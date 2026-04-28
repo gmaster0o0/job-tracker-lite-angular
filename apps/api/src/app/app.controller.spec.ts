@@ -6,16 +6,28 @@ describe('AppController', () => {
   let app: TestingModule;
 
   beforeAll(async () => {
+    const mockAppService = {
+      checkHealth: jest.fn().mockResolvedValue({
+        status: 'UP',
+        database: 'UP',
+        timestamp: new Date().toISOString(),
+      }),
+    };
+
     app = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [{ provide: AppService, useValue: mockAppService }],
     }).compile();
   });
 
-  describe('getData', () => {
-    it('should return "Hello API"', () => {
+  describe('checkHealth', () => {
+    it('should return health status and timestamp', async () => {
       const appController = app.get<AppController>(AppController);
-      expect(appController.getData()).toEqual({ message: 'Hello API' });
+      const response = await appController.checkHealth();
+
+      expect(response.status).toBe('UP');
+      expect(response.database).toBe('UP');
+      expect(new Date(response.timestamp).toString()).not.toBe('Invalid Date');
     });
   });
 });

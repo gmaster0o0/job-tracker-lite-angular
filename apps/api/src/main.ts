@@ -5,7 +5,12 @@
 
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
 import { AppModule } from './app/app.module';
+
+const envPath = path.join(process.cwd(), '.env');
+dotenv.config({ path: envPath });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

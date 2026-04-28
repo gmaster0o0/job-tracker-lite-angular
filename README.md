@@ -28,6 +28,35 @@ From the repository root:
 npm install
 ```
 
+## Docker Compose
+
+This repo includes `docker-compose.yml` for shared services such as PostgreSQL.
+
+1. Copy `.env.example` to `.env` and fill in database credentials.
+2. Start containers:
+
+```sh
+npm run docker:up
+```
+
+3. Stop and remove containers:
+
+```sh
+npm run docker:down
+```
+
+4. View container logs:
+
+```sh
+npm run docker:logs
+```
+
+5. List running containers:
+
+```sh
+npm run docker:ps
+```
+
 ## Start locally
 
 The frontend is configured to proxy API requests to the backend. The backend runs on port `3000` and the frontend dev server runs on port `4200`.

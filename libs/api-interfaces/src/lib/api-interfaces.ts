@@ -8,3 +8,9 @@ export type User = {
   email: string;
   password: string;
 };
+
+export interface HealthResponseDto {
+  status: 'UP' | 'DOWN';
+  database: 'UP' | 'DOWN';
+  timestamp: string;
+}

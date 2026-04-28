@@ -9,6 +9,6 @@ import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-acces
   styleUrl: './app.scss',
 })
 export class App {
-  protected title = 'frontend';
-  protected readonly user = inject(DataAccessService).userResource;
+  protected title = 'Health Check';
+  protected readonly health = inject(DataAccessService).healthResource;
 }

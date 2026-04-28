@@ -1,14 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@job-tracker-lite-angular/api-interfaces';
+import { HealthResponseDto } from '@job-tracker-lite-angular/api-interfaces';
+import { PrismaService } from '@job-tracker-lite-angular/prisma';
 
 @Injectable()
 export class AppService {
-  getData(): User {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async checkHealth(): Promise<HealthResponseDto> {
+    const timestamp = new Date().toISOString();
+    let databaseStatus: 'UP' | 'DOWN' = 'UP';
+
+    try {
+      await this.prisma.testConnection();
+    } catch {
+      databaseStatus = 'DOWN';
+    }
+
     return {
-      id: '1',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      password: 'password',
+      status: databaseStatus === 'UP' ? 'UP' : 'DOWN',
+      database: databaseStatus,
+      timestamp,
     };
   }
 }
