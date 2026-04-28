@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 
 @Component({
-  imports: [NxWelcome, RouterModule],
+  imports: [CommonModule],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
   protected title = 'frontend';
+  protected readonly user = inject(DataAccessService).userResource;
 }
