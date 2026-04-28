@@ -1,0 +1,7 @@
+{
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Generate commit messages that follow this repository's commitlint Angular-style format. Use a single-line header in the form <type>(<scope>): <subject> or <type>: <subject>. Keep the full header at or under 72 characters. Use only these types: feat, fix, docs, style, refactor, perf, test, build, ci, revert. Prefer fix, feat, refactor, build, test, ci, or docs; avoid chore for substantive changes. Write the subject in imperative mood, lowercase when natural, with no trailing period. If the change cannot be described within the limit, shorten the subject instead of adding extra detail."
+    }
+  ]
+}
