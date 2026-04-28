@@ -1,0 +1,36 @@
+<div class="health-shell">
+  <header class="health-header">
+    <h1>Health Check</h1>
+    <p class="health-tag">Backend liveliness and DB status</p>
+  </header>
+
+  @if (health.value(); as healthData) {
+    <section class="health-card">
+      <div class="health-status-row">
+        <div class="health-status-item">
+          <span class="label">API</span>
+          <strong class="value status-{{ healthData.status | lowercase }}">
+            {{ healthData.status }}
+          </strong>
+        </div>
+        <div class="health-status-item">
+          <span class="label">Database</span>
+          <strong class="value status-{{ healthData.database | lowercase }}">
+            {{ healthData.database }}
+          </strong>
+        </div>
+      </div>
+
+      <div class="health-detail-row">
+        <div>
+          <span class="label">Last checked</span>
+          <p>{{ healthData.timestamp | date: 'medium' }}</p>
+        </div>
+      </div>
+    </section>
+  } @else {
+    <section class="health-card loading">
+      <p>Loading health check…</p>
+    </section>
+  }
+</div>
