@@ -1,96 +1,100 @@
-# JobTrackerLiteAngular
+# Job Tracker Lite Angular
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A small Nx monorepo containing an Angular frontend and a NestJS backend.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## Project overview
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+- `apps/frontend` — Angular application using standalone components and `httpResource`.
+- `apps/api` — NestJS backend application with a global `/api` prefix.
+- `libs/api-interfaces` — shared TypeScript interfaces and types used by frontend and backend.
+- `libs/frontend` — shared frontend library code, including data access services.
 
-## Run tasks
+## Tech stack
 
-To run tasks with Nx use:
+- Nx monorepo
+- Angular `~21.2.0`
+- NestJS `^11.0.0`
+- TypeScript `~5.9.2`
+- RxJS
+- Jest / Vitest for unit tests
+- Playwright for e2e testing
+- Angular `httpResource` for data loading
 
-```sh
-npx nx <target> <project-name>
-```
+## Install
 
-For example:
-
-```sh
-npx nx build myproject
-```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-To install a new plugin you can use the `nx add` command. Here's an example of adding the React plugin:
-```sh
-npx nx add @nx/react
-```
-
-Use the plugin's generator to create new projects. For example, to create a new React app or library:
+From the repository root:
 
 ```sh
-# Generate an app
-npx nx g @nx/react:app demo
-
-# Generate a library
-npx nx g @nx/react:lib some-lib
+npm install
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+## Start locally
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
+The frontend is configured to proxy API requests to the backend. The backend runs on port `3000` and the frontend dev server runs on port `4200`.
 
 ```sh
-npx nx connect
+npx nx serve frontend
 ```
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+Then open:
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- Frontend: `http://localhost:4200`
+- Backend: `http://localhost:3000/api`
 
-### Step 2
+## Run tests
 
-Use the following command to configure a CI workflow for your workspace:
+### Frontend unit tests
 
 ```sh
-npx nx g ci-workflow
+npx nx test frontend
 ```
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Backend tests
 
-## Install Nx Console
+```sh
+npx nx test api
+```
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+### End-to-end tests
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Depending on your setup, there may be e2e projects in `apps/frontend-e2e` and `apps/api-e2e`. Use Nx to run the relevant target.
 
-## Useful links
+```sh
+npx nx run frontend-e2e:e2e
+npx nx run api-e2e:e2e
+```
 
-Learn more:
+## Project structure
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```text
+apps/
+  frontend/         # Angular app
+  api/              # NestJS backend
+  frontend-e2e/     # Frontend E2E tests
+  api-e2e/          # API E2E tests
+libs/
+  api-interfaces/   # Shared API types
+  frontend/         # Shared frontend utilities and services
+```
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## Notes
+
+- The frontend app loads data from `/api` using `httpResource<User>(() => '/api')`.
+- The backend uses `app.setGlobalPrefix('api')`, so the API root is `http://localhost:3000/api`.
+- `apps/frontend/proxy.conf.json` proxies frontend requests for `/api` to the backend.
+
+## Useful commands
+
+```sh
+npm install
+npx nx serve frontend
+npx nx test frontend
+npx nx test api
+npx nx graph
+```
+
+## Additional resources
+
+- [Nx docs](https://nx.dev)
+- [Angular docs](https://angular.dev)
+- [NestJS docs](https://nestjs.com)
