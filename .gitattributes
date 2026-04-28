@@ -1,0 +1,18 @@
+# Gitattributes file for the project
+
+#Hide the from the language statistics
+package-lock.json linguist-generated=true
+package-lock.json -diff
+
+# Generated translation files
+src/assets/i18n/*.json linguist-generated=true -diff
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+
+# Normalize line endings for text files
+* text=auto eol=lf
