@@ -49,3 +49,4 @@ __screenshots__/
 
 vitest.config.*.timestamp*
 .nx/polygraph
+.env
