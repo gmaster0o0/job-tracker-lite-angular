@@ -1,23 +1,21 @@
-<div class="space-y-3">
-  <div class="px-2"></div>
+<div class="space-y-4 p-3">
+  <div class="px-2 text-sm uppercase tracking-[0.24em] text-slate-500">
+    Navigation
+  </div>
 
-  <nav class="space-y-2">
+  <ul hlmSidebarMenu class="space-y-1">
     @for (item of items; track item.path) {
-      <a
-        class="block rounded-lg px-3 py-3 transition hover:bg-slate-100"
-        routerLinkActive="bg-slate-100"
-        [routerLink]="item.path"
-        [routerLinkActiveOptions]="{ exact: true }"
-      >
-        <span class="flex min-w-0 flex-col gap-1">
-          <span class="truncate font-semibold text-slate-950">
-            {{ item.label }}
-          </span>
-          <span class="text-xs leading-5 text-slate-500">
-            {{ item.description }}
-          </span>
-        </span>
-      </a>
+      <li hlmSidebarMenuItem>
+        <a
+          hlmSidebarMenuButton
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          class="w-full gap-3"
+        >
+          <ng-icon hlm size="sm" [name]="item.icon"></ng-icon>
+          <span class="truncate">{{ item.label }}</span>
+        </a>
+      </li>
     }
-  </nav>
+  </ul>
 </div>

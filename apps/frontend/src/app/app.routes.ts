@@ -8,6 +8,36 @@ export const appRoutes: Route[] = [
       import('./layouts/main-layout/main-layout.component').then(
         (m) => m.MainLayoutComponent,
       ),
+
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./features/home/home.component').then((m) => m.HomeComponent),
+      },
+      {
+        path: '',
+        outlet: 'sidenav',
+        loadComponent: () =>
+          import('./navigation/main-menu/main-menu.component').then(
+            (m) => m.MainMenuComponent,
+          ),
+      },
+    ],
+  },
+  {
+    path: 'jobs',
+    children: [
+      {
+        path: '',
+        outlet: 'sidenav',
+        loadComponent: () =>
+          import('./features/jobs/job-list/job-list.component').then(
+            (m) => m.JobListComponent,
+          ),
+      },
+    ],
   },
   {
     path: 'status',

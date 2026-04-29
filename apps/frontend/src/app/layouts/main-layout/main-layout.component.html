@@ -1,4 +1,9 @@
-<app-sidenav>
-  <router-outlet name="sidenav"></router-outlet>
-</app-sidenav>
-<router-outlet></router-outlet>
+<div class="flex h-screen">
+  <app-sidenav>
+    <router-outlet name="sidenav"></router-outlet>
+  </app-sidenav>
+
+  <main class="flex-1">
+    <router-outlet></router-outlet>
+  </main>
+</div>

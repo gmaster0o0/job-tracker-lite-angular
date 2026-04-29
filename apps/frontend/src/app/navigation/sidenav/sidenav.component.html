@@ -1,0 +1,16 @@
+<div hlmSidebarWrapper class="h-screen border-r">
+  <hlm-sidebar>
+    <div hlmSidebarHeader></div>
+    <div hlmSidebarContent>
+      <ng-content></ng-content>
+    </div>
+    <div hlmSidebarFooter>
+      <div class="flex flex-wrap items-center gap-2 md:flex-row">
+        <button hlmBtn variant="outline" size="sm">
+          <ng-icon name="lucideLogOut" />
+          Logout
+        </button>
+      </div>
+    </div>
+  </hlm-sidebar>
+</div>
