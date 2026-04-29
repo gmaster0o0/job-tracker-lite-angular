@@ -38,6 +38,9 @@
       "@shared-ui/helm/sidebar": [
         "./libs/shared-ui/sidebar/src/index.ts"
       ],
+      "@shared-ui/helm/sidebar/*": [
+        "./libs/shared-ui/sidebar/src/lib/*"
+      ],
       "@shared-ui/helm/button": [
         "./libs/shared-ui/button/src/index.ts"
       ],
