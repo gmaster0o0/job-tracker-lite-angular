@@ -1,20 +1,29 @@
 #!/bin/sh
 
-echo "🚀 Parallel testing started..."
+echo "Parallel testing started..."
 
-npx nx affected -t test --base=origin/main --head=HEAD --parallel=3 --watch=false --skip-nx-cache
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+BASE_BRANCH="origin/main"
 
+if git show-ref --verify --quiet "refs/remotes/origin/${CURRENT_BRANCH}"; then
+  BASE_BRANCH="origin/${CURRENT_BRANCH}"
+elif git show-ref --verify --quiet "refs/remotes/origin/master"; then
+  BASE_BRANCH="origin/master"
+fi
+
+echo "Using base branch: ${BASE_BRANCH}"
+
+npx nx affected -t test --base="${BASE_BRANCH}" --head=HEAD --parallel=3 --watch=false --skip-nx-cache
 if [ $? -ne 0 ]; then
-  echo "❌ Test failed! Fix the code before pushing."
+  echo "Test failed! Fix the code before pushing."
   exit 1
 fi
 
-echo "🚀 Parallel typecheck started..."
-npx nx affected --target=typecheck --base=origin/main --head=HEAD --parallel=3 --watch=false --skip-nx-cache
-
+echo "Parallel typecheck started..."
+npx nx affected --target=typecheck --base="${BASE_BRANCH}" --head=HEAD --parallel=3 --skip-nx-cache
 if [ $? -ne 0 ]; then
-  echo "❌ Typecheck failed! Fix the code before pushing."
+  echo "Typecheck failed! Fix the code before pushing."
   exit 1
 fi
 
-echo "✅ Tests and typecheck passed, push allowed."
+echo "Tests and typecheck passed, push allowed."
