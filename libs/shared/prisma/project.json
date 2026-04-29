@@ -15,6 +15,12 @@
         "main": "libs/shared/prisma/src/index.ts",
         "assets": ["libs/shared/prisma/*.md"]
       }
+    },
+    "seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ts-node --project libs/shared/prisma/tsconfig.json libs/shared/prisma/src/seed.ts"
+      }
     }
   }
 }

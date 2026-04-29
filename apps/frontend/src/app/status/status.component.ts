@@ -1,9 +1,10 @@
-import { CommonModule, DatePipe, LowerCasePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 
 @Component({
-  imports: [CommonModule, DatePipe, LowerCasePipe],
+  standalone: true,
+  imports: [CommonModule, DatePipe],
   selector: 'app-status',
   templateUrl: './status.component.html',
   styleUrl: './status.component.scss',
