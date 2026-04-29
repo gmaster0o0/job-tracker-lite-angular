@@ -38,7 +38,7 @@ describe('PrismaService', () => {
   describe('onModuleInit', () => {
     it('should call $connect', async () => {
       const connectSpy = jest
-        .spyOn(service, '$connect')
+        .spyOn(service as any, '$connect')
         .mockImplementation(async () => {
           /* empty */
         });
@@ -52,7 +52,7 @@ describe('PrismaService', () => {
   describe('onModuleDestroy', () => {
     it('should call $disconnect', async () => {
       const disconnectSpy = jest
-        .spyOn(service, '$disconnect')
+        .spyOn(service as any, '$disconnect')
         .mockImplementation(async () => {
           // Simulate successful disconnect
         });
@@ -68,11 +68,7 @@ describe('PrismaService', () => {
       const expected = [{ id: 1, name: 'Test User' }];
       const findManySpy = jest
         .spyOn(service.user, 'findMany')
-        .mockResolvedValue(
-          expected as unknown as Awaited<
-            ReturnType<typeof service.user.findMany>
-          >,
-        );
+        .mockResolvedValue(expected as any);
 
       await expect(service.testConnection()).resolves.toEqual(expected);
       expect(findManySpy).toHaveBeenCalled();
