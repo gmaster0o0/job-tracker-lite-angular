@@ -9,7 +9,11 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
-    "docker:ps": "docker compose ps"
+    "docker:ps": "docker compose ps",
+    "test": "npx nx run-many --target=test --all",
+    "lint": "npx nx run-many --target=lint --all",
+    "typecheck": "npx nx run-many --target=typecheck --all",
+    "test:push": "npx nx affected -t test --base=origin/main --head=HEAD --parallel=3"
   },
   "private": true,
   "devDependencies": {
@@ -59,6 +63,7 @@
     "jest-util": "^30.0.2",
     "jsdom": "^27.1.0",
     "jsonc-eslint-parser": "^2.1.0",
+    "lint-staged": "^16.4.0",
     "ng-packagr": "~21.2.0",
     "nx": "22.7.0",
     "postcss": "^8.4.5",
