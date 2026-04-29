@@ -10,7 +10,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "🚀 Parallel typecheck started..."
-npx nx affected --target=typecheck --base=origin/main --head=HEAD --parallel=3 --skip-nx-cache
+npx nx affected --target=typecheck --base=origin/main --head=HEAD --parallel=3 --watch=false --skip-nx-cache
 
 if [ $? -ne 0 ]; then
   echo "❌ Typecheck failed! Fix the code before pushing."
