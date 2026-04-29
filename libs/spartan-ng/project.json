@@ -1,0 +1,24 @@
+{
+  "name": "spartan-ng",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/spartan-ng/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/spartan-ng",
+        "main": "libs/spartan-ng/src/index.ts",
+        "tsConfig": "libs/spartan-ng/tsconfig.lib.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["libs/spartan-ng/**/*.ts"]
+      }
+    }
+  }
+}
