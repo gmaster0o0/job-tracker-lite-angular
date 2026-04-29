@@ -2,7 +2,7 @@
 
 echo "🚀 Parallel testing started..."
 
-npx nx affected -t test --base=origin/main --head=HEAD --parallel=3 --watch=false
+npx nx affected -t test --base=origin/main --head=HEAD --parallel=3 --watch=false --skip-nx-cache
 
 if [ $? -ne 0 ]; then
   echo "❌ Test failed! Fix the code before pushing."
