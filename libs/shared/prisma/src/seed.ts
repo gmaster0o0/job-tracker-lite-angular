@@ -1,3 +1,4 @@
+import { JobStatus } from '@prisma/client';
 import { PrismaService } from './lib/prisma.service';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
@@ -12,24 +13,28 @@ const seedJobs = [
     description:
       'Build polished Angular workflows for an internal hiring platform.',
     company: 'Acme Labs',
+    status: JobStatus.SAVED,
   },
   {
     position: 'Backend Engineer',
     link: 'https://example.com/jobs/backend-engineer',
     description: 'Own Node and Nest services that power recruiting automation.',
     company: 'Globex',
+    status: JobStatus.APPLIED,
   },
   {
     position: 'Full Stack Engineer',
     link: 'https://example.com/jobs/full-stack-engineer',
     description: 'Ship product features across Angular, Nest, and PostgreSQL.',
     company: 'Initech',
+    status: JobStatus.INTERVIEW,
   },
   {
     position: 'Product Designer',
     link: 'https://example.com/jobs/product-designer',
     description: 'Design application flows for a job tracking workspace.',
     company: 'Northwind',
+    status: JobStatus.JOB_OFFERED,
   },
   {
     position: 'Engineering Manager',
@@ -37,6 +42,7 @@ const seedJobs = [
     description:
       'Lead a platform team focused on developer tooling and velocity.',
     company: 'Umbrella Tech',
+    status: JobStatus.APPLIED,
   },
   {
     position: 'DevOps Engineer',
@@ -44,6 +50,7 @@ const seedJobs = [
     description:
       'Improve CI/CD and containerized local development for the team.',
     company: 'Stark Systems',
+    status: JobStatus.SAVED,
   },
   {
     position: 'QA Automation Engineer',
@@ -51,12 +58,14 @@ const seedJobs = [
     description:
       'Expand Jest and Playwright coverage across the hiring workflow.',
     company: 'Wayne Enterprises',
+    status: JobStatus.INTERVIEW,
   },
   {
     position: 'Data Analyst',
     link: 'https://example.com/jobs/data-analyst',
     description: 'Turn recruiting funnel metrics into actionable insights.',
     company: 'Soylent Analytics',
+    status: JobStatus.SAVED,
   },
   {
     position: 'Technical Recruiter',
@@ -64,12 +73,14 @@ const seedJobs = [
     description:
       'Partner with engineering leaders to source senior candidates.',
     company: 'Hooli Talent',
+    status: JobStatus.APPLIED,
   },
   {
     position: 'Platform Engineer',
     link: 'https://example.com/jobs/platform-engineer',
     description: 'Standardize shared tooling and libraries in an Nx monorepo.',
     company: 'Massive Dynamic',
+    status: JobStatus.JOB_OFFERED,
   },
 ];
 
@@ -85,6 +96,7 @@ async function main() {
         position: job.position,
         description: job.description,
         company: job.company,
+        status: job.status,
       },
       create: job,
     });
