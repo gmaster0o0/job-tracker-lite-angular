@@ -23,16 +23,17 @@
           hiring pipeline.
         </p>
       </header>
-
-      @if (jobs.value(); as jobsData) {
-        <app-job-list [jobs]="jobsData" />
-      } @else {
-        <section
-          class="rounded-3xl bg-white/90 p-8 text-center shadow-xl shadow-slate-200/80 ring-1 ring-slate-200"
-        >
-          <p class="text-base font-medium text-slate-700">Loading jobs…</p>
-        </section>
-      }
+      <app-sidenav>
+        @if (jobs.value(); as jobsData) {
+          <app-job-list [jobs]="jobsData" />
+        } @else {
+          <section
+            class="rounded-3xl bg-white/90 p-8 text-center shadow-xl shadow-slate-200/80 ring-1 ring-slate-200"
+          >
+            <p class="text-base font-medium text-slate-700">Loading jobs…</p>
+          </section>
+        }
+      </app-sidenav>
     </div>
   </main>
 }

@@ -4,10 +4,11 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map, merge, of } from 'rxjs';
 import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { JobListComponent } from './jobs/job-list/job-list.component';
+import { SidenavComponent } from './sidenav/sidenav.component';
 
 @Component({
   standalone: true,
-  imports: [RouterOutlet, JobListComponent],
+  imports: [RouterOutlet, JobListComponent, SidenavComponent],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

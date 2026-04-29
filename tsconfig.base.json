@@ -34,6 +34,39 @@
       ],
       "@shared-ui/helm/utils": [
         "./libs/shared-ui/utils/src/index.ts"
+      ],
+      "@shared-ui/helm/sidebar": [
+        "./libs/shared-ui/sidebar/src/index.ts"
+      ],
+      "@shared-ui/helm/button": [
+        "./libs/shared-ui/button/src/index.ts"
+      ],
+      "@shared-ui/helm/icon": [
+        "./libs/shared-ui/icon/src/index.ts"
+      ],
+      "@shared-ui/helm/input": [
+        "./libs/shared-ui/input/src/index.ts"
+      ],
+      "@shared-ui/helm/separator": [
+        "./libs/shared-ui/separator/src/index.ts"
+      ],
+      "@shared-ui/helm/sheet": [
+        "./libs/shared-ui/sheet/src/index.ts"
+      ],
+      "@shared-ui/helm/skeleton": [
+        "./libs/shared-ui/skeleton/src/index.ts"
+      ],
+      "@shared-ui/helm/tooltip": [
+        "./libs/shared-ui/tooltip/src/index.ts"
+      ],
+      "@shared-ui/helm/badge": [
+        "./libs/shared-ui/badge/src/index.ts"
+      ],
+      "@shared-ui/helm/breadcrumb": [
+        "./libs/shared-ui/breadcrumb/src/index.ts"
+      ],
+      "@shared-ui/helm/spinner": [
+        "./libs/shared-ui/spinner/src/index.ts"
       ]
     }
   },
