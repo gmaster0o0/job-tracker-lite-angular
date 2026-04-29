@@ -1,0 +1,6 @@
+{
+  "componentsPath": "libs/shared-ui",
+  "buildable": false,
+  "generateAs": "library",
+  "importAlias": "@shared-ui/helm"
+}

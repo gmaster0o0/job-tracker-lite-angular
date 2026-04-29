@@ -10,7 +10,10 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "paths": {
@@ -20,10 +23,22 @@
       "@job-tracker-lite-angular/frontend-data-access": [
         "./libs/frontend/src/index.ts"
       ],
-      "@job-tracker-lite-angular/prisma": ["./libs/shared/prisma/src/index.ts"],
-      "spartan-ng": ["./libs/spartan-ng/src/index.ts"],
-      "spartan/ui/helm": ["./libs/spartan-ng/src/lib/helm/index.ts"]
+      "@job-tracker-lite-angular/prisma": [
+        "./libs/shared/prisma/src/index.ts"
+      ],
+      "spartan/ui/helm": [
+        "./libs/shared-ui/card/src/index.ts"
+      ],
+      "@shared-ui/helm/card": [
+        "./libs/shared-ui/card/src/index.ts"
+      ],
+      "@shared-ui/helm/utils": [
+        "./libs/shared-ui/utils/src/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

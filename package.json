@@ -90,8 +90,10 @@
     "@spartan-ng/brain": "^0.0.1-alpha.679",
     "@spartan-ng/cli": "^0.0.1-alpha.679",
     "axios": "^1.6.0",
+    "clsx": "^2.1.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "~7.8.0",
+    "tailwind-merge": "^3.5.0",
     "tailwindcss-animate": "^1.0.7"
   }
 }
