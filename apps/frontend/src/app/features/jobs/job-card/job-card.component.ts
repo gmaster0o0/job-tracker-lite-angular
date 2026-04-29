@@ -1,13 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
+import {
+  HlmCard,
+  HlmCardDescription,
+  HlmCardFooter,
+  HlmCardHeader,
+  HlmCardTitle,
+} from '@shared-ui/helm/card';
 
 @Component({
-  selector: 'app-job-card',
   standalone: true,
-  imports: [CommonModule],
+  selector: 'app-job-card',
+  imports: [
+    CommonModule,
+    HlmCard,
+    HlmCardDescription,
+    HlmCardFooter,
+    HlmCardHeader,
+    HlmCardTitle,
+  ],
   templateUrl: './job-card.component.html',
-  styleUrl: './job-card.component.scss',
 })
 export class JobCardComponent {
   readonly job = input.required<JobDto>();
