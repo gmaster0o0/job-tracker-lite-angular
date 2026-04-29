@@ -5,10 +5,15 @@
   "scripts": {
     "prepare": "husky install",
     "commitlint": "npx commitlint --from=HEAD~1 --to=HEAD",
+    "db:seed": "npx nx run prisma:seed",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
-    "docker:ps": "docker compose ps"
+    "docker:ps": "docker compose ps",
+    "test": "npx nx run-many --target=test --all",
+    "lint": "npx nx run-many --target=lint --all",
+    "typecheck": "npx nx run-many --target=typecheck --all",
+    "test:push": "npx nx affected -t test --base=origin/main --head=HEAD --parallel=3"
   },
   "private": true,
   "devDependencies": {
@@ -58,11 +63,13 @@
     "jest-util": "^30.0.2",
     "jsdom": "^27.1.0",
     "jsonc-eslint-parser": "^2.1.0",
+    "lint-staged": "^16.4.0",
     "ng-packagr": "~21.2.0",
     "nx": "22.7.0",
     "postcss": "^8.4.5",
     "prettier": "~3.6.2",
     "prisma": "^7.8.0",
+    "tailwindcss": "^3.4.4",
     "ts-jest": "^29.4.0",
     "ts-node": "10.9.1",
     "tslib": "^2.3.0",
@@ -73,6 +80,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "@angular/cdk": "^21.2.8",
     "@angular/common": "~21.2.0",
     "@angular/compiler": "~21.2.0",
     "@angular/core": "~21.2.0",
@@ -84,8 +92,13 @@
     "@nestjs/platform-express": "^11.0.0",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@spartan-ng/brain": "^0.0.1-alpha.679",
+    "@spartan-ng/cli": "^0.0.1-alpha.679",
     "axios": "^1.6.0",
+    "clsx": "^2.1.1",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "~7.8.0"
+    "rxjs": "~7.8.0",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss-animate": "^1.0.7"
   }
 }

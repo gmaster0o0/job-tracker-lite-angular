@@ -1,21 +1,20 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DataAccess } from './data-access';
+import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { DataAccessService } from './data-access';
 
-describe('DataAccess', () => {
-  let component: DataAccess;
-  let fixture: ComponentFixture<DataAccess>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [DataAccess],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(DataAccess);
-    component = fixture.componentInstance;
-    await fixture.whenStable();
+describe('DataAccessService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        DataAccessService,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
+    });
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(TestBed.inject(DataAccessService)).toBeTruthy();
   });
 });

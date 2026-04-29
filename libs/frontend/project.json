@@ -27,6 +27,12 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsc -p libs/frontend/tsconfig.lib.json --noEmit"
+      }
     }
   }
 }
