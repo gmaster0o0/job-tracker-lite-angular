@@ -12,6 +12,12 @@
         "passWithNoTests": true
       },
       "dependsOn": ["api:build", "api:serve"]
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsc -p apps/api-e2e/tsconfig.json --noEmit"
+      }
     }
   }
 }

@@ -21,6 +21,12 @@
       "options": {
         "command": "ts-node --project libs/shared/prisma/tsconfig.json libs/shared/prisma/src/seed.ts"
       }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsc -p libs/shared/prisma/tsconfig.lib.json --noEmit"
+      }
     }
   }
 }

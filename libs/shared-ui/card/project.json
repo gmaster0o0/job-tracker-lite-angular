@@ -8,6 +8,12 @@
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsc -p libs/shared-ui/card/tsconfig.lib.json --noEmit"
+      }
     }
   }
 }

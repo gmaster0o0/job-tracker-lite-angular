@@ -14,6 +14,12 @@
         "tsConfig": "libs/api-interfaces/tsconfig.lib.json",
         "assets": ["libs/api-interfaces/*.md"]
       }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsc -p libs/api-interfaces/tsconfig.lib.json --noEmit"
+      }
     }
   }
 }
