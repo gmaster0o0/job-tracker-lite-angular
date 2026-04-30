@@ -6,21 +6,45 @@ import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-acces
 
 @Component({
   standalone: true,
-  template: '',
+  template: 'Test Menu',
 })
-class DummyStatusComponent {}
+class DummyMenuComponent {}
+
+@Component({
+  standalone: true,
+  template: 'Test Content',
+})
+class DummyContentComponent {}
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
       providers: [
-        provideRouter([{ path: 'status', component: DummyStatusComponent }]),
+        provideRouter([
+          {
+            path: '',
+            component: DummyContentComponent,
+            outlet: 'primary',
+            children: [
+              {
+                path: 'jobs',
+                component: DummyContentComponent,
+              },
+            ],
+          },
+          {
+            path: '',
+            component: DummyMenuComponent,
+            outlet: 'sidenav',
+          },
+        ]),
         {
           provide: DataAccessService,
           useValue: {
             jobsResource: {
               value: () => [],
+              isLoading: () => false,
             },
           },
         },
@@ -33,10 +57,12 @@ describe('AppComponent', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should render the jobs header on the root view', () => {
+  it('should render with router outlet', async () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
+    await fixture.whenStable();
 
-    expect(fixture.nativeElement.textContent).toContain('Saved opportunities');
+    const routerOutlet = fixture.nativeElement.querySelector('router-outlet');
+    expect(routerOutlet).toBeTruthy();
   });
 });

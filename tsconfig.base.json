@@ -10,10 +10,7 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "paths": {
@@ -23,22 +20,25 @@
       "@job-tracker-lite-angular/frontend-data-access": [
         "./libs/frontend/src/index.ts"
       ],
-      "@job-tracker-lite-angular/prisma": [
-        "./libs/shared/prisma/src/index.ts"
+      "@job-tracker-lite-angular/prisma": ["./libs/shared/prisma/src/index.ts"],
+      "spartan/ui/helm": ["./libs/shared-ui/card/src/index.ts"],
+      "@spartan-ng/helm/card": ["./libs/shared-ui/card/src/index.ts"],
+      "@spartan-ng/helm/utils": ["./libs/shared-ui/utils/src/index.ts"],
+      "@spartan-ng/helm/sidebar": ["./libs/shared-ui/sidebar/src/index.ts"],
+      "@spartan-ng/helm/sidebar/*": ["./libs/shared-ui/sidebar/src/lib/*"],
+      "@spartan-ng/helm/button": ["./libs/shared-ui/button/src/index.ts"],
+      "@spartan-ng/helm/icon": ["./libs/shared-ui/icon/src/index.ts"],
+      "@spartan-ng/helm/input": ["./libs/shared-ui/input/src/index.ts"],
+      "@spartan-ng/helm/separator": ["./libs/shared-ui/separator/src/index.ts"],
+      "@spartan-ng/helm/sheet": ["./libs/shared-ui/sheet/src/index.ts"],
+      "@spartan-ng/helm/skeleton": ["./libs/shared-ui/skeleton/src/index.ts"],
+      "@spartan-ng/helm/tooltip": ["./libs/shared-ui/tooltip/src/index.ts"],
+      "@spartan-ng/helm/badge": ["./libs/shared-ui/badge/src/index.ts"],
+      "@spartan-ng/helm/breadcrumb": [
+        "./libs/shared-ui/breadcrumb/src/index.ts"
       ],
-      "spartan/ui/helm": [
-        "./libs/shared-ui/card/src/index.ts"
-      ],
-      "@shared-ui/helm/card": [
-        "./libs/shared-ui/card/src/index.ts"
-      ],
-      "@shared-ui/helm/utils": [
-        "./libs/shared-ui/utils/src/index.ts"
-      ]
+      "@spartan-ng/helm/spinner": ["./libs/shared-ui/spinner/src/index.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

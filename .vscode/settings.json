@@ -5,5 +5,6 @@
     }
   ],
   "scss.lint.unknownAtRules": "ignore",
-  "css.lint.unknownAtRules": "ignore"
+  "css.lint.unknownAtRules": "ignore",
+  "tailwindCSS.classFunctions": ["hlm", "cva", "classes"]
 }

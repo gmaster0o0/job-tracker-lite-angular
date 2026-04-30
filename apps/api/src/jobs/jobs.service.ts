@@ -12,6 +12,7 @@ const prismaToDtoStatus: Record<JobStatus, JobStatusDto> = {
   APPLIED: 'applied',
   INTERVIEW: 'interview',
   JOB_OFFERED: 'job offered',
+  REJECTED: 'rejected',
 };
 
 const dtoToPrismaStatus: Record<JobStatusDto, JobStatus> = {
@@ -19,6 +20,7 @@ const dtoToPrismaStatus: Record<JobStatusDto, JobStatus> = {
   applied: 'APPLIED',
   interview: 'INTERVIEW',
   'job offered': 'JOB_OFFERED',
+  rejected: 'REJECTED',
 };
 
 @Injectable()

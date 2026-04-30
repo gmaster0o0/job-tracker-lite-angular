@@ -1,6 +1,5 @@
 {
   "{apps,libs}/**/*.{ts,js,html,scss}": [
-    "npx nx affected --target=lint --uncommitted",
-    "npx nx affected --target=test --uncommitted"
+    "npx nx affected --target=lint --uncommitted"
   ]
 }

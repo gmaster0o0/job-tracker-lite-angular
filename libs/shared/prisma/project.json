@@ -5,6 +5,12 @@
   "projectType": "library",
   "tags": [],
   "targets": {
+    "generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma generate --schema=libs/shared/prisma/db-schema/schema.prisma && node -e \"const fs=require('fs');const src='libs/shared/prisma/node_modules/.prisma/client';const dst='node_modules/.prisma/client';if(fs.existsSync(src)){fs.mkdirSync('node_modules/.prisma',{recursive:true});fs.rmSync(dst,{recursive:true,force:true});fs.cpSync(src,dst,{recursive:true});}\""
+      }
+    },
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],

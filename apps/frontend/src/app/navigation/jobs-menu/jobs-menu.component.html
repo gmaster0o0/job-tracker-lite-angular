@@ -1,0 +1,76 @@
+<div class="flex h-full flex-col overflow-hidden">
+  <!-- Header: search + filters -->
+  <div class="space-y-2 border-b border-slate-100 p-3">
+    <!-- Search bar -->
+    <div class="relative flex items-center">
+      <ng-icon
+        hlm
+        size="sm"
+        name="lucideSearch"
+        class="absolute left-3 z-10 text-muted-foreground"
+      />
+      <input
+        hlmInput
+        type="search"
+        placeholder="Search jobs or companies..."
+        class="w-full pl-9 text-sm"
+        (input)="onSearch($event)"
+      />
+    </div>
+
+    <!-- Chip filters -->
+    <div class="flex flex-wrap items-center gap-1">
+      @for (chip of chips; track chip.value) {
+        <button
+          hlmBtn
+          size="xs"
+          [variant]="activeFilter() === chip.value ? 'default' : 'outline'"
+          (click)="setFilter(chip.value)"
+          class="h-6 rounded-full px-2.5 text-[11px]"
+        >
+          {{ chip.label }}
+        </button>
+      }
+      <button
+        hlmBtn
+        size="icon-xs"
+        variant="ghost"
+        (click)="toggleRejected()"
+        aria-label="Toggle Rejected"
+        class="ml-auto shrink-0 transition-colors"
+        [class.text-destructive]="showRejected()"
+        [class.hover:text-destructive]="showRejected()"
+      >
+        <ng-icon hlm size="sm" name="lucideGhost" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Job List -->
+  <div class="flex-1 overflow-y-auto p-3">
+    @if (jobsResource.isLoading()) {
+      <div class="py-8 text-center text-sm text-muted-foreground">
+        Loading jobs…
+      </div>
+    } @else {
+      <ul class="space-y-1.5">
+        @for (job of filteredJobs(); track job.id) {
+          <li>
+            <a
+              [routerLink]="['/jobs', job.id]"
+              routerLinkActive
+              #rla="routerLinkActive"
+              class="block"
+            >
+              <app-job-card [job]="job" [selected]="rla.isActive" />
+            </a>
+          </li>
+        } @empty {
+          <li class="py-8 text-center text-sm text-muted-foreground">
+            No jobs found
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</div>

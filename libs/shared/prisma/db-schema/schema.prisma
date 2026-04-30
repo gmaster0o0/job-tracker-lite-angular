@@ -11,6 +11,7 @@ enum JobStatus {
   APPLIED
   INTERVIEW
   JOB_OFFERED
+  REJECTED
 }
 
 model User {
