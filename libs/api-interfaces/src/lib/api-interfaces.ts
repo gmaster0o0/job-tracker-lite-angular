@@ -15,7 +15,12 @@ export interface HealthResponseDto {
   timestamp: string;
 }
 
-export type JobStatusDto = 'saved' | 'applied' | 'interview' | 'job offered';
+export type JobStatusDto =
+  | 'saved'
+  | 'applied'
+  | 'interview'
+  | 'job offered'
+  | 'rejected';
 
 export interface JobDto {
   id: number;

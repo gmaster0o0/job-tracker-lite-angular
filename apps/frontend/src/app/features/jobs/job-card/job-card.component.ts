@@ -1,38 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
-import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
-import {
-  HlmCard,
-  HlmCardDescription,
-  HlmCardFooter,
-  HlmCardHeader,
-  HlmCardTitle,
-} from '@spartan-ng/helm/card';
+import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
+import { HlmBadgeImports } from '@spartan-ng/helm/badge';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 
 @Component({
   standalone: true,
   selector: 'app-job-card',
-  imports: [
-    CommonModule,
-    HlmCard,
-    HlmCardDescription,
-    HlmCardFooter,
-    HlmCardHeader,
-    HlmCardTitle,
-  ],
+  imports: [CommonModule, HlmBadgeImports, HlmCardImports],
   templateUrl: './job-card.component.html',
 })
 export class JobCardComponent {
   readonly job = input.required<JobDto>();
+  readonly selected = input<boolean>(false);
+  readonly variant = input<'compact' | 'default'>('compact');
 
-  protected readonly statusClasses: Record<JobDto['status'], string> = {
-    saved:
-      'rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide bg-sky-100 text-sky-700 ring-1 ring-inset ring-sky-700/10',
-    applied:
-      'rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide bg-amber-100 text-amber-700 ring-1 ring-inset ring-amber-700/10',
-    interview:
-      'rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide bg-violet-100 text-violet-700 ring-1 ring-inset ring-violet-700/10',
-    'job offered':
-      'rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide bg-emerald-100 text-emerald-700 ring-1 ring-inset ring-emerald-700/20',
+  protected readonly statusBadgeClasses: Record<JobStatusDto, string> = {
+    saved: 'bg-sky-100 text-sky-700 border-sky-200',
+    applied: 'bg-amber-100 text-amber-700 border-amber-200',
+    interview: 'bg-violet-100 text-violet-700 border-violet-200',
+    'job offered': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+    rejected: 'bg-red-100 text-red-700 border-red-200',
   };
 }

@@ -82,6 +82,13 @@ const seedJobs = [
     company: 'Massive Dynamic',
     status: JobStatus.JOB_OFFERED,
   },
+  {
+    position: 'Junior React Developer',
+    link: 'https://example.com/jobs/junior-react-developer',
+    description: 'Help build internal dashboards.',
+    company: 'Initrode',
+    status: JobStatus.REJECTED,
+  },
 ];
 
 async function main() {
