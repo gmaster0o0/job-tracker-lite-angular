@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { provideIcons } from '@ng-icons/core';
 import { lucidePanelLeft } from '@ng-icons/lucide';
-import { HlmButton, provideBrnButtonConfig } from '@shared-ui/helm/button';
-import { HlmIconImports } from '@shared-ui/helm/icon';
+import { HlmButton, provideBrnButtonConfig } from '@spartan-ng/helm/button';
+import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmSidebarService } from './hlm-sidebar.service';
 
 @Component({

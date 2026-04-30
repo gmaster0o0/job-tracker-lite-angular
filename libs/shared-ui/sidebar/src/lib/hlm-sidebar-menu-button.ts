@@ -5,8 +5,8 @@ import {
 	DEFAULT_TOOLTIP_CONTENT_CLASSES,
 	DEFAULT_TOOLTIP_SVG_CLASS,
 	tooltipPositionVariants,
-} from '@shared-ui/helm/tooltip';
-import { classes, hlm } from '@shared-ui/helm/utils';
+} from '@spartan-ng/helm/tooltip';
+import { classes, hlm } from '@spartan-ng/helm/utils';
 import { cva } from 'class-variance-authority';
 import { HlmSidebarService } from './hlm-sidebar.service';
 import { injectHlmSidebarConfig } from './hlm-sidebar.token';

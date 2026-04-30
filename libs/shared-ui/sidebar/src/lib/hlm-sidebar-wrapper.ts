@@ -1,5 +1,5 @@
 import { Directive, input } from '@angular/core';
-import { classes } from '@shared-ui/helm/utils';
+import { classes } from '@spartan-ng/helm/utils';
 import { injectHlmSidebarConfig } from './hlm-sidebar.token';
 
 @Directive({

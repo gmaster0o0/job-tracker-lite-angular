@@ -7,11 +7,11 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { classes, hlm } from '@shared-ui/helm/utils';
+import { classes, hlm } from '@spartan-ng/helm/utils';
 import type { ClassValue } from 'clsx';
-import { HlmSheet } from '@shared-ui/helm/sheet';
-import { HlmSheetContent } from '@shared-ui/helm/sheet';
-import { HlmSheetPortal } from '@shared-ui/helm/sheet';
+import { HlmSheet } from '@spartan-ng/helm/sheet';
+import { HlmSheetContent } from '@spartan-ng/helm/sheet';
+import { HlmSheetPortal } from '@spartan-ng/helm/sheet';
 import { HlmSidebarService, type SidebarVariant } from './hlm-sidebar.service';
 import { injectHlmSidebarConfig } from './hlm-sidebar.token';
 

@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { classes } from '@shared-ui/helm/utils';
+import { classes } from '@spartan-ng/helm/utils';
 
 @Directive({
 	selector: 'ul[hlmSidebarMenuSub]',

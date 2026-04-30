@@ -29,46 +29,46 @@
       "spartan/ui/helm": [
         "./libs/shared-ui/card/src/index.ts"
       ],
-      "@shared-ui/helm/card": [
+      "@spartan-ng/helm/card": [
         "./libs/shared-ui/card/src/index.ts"
       ],
-      "@shared-ui/helm/utils": [
+      "@spartan-ng/helm/utils": [
         "./libs/shared-ui/utils/src/index.ts"
       ],
-      "@shared-ui/helm/sidebar": [
+      "@spartan-ng/helm/sidebar": [
         "./libs/shared-ui/sidebar/src/index.ts"
       ],
-      "@shared-ui/helm/sidebar/*": [
+      "@spartan-ng/helm/sidebar/*": [
         "./libs/shared-ui/sidebar/src/lib/*"
       ],
-      "@shared-ui/helm/button": [
+      "@spartan-ng/helm/button": [
         "./libs/shared-ui/button/src/index.ts"
       ],
-      "@shared-ui/helm/icon": [
+      "@spartan-ng/helm/icon": [
         "./libs/shared-ui/icon/src/index.ts"
       ],
-      "@shared-ui/helm/input": [
+      "@spartan-ng/helm/input": [
         "./libs/shared-ui/input/src/index.ts"
       ],
-      "@shared-ui/helm/separator": [
+      "@spartan-ng/helm/separator": [
         "./libs/shared-ui/separator/src/index.ts"
       ],
-      "@shared-ui/helm/sheet": [
+      "@spartan-ng/helm/sheet": [
         "./libs/shared-ui/sheet/src/index.ts"
       ],
-      "@shared-ui/helm/skeleton": [
+      "@spartan-ng/helm/skeleton": [
         "./libs/shared-ui/skeleton/src/index.ts"
       ],
-      "@shared-ui/helm/tooltip": [
+      "@spartan-ng/helm/tooltip": [
         "./libs/shared-ui/tooltip/src/index.ts"
       ],
-      "@shared-ui/helm/badge": [
+      "@spartan-ng/helm/badge": [
         "./libs/shared-ui/badge/src/index.ts"
       ],
-      "@shared-ui/helm/breadcrumb": [
+      "@spartan-ng/helm/breadcrumb": [
         "./libs/shared-ui/breadcrumb/src/index.ts"
       ],
-      "@shared-ui/helm/spinner": [
+      "@spartan-ng/helm/spinner": [
         "./libs/shared-ui/spinner/src/index.ts"
       ]
     }

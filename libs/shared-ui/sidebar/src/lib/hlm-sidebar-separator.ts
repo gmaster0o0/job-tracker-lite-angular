@@ -1,6 +1,6 @@
 import { Directive } from '@angular/core';
-import { HlmSeparator } from '@shared-ui/helm/separator';
-import { classes } from '@shared-ui/helm/utils';
+import { HlmSeparator } from '@spartan-ng/helm/separator';
+import { classes } from '@spartan-ng/helm/utils';
 
 @Directive({
 	selector: '[hlmSidebarSeparator],hlm-sidebar-separator',

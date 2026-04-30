@@ -1,6 +1,6 @@
 import { Directive } from '@angular/core';
 import { BrnTooltip, BrnTooltipPosition, provideBrnTooltipDefaultOptions } from '@spartan-ng/brain/tooltip';
-import { hlm } from '@shared-ui/helm/utils';
+import { hlm } from '@spartan-ng/helm/utils';
 import { cva } from 'class-variance-authority';
 
 export const DEFAULT_TOOLTIP_SVG_CLASS =

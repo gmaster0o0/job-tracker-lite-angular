@@ -7,7 +7,7 @@ import {
   HlmCardFooter,
   HlmCardHeader,
   HlmCardTitle,
-} from '@shared-ui/helm/card';
+} from '@spartan-ng/helm/card';
 
 @Component({
   standalone: true,

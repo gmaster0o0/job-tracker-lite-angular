@@ -1,6 +1,6 @@
 import { Directive } from '@angular/core';
-import { HlmInput, inputVariants } from '@shared-ui/helm/input';
-import { classes } from '@shared-ui/helm/utils';
+import { HlmInput, inputVariants } from '@spartan-ng/helm/input';
+import { classes } from '@spartan-ng/helm/utils';
 
 @Directive({
 	selector: 'input[hlmSidebarInput]',

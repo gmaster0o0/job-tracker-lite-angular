@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
 import {
@@ -7,8 +7,8 @@ import {
   lucideSettings,
   lucideUser,
 } from '@ng-icons/lucide';
-import { HlmSidebarImports } from '@shared-ui/helm/sidebar';
-import { HlmIconImports } from '@shared-ui/helm/icon';
+import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
+import { HlmIconImports } from '@spartan-ng/helm/icon';
 
 type MainMenuItem = {
   readonly label: string;

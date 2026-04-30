@@ -16,8 +16,8 @@ import {
   injectExposedSideProvider,
   injectExposesStateProvider,
 } from '@spartan-ng/brain/core';
-import { HlmButton } from '@shared-ui/helm/button';
-import { classes } from '@shared-ui/helm/utils';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { classes } from '@spartan-ng/helm/utils';
 import { cva } from 'class-variance-authority';
 import { HlmSheetClose } from './hlm-sheet-close';
 import { HlmIcon } from '../../../icon/src/lib/hlm-icon';
