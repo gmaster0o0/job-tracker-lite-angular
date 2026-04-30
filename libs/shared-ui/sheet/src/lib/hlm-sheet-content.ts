@@ -20,7 +20,7 @@ import { HlmButton } from '@spartan-ng/helm/button';
 import { classes } from '@spartan-ng/helm/utils';
 import { cva } from 'class-variance-authority';
 import { HlmSheetClose } from './hlm-sheet-close';
-import { HlmIcon } from '../../../icon/src/lib/hlm-icon';
+import { HlmIcon } from '@spartan-ng/helm/icon';
 
 export const sheetVariants = cva(
   'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500',
