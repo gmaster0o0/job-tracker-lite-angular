@@ -12,6 +12,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { CreateJobComponent } from '../create-job/create-job.component';
+import { JobOverviewComponent } from '../job-overview/job-overview.component';
 import { JobTabsComponent } from '../job-tabs/job-tabs.component';
 import { ProgessionStepperComponent } from '../../../shared/progession-stepper/progession-stepper.component';
 import { provideIcons } from '@ng-icons/core';
@@ -32,6 +33,7 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
     HlmButtonImports,
     HlmCardImports,
     HlmIconImports,
+    JobOverviewComponent,
     JobTabsComponent,
     ProgessionStepperComponent,
   ],

@@ -104,27 +104,29 @@
           (tabSelected)="onTabSelected($event)"
         />
 
-        <div hlmCard class="border-slate-200 shadow-sm">
-          <div hlmCardContent class="space-y-6 p-6">
-            @if (activeTab() === 'overview') {
-              <app-job-overview [description]="job()!.description" />
-            }
+        @if (activeTab() === 'overview') {
+          <app-job-overview [description]="job()!.description" />
+        } @else {
+          <div hlmCard class="border-slate-200 shadow-sm">
+            <div hlmCardContent class="space-y-6 p-6">
+              @if (activeTab() === 'contacts') {
+                <p class="text-sm text-muted-foreground">
+                  Contacts coming soon.
+                </p>
+              }
 
-            @if (activeTab() === 'contacts') {
-              <p class="text-sm text-muted-foreground">Contacts coming soon.</p>
-            }
+              @if (activeTab() === 'notes') {
+                <p class="text-sm text-muted-foreground">Notes coming soon.</p>
+              }
 
-            @if (activeTab() === 'notes') {
-              <p class="text-sm text-muted-foreground">Notes coming soon.</p>
-            }
-
-            @if (activeTab() === 'cover-letter') {
-              <p class="text-sm text-muted-foreground">
-                Cover letter coming soon.
-              </p>
-            }
+              @if (activeTab() === 'cover-letter') {
+                <p class="text-sm text-muted-foreground">
+                  Cover letter coming soon.
+                </p>
+              }
+            </div>
           </div>
-        </div>
+        }
       </section>
     </div>
   }
