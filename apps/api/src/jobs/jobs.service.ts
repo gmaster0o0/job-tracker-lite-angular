@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import { Injectable } from '@nestjs/common';
 import { Job, JobStatus } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 const prismaToDtoStatus: Record<JobStatus, JobStatusDto> = {
   SAVED: 'saved',
@@ -41,6 +42,25 @@ export class JobsService {
     });
 
     return mapJobToDto(job);
+  }
+
+  async findOne(id: number): Promise<JobDto> {
+    try {
+      const job = await this.prisma.job.findUniqueOrThrow({
+        where: { id },
+      });
+
+      return mapJobToDto(job);
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new Error('NOT_FOUND');
+      }
+
+      throw error;
+    }
   }
 
   async updateStatus(id: number, status: JobStatusDto): Promise<JobDto> {

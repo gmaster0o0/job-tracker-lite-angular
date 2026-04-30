@@ -7,6 +7,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
@@ -21,6 +22,19 @@ export class JobsController {
   @Get()
   async findAll(): Promise<JobDto[]> {
     return this.jobsService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<JobDto> {
+    try {
+      return await this.jobsService.findOne(id);
+    } catch (error) {
+      if (error instanceof Error && error.message === 'NOT_FOUND') {
+        throw new NotFoundException(`Job with id ${id} not found`);
+      }
+
+      throw error;
+    }
   }
 
   @Post()
