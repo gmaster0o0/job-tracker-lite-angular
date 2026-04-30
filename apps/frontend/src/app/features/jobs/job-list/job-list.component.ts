@@ -1,4 +1,4 @@
-import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { JobCardComponent } from '../job-card/job-card.component';
 import { HlmIconImports } from '@spartan-ng/helm/icon';

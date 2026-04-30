@@ -18,24 +18,32 @@ export const appRoutes: Route[] = [
       },
       {
         path: '',
+        pathMatch: 'full',
         outlet: 'sidenav',
         loadComponent: () =>
           import('./navigation/main-menu/main-menu.component').then(
             (m) => m.MainMenuComponent,
           ),
       },
-    ],
-  },
-  {
-    path: 'jobs',
-    children: [
       {
-        path: '',
-        outlet: 'sidenav',
-        loadComponent: () =>
-          import('./features/jobs/job-list/job-list.component').then(
-            (m) => m.JobListComponent,
-          ),
+        path: 'jobs',
+        children: [
+          {
+            path: '',
+            outlet: 'sidenav',
+            loadComponent: () =>
+              import('./navigation/jobs-menu/jobs-menu.component').then(
+                (m) => m.JobsMenuComponent,
+              ),
+          },
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/jobs/job-list/job-list.component').then(
+                (m) => m.JobListComponent,
+              ),
+          },
+        ],
       },
     ],
   },

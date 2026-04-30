@@ -120,6 +120,8 @@ npx nx serve frontend
 npx nx test frontend
 npx nx test api
 npx nx graph
+#generate angular component example:
+npx nx g @nx/angular:component   --path=apps/frontend/src/app/navigation/jobs-menu/jobs-menu   --standalone
 ```
 
 ## Additional resources
