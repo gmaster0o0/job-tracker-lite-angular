@@ -2,14 +2,17 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
 import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
+import { CreateJobComponent } from '../create-job/create-job.component';
+import { JobTabsComponent } from '../job-tabs/job-tabs.component';
 import { ProgessionStepperComponent } from '../../../shared/progession-stepper/progession-stepper.component';
 import { provideIcons } from '@ng-icons/core';
 import {
@@ -29,6 +32,7 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
     HlmButtonImports,
     HlmCardImports,
     HlmIconImports,
+    JobTabsComponent,
     ProgessionStepperComponent,
   ],
   providers: [
@@ -42,7 +46,9 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
 })
 export class JobDetailComponent {
   protected readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly dataAccess = inject(DataAccessService);
+  private readonly dialog = inject(HlmDialogService);
 
   protected readonly jobsResource = this.dataAccess.jobsResource;
   protected readonly jobResource = this.dataAccess.jobResource;
@@ -87,7 +93,7 @@ export class JobDetailComponent {
     return error instanceof HttpErrorResponse && error.status === 404;
   });
 
-  protected readonly tabs: { label: string; value: JobTab }[] = [
+  protected readonly tabs: readonly { label: string; value: JobTab }[] = [
     { label: 'Overview', value: 'overview' },
     { label: 'Contacts', value: 'contacts' },
     { label: 'Notes', value: 'notes' },
@@ -124,6 +130,26 @@ export class JobDetailComponent {
 
   protected setTab(tab: JobTab): void {
     this.activeTab.set(tab);
+  }
+
+  protected openCreateJobDialog(): void {
+    this.dialog.open(CreateJobComponent, {
+      contentClass: 'sm:max-w-xl',
+      context: {
+        onCreated: (created: JobDto) => {
+          this.router.navigate(['/jobs', created.id]);
+        },
+      },
+    });
+  }
+
+  protected onTabSelected(tab: string): void {
+    const isKnownTab = this.tabs.some((item) => item.value === tab);
+    if (!isKnownTab) {
+      return;
+    }
+
+    this.setTab(tab as JobTab);
   }
 
   protected isRejected(job: JobDto): boolean {

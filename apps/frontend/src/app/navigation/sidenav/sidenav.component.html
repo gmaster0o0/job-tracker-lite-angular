@@ -6,7 +6,10 @@
   <hlm-sidebar>
     <div hlmSidebarHeader class="p-4 space-y-4">
       <div class="flex items-center justify-between gap-2">
-        <h1 class="text-xl font-bold tracking-tight">Job Tracker Lite</h1>
+        <div class="space-y-1">
+          <h1 class="text-xl font-bold tracking-tight">Job Tracker Lite</h1>
+          <p class="text-base font-medium text-slate-500">Angular</p>
+        </div>
         <a
           hlmBtn
           variant="ghost"
@@ -25,7 +28,7 @@
       <ng-content></ng-content>
     </div>
     <div hlmSidebarFooter class="p-4 border-t bg-muted/30 shrink-0">
-      <div class="flex flex-wrap items-center gap-2 md:flex-row">
+      <div class="space-y-3">
         <button
           hlmBtn
           variant="outline"
@@ -35,6 +38,14 @@
           <ng-icon name="lucideLogOut" />
           Logout
         </button>
+
+        <div class="space-y-1 text-[11px] text-muted-foreground">
+          <div class="flex items-center justify-between">
+            <span>Version 0.1.0</span>
+            <span>Alpha</span>
+          </div>
+          <p class="text-center font-medium">© 2026 Job Tracker Lite</p>
+        </div>
       </div>
     </div>
   </hlm-sidebar>

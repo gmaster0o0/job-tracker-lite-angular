@@ -3,6 +3,7 @@ import { httpResource } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import {
+  CreateJobDto,
   HealthResponseDto,
   JobDto,
   JobStatusDto,
@@ -25,6 +26,17 @@ export class DataAccessService {
 
   selectJob(id: number | null): void {
     this.selectedJobId.set(id);
+  }
+
+  async createJob(dto: CreateJobDto): Promise<JobDto> {
+    const created = await firstValueFrom(
+      this.http.post<JobDto>('/api/jobs', dto),
+    );
+
+    this.jobsResource.reload();
+    this.jobResource.reload();
+
+    return created;
   }
 
   async updateJobStatus(id: number, status: JobStatusDto): Promise<JobDto> {

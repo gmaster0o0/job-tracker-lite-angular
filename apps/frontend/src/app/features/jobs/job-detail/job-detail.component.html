@@ -61,7 +61,13 @@
               Reject
             </button>
 
-            <button hlmBtn variant="outline" size="sm" type="button">
+            <button
+              hlmBtn
+              variant="outline"
+              size="sm"
+              type="button"
+              (click)="openCreateJobDialog()"
+            >
               <ng-icon hlm size="sm" name="lucidePlus" class="mr-2" />
               Add New Job
             </button>
@@ -92,29 +98,16 @@
       </section>
 
       <section class="space-y-4">
-        <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-2">
-          @for (tab of tabs; track tab.value) {
-            <button
-              hlmBtn
-              size="sm"
-              [variant]="activeTab() === tab.value ? 'default' : 'ghost'"
-              (click)="setTab(tab.value)"
-              type="button"
-            >
-              {{ tab.label }}
-            </button>
-          }
-        </div>
+        <app-job-tabs
+          [tabs]="tabs"
+          [activeTab]="activeTab()"
+          (tabSelected)="onTabSelected($event)"
+        />
 
         <div hlmCard class="border-slate-200 shadow-sm">
           <div hlmCardContent class="space-y-6 p-6">
             @if (activeTab() === 'overview') {
-              <section class="space-y-3">
-                <h2 class="text-3xl font-semibold text-slate-900">
-                  Description
-                </h2>
-                <p class="leading-7 text-slate-600">{{ job()!.description }}</p>
-              </section>
+              <app-job-overview [description]="job()!.description" />
             }
 
             @if (activeTab() === 'contacts') {
