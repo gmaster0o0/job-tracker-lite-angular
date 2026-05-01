@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { JobsMenuComponent } from './jobs-menu.component';
-import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 
 describe('JobsMenuComponent', () => {
   let component: JobsMenuComponent;
@@ -18,7 +18,7 @@ describe('JobsMenuComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, JobsMenuComponent],
       providers: [
-        { provide: DataAccessService, useValue: dataAccessServiceMock },
+        { provide: JobsDataAccessService, useValue: dataAccessServiceMock },
       ],
     }).compileComponents();
 

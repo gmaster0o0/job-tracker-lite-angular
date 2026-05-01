@@ -1,0 +1,8 @@
+<div class="space-y-4">
+  <p>Are you sure you want to delete {{ context.contactName }}?</p>
+
+  <div class="flex items-center gap-2">
+    <button hlmBtn variant="destructive" (click)="confirm()">Delete</button>
+    <button hlmBtn (click)="cancel()">Cancel</button>
+  </div>
+</div>

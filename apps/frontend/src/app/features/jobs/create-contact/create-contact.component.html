@@ -1,0 +1,23 @@
+<div class="space-y-4">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div>
+      <label for="create-contact-name">Name</label>
+      <input id="create-contact-name" hlmInput formControlName="name" />
+    </div>
+
+    <div>
+      <label for="create-contact-email">Email</label>
+      <input id="create-contact-email" hlmInput formControlName="email" />
+    </div>
+
+    <div>
+      <label for="create-contact-phone">Phone</label>
+      <input id="create-contact-phone" hlmInput formControlName="phoneNumber" />
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button hlmBtn type="submit">Create</button>
+      <button hlmBtn type="button" (click)="cancel()">Cancel</button>
+    </div>
+  </form>
+</div>

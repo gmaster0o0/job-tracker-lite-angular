@@ -1,0 +1,19 @@
+{
+  "name": "dialog",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared-ui/dialog/src",
+  "prefix": "hlm",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsc -p libs/shared-ui/dialog/tsconfig.lib.json --noEmit"
+      }
+    }
+  }
+}

@@ -4,7 +4,8 @@
   "peerDependencies": {
     "@angular/common": "^21.2.0",
     "@angular/core": "^21.2.0",
-    "@job-tracker-lite-angular/api-interfaces": "0.0.1"
+    "@job-tracker-lite-angular/api-interfaces": "0.0.1",
+    "rxjs": "~7.8.0"
   },
   "sideEffects": false
 }

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { AppComponent } from './app.component';
-import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 
 @Component({
   standalone: true,
@@ -40,7 +40,7 @@ describe('AppComponent', () => {
           },
         ]),
         {
-          provide: DataAccessService,
+          provide: JobsDataAccessService,
           useValue: {
             jobsResource: {
               value: () => [],

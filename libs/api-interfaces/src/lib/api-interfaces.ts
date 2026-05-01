@@ -51,3 +51,25 @@ export interface UpdateJobDto {
 export interface UpdateJobStatusDto {
   status: JobStatusDto;
 }
+
+export interface ContactDto {
+  id: number;
+  jobId: number;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateContactDto {
+  name: string;
+  email: string;
+  phoneNumber: string;
+}
+
+export interface UpdateContactDto {
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
+}

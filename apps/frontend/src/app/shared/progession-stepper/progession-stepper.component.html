@@ -1,0 +1,47 @@
+<div class="flex items-start gap-4">
+  @for (label of labels(); track label; let i = $index) {
+    <div class="relative flex min-w-0 flex-1 flex-col items-center gap-2">
+      <button
+        type="button"
+        class="h-10 w-10 rounded-full border-2 text-xs font-semibold transition-colors disabled:opacity-60"
+        [class.border-red-500]="errorState()"
+        [class.text-red-600]="errorState()"
+        [class.bg-red-50]="errorState()"
+        [class.border-slate-300]="!errorState() && !isStepCompleted(i)"
+        [class.text-slate-500]="!errorState() && !isStepCompleted(i)"
+        [class.border-slate-900]="!errorState() && isStepCompleted(i)"
+        [class.bg-slate-900]="!errorState() && isStepCompleted(i)"
+        [class.text-white]="!errorState() && isStepCompleted(i)"
+        [class.bg-white]="!errorState() && !isStepCompleted(i)"
+        [class.ring-4]="!errorState() && isCurrentStep(i)"
+        [class.ring-slate-200]="!errorState() && isCurrentStep(i)"
+        (click)="selectStep(i)"
+        [disabled]="disabled()"
+      >
+        @if (!errorState() && isStepCompleted(i)) {
+          <ng-icon hlm size="sm" name="lucideCheck" />
+        } @else {
+          {{ i + 1 }}
+        }
+      </button>
+      <button
+        type="button"
+        class="truncate text-center text-xs font-semibold uppercase tracking-wide text-slate-500 transition-colors hover:text-slate-800 disabled:opacity-60"
+        [class.text-slate-900]="!errorState() && isStepCompleted(i)"
+        (click)="selectStep(i)"
+        [disabled]="disabled()"
+      >
+        {{ label }}
+      </button>
+
+      @if (i < labels().length - 1) {
+        <div
+          class="absolute left-[calc(50%+24px)] top-5 h-[2px] w-[calc(100%-48px)]"
+          [class.bg-red-300]="errorState()"
+          [class.bg-slate-900]="!errorState() && isConnectorCompleted(i)"
+          [class.bg-slate-300]="!errorState() && !isConnectorCompleted(i)"
+        ></div>
+      }
+    </div>
+  }
+</div>

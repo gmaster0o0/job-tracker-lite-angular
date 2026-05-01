@@ -91,13 +91,38 @@ const seedJobs = [
   },
 ];
 
+const contactNamePool = [
+  ['Alex Kovacs', 'Maya Horvath'],
+  ['Daniel Szabo', 'Reka Toth'],
+  ['Peter Nagy', 'Anna Fodor'],
+  ['Levente Varga', 'Eszter Simon'],
+];
+
+function seededContactsForJob(jobIndex: number, company: string) {
+  const contactCount = jobIndex % 3;
+
+  return Array.from({ length: contactCount }, (_, contactIndex) => {
+    const [primaryName, secondaryName] =
+      contactNamePool[jobIndex % contactNamePool.length];
+    const name = contactIndex === 0 ? primaryName : secondaryName;
+    const companySlug = company.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const alias = name.toLowerCase().replace(/[^a-z0-9]+/g, '.');
+
+    return {
+      name,
+      email: `${alias}.${jobIndex + 1}@${companySlug}.example.com`,
+      phoneNumber: `+36-1-555-${String(1000 + jobIndex * 10 + contactIndex)}`,
+    };
+  });
+}
+
 async function main() {
   const prisma = new PrismaService();
 
   await prisma.$connect();
 
-  for (const job of seedJobs) {
-    await prisma.job.upsert({
+  for (const [jobIndex, job] of seedJobs.entries()) {
+    const seededJob = await prisma.job.upsert({
       where: { link: job.link },
       update: {
         position: job.position,
@@ -107,11 +132,25 @@ async function main() {
       },
       create: job,
     });
+
+    const contacts = seededContactsForJob(jobIndex, job.company);
+    await prisma.contact.deleteMany({ where: { jobId: seededJob.id } });
+
+    if (contacts.length > 0) {
+      await prisma.contact.createMany({
+        data: contacts.map((contact) => ({
+          jobId: seededJob.id,
+          ...contact,
+        })),
+      });
+    }
   }
 
   await prisma.$disconnect();
 
-  console.log(`Seeded ${seedJobs.length} jobs.`);
+  console.log(
+    `Seeded ${seedJobs.length} jobs with 0-2 contacts each (deterministic).`,
+  );
 }
 
 main().catch(async (error) => {
