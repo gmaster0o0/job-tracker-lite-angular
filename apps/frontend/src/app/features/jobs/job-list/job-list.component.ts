@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { JobCardComponent } from '../job-card/job-card.component';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmInputImports } from '@spartan-ng/helm/input';
@@ -14,5 +14,5 @@ import { lucideSearch } from '@ng-icons/lucide';
   templateUrl: './job-list.component.html',
 })
 export class JobListComponent {
-  protected readonly jobs = inject(DataAccessService).jobsResource;
+  protected readonly jobs = inject(JobsDataAccessService).jobsResource;
 }

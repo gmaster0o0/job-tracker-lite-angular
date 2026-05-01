@@ -1,0 +1,34 @@
+<div hlmCard class="flex items-start gap-4">
+  <div
+    class="flex h-12 w-12 items-center justify-center rounded-md bg-slate-100"
+  >
+    <ng-icon hlm size="lg" name="lucideUser" />
+  </div>
+  <div class="flex-1">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="font-medium text-slate-900">{{ contact().name }}</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button hlmBtn variant="ghost" size="icon-sm" (click)="onEdit()">
+          <ng-icon hlm size="sm" name="lucidePencil" />
+        </button>
+        <button hlmBtn variant="ghost" size="icon-sm" (click)="onRemove()">
+          <ng-icon hlm size="sm" name="lucideTrash2" />
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-2 flex items-center gap-4 text-sm text-slate-500">
+      <div class="flex items-center gap-2">
+        <ng-icon hlm size="sm" name="lucideMail" />
+        <span>{{ contact().email }}</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <ng-icon hlm size="sm" name="lucidePhone" />
+        <span>{{ contact().phoneNumber }}</span>
+      </div>
+    </div>
+  </div>
+</div>

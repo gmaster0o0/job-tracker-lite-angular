@@ -110,9 +110,7 @@
           <div hlmCard class="border-slate-200 shadow-sm">
             <div hlmCardContent class="space-y-6 p-6">
               @if (activeTab() === 'contacts') {
-                <p class="text-sm text-muted-foreground">
-                  Contacts coming soon.
-                </p>
+                <app-contact-tab [jobId]="job()!.id" />
               }
 
               @if (activeTab() === 'notes') {

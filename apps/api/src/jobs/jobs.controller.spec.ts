@@ -8,6 +8,10 @@ describe('JobsController', () => {
     findAll: jest.Mock;
     create: jest.Mock;
     updateStatus: jest.Mock;
+    findContacts: jest.Mock;
+    createContact: jest.Mock;
+    updateContact: jest.Mock;
+    deleteContact: jest.Mock;
   };
 
   beforeEach(async () => {
@@ -15,6 +19,10 @@ describe('JobsController', () => {
       findAll: jest.fn(),
       create: jest.fn(),
       updateStatus: jest.fn(),
+      findContacts: jest.fn(),
+      createContact: jest.fn(),
+      updateContact: jest.fn(),
+      deleteContact: jest.fn(),
     };
 
     const moduleRef = await Test.createTestingModule({
@@ -57,5 +65,39 @@ describe('JobsController', () => {
     await expect(
       controller.updateStatus(3, { status: 'applied' }),
     ).resolves.toEqual({ id: 3, status: 'applied' });
+  });
+
+  it('should delegate contact listing to the service', async () => {
+    jobsService.findContacts.mockResolvedValue([{ id: 1, name: 'Jane Doe' }]);
+
+    await expect(controller.findContacts(10)).resolves.toEqual([
+      { id: 1, name: 'Jane Doe' },
+    ]);
+  });
+
+  it('should delegate contact creation to the service', async () => {
+    jobsService.createContact.mockResolvedValue({ id: 2, name: 'John Doe' });
+
+    await expect(
+      controller.createContact(10, {
+        name: 'John Doe',
+        email: 'john@example.com',
+        phoneNumber: '555-111',
+      }),
+    ).resolves.toEqual({ id: 2, name: 'John Doe' });
+  });
+
+  it('should delegate contact update to the service', async () => {
+    jobsService.updateContact.mockResolvedValue({ id: 2, name: 'Updated' });
+
+    await expect(
+      controller.updateContact(10, 2, { name: 'Updated' }),
+    ).resolves.toEqual({ id: 2, name: 'Updated' });
+  });
+
+  it('should delegate contact deletion to the service', async () => {
+    jobsService.deleteContact.mockResolvedValue(undefined);
+
+    await expect(controller.deleteContact(10, 2)).resolves.toBeUndefined();
   });
 });

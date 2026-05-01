@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { convertToParamMap, ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
-import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { JobsDataAccessService, ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { ProgessionStepperComponent } from '../../../shared/progession-stepper/progession-stepper.component';
 import { JobDetailComponent } from './job-detail.component';
 
@@ -61,7 +61,8 @@ describe('JobDetailComponent', () => {
           provide: ActivatedRoute,
           useValue: { paramMap: of(convertToParamMap({ id: options.id })) },
         },
-        { provide: DataAccessService, useValue: dataAccessServiceMock },
+        { provide: JobsDataAccessService, useValue: dataAccessServiceMock },
+        { provide: ContactsDataAccessService, useValue: {} },
       ],
     }).compileComponents();
 

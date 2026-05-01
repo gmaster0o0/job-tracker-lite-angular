@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { JobListComponent } from './job-list.component';
-import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 
 describe('JobListComponent', () => {
   beforeEach(async () => {
@@ -34,7 +34,7 @@ describe('JobListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [JobListComponent],
       providers: [
-        { provide: DataAccessService, useValue: dataAccessServiceMock },
+        { provide: JobsDataAccessService, useValue: dataAccessServiceMock },
       ],
     }).compileComponents();
   });

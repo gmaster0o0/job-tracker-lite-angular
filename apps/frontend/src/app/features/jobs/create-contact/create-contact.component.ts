@@ -4,40 +4,40 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
-import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
-import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
+import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 
-type CreateJobDialogContext = {
-  onCreated?: (job: JobDto) => void;
+type CreateContactDialogContext = {
+  jobId: number;
+  onCreated?: (contact: ContactDto) => void;
 };
 
 @Component({
   standalone: true,
-  selector: 'app-create-job',
+  selector: 'app-create-contact',
   imports: [
     CommonModule,
     ReactiveFormsModule,
     HlmButtonImports,
     HlmInputImports,
   ],
-  templateUrl: './create-job.component.html',
+  templateUrl: './create-contact.component.html',
 })
-export class CreateJobComponent {
+export class CreateContactComponent {
   private readonly fb = inject(FormBuilder);
-  private readonly jobsDataAccess = inject(JobsDataAccessService);
+  private readonly dataAccess = inject(ContactsDataAccessService);
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
-  private readonly dialogContext =
-    injectBrnDialogContext<CreateJobDialogContext>({ optional: true });
+  private readonly context = injectBrnDialogContext<CreateContactDialogContext>(
+    { optional: true },
+  ) ?? { jobId: 0 };
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
 
   protected readonly form = this.fb.nonNullable.group({
-    jobTitle: ['', Validators.required],
-    position: ['', Validators.required],
-    company: ['', Validators.required],
-    link: ['', Validators.required],
-    description: ['', Validators.required],
+    name: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    phoneNumber: ['', Validators.required],
   });
 
   protected async submit(): Promise<void> {
@@ -49,20 +49,17 @@ export class CreateJobComponent {
     this.submitError.set(null);
     this.isSubmitting.set(true);
 
-    const value = this.form.getRawValue();
-
     try {
-      const created = await this.jobsDataAccess.createJob({
-        company: value.company.trim(),
-        link: value.link.trim(),
-        description: value.description.trim(),
-        position: value.position.trim() || value.jobTitle.trim(),
+      const created = await this.dataAccess.createContact(this.context.jobId, {
+        name: this.form.controls.name.value.trim(),
+        email: this.form.controls.email.value.trim(),
+        phoneNumber: this.form.controls.phoneNumber.value.trim(),
       });
 
-      this.dialogContext?.onCreated?.(created);
+      this.context.onCreated?.(created);
       this.dialogRef?.close(created);
     } catch {
-      this.submitError.set('Failed to create job. Please try again.');
+      this.submitError.set('Failed to create contact. Please try again.');
     } finally {
       this.isSubmitting.set(false);
     }

@@ -10,6 +10,14 @@ describe('JobsService', () => {
       findMany: jest.Mock;
       create: jest.Mock;
       update: jest.Mock;
+      findUniqueOrThrow: jest.Mock;
+    };
+    contact: {
+      findMany: jest.Mock;
+      create: jest.Mock;
+      findFirst: jest.Mock;
+      update: jest.Mock;
+      delete: jest.Mock;
     };
   };
 
@@ -19,6 +27,14 @@ describe('JobsService', () => {
         findMany: jest.fn(),
         create: jest.fn(),
         update: jest.fn(),
+        findUniqueOrThrow: jest.fn(),
+      },
+      contact: {
+        findMany: jest.fn(),
+        create: jest.fn(),
+        findFirst: jest.fn(),
+        update: jest.fn(),
+        delete: jest.fn(),
       },
     };
 
@@ -112,5 +128,61 @@ describe('JobsService', () => {
       data: { status: JobStatus.INTERVIEW },
     });
     expect(job.status).toBe('interview');
+  });
+
+  it('should return contacts for a job', async () => {
+    prismaMock.job.findUniqueOrThrow.mockResolvedValue({ id: 10 });
+    prismaMock.contact.findMany.mockResolvedValue([
+      {
+        id: 1,
+        jobId: 10,
+        name: 'Jane Doe',
+        email: 'jane@example.com',
+        phoneNumber: '12345',
+        createdAt: new Date('2026-04-29T09:00:00.000Z'),
+        updatedAt: new Date('2026-04-29T09:30:00.000Z'),
+      },
+    ]);
+
+    await expect(service.findContacts(10)).resolves.toEqual([
+      {
+        id: 1,
+        jobId: 10,
+        name: 'Jane Doe',
+        email: 'jane@example.com',
+        phoneNumber: '12345',
+        createdAt: '2026-04-29T09:00:00.000Z',
+        updatedAt: '2026-04-29T09:30:00.000Z',
+      },
+    ]);
+  });
+
+  it('should create a contact for a job', async () => {
+    prismaMock.job.findUniqueOrThrow.mockResolvedValue({ id: 10 });
+    prismaMock.contact.create.mockResolvedValue({
+      id: 2,
+      jobId: 10,
+      name: 'John Doe',
+      email: 'john@example.com',
+      phoneNumber: '555-111',
+      createdAt: new Date('2026-04-29T09:00:00.000Z'),
+      updatedAt: new Date('2026-04-29T09:00:00.000Z'),
+    });
+
+    const created = await service.createContact(10, {
+      name: 'John Doe',
+      email: 'john@example.com',
+      phoneNumber: '555-111',
+    });
+
+    expect(prismaMock.contact.create).toHaveBeenCalledWith({
+      data: {
+        jobId: 10,
+        name: 'John Doe',
+        email: 'john@example.com',
+        phoneNumber: '555-111',
+      },
+    });
+    expect(created.id).toBe(2);
   });
 });

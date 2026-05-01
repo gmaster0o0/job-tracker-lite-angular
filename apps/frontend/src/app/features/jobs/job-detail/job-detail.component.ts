@@ -5,13 +5,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
-import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { CreateJobComponent } from '../create-job/create-job.component';
+import { ContactTabComponent } from '../contact-tab/contact-tab.component';
 import { JobOverviewComponent } from '../job-overview/job-overview.component';
 import { JobTabsComponent } from '../job-tabs/job-tabs.component';
 import { ProgessionStepperComponent } from '../../../shared/progession-stepper/progession-stepper.component';
@@ -32,6 +33,7 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
     HlmBadgeImports,
     HlmButtonImports,
     HlmCardImports,
+    ContactTabComponent,
     HlmIconImports,
     JobOverviewComponent,
     JobTabsComponent,
@@ -49,11 +51,11 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
 export class JobDetailComponent {
   protected readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly dataAccess = inject(DataAccessService);
+  private readonly jobsDataAccess = inject(JobsDataAccessService);
   private readonly dialog = inject(HlmDialogService);
 
-  protected readonly jobsResource = this.dataAccess.jobsResource;
-  protected readonly jobResource = this.dataAccess.jobResource;
+  protected readonly jobsResource = this.jobsDataAccess.jobsResource;
+  protected readonly jobResource = this.jobsDataAccess.jobResource;
 
   protected readonly activeTab = signal<JobTab>('overview');
   protected readonly isUpdatingStatus = signal(false);
@@ -126,7 +128,7 @@ export class JobDetailComponent {
 
   constructor() {
     effect(() => {
-      this.dataAccess.selectJob(this.selectedJobId());
+      this.jobsDataAccess.selectJob(this.selectedJobId());
     });
   }
 
@@ -136,7 +138,7 @@ export class JobDetailComponent {
 
   protected openCreateJobDialog(): void {
     this.dialog.open(CreateJobComponent, {
-      contentClass: 'sm:max-w-xl',
+      contentClass: 'sm:max-w-xl !sm:mx-auto',
       context: {
         onCreated: (created: JobDto) => {
           this.router.navigate(['/jobs', created.id]);
@@ -186,7 +188,7 @@ export class JobDetailComponent {
 
     this.isUpdatingStatus.set(true);
     try {
-      await this.dataAccess.updateJobStatus(job.id, status);
+      await this.jobsDataAccess.updateJobStatus(job.id, status);
     } finally {
       this.isUpdatingStatus.set(false);
     }
@@ -199,7 +201,7 @@ export class JobDetailComponent {
 
     this.isUpdatingStatus.set(true);
     try {
-      await this.dataAccess.updateJobStatus(job.id, 'rejected');
+      await this.jobsDataAccess.updateJobStatus(job.id, 'rejected');
     } finally {
       this.isUpdatingStatus.set(false);
     }

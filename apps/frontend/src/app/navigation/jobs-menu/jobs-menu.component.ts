@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal, effect } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
-import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { JobCardComponent } from '../../features/jobs/job-card/job-card.component';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -32,8 +32,8 @@ type FilterChip = {
 })
 export class JobsMenuComponent {
   private readonly router = inject(Router);
-  private readonly _dataAccess = inject(DataAccessService);
-  protected readonly jobsResource = this._dataAccess.jobsResource;
+  private readonly jobsDataAccess = inject(JobsDataAccessService);
+  protected readonly jobsResource = this.jobsDataAccess.jobsResource;
 
   protected readonly searchQuery = signal('');
   protected readonly activeFilter = signal<FilterValue>(null);
