@@ -88,6 +88,9 @@
       ],
       "@spartan-ng/helm/dropdown-menu": [
         "./libs/shared-ui/dropdown-menu/src/index.ts"
+      ],
+      "@spartan-ng/helm/textarea": [
+        "./libs/shared-ui/textarea/src/index.ts"
       ]
     }
   },
