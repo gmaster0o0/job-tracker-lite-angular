@@ -1,8 +1,20 @@
-<div class="space-y-4">
-  <p>Are you sure you want to delete {{ context.contactName }}?</p>
+<hlm-alert-dialog-header>
+  <h2 hlmAlertDialogTitle>Are you sure?</h2>
+  <p hlmAlertDialogDescription>
+    This will permanently delete {{ context.contactName }}. This action cannot
+    be undone.
+  </p>
+</hlm-alert-dialog-header>
 
-  <div class="flex items-center gap-2">
-    <button hlmBtn variant="destructive" (click)="confirm()">Delete</button>
-    <button hlmBtn (click)="cancel()">Cancel</button>
-  </div>
-</div>
+<hlm-alert-dialog-footer>
+  <button hlmAlertDialogCancel (click)="cancel()" type="button">Cancel</button>
+  <button
+    hlmAlertDialogAction
+    variant="destructive"
+    (click)="confirm()"
+    [disabled]="isDeleting()"
+    type="button"
+  >
+    {{ isDeleting() ? 'Deleting...' : 'Delete' }}
+  </button>
+</hlm-alert-dialog-footer>

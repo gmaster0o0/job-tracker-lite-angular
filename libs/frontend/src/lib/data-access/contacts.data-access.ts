@@ -14,7 +14,7 @@ import {
 export class ContactsDataAccessService {
   private readonly http = inject(HttpClient);
 
-  getContacts(jobId: number) {
+  getContactsResource(jobId: number) {
     return httpResource<ContactDto[]>(() => `/api/jobs/${jobId}/contacts`);
   }
 

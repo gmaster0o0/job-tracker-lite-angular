@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
-import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
 
 type DeleteContactAlertDialogContext = {
   onConfirm: () => Promise<void>;
@@ -11,7 +11,7 @@ type DeleteContactAlertDialogContext = {
 @Component({
   standalone: true,
   selector: 'app-delete-contact-alert-dialog',
-  imports: [CommonModule, HlmButtonImports],
+  imports: [CommonModule, HlmAlertDialogImports],
   templateUrl: './delete-contact-alert-dialog.component.html',
 })
 export class DeleteContactAlertDialogComponent {

@@ -1,6 +1,6 @@
 {
   "componentsPath": "libs/shared-ui",
-  "buildable": true,
+  "buildable": false,
   "generateAs": "library",
   "importAlias": "@spartan-ng/helm"
 }

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
-import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 
 export type JobTabItem = {
   label: string;
@@ -10,7 +10,7 @@ export type JobTabItem = {
 @Component({
   standalone: true,
   selector: 'app-job-tabs',
-  imports: [CommonModule, HlmButtonImports],
+  imports: [CommonModule, HlmTabsImports],
   templateUrl: './job-tabs.component.html',
 })
 export class JobTabsComponent {
