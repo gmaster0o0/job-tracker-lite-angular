@@ -11,12 +11,7 @@ import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
-import {
-  HlmDropdownMenu,
-  HlmDropdownMenuItem,
-  HlmDropdownMenuSeparator,
-} from '@job-tracker-lite-angular/shared-ui/dropdown-menu';
-import { BrnMenuTriggerDirective } from '@spartan-ng/brain/menu';
+import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { CreateJobComponent } from '../create-job/create-job.component';
 import { EditJobComponent } from '../edit-job/edit-job.component';
 import { DeleteJobAlertDialogComponent } from '../delete-job-alert-dialog/delete-job-alert-dialog.component';
@@ -48,10 +43,7 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
     JobOverviewComponent,
     JobTabsComponent,
     ProgessionStepperComponent,
-    HlmDropdownMenu,
-    HlmDropdownMenuItem,
-    HlmDropdownMenuSeparator,
-    BrnMenuTriggerDirective,
+    HlmDropdownMenuImports,
   ],
   providers: [
     provideIcons({
