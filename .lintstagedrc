@@ -1,5 +1,3 @@
 {
-  "{apps,libs}/**/*.{ts,js,html,scss}": [
-    "npx nx affected --target=lint --files"
-  ]
+  "{apps,libs}/**/*.{ts,js,html,scss}": ["eslint --fix", "prettier --write"]
 }

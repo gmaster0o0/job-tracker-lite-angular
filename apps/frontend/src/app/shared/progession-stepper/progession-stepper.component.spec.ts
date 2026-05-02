@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ProgessionStepperComponent } from './progession-stepper.component';
+import { jobStepperLabels } from '@job-tracker-lite-angular/shared-testing';
 
 describe('ProgessionStepperComponent', () => {
-  const labels = ['Save', 'Applied', 'Interview', 'Offer'];
+  const labels = jobStepperLabels;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

@@ -2,41 +2,23 @@ import { Test } from '@nestjs/testing';
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import { JobStatus } from '@prisma/client';
 import { JobsService } from './jobs.service';
+import {
+  contactFixtures,
+  createContactFixtures,
+  createJobFixtures,
+  createPrismaServiceMock,
+  jobFixtures,
+  prismaContactFixtures,
+  prismaJobFixtures,
+  prismaJobResultFixtures,
+} from '@job-tracker-lite-angular/shared-testing';
 
 describe('JobsService', () => {
   let service: JobsService;
-  let prismaMock: {
-    job: {
-      findMany: jest.Mock;
-      create: jest.Mock;
-      update: jest.Mock;
-      findUniqueOrThrow: jest.Mock;
-    };
-    contact: {
-      findMany: jest.Mock;
-      create: jest.Mock;
-      findFirst: jest.Mock;
-      update: jest.Mock;
-      delete: jest.Mock;
-    };
-  };
+  let prismaMock: ReturnType<typeof createPrismaServiceMock>;
 
   beforeEach(async () => {
-    prismaMock = {
-      job: {
-        findMany: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
-        findUniqueOrThrow: jest.fn(),
-      },
-      contact: {
-        findMany: jest.fn(),
-        create: jest.fn(),
-        findFirst: jest.fn(),
-        update: jest.fn(),
-        delete: jest.fn(),
-      },
-    };
+    prismaMock = createPrismaServiceMock(jest.fn);
 
     const moduleRef = await Test.createTestingModule({
       providers: [
@@ -53,73 +35,31 @@ describe('JobsService', () => {
 
   it('should map Prisma jobs into DTOs', async () => {
     prismaMock.job.findMany.mockResolvedValue([
-      {
-        id: 1,
-        position: 'Frontend Engineer',
-        link: 'https://example.com/jobs/frontend-engineer',
-        description: 'Build Angular apps',
-        company: 'Acme',
-        status: JobStatus.SAVED,
-        createdAt: new Date('2026-04-29T09:00:00.000Z'),
-        updatedAt: new Date('2026-04-29T09:30:00.000Z'),
-      },
+      prismaJobFixtures.frontendEngineer,
     ]);
 
     await expect(service.findAll()).resolves.toEqual([
-      {
-        id: 1,
-        position: 'Frontend Engineer',
-        link: 'https://example.com/jobs/frontend-engineer',
-        description: 'Build Angular apps',
-        company: 'Acme',
-        status: 'saved',
-        createdAt: '2026-04-29T09:00:00.000Z',
-        updatedAt: '2026-04-29T09:30:00.000Z',
-      },
+      jobFixtures.frontendEngineer,
     ]);
   });
 
   it('should persist a new job and keep the default saved status', async () => {
-    prismaMock.job.create.mockResolvedValue({
-      id: 7,
-      position: 'Product Designer',
-      link: 'https://example.com/jobs/product-designer',
-      description: 'Design the experience',
-      company: 'Northwind',
-      status: JobStatus.SAVED,
-      createdAt: new Date('2026-04-29T09:00:00.000Z'),
-      updatedAt: new Date('2026-04-29T09:00:00.000Z'),
-    });
+    prismaMock.job.create.mockResolvedValue(
+      prismaJobResultFixtures.createdProductDesigner,
+    );
 
-    const job = await service.create({
-      position: 'Product Designer',
-      link: 'https://example.com/jobs/product-designer',
-      description: 'Design the experience',
-      company: 'Northwind',
-    });
+    const job = await service.create(createJobFixtures.productDesigner);
 
     expect(prismaMock.job.create).toHaveBeenCalledWith({
-      data: {
-        position: 'Product Designer',
-        link: 'https://example.com/jobs/product-designer',
-        description: 'Design the experience',
-        company: 'Northwind',
-      },
+      data: createJobFixtures.productDesigner,
     });
     expect(job.status).toBe('saved');
   });
 
   it('should update job status', async () => {
-    prismaMock.job.update.mockResolvedValue({
-      id: 9,
-      position: 'Backend Engineer',
-      link: 'https://example.com/jobs/backend-engineer',
-      description: 'Own API delivery',
-      company: 'Globex',
-      status: JobStatus.INTERVIEW,
-      createdAt: new Date('2026-04-29T09:00:00.000Z'),
-      updatedAt: new Date('2026-04-29T10:00:00.000Z'),
-    });
+    prismaMock.job.update.mockResolvedValue(
+      prismaJobResultFixtures.updatedBackendEngineerInterview,
+    );
 
     const job = await service.updateStatus(9, 'interview');
 
@@ -133,54 +73,27 @@ describe('JobsService', () => {
   it('should return contacts for a job', async () => {
     prismaMock.job.findUniqueOrThrow.mockResolvedValue({ id: 10 });
     prismaMock.contact.findMany.mockResolvedValue([
-      {
-        id: 1,
-        jobId: 10,
-        name: 'Jane Doe',
-        email: 'jane@example.com',
-        phoneNumber: '12345',
-        createdAt: new Date('2026-04-29T09:00:00.000Z'),
-        updatedAt: new Date('2026-04-29T09:30:00.000Z'),
-      },
+      prismaContactFixtures.janeDoe,
     ]);
 
     await expect(service.findContacts(10)).resolves.toEqual([
-      {
-        id: 1,
-        jobId: 10,
-        name: 'Jane Doe',
-        email: 'jane@example.com',
-        phoneNumber: '12345',
-        createdAt: '2026-04-29T09:00:00.000Z',
-        updatedAt: '2026-04-29T09:30:00.000Z',
-      },
+      contactFixtures.janeDoe,
     ]);
   });
 
   it('should create a contact for a job', async () => {
     prismaMock.job.findUniqueOrThrow.mockResolvedValue({ id: 10 });
-    prismaMock.contact.create.mockResolvedValue({
-      id: 2,
-      jobId: 10,
-      name: 'John Doe',
-      email: 'john@example.com',
-      phoneNumber: '555-111',
-      createdAt: new Date('2026-04-29T09:00:00.000Z'),
-      updatedAt: new Date('2026-04-29T09:00:00.000Z'),
-    });
+    prismaMock.contact.create.mockResolvedValue(prismaContactFixtures.johnDoe);
 
-    const created = await service.createContact(10, {
-      name: 'John Doe',
-      email: 'john@example.com',
-      phoneNumber: '555-111',
-    });
+    const created = await service.createContact(
+      10,
+      createContactFixtures.johnDoe,
+    );
 
     expect(prismaMock.contact.create).toHaveBeenCalledWith({
       data: {
         jobId: 10,
-        name: 'John Doe',
-        email: 'john@example.com',
-        phoneNumber: '555-111',
+        ...createContactFixtures.johnDoe,
       },
     });
     expect(created.id).toBe(2);

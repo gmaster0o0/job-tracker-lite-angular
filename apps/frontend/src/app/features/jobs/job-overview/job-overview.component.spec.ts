@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { JobOverviewComponent } from './job-overview.component';
+import { jobOverviewMarkdown } from '@job-tracker-lite-angular/shared-testing';
 
 describe('JobOverviewComponent', () => {
   beforeEach(async () => {
@@ -10,10 +11,7 @@ describe('JobOverviewComponent', () => {
 
   it('should render markdown into formatted HTML', () => {
     const fixture = TestBed.createComponent(JobOverviewComponent);
-    fixture.componentRef.setInput(
-      'description',
-      '# Job Description\n\nThis is **important** for the role.',
-    );
+    fixture.componentRef.setInput('description', jobOverviewMarkdown);
     fixture.detectChanges();
 
     const article = fixture.nativeElement.querySelector(

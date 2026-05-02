@@ -1,13 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { JobTabsComponent, JobTabItem } from './job-tabs.component';
+import { jobTabsFixture } from '@job-tracker-lite-angular/shared-testing';
 
 describe('JobTabsComponent', () => {
-  const tabs: readonly JobTabItem[] = [
-    { label: 'Overview', value: 'overview' },
-    { label: 'Contacts', value: 'contacts' },
-    { label: 'Notes', value: 'notes' },
-  ];
+  const tabs: readonly JobTabItem[] = jobTabsFixture;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

@@ -1,15 +1,15 @@
 import { Test } from '@nestjs/testing';
 import { AppService } from './app.service';
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
+import { createPrismaServiceMock } from '@job-tracker-lite-angular/shared-testing';
 
 describe('AppService', () => {
   let service: AppService;
-  let mockPrismaService: Partial<PrismaService>;
+  let mockPrismaService: ReturnType<typeof createPrismaServiceMock>;
 
   beforeAll(async () => {
-    mockPrismaService = {
-      testConnection: jest.fn().mockResolvedValue([]),
-    };
+    mockPrismaService = createPrismaServiceMock(jest.fn);
+    mockPrismaService.testConnection.mockResolvedValue([]);
 
     const app = await Test.createTestingModule({
       providers: [
@@ -31,7 +31,7 @@ describe('AppService', () => {
     });
 
     it('should report DOWN when the database check fails', async () => {
-      (mockPrismaService.testConnection as jest.Mock).mockRejectedValueOnce(
+      mockPrismaService.testConnection.mockRejectedValueOnce(
         new Error('DB unavailable'),
       );
 
