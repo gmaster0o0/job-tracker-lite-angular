@@ -5,6 +5,10 @@ import {
   JobsDataAccessService,
   ContactsDataAccessService,
 } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  createContactsDataAccessMock,
+  createJobsDataAccessMock,
+} from '@job-tracker-lite-angular/shared-testing';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { vi } from 'vitest';
 import { ContactTabComponent } from '../contact-tab/contact-tab.component';
@@ -12,18 +16,8 @@ import { ContactTabComponent } from '../contact-tab/contact-tab.component';
 describe('ContactTabComponent', () => {
   async function setup(contacts: ContactDto[]) {
     const dialogMock = { open: vi.fn() };
-    const jobsDataAccessMock = {
-      selectJob: () => {
-        //empty
-      },
-      jobContactsResource: {
-        isLoading: () => false,
-        value: () => contacts,
-      },
-    };
-    const contactsDataAccessMock = {
-      deleteContact: vi.fn(),
-    };
+    const jobsDataAccessMock = createJobsDataAccessMock({ contacts });
+    const contactsDataAccessMock = createContactsDataAccessMock();
 
     await TestBed.configureTestingModule({
       imports: [ContactTabComponent],

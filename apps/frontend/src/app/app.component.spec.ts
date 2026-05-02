@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { AppComponent } from './app.component';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { createJobsDataAccessMock } from '@job-tracker-lite-angular/shared-testing';
 
 @Component({
   standalone: true,
@@ -41,12 +42,7 @@ describe('AppComponent', () => {
         ]),
         {
           provide: JobsDataAccessService,
-          useValue: {
-            jobsResource: {
-              value: () => [],
-              isLoading: () => false,
-            },
-          },
+          useValue: createJobsDataAccessMock(),
         },
       ],
     }).compileComponents();

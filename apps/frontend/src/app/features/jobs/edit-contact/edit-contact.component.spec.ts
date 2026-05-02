@@ -3,26 +3,34 @@ import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-da
 import { vi } from 'vitest';
 import { EditContactComponent } from './edit-contact.component';
 import { UpdateContactDto } from '@job-tracker-lite-angular/api-interfaces';
+import {
+  contactFixtures,
+  createContactsDataAccessMock,
+  updateContactFixtures,
+} from '@job-tracker-lite-angular/shared-testing';
 
 describe('EditContactComponent', () => {
   it('should submit and call update', async () => {
-    const updateContact = vi.fn().mockResolvedValue({ id: 1 });
+    const updateContact = vi
+      .fn()
+      .mockResolvedValue(contactFixtures.updatedContact);
 
     await TestBed.configureTestingModule({
       imports: [EditContactComponent],
       providers: [
-        { provide: ContactsDataAccessService, useValue: { updateContact } },
+        {
+          provide: ContactsDataAccessService,
+          useValue: createContactsDataAccessMock({ updateContact }),
+        },
       ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(EditContactComponent);
     const component = fixture.componentInstance as any;
 
-    component.form.setValue({
-      name: 'Updated',
-      email: 'updated@example.com',
-      phoneNumber: '999',
-    } as UpdateContactDto);
+    component.form.setValue(
+      updateContactFixtures.updatedContact as UpdateContactDto,
+    );
 
     await component.submit();
 

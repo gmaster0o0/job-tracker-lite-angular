@@ -1,23 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { createJobsDataAccessMock } from '@job-tracker-lite-angular/shared-testing';
 import { ContactListComponent } from './contact-list.component';
 
 describe('ContactListComponent', () => {
   async function setup(contacts: ContactDto[]) {
-    const dataAccessMock = {
-      selectJob: () => {
-        // empty
-      },
-      jobContactsResource: {
-        isLoading: () => false,
-        value: () => contacts,
-      },
-    };
-
     await TestBed.configureTestingModule({
       imports: [ContactListComponent],
-      providers: [{ provide: JobsDataAccessService, useValue: dataAccessMock }],
+      providers: [
+        {
+          provide: JobsDataAccessService,
+          useValue: createJobsDataAccessMock({ contacts }),
+        },
+      ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ContactListComponent);

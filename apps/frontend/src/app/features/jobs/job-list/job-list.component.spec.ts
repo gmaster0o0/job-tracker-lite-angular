@@ -1,35 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { JobListComponent } from './job-list.component';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  createJobsDataAccessMock,
+  jobFixtures,
+} from '@job-tracker-lite-angular/shared-testing';
 
 describe('JobListComponent', () => {
   beforeEach(async () => {
-    const dataAccessServiceMock = {
-      jobsResource: {
-        value: () => [
-          {
-            id: 1,
-            position: 'Frontend Engineer',
-            link: 'https://example.com/jobs/frontend-engineer',
-            description: 'Build Angular apps',
-            company: 'Acme Labs',
-            status: 'saved' as const,
-            createdAt: '2026-04-29T09:00:00.000Z',
-            updatedAt: '2026-04-29T09:00:00.000Z',
-          },
-          {
-            id: 2,
-            position: 'Backend Engineer',
-            link: 'https://example.com/jobs/backend-engineer',
-            description: 'Own Nest APIs',
-            company: 'Globex',
-            status: 'applied' as const,
-            createdAt: '2026-04-29T09:00:00.000Z',
-            updatedAt: '2026-04-29T09:00:00.000Z',
-          },
-        ],
-      },
-    };
+    const dataAccessServiceMock = createJobsDataAccessMock({
+      jobs: [jobFixtures.frontendEngineer, jobFixtures.backendEngineer],
+    });
 
     await TestBed.configureTestingModule({
       imports: [JobListComponent],

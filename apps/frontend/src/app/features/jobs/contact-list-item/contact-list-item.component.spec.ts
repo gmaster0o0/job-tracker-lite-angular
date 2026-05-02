@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
+import { contactFixtures } from '@job-tracker-lite-angular/shared-testing';
 import { ContactListItemComponent } from './contact-list-item.component';
 
 describe('ContactListItemComponent', () => {
@@ -16,16 +17,7 @@ describe('ContactListItemComponent', () => {
   }
 
   it('should render contact name', async () => {
-    const contact = {
-      id: 1,
-      name: 'A',
-      email: '',
-      phoneNumber: '',
-      jobId: 1,
-      createdAt: '',
-      updatedAt: '',
-    } as ContactDto;
-    const { fixture } = await setup(contact);
-    expect(fixture.nativeElement.textContent).toContain('A');
+    const { fixture } = await setup(contactFixtures.janeDoe as ContactDto);
+    expect(fixture.nativeElement.textContent).toContain('Jane Doe');
   });
 });

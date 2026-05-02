@@ -1,17 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { healthFixture } from '@job-tracker-lite-angular/shared-testing';
 
 describe('AppController', () => {
   let app: TestingModule;
 
   beforeAll(async () => {
     const mockAppService = {
-      checkHealth: jest.fn().mockResolvedValue({
-        status: 'UP',
-        database: 'UP',
-        timestamp: new Date().toISOString(),
-      }),
+      checkHealth: jest.fn().mockResolvedValue(healthFixture),
     };
 
     app = await Test.createTestingModule({
