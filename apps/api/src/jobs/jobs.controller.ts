@@ -4,6 +4,7 @@ import {
   CreateJobDto,
   JobDto,
   UpdateContactDto,
+  UpdateJobDto,
   UpdateJobStatusDto,
 } from '@job-tracker-lite-angular/api-interfaces';
 import {
@@ -52,6 +53,35 @@ export class JobsController {
     @Body() updateJobStatusDto: UpdateJobStatusDto,
   ): Promise<JobDto> {
     return this.jobsService.updateStatus(id, updateJobStatusDto.status);
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateJobDto: UpdateJobDto,
+  ): Promise<JobDto> {
+    try {
+      return await this.jobsService.update(id, updateJobDto);
+    } catch (error) {
+      if (error instanceof Error && error.message === 'NOT_FOUND') {
+        throw new NotFoundException(`Job with id ${id} not found`);
+      }
+
+      throw error;
+    }
+  }
+
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    try {
+      await this.jobsService.delete(id);
+    } catch (error) {
+      if (error instanceof Error && error.message === 'NOT_FOUND') {
+        throw new NotFoundException(`Job with id ${id} not found`);
+      }
+
+      throw error;
+    }
   }
 
   @Get(':id/contacts')
