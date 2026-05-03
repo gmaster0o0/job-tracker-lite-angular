@@ -7,12 +7,13 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HlmCardImports } from '@spartan-ng/helm/card';
+import { HlmScrollAreaImports } from '@spartan-ng/helm/scroll-area';
 import { marked } from 'marked';
 
 @Component({
   standalone: true,
   selector: 'app-job-overview',
-  imports: [HlmCardImports],
+  imports: [HlmCardImports, HlmScrollAreaImports],
   templateUrl: './job-overview.component.html',
 })
 export class JobOverviewComponent {

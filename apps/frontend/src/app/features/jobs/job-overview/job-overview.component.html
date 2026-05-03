@@ -1,10 +1,12 @@
-<div hlmCard class="border-slate-200 shadow-sm">
-  <div hlmCardContent class="space-y-3 p-6">
+<div hlmCard class="border-slate-200 shadow-sm flex-1">
+  <div hlmCardContent class="space-y-3 p-6 flex-1">
     <h2 class="text-3xl font-semibold text-slate-900">Description</h2>
     <div class="h-px w-full bg-slate-200"></div>
-    <article
-      class="prose prose-slate"
-      [innerHTML]="renderedDescription()"
-    ></article>
+    <hlm-scroll-area class="h-64 pr-4 overflow-auto">
+      <article
+        class="prose prose-slate"
+        [innerHTML]="renderedDescription()"
+      ></article>
+    </hlm-scroll-area>
   </div>
 </div>
