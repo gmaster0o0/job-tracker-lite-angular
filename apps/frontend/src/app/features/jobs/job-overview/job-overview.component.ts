@@ -33,6 +33,9 @@ export class JobOverviewComponent {
     });
 
     const html = typeof parsed === 'string' ? parsed : '';
-    return this.sanitizer.sanitize(SecurityContext.HTML, html) ?? '';
+
+    // A sanitize helyett használjuk a bypassSecurityTrustHtml-t,
+    // hogy a Tailwind szelektorok és a HTML struktúra érintetlen maradjon
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   });
 }

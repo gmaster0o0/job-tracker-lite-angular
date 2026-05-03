@@ -11,13 +11,14 @@ import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
+import { HlmTabsImports } from '@spartan-ng/helm/tabs';
+import { BrnTabsImports } from '@spartan-ng/brain/tabs';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { CreateJobComponent } from '../create-job/create-job.component';
 import { EditJobComponent } from '../edit-job/edit-job.component';
 import { DeleteJobAlertDialogComponent } from '../delete-job-alert-dialog/delete-job-alert-dialog.component';
 import { ContactTabComponent } from '../contact-tab/contact-tab.component';
 import { JobOverviewComponent } from '../job-overview/job-overview.component';
-import { JobTabsComponent } from '../job-tabs/job-tabs.component';
 import { ProgessionStepperComponent } from '../../../shared/progession-stepper/progession-stepper.component';
 import { provideIcons } from '@ng-icons/core';
 import {
@@ -39,9 +40,10 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
     HlmButtonImports,
     HlmCardImports,
     ContactTabComponent,
+    HlmTabsImports,
+    BrnTabsImports,
     HlmIconImports,
     JobOverviewComponent,
-    JobTabsComponent,
     ProgessionStepperComponent,
     HlmDropdownMenuImports,
   ],
