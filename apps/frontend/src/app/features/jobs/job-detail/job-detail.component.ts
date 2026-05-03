@@ -146,7 +146,7 @@ export class JobDetailComponent {
 
   protected openCreateJobDialog(): void {
     this.dialog.open(CreateJobComponent, {
-      contentClass: 'sm:max-w-xl !sm:mx-auto',
+      contentClass: 'sm:max-w-2xl w-[95vw]',
       context: {
         onCreated: (created: JobDto) => {
           this.router.navigate(['/jobs', created.id]);
@@ -157,7 +157,7 @@ export class JobDetailComponent {
 
   protected openEditJobDialog(job: JobDto): void {
     this.dialog.open(EditJobComponent, {
-      contentClass: 'sm:max-w-xl !sm:mx-auto',
+      contentClass: 'sm:max-w-2xl w-[95vw]',
       context: {
         job,
       },

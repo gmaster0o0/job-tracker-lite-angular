@@ -9,6 +9,11 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
 import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { HlmTextarea } from '@spartan-ng/helm/textarea';
+import { HlmDialogImports } from '@spartan-ng/helm/dialog';
+import { provideIcons } from '@ng-icons/core';
+import { lucideUndo2, lucideSave } from '@ng-icons/lucide';
+import { HlmIconImports } from '@spartan-ng/helm/icon';
 
 type EditJobDialogContext = {
   job: JobDto;
@@ -22,7 +27,14 @@ type EditJobDialogContext = {
     ReactiveFormsModule,
     HlmButtonImports,
     HlmInputImports,
+    HlmCardImports,
+    HlmFieldImports,
+    HlmInputGroupImports,
+    HlmTextarea,
+    HlmDialogImports,
+    HlmIconImports,
   ],
+  providers: [provideIcons({ lucideUndo2, lucideSave })],
   templateUrl: './edit-job.component.html',
 })
 export class EditJobComponent {
@@ -69,9 +81,5 @@ export class EditJobComponent {
     } finally {
       this.isSubmitting.set(false);
     }
-  }
-
-  protected cancel(): void {
-    this.dialogRef?.close();
   }
 }

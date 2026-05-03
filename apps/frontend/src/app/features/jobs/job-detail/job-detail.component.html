@@ -85,19 +85,34 @@
 
             <ng-template #moreOptions>
               <div hlmDropdownMenu>
-                <button hlmMenuItem (click)="openEditJobDialog(job()!)">
-                  <ng-icon hlm size="sm" name="lucidePencil" class="mr-2" />
-                  Edit Job
-                </button>
-                <div hlmMenuSeparator></div>
-                <button
-                  hlmMenuItem
-                  class="text-destructive focus:text-destructive"
-                  (click)="openDeleteJobDialog(job()!)"
-                >
-                  <ng-icon hlm size="sm" name="lucideTrash" class="mr-2" />
-                  Delete Job
-                </button>
+                <div brnMenuContent align="end" class="w-48">
+                  <button
+                    hlmDropdownMenuItem
+                    (click)="openEditJobDialog(job()!)"
+                  >
+                    <ng-icon
+                      hlm
+                      size="sm"
+                      name="lucidePencil"
+                      class="h-4 w-4 mr-2"
+                    />
+                    Edit Job
+                  </button>
+                  <div hlmDropdownMenuSeparator></div>
+                  <button
+                    hlmDropdownMenuItem
+                    class="text-destructive focus:text-destructive"
+                    (click)="openDeleteJobDialog(job()!)"
+                  >
+                    <ng-icon
+                      hlm
+                      size="sm"
+                      name="lucideTrash"
+                      class="h-4 w-4 mr-2"
+                    />
+                    Delete Job
+                  </button>
+                </div>
               </div>
             </ng-template>
           </div>

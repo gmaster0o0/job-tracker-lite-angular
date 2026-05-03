@@ -1,23 +1,19 @@
-<div class="flex flex-col gap-4 p-6 bg-background border rounded-lg shadow-lg">
-  <h2 class="text-lg font-semibold tracking-tight">Edit Job</h2>
-  <p class="text-sm text-muted-foreground">
+<hlm-dialog-header>
+  <h2 hlmDialogTitle>Edit Job</h2>
+  <p hlmDialogDescription>
     Update the details for the job at {{ job.company }}.
   </p>
+</hlm-dialog-header>
 
-  <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
-    <div class="space-y-1">
-      <label hlmLabel for="company">Company</label>
-      <input
-        hlmInput
-        id="company"
-        formControlName="company"
-        placeholder="e.g. Acme Inc"
-        class="w-full"
-      />
-    </div>
-
-    <div class="space-y-1">
-      <label hlmLabel for="position">Position</label>
+<form
+  [formGroup]="form"
+  id="editJobForm"
+  class="space-y-4 py-4"
+  (ngSubmit)="submit()"
+>
+  <hlm-field-group>
+    <hlm-field>
+      <label hlmLabel for="position">Position*</label>
       <input
         hlmInput
         id="position"
@@ -25,10 +21,33 @@
         placeholder="e.g. Frontend Engineer"
         class="w-full"
       />
-    </div>
-
-    <div class="space-y-1">
-      <label hlmLabel for="link">Job Link</label>
+      @if (form.get('position')?.invalid && form.get('position')?.touched) {
+        <hlm-field-error validator="required"
+          >Position is a required field.</hlm-field-error
+        >
+      } @else {
+        <p hlmDialogDescription>e.g. Frontend Engineer</p>
+      }
+    </hlm-field>
+    <hlm-field>
+      <label hlmLabel for="company">Company*</label>
+      <input
+        hlmInput
+        id="company"
+        formControlName="company"
+        placeholder="e.g. Acme Inc"
+        class="w-full"
+      />
+      @if (form.get('company')?.invalid && form.get('company')?.touched) {
+        <hlm-field-error validator="required"
+          >Company is a required field.</hlm-field-error
+        >
+      } @else {
+        <p hlmDialogDescription>e.g. Acme Inc</p>
+      }
+    </hlm-field>
+    <hlm-field>
+      <label hlmLabel for="link">Job Link*</label>
       <input
         hlmInput
         id="link"
@@ -36,33 +55,59 @@
         placeholder="https://..."
         class="w-full"
       />
-    </div>
+      @if (form.get('link')?.invalid && form.get('link')?.touched) {
+        <hlm-field-error validator="required"
+          >Job link is a required field.</hlm-field-error
+        >
+      } @else {
+        <p hlmDialogDescription>Link to the job posting</p>
+      }
+    </hlm-field>
 
-    <div class="space-y-1">
-      <label hlmLabel for="description">Description</label>
+    <hlm-field>
+      <label hlmLabel for="description">Description*</label>
       <textarea
-        hlmInput
+        hlmTextarea
         id="description"
         formControlName="description"
         placeholder="A brief overview of the role"
-        class="w-full"
-        rows="3"
+        rows="4"
+        class="min-h-24"
       ></textarea>
-    </div>
+      @if (
+        form.get('description')?.invalid && form.get('description')?.touched
+      ) {
+        <hlm-field-error validator="required"
+          >Description is a required field.</hlm-field-error
+        >
+      } @else {
+        <p hlmDialogDescription>A brief overview of the role</p>
+      }
+    </hlm-field>
 
     @if (submitError()) {
       <div class="text-sm font-medium text-destructive">
         {{ submitError() }}
       </div>
     }
-
-    <div class="flex justify-end gap-2 pt-2">
-      <button hlmBtn type="button" variant="outline" (click)="cancel()">
-        Cancel
-      </button>
-      <button hlmBtn type="submit" [disabled]="form.invalid || isSubmitting()">
-        {{ isSubmitting() ? 'Saving...' : 'Save Changes' }}
-      </button>
-    </div>
-  </form>
-</div>
+  </hlm-field-group>
+</form>
+<hlm-dialog-footer>
+  <button hlmBtn variant="outline" type="button" hlmDialogClose>
+    <ng-icon hlm name="lucideUndo2" size="sm" />Cancel
+  </button>
+  <button
+    hlmBtn
+    type="submit"
+    form="editJobForm"
+    [disabled]="form.invalid || isSubmitting()"
+  >
+    @if (isSubmitting()) {
+      <ng-icon hlm name="lucideSave" size="sm" class="animate-spin" />
+      Saving...
+    } @else {
+      <ng-icon hlm name="lucideSave" size="sm" />
+      Save Changes
+    }
+  </button>
+</hlm-dialog-footer>
