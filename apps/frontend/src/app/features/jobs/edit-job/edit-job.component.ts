@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
-import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
@@ -11,9 +10,7 @@ import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
-import { provideIcons } from '@ng-icons/core';
-import { lucideUndo2, lucideSave } from '@ng-icons/lucide';
-import { HlmIconImports } from '@spartan-ng/helm/icon';
+import { EditJobDialogFooterComponent } from '../../../shared/edit-job-dialog-footer/edit-job-dialog-footer.component';
 
 type EditJobDialogContext = {
   job: JobDto;
@@ -25,16 +22,14 @@ type EditJobDialogContext = {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    HlmButtonImports,
     HlmInputImports,
     HlmCardImports,
     HlmFieldImports,
     HlmInputGroupImports,
     HlmTextarea,
     HlmDialogImports,
-    HlmIconImports,
+    EditJobDialogFooterComponent,
   ],
-  providers: [provideIcons({ lucideUndo2, lucideSave })],
   templateUrl: './edit-job.component.html',
 })
 export class EditJobComponent {

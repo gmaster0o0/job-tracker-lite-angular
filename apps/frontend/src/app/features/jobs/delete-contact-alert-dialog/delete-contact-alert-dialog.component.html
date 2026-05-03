@@ -1,20 +1,10 @@
-<hlm-alert-dialog-header>
-  <h2 hlmAlertDialogTitle>Are you sure?</h2>
-  <p hlmAlertDialogDescription>
+<app-delete-confirmation-dialog
+  [isBusy]="isDeleting()"
+  (cancel)="cancel()"
+  (confirm)="confirm()"
+>
+  <span deleteDialogDescription>
     This will permanently delete {{ context.contactName }}. This action cannot
     be undone.
-  </p>
-</hlm-alert-dialog-header>
-
-<hlm-alert-dialog-footer>
-  <button hlmAlertDialogCancel (click)="cancel()" type="button">Cancel</button>
-  <button
-    hlmAlertDialogAction
-    variant="destructive"
-    (click)="confirm()"
-    [disabled]="isDeleting()"
-    type="button"
-  >
-    {{ isDeleting() ? 'Deleting...' : 'Delete' }}
-  </button>
-</hlm-alert-dialog-footer>
+  </span>
+</app-delete-confirmation-dialog>

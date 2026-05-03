@@ -70,7 +70,7 @@
         formControlName="description"
         placeholder="A brief overview of the role"
         rows="4"
-        class="min-h-24"
+        class="min-h-[120px] h-[120px] [field-sizing:fixed] overflow-y-auto"
       ></textarea>
       @if (
         form.get('description')?.invalid && form.get('description')?.touched
@@ -90,16 +90,8 @@
     }
   </hlm-field-group>
 </form>
-<hlm-dialog-footer>
-  <button hlmBtn variant="outline" type="button" hlmDialogClose>
-    <ng-icon hlm name="lucideUndo2" size="sm" />Cancel
-  </button>
-  <button
-    hlmBtn
-    type="submit"
-    form="createJobForm"
-    [disabled]="form.invalid || isSubmitting()"
-  >
-    {{ isSubmitting() ? 'Saving...' : 'Create' }}
-  </button>
-</hlm-dialog-footer>
+<app-create-job-dialog-footer
+  formId="createJobForm"
+  [disableSubmit]="form.invalid"
+  [isSubmitting]="isSubmitting()"
+/>

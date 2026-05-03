@@ -72,7 +72,7 @@
         formControlName="description"
         placeholder="A brief overview of the role"
         rows="4"
-        class="min-h-24"
+        class="w-full min-h-[120px] h-[120px] [field-sizing:fixed] resize-none overflow-y-auto"
       ></textarea>
       @if (
         form.get('description')?.invalid && form.get('description')?.touched
@@ -92,22 +92,8 @@
     }
   </hlm-field-group>
 </form>
-<hlm-dialog-footer>
-  <button hlmBtn variant="outline" type="button" hlmDialogClose>
-    <ng-icon hlm name="lucideUndo2" size="sm" />Cancel
-  </button>
-  <button
-    hlmBtn
-    type="submit"
-    form="editJobForm"
-    [disabled]="form.invalid || isSubmitting()"
-  >
-    @if (isSubmitting()) {
-      <ng-icon hlm name="lucideSave" size="sm" class="animate-spin" />
-      Saving...
-    } @else {
-      <ng-icon hlm name="lucideSave" size="sm" />
-      Save Changes
-    }
-  </button>
-</hlm-dialog-footer>
+<app-edit-job-dialog-footer
+  formId="editJobForm"
+  [disableSubmit]="form.invalid"
+  [isSubmitting]="isSubmitting()"
+/>

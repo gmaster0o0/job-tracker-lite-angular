@@ -1,0 +1,8 @@
+<button
+  hlmBtn
+  type="submit"
+  [attr.form]="formId()"
+  [disabled]="disabled() || isSubmitting()"
+>
+  {{ isSubmitting() ? submittingLabel() : idleLabel() }}
+</button>

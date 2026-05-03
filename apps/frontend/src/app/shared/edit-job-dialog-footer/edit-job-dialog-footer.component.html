@@ -1,0 +1,13 @@
+<hlm-dialog-footer>
+  <button hlmBtn variant="outline" type="button" hlmDialogClose>
+    <ng-icon hlm name="lucideUndo2" size="sm" />Cancel
+  </button>
+
+  <app-job-form-submit-button
+    [formId]="formId()"
+    [disabled]="disableSubmit()"
+    [isSubmitting]="isSubmitting()"
+    idleLabel="Save Changes"
+    submittingLabel="Saving..."
+  />
+</hlm-dialog-footer>

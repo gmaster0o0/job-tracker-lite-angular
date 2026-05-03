@@ -1,8 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
-import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
-import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { DeleteConfirmationDialogComponent } from '../../../shared';
 
 type DeleteJobAlertDialogContext = {
   onConfirm: () => Promise<void>;
@@ -12,33 +10,8 @@ type DeleteJobAlertDialogContext = {
 @Component({
   standalone: true,
   selector: 'app-delete-job-alert-dialog',
-  imports: [CommonModule, HlmAlertDialogImports, HlmButtonImports],
-  template: `
-    <hlm-alert-dialog-content>
-      <hlm-alert-dialog-header>
-        <h3 hlmAlertDialogTitle>Are you absolutely sure?</h3>
-        <p hlmAlertDialogDescription>
-          This action cannot be undone. This will permanently delete the job
-          application for
-          <span class="font-semibold text-foreground">{{
-            context.company
-          }}</span>
-          and all its associated contacts.
-        </p>
-      </hlm-alert-dialog-header>
-      <hlm-alert-dialog-footer>
-        <button hlmBtn variant="outline" (click)="cancel()">Cancel</button>
-        <button
-          hlmBtn
-          variant="destructive"
-          [disabled]="isDeleting()"
-          (click)="confirm()"
-        >
-          {{ isDeleting() ? 'Deleting...' : 'Delete Job' }}
-        </button>
-      </hlm-alert-dialog-footer>
-    </hlm-alert-dialog-content>
-  `,
+  imports: [DeleteConfirmationDialogComponent],
+  templateUrl: './delete-job-alert-dialog.component.html',
 })
 export class DeleteJobAlertDialogComponent {
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
