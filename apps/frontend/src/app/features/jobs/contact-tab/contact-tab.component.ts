@@ -41,6 +41,9 @@ export class ContactTabComponent {
       contentClass: 'sm:max-w-lg !sm:mx-auto',
       context: {
         jobId: this.jobId(),
+        onUpdated: async () => {
+          this.jobsDataAccess.jobContactsResource.reload();
+        },
       },
     });
   }
@@ -51,6 +54,9 @@ export class ContactTabComponent {
       context: {
         jobId: this.jobId(),
         contact,
+        onUpdated: async () => {
+          this.jobsDataAccess.jobContactsResource.reload();
+        },
       },
     });
   }
