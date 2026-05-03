@@ -8,6 +8,7 @@
   "dependencies": {
     "tslib": "^2.3.0",
     "@job-tracker-lite-angular/api-interfaces": "0.0.1",
-    "@prisma/client": "^7.8.0"
+    "@prisma/client": "^7.8.0",
+    "@spartan-ng/brain": "^0.0.1-alpha.679"
   }
 }
