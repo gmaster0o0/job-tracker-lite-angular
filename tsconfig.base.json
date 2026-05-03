@@ -91,6 +91,15 @@
       ],
       "@spartan-ng/helm/textarea": [
         "./libs/shared-ui/textarea/src/index.ts"
+      ],
+      "@spartan-ng/helm/field": [
+        "./libs/shared-ui/field/src/index.ts"
+      ],
+      "@spartan-ng/helm/label": [
+        "./libs/shared-ui/label/src/index.ts"
+      ],
+      "@spartan-ng/helm/input-group": [
+        "./libs/shared-ui/input-group/src/index.ts"
       ]
     }
   },
