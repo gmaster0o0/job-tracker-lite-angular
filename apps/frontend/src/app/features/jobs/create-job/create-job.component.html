@@ -1,69 +1,97 @@
-<div class="space-y-4">
-  <header class="space-y-1">
-    <h2 class="text-lg font-semibold text-slate-900">Add New Job</h2>
-    <p class="text-sm text-muted-foreground">
-      Fill in the details below to add a new job application.
-    </p>
-  </header>
+<hlm-dialog-header>
+  <h2 hlmDialogTitle>Create Job</h2>
+  <p hlmDialogDescription>Fill in the details for the new job.</p>
+</hlm-dialog-header>
 
-  <form class="space-y-4" [formGroup]="form" (ngSubmit)="submit()">
-    <div class="grid gap-4 sm:grid-cols-2">
-      <div class="space-y-1">
-        <label class="text-sm font-medium text-slate-700" for="job-title">
-          Job Title
-        </label>
-        <input id="job-title" hlmInput formControlName="jobTitle" />
-      </div>
-
-      <div class="space-y-1">
-        <label class="text-sm font-medium text-slate-700" for="position">
-          Position
-        </label>
-        <input id="position" hlmInput formControlName="position" />
-      </div>
-    </div>
-
-    <div class="space-y-1">
-      <label class="text-sm font-medium text-slate-700" for="company">
-        Company
-      </label>
-      <input id="company" hlmInput formControlName="company" />
-    </div>
-
-    <div class="space-y-1">
-      <label class="text-sm font-medium text-slate-700" for="link">Link</label>
-      <input id="link" hlmInput formControlName="link" placeholder="https://" />
-    </div>
-
-    <div class="space-y-1">
-      <label class="text-sm font-medium text-slate-700" for="description">
-        Description
-      </label>
-      <textarea
-        id="description"
+<form
+  [formGroup]="form"
+  id="createJobForm"
+  class="space-y-4 py-4"
+  (ngSubmit)="submit()"
+>
+  <hlm-field-group>
+    <hlm-field>
+      <label hlmLabel for="position">Position*</label>
+      <input
         hlmInput
-        class="min-h-28"
+        id="position"
+        formControlName="position"
+        placeholder="e.g. Frontend Engineer"
+        class="w-full"
+      />
+      @if (form.get('position')?.invalid && form.get('position')?.touched) {
+        <hlm-field-error validator="required"
+          >Position is a required field.</hlm-field-error
+        >
+      } @else {
+        <p hlmDialogDescription>e.g. Frontend Engineer</p>
+      }
+    </hlm-field>
+    <hlm-field>
+      <label hlmLabel for="company">Company*</label>
+      <input
+        hlmInput
+        id="company"
+        formControlName="company"
+        placeholder="e.g. Acme Inc"
+        class="w-full"
+      />
+      @if (form.get('company')?.invalid && form.get('company')?.touched) {
+        <hlm-field-error validator="required"
+          >Company is a required field.</hlm-field-error
+        >
+      } @else {
+        <p hlmDialogDescription>e.g. Acme Inc</p>
+      }
+    </hlm-field>
+    <hlm-field>
+      <label hlmLabel for="link">Job Link*</label>
+      <input
+        hlmInput
+        id="link"
+        formControlName="link"
+        placeholder="https://..."
+        class="w-full"
+      />
+      @if (form.get('link')?.invalid && form.get('link')?.touched) {
+        <hlm-field-error validator="required"
+          >Job link is a required field.</hlm-field-error
+        >
+      } @else {
+        <p hlmDialogDescription>Link to the job posting</p>
+      }
+    </hlm-field>
+
+    <hlm-field>
+      <label hlmLabel for="description">Description*</label>
+      <textarea
+        hlmTextarea
+        id="description"
         formControlName="description"
+        placeholder="A brief overview of the role"
+        rows="4"
+        class="min-h-[120px] h-[120px] [field-sizing:fixed] overflow-y-auto"
       ></textarea>
-    </div>
+      @if (
+        form.get('description')?.invalid && form.get('description')?.touched
+      ) {
+        <hlm-field-error validator="required"
+          >Description is a required field.</hlm-field-error
+        >
+      } @else {
+        <p hlmDialogDescription>A brief overview of the role</p>
+      }
+    </hlm-field>
 
     @if (submitError()) {
-      <p class="text-sm text-red-600">{{ submitError() }}</p>
+      <div class="text-sm font-medium text-destructive">
+        {{ submitError() }}
+      </div>
     }
-
-    <div class="flex justify-end gap-2 pt-2">
-      <button
-        hlmBtn
-        variant="outline"
-        type="button"
-        [disabled]="isSubmitting()"
-        (click)="cancel()"
-      >
-        Cancel
-      </button>
-      <button hlmBtn type="submit" [disabled]="isSubmitting() || form.invalid">
-        {{ isSubmitting() ? 'Creating...' : 'Create Job' }}
-      </button>
-    </div>
-  </form>
-</div>
+  </hlm-field-group>
+</form>
+<app-create-job-dialog-footer
+  formId="createJobForm"
+  [disableSubmit]="form.invalid"
+  [isSubmitting]="isSubmitting()"
+/>

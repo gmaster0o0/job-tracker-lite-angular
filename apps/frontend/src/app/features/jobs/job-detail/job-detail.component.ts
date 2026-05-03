@@ -11,7 +11,10 @@ import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
+import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { CreateJobComponent } from '../create-job/create-job.component';
+import { EditJobComponent } from '../edit-job/edit-job.component';
+import { DeleteJobAlertDialogComponent } from '../delete-job-alert-dialog/delete-job-alert-dialog.component';
 import { ContactTabComponent } from '../contact-tab/contact-tab.component';
 import { JobOverviewComponent } from '../job-overview/job-overview.component';
 import { JobTabsComponent } from '../job-tabs/job-tabs.component';
@@ -21,6 +24,8 @@ import {
   lucideCircleX,
   lucideEllipsisVertical,
   lucidePlus,
+  lucideTrash,
+  lucidePencil,
 } from '@ng-icons/lucide';
 
 type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
@@ -38,12 +43,15 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
     JobOverviewComponent,
     JobTabsComponent,
     ProgessionStepperComponent,
+    HlmDropdownMenuImports,
   ],
   providers: [
     provideIcons({
       lucidePlus,
       lucideCircleX,
       lucideEllipsisVertical,
+      lucideTrash,
+      lucidePencil,
     }),
   ],
   templateUrl: './job-detail.component.html',
@@ -138,10 +146,32 @@ export class JobDetailComponent {
 
   protected openCreateJobDialog(): void {
     this.dialog.open(CreateJobComponent, {
-      contentClass: 'sm:max-w-xl !sm:mx-auto',
+      contentClass: 'sm:max-w-2xl w-[95vw]',
       context: {
         onCreated: (created: JobDto) => {
           this.router.navigate(['/jobs', created.id]);
+        },
+      },
+    });
+  }
+
+  protected openEditJobDialog(job: JobDto): void {
+    this.dialog.open(EditJobComponent, {
+      contentClass: 'sm:max-w-2xl w-[95vw]',
+      context: {
+        job,
+      },
+    });
+  }
+
+  protected openDeleteJobDialog(job: JobDto): void {
+    this.dialog.open(DeleteJobAlertDialogComponent, {
+      contentClass: 'sm:max-w-xl !sm:mx-auto',
+      context: {
+        company: job.company,
+        onConfirm: async () => {
+          await this.jobsDataAccess.deleteJob(job.id);
+          this.router.navigate(['/jobs']);
         },
       },
     });

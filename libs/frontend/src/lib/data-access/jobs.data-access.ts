@@ -6,6 +6,7 @@ import {
   CreateJobDto,
   JobDto,
   JobStatusDto,
+  UpdateJobDto,
   UpdateJobStatusDto,
   ContactDto,
 } from '@job-tracker-lite-angular/api-interfaces';
@@ -48,5 +49,19 @@ export class JobsDataAccessService {
     this.jobsResource.reload();
     this.jobResource.reload();
     return updated;
+  }
+
+  async updateJob(id: number, dto: UpdateJobDto): Promise<JobDto> {
+    const updated = await firstValueFrom(
+      this.http.patch<JobDto>(`/api/jobs/${id}`, dto),
+    );
+    this.jobsResource.reload();
+    this.jobResource.reload();
+    return updated;
+  }
+
+  async deleteJob(id: number): Promise<void> {
+    await firstValueFrom(this.http.delete(`/api/jobs/${id}`));
+    this.jobsResource.reload();
   }
 }

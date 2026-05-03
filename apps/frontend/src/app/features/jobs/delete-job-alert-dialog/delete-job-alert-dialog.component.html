@@ -1,0 +1,15 @@
+<app-delete-confirmation-dialog
+  title="Are you absolutely sure?"
+  confirmLabel="Delete Job"
+  [isBusy]="isDeleting()"
+  (cancel)="cancel()"
+  (confirm)="confirm()"
+>
+  <span deleteDialogDescription>
+    This action cannot be undone. This will permanently delete the job
+    application for
+    <span class="font-semibold text-foreground">{{ context.company }}</span>
+    and all its associated contacts.
+  </span>
+</app-delete-confirmation-dialog>
+`

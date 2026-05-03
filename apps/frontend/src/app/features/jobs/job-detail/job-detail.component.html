@@ -78,9 +78,43 @@
               size="icon-sm"
               type="button"
               aria-label="More options"
+              [hlmDropdownMenuTrigger]="moreOptions"
             >
               <ng-icon hlm size="sm" name="lucideEllipsisVertical" />
             </button>
+
+            <ng-template #moreOptions>
+              <div hlmDropdownMenu>
+                <div brnMenuContent align="end" class="w-48">
+                  <button
+                    hlmDropdownMenuItem
+                    (click)="openEditJobDialog(job()!)"
+                  >
+                    <ng-icon
+                      hlm
+                      size="sm"
+                      name="lucidePencil"
+                      class="h-4 w-4 mr-2"
+                    />
+                    Edit Job
+                  </button>
+                  <div hlmDropdownMenuSeparator></div>
+                  <button
+                    hlmDropdownMenuItem
+                    class="text-destructive focus:text-destructive"
+                    (click)="openDeleteJobDialog(job()!)"
+                  >
+                    <ng-icon
+                      hlm
+                      size="sm"
+                      name="lucideTrash"
+                      class="h-4 w-4 mr-2"
+                    />
+                    Delete Job
+                  </button>
+                </div>
+              </div>
+            </ng-template>
           </div>
         </div>
       </header>
