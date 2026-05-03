@@ -1,0 +1,23 @@
+<hlm-alert-dialog-content>
+  <hlm-alert-dialog-header>
+    <h3 hlmAlertDialogTitle>Are you absolutely sure?</h3>
+    <p hlmAlertDialogDescription>
+      This action cannot be undone. This will permanently delete the job
+      application for
+      <span class="font-semibold text-foreground">{{ context.company }}</span>
+      and all its associated contacts.
+    </p>
+  </hlm-alert-dialog-header>
+  <hlm-alert-dialog-footer>
+    <button hlmBtn variant="outline" (click)="cancel()">Cancel</button>
+    <button
+      hlmBtn
+      variant="destructive"
+      [disabled]="isDeleting()"
+      (click)="confirm()"
+    >
+      {{ isDeleting() ? 'Deleting...' : 'Delete Job' }}
+    </button>
+  </hlm-alert-dialog-footer>
+</hlm-alert-dialog-content>
+`
