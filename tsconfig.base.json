@@ -100,6 +100,9 @@
       ],
       "@spartan-ng/helm/input-group": [
         "./libs/shared-ui/input-group/src/index.ts"
+      ],
+      "@spartan-ng/helm/scroll-area": [
+        "./libs/shared-ui/scroll-area/src/index.ts"
       ]
     }
   },
