@@ -3,6 +3,7 @@ import { Component, inject, input, output, effect } from '@angular/core';
 import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { ContactListItemComponent } from '../contact-list-item/contact-list-item.component';
 
 @Component({
@@ -13,6 +14,9 @@ import { ContactListItemComponent } from '../contact-list-item/contact-list-item
 })
 export class ContactListComponent {
   private readonly jobsDataAccessService = inject(JobsDataAccessService);
+  private readonly contactsDataAccessService = inject(
+    ContactsDataAccessService,
+  );
 
   readonly jobId = input.required<number>();
   readonly edit = output<ContactDto>();
@@ -25,7 +29,7 @@ export class ContactListComponent {
   }
 
   protected readonly contactsResource =
-    this.jobsDataAccessService.jobContactsResource;
+    this.contactsDataAccessService.getContactsResource(this.jobId);
 
   protected onEdit(contact: ContactDto): void {
     this.edit.emit(contact);

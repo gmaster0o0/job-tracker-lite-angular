@@ -7,7 +7,20 @@ import {
   getSeedContactsForJob,
   seedJobFixtures,
   SeedContactTemplate,
-} from '../testing/src';
+} from '@job-tracker-lite-angular/shared-testing';
+import {
+  getSeedContactsForJob,
+  seedJobFixtures,
+  SeedContactTemplate,
+} from '@job-tracker-lite-angular/testing';
+import {
+  getSeedNotesForJob,
+  SeedNoteTemplate,
+} from '@job-tracker-lite-angular/shared-testing';
+import {
+  getSeedNotesForJob,
+  SeedNoteTemplate,
+} from '@job-tracker-lite-angular/testing';
 
 const envPath = path.join(process.cwd(), '.env');
 dotenv.config({ path: envPath });
@@ -55,12 +68,24 @@ async function main() {
         })),
       });
     }
+
+    const notes = getSeedNotesForJob(jobIndex);
+    await prisma.note.deleteMany({ where: { jobId: seededJob.id } });
+
+    if (notes.length > 0) {
+      await prisma.note.createMany({
+        data: notes.map((note: SeedNoteTemplate) => ({
+          jobId: seededJob.id,
+          content: note.content,
+        })),
+      });
+    }
   }
 
   await prisma.$disconnect();
 
   console.log(
-    `Seeded ${seedJobs.length} jobs with 0-2 contacts each (deterministic).`,
+    `Seeded ${seedJobs.length} jobs with 0-2 contacts and 0-1 notes each (deterministic).`,
   );
 }
 

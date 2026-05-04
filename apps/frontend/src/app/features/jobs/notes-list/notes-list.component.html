@@ -1,1 +1,25 @@
-<p>notes-list.component works!</p>
+<div class="space-y-4">
+  @if (notesResource.isLoading()) {
+    <div
+      class="rounded-xl border border-slate-200 border-dashed p-12 text-center text-sm text-muted-foreground"
+    >
+      Loading notes...
+    </div>
+  } @else if ((notesResource.value()?.length ?? 0) === 0) {
+    <div
+      class="space-y-4 rounded-xl border border-slate-200 border-dashed p-12 text-center text-lg text-slate-500"
+    >
+      <p>No notes yet.</p>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 gap-6 p-4 pb-24 lg:grid-cols-2 xl:grid-cols-3">
+      @for (note of notesResource.value() ?? []; track note.id) {
+        <app-notes-list-item
+          [note]="note"
+          (edit)="onEdit($event)"
+          (remove)="onRemove($event)"
+        />
+      }
+    </div>
+  }
+</div>

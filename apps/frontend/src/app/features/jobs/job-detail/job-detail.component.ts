@@ -17,7 +17,7 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { CreateJobComponent } from '../create-job/create-job.component';
 import { EditJobComponent } from '../edit-job/edit-job.component';
 import { DeleteJobAlertDialogComponent } from '../delete-job-alert-dialog/delete-job-alert-dialog.component';
-import { ContactTabComponent } from '../contact-tab/contact-tab.component';
+import { ContactsTabComponent } from '../contacts-tab/contacts-tab.component';
 import { JobOverviewComponent } from '../job-overview/job-overview.component';
 import { ProgessionStepperComponent } from '../../../shared/progession-stepper/progession-stepper.component';
 import { provideIcons } from '@ng-icons/core';
@@ -29,6 +29,7 @@ import {
   lucidePencil,
 } from '@ng-icons/lucide';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
+import { NotesTabComponent } from '../notes-tab/notes-tab.component';
 
 type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
 
@@ -40,7 +41,6 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
     HlmBadgeImports,
     HlmButtonImports,
     HlmCardImports,
-    ContactTabComponent,
     HlmTabsImports,
     BrnTabsImports,
     HlmIconImports,
@@ -48,6 +48,8 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
     ProgessionStepperComponent,
     HlmDropdownMenuImports,
     HlmTooltipImports,
+    ContactsTabComponent,
+    NotesTabComponent,
   ],
   providers: [
     provideIcons({

@@ -14,8 +14,13 @@ import {
 export class NotesDataAccessService {
   private readonly http = inject(HttpClient);
 
-  getNotesResource(jobId: number) {
-    return httpResource<NoteDto[]>(() => `/api/jobs/${jobId}/notes`);
+  getNotesResource(jobIdSource: () => number | undefined) {
+    return httpResource<NoteDto[]>(() => {
+      const id = jobIdSource();
+      if (id === undefined || id === null) return undefined;
+
+      return `/api/jobs/${id}/notes`;
+    });
   }
 
   async createNote(

@@ -14,8 +14,13 @@ import {
 export class ContactsDataAccessService {
   private readonly http = inject(HttpClient);
 
-  getContactsResource(jobId: number) {
-    return httpResource<ContactDto[]>(() => `/api/jobs/${jobId}/contacts`);
+  getContactsResource(jobIdSource: () => number | undefined) {
+    return httpResource<ContactDto[]>(() => {
+      const id = jobIdSource();
+      if (id === undefined || id === null) return undefined;
+
+      return `/api/jobs/${id}/contacts`;
+    });
   }
 
   async createContact(
