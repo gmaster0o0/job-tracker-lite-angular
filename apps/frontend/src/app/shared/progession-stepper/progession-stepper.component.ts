@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
+import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
+import { BrnTooltip } from '@spartan-ng/brain/tooltip';
 import { provideIcons } from '@ng-icons/core';
 import { lucideCheck } from '@ng-icons/lucide';
 
 @Component({
   standalone: true,
   selector: 'app-progession-stepper',
-  imports: [CommonModule, HlmIconImports],
+  imports: [CommonModule, HlmIconImports, HlmTooltipImports, BrnTooltip],
   providers: [provideIcons({ lucideCheck })],
   templateUrl: './progession-stepper.component.html',
 })

@@ -6,6 +6,7 @@ import { JobCardComponent } from '../../features/jobs/job-card/job-card.componen
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmInputImports } from '@spartan-ng/helm/input';
+import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { provideIcons } from '@ng-icons/core';
 import { lucideSearch, lucideGhost } from '@ng-icons/lucide';
 
@@ -26,6 +27,7 @@ type FilterChip = {
     HlmButtonImports,
     HlmIconImports,
     HlmInputImports,
+    HlmTooltipImports,
   ],
   providers: [provideIcons({ lucideSearch, lucideGhost })],
   templateUrl: './jobs-menu.component.html',

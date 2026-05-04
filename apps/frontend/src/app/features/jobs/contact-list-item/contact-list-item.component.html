@@ -11,10 +11,22 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <button hlmBtn variant="ghost" size="icon-sm" (click)="onEdit()">
+        <button
+          hlmBtn
+          [hlmTooltip]="'Edit contact'"
+          variant="ghost"
+          size="icon-sm"
+          (click)="onEdit()"
+        >
           <ng-icon hlm size="sm" name="lucidePencil" />
         </button>
-        <button hlmBtn variant="ghost" size="icon-sm" (click)="onRemove()">
+        <button
+          hlmBtn
+          [hlmTooltip]="'Remove contact'"
+          variant="ghost"
+          size="icon-sm"
+          (click)="onRemove()"
+        >
           <ng-icon hlm size="sm" name="lucideTrash2" />
         </button>
       </div>

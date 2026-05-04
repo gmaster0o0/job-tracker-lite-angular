@@ -40,6 +40,7 @@
         class="ml-auto shrink-0 transition-colors"
         [class.text-destructive]="showRejected()"
         [class.hover:text-destructive]="showRejected()"
+        [hlmTooltip]="'Toggle showing rejected jobs'"
       >
         <ng-icon hlm size="sm" name="lucideGhost" />
       </button>
