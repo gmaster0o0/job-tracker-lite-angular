@@ -6,5 +6,10 @@
   ],
   "scss.lint.unknownAtRules": "ignore",
   "css.lint.unknownAtRules": "ignore",
-  "tailwindCSS.classFunctions": ["hlm", "cva", "classes"]
+  "tailwindCSS.classFunctions": [
+    "hlm",
+    "cva",
+    "classes"
+  ],
+  "angular.enable-strict-mode-prompt": false
 }

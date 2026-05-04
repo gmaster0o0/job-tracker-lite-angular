@@ -14,24 +14,27 @@ export const noteFixtures: NoteFixturesMap = {
   janeDoe: {
     id: 1,
     jobId: 10,
-    content: 'Jane Doe note content',
+    title: 'Jane Doe note title',
+    body: 'Jane Doe note body',
     createdAt: '2026-04-29T09:00:00.000Z',
     updatedAt: '2026-04-29T09:00:00.000Z',
-  } as NoteDto,
+  },
   johnDoe: {
     id: 2,
     jobId: 10,
-    content: 'John Doe note content',
+    title: 'John Doe note title',
+    body: 'John Doe note body',
     createdAt: '2026-04-29T09:00:00.000Z',
     updatedAt: '2026-04-29T09:00:00.000Z',
   },
   updatedNote: {
     id: 2,
     jobId: 10,
-    content: 'Updated note content',
+    title: 'Updated note title',
+    body: 'Updated note body',
     createdAt: '2026-04-29T09:00:00.000Z',
     updatedAt: '2026-04-29T09:00:00.000Z',
-  } as NoteDto,
+  },
 };
 
 export interface CreateNoteFixturesMap {
@@ -41,10 +44,12 @@ export interface CreateNoteFixturesMap {
 
 export const createNoteFixtures: CreateNoteFixturesMap = {
   janeDoe: {
-    content: 'Jane Doe note content',
+    title: 'Jane Doe note title',
+    body: 'Jane Doe note body',
   },
   johnDoe: {
-    content: 'John Doe note content',
+    title: 'John Doe note title',
+    body: 'John Doe note body',
   },
 };
 
@@ -54,6 +59,7 @@ export interface UpdateNoteFixturesMap {
 
 export const updateNoteFixtures: UpdateNoteFixturesMap = {
   updatedNote: {
-    content: 'Updated note content',
+    title: 'Updated note title',
+    body: 'Updated note body',
   },
 };

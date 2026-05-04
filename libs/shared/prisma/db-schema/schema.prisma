@@ -46,7 +46,8 @@ model Contact {
 
 model Note {
   id          Int      @id @default(autoincrement())
-  content     String
+  title       String
+  body        String
   jobId       Int
   job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())

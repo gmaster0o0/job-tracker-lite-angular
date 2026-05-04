@@ -312,7 +312,8 @@ function mapNoteToDto(note: Note): NoteDto {
   return {
     id: note.id,
     jobId: note.jobId,
-    content: note.content,
+    title: note.title,
+    body: note.body,
     createdAt: note.createdAt.toISOString(),
     updatedAt: note.updatedAt.toISOString(),
   };

@@ -76,7 +76,8 @@ async function main() {
       await prisma.note.createMany({
         data: notes.map((note: SeedNoteTemplate) => ({
           jobId: seededJob.id,
-          content: note.content,
+          title: note.title,
+          body: note.body,
         })),
       });
     }

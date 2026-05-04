@@ -12,7 +12,8 @@ export interface SeedContactTemplate {
 }
 
 export interface SeedNoteTemplate {
-  content: string;
+  title: string;
+  body: string;
 }
 
 export const seedJobFixtures: readonly JobDto[] = [
@@ -41,6 +42,13 @@ const noteContentPool = [
   'Research the company culture and recent news.',
   'Prepare answers for common interview questions.',
   'Review the job description and requirements.',
+] as const;
+
+const noteTitlePool = [
+  'Follow-up',
+  'Company Research',
+  'Interview Prep',
+  'Job Description Review',
 ] as const;
 
 function slugify(value: string): string {
@@ -87,11 +95,10 @@ export function getSeedNotesForJob(jobIndex: number): SeedNoteTemplate[] {
   const noteCount = jobIndex % 2;
 
   return Array.from({ length: noteCount }, (_, noteIndex) => {
-    const content =
-      noteContentPool[(jobIndex + noteIndex) % noteContentPool.length];
-
+    const poolIndex = (jobIndex + noteIndex) % noteContentPool.length;
     return {
-      content,
+      title: noteTitlePool[poolIndex],
+      body: noteContentPool[poolIndex],
     };
   });
 }

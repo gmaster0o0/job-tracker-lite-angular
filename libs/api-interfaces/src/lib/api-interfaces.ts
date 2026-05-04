@@ -77,15 +77,18 @@ export interface UpdateContactDto {
 export interface NoteDto {
   id: number;
   jobId: number;
-  content: string;
+  title: string;
+  body: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface CreateNoteDto {
-  content: string;
+  title: string;
+  body: string;
 }
 
 export interface UpdateNoteDto {
-  content?: string;
+  title?: string;
+  body?: string;
 }
