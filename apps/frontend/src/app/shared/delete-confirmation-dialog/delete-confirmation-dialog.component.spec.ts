@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
-import { dialogRefMock } from '@job-tracker-lite-angular/shared-testing';
+import { dialogRefMock } from '@job-tracker-lite-angular/testing';
 import { DeleteConfirmationDialogComponent } from './delete-confirmation-dialog.component';
 
 @Component({

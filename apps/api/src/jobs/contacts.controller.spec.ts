@@ -5,7 +5,7 @@ import {
   contactFixtures,
   createContactFixtures,
   updateContactFixtures,
-} from '@job-tracker-lite-angular/shared-testing';
+} from '@job-tracker-lite-angular/testing';
 
 describe('ContactsController', () => {
   let contactsController: ContactsController;

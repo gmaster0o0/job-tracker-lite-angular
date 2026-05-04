@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
-import { contactFixtures } from '@job-tracker-lite-angular/shared-testing';
+import { contactFixtures } from '@job-tracker-lite-angular/testing';
 import { ContactListItemComponent } from './contact-list-item.component';
 
 describe('ContactListItemComponent', () => {

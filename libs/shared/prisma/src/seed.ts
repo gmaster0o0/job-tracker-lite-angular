@@ -7,17 +7,6 @@ import {
   getSeedContactsForJob,
   seedJobFixtures,
   SeedContactTemplate,
-} from '@job-tracker-lite-angular/shared-testing';
-import {
-  getSeedContactsForJob,
-  seedJobFixtures,
-  SeedContactTemplate,
-} from '@job-tracker-lite-angular/testing';
-import {
-  getSeedNotesForJob,
-  SeedNoteTemplate,
-} from '@job-tracker-lite-angular/shared-testing';
-import {
   getSeedNotesForJob,
   SeedNoteTemplate,
 } from '@job-tracker-lite-angular/testing';

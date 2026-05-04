@@ -80,9 +80,6 @@
       "@spartan-ng/helm/tabs": [
         "./libs/shared-ui/tabs/src/index.ts"
       ],
-      "@job-tracker-lite-angular/shared-testing": [
-        "./libs/shared/testing/src/index.ts"
-      ],
       "@job-tracker-lite-angular/testing": [
         "./libs/shared/testing/src/index.ts"
       ],

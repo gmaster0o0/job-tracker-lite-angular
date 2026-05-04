@@ -4,7 +4,7 @@ import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-a
 import {
   createJobsDataAccessMock,
   jobFixtures,
-} from '@job-tracker-lite-angular/shared-testing';
+} from '@job-tracker-lite-angular/testing';
 
 describe('JobListComponent', () => {
   beforeEach(async () => {

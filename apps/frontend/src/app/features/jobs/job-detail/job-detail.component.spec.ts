@@ -14,7 +14,7 @@ import {
   createContactsDataAccessMock,
   createJobsDataAccessMock,
   jobFixtures,
-} from '@job-tracker-lite-angular/shared-testing';
+} from '@job-tracker-lite-angular/testing';
 
 describe('JobDetailComponent', () => {
   const baseJob = jobFixtures.platformEngineer;

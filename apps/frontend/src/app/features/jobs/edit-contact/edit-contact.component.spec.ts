@@ -7,7 +7,7 @@ import {
   contactFixtures,
   createContactsDataAccessMock,
   updateContactFixtures,
-} from '@job-tracker-lite-angular/shared-testing';
+} from '@job-tracker-lite-angular/testing';
 
 describe('EditContactComponent', () => {
   it('should submit and call update', async () => {

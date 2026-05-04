@@ -5,7 +5,7 @@ import {
   noteFixtures,
   createNoteFixtures,
   updateNoteFixtures,
-} from '@job-tracker-lite-angular/shared-testing';
+} from '@job-tracker-lite-angular/testing';
 
 describe('NotesController', () => {
   let notesController: NotesController;

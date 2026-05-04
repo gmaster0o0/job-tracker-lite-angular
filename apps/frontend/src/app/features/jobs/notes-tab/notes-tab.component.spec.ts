@@ -8,7 +8,7 @@ import {
 import {
   createContactsDataAccessMock,
   createJobsDataAccessMock,
-} from '@job-tracker-lite-angular/shared-testing';
+} from '@job-tracker-lite-angular/testing';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { vi } from 'vitest';
 import { ContactTabComponent } from '../contact-tab/contact-tab.component';

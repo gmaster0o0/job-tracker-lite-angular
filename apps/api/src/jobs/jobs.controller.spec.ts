@@ -5,7 +5,7 @@ import {
   createJobFixtures,
   jobFixtures,
   jobResultFixtures,
-} from '@job-tracker-lite-angular/shared-testing';
+} from '@job-tracker-lite-angular/testing';
 
 describe('JobsController', () => {
   let controller: JobsController;

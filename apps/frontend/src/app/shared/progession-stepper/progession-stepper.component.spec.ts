@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ProgessionStepperComponent } from './progession-stepper.component';
-import { jobStepperLabels } from '@job-tracker-lite-angular/shared-testing';
+import { jobStepperLabels } from '@job-tracker-lite-angular/testing';
 
 describe('ProgessionStepperComponent', () => {
   const labels = jobStepperLabels;
