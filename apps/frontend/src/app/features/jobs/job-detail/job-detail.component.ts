@@ -28,6 +28,7 @@ import {
   lucideTrash,
   lucidePencil,
 } from '@ng-icons/lucide';
+import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 
 type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
 
@@ -46,6 +47,7 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
     JobOverviewComponent,
     ProgessionStepperComponent,
     HlmDropdownMenuImports,
+    HlmTooltipImports,
   ],
   providers: [
     provideIcons({

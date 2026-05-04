@@ -4,6 +4,7 @@ import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
+import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { provideIcons } from '@ng-icons/core';
 import {
   lucideMail,
@@ -16,7 +17,13 @@ import {
 @Component({
   standalone: true,
   selector: 'app-contact-list-item',
-  imports: [CommonModule, HlmCardImports, HlmButtonImports, HlmIconImports],
+  imports: [
+    CommonModule,
+    HlmCardImports,
+    HlmButtonImports,
+    HlmIconImports,
+    HlmTooltipImports,
+  ],
   providers: [
     provideIcons({
       lucideUser,
