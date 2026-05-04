@@ -41,7 +41,7 @@ export class ContactTabComponent {
       contentClass: 'sm:max-w-lg !sm:mx-auto',
       context: {
         jobId: this.jobId(),
-        onUpdated: async () => {
+        onCreated: async () => {
           this.jobsDataAccess.jobContactsResource.reload();
         },
       },
@@ -68,6 +68,7 @@ export class ContactTabComponent {
         contactName: contact.name,
         onConfirm: async () => {
           await this.contactsDataAccess.deleteContact(this.jobId(), contact.id);
+          this.jobsDataAccess.jobContactsResource.reload();
         },
       },
     });

@@ -12,7 +12,7 @@
       <p>No contacts yet.</p>
     </div>
   } @else {
-    <div class="grid gap-4 md:grid-cols-2">
+    <div class="grid grid-cols-1 gap-6 p-4 pb-24 lg:grid-cols-2 xl:grid-cols-3">
       @for (contact of contactsResource.value() ?? []; track contact.id) {
         <app-contact-list-item
           [contact]="contact"
