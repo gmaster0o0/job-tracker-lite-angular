@@ -1,10 +1,18 @@
-import { ContactDto, JobDto } from '@job-tracker-lite-angular/api-interfaces';
+import {
+  ContactDto,
+  JobDto,
+  NoteDto,
+} from '@job-tracker-lite-angular/api-interfaces';
 import { jobFixtures } from './jobs.fixtures';
 
 export interface SeedContactTemplate {
   name: string;
   email: string;
   phoneNumber: string;
+}
+
+export interface SeedNoteTemplate {
+  content: string;
 }
 
 export const seedJobFixtures: readonly JobDto[] = [
@@ -26,6 +34,13 @@ const contactNamePool = [
   ['Daniel Szabo', 'Reka Toth'],
   ['Peter Nagy', 'Anna Fodor'],
   ['Levente Varga', 'Eszter Simon'],
+] as const;
+
+const noteContentPool = [
+  'Follow up with the recruiter about the next steps.',
+  'Research the company culture and recent news.',
+  'Prepare answers for common interview questions.',
+  'Review the job description and requirements.',
 ] as const;
 
 function slugify(value: string): string {
@@ -67,3 +82,27 @@ export const seedContactFixtures: readonly ContactDto[] =
       }),
     ),
   );
+
+export function getSeedNotesForJob(jobIndex: number): SeedNoteTemplate[] {
+  const noteCount = jobIndex % 2;
+
+  return Array.from({ length: noteCount }, (_, noteIndex) => {
+    const content =
+      noteContentPool[(jobIndex + noteIndex) % noteContentPool.length];
+
+    return {
+      content,
+    };
+  });
+}
+
+export const seedNoteFixtures: readonly NoteDto[] = seedJobFixtures.flatMap(
+  (job, jobIndex) =>
+    getSeedNotesForJob(jobIndex).map((note, noteIndex) => ({
+      id: job.id * 10 + noteIndex + 1,
+      jobId: job.id,
+      ...note,
+      createdAt: '2026-04-29T09:00:00.000Z',
+      updatedAt: '2026-04-29T09:00:00.000Z',
+    })),
+);
