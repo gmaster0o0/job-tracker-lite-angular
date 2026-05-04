@@ -1,46 +1,44 @@
-<div hlmCard class="flex items-start gap-4">
-  <div
-    class="flex h-12 w-12 items-center justify-center rounded-md bg-slate-100"
-  >
-    <ng-icon hlm size="lg" name="lucideUser" />
+<div hlmCard class="flex flex-row items-center justify-between p-6 shadow-sm">
+  <div class="flex flex-col gap-3">
+    <div class="flex items-center gap-3">
+      <ng-icon hlm name="lucideUser" class="text-slate-900" size="sm" />
+      <span class="text-base font-semibold text-slate-900">{{
+        contact().name
+      }}</span>
+    </div>
+
+    <div class="flex items-center gap-3 text-sm text-slate-500">
+      <ng-icon hlm name="lucideMail" size="xs" />
+      <span class="hover:text-primary cursor-pointer">{{
+        contact().email
+      }}</span>
+    </div>
+
+    <div class="flex items-center gap-3 text-sm text-slate-500">
+      <ng-icon hlm name="lucidePhone" size="xs" />
+      <span>{{ contact().phoneNumber }}</span>
+    </div>
   </div>
-  <div class="flex-1">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="font-medium text-slate-900">{{ contact().name }}</p>
-      </div>
 
-      <div class="flex items-center gap-2">
-        <button
-          hlmBtn
-          [hlmTooltip]="'Edit contact'"
-          variant="ghost"
-          size="icon-sm"
-          (click)="onEdit()"
-        >
-          <ng-icon hlm size="sm" name="lucidePencil" />
-        </button>
-        <button
-          hlmBtn
-          [hlmTooltip]="'Remove contact'"
-          variant="ghost"
-          size="icon-sm"
-          (click)="onRemove()"
-        >
-          <ng-icon hlm size="sm" name="lucideTrash2" />
-        </button>
-      </div>
-    </div>
+  <div class="flex flex-col gap-1">
+    <button
+      hlmBtn
+      variant="ghost"
+      size="icon-sm"
+      (click)="onEdit()"
+      class="h-9 w-9 text-slate-400 hover:bg-slate-50 hover:text-blue-600"
+    >
+      <ng-icon hlm size="sm" name="lucidePencil" />
+    </button>
 
-    <div class="mt-2 flex items-center gap-4 text-sm text-slate-500">
-      <div class="flex items-center gap-2">
-        <ng-icon hlm size="sm" name="lucideMail" />
-        <span>{{ contact().email }}</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <ng-icon hlm size="sm" name="lucidePhone" />
-        <span>{{ contact().phoneNumber }}</span>
-      </div>
-    </div>
+    <button
+      hlmBtn
+      variant="ghost"
+      size="icon-sm"
+      (click)="onRemove()"
+      class="h-9 w-9 text-slate-400 hover:bg-red-50 hover:text-red-600"
+    >
+      <ng-icon hlm size="sm" name="lucideTrash2" />
+    </button>
   </div>
 </div>
