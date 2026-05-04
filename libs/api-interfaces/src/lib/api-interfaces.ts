@@ -73,3 +73,19 @@ export interface UpdateContactDto {
   email?: string;
   phoneNumber?: string;
 }
+
+export interface NoteDto {
+  id: number;
+  jobId: number;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateNoteDto {
+  content: string;
+}
+
+export interface UpdateNoteDto {
+  content?: string;
+}

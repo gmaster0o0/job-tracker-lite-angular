@@ -2,10 +2,12 @@ import { JobStatus } from '@prisma/client';
 import { PrismaService } from './lib/prisma.service';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
+import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
 import {
   getSeedContactsForJob,
   seedJobFixtures,
-} from '@job-tracker-lite-angular/shared-testing';
+  SeedContactTemplate,
+} from '../testing/src';
 
 const envPath = path.join(process.cwd(), '.env');
 dotenv.config({ path: envPath });
@@ -18,7 +20,7 @@ const statusMap: Record<string, JobStatus> = {
   rejected: JobStatus.REJECTED,
 };
 
-const seedJobs = seedJobFixtures.map((job) => ({
+const seedJobs = seedJobFixtures.map((job: JobDto) => ({
   ...job,
   status: statusMap[job.status] ?? JobStatus.REJECTED,
 }));
@@ -45,7 +47,7 @@ async function main() {
 
     if (contacts.length > 0) {
       await prisma.contact.createMany({
-        data: contacts.map((contact) => ({
+        data: contacts.map((contact: SeedContactTemplate) => ({
           jobId: seededJob.id,
           name: contact.name,
           email: contact.email,

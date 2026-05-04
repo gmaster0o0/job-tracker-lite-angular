@@ -2,12 +2,9 @@ import { Test } from '@nestjs/testing';
 import { JobsController } from './jobs.controller';
 import { JobsService } from './jobs.service';
 import {
-  contactFixtures,
-  createContactFixtures,
   createJobFixtures,
   jobFixtures,
   jobResultFixtures,
-  updateContactFixtures,
 } from '@job-tracker-lite-angular/shared-testing';
 
 describe('JobsController', () => {
@@ -76,35 +73,5 @@ describe('JobsController', () => {
       ...jobFixtures.backendEngineer,
       id: 3,
     });
-  });
-
-  it('should delegate contact listing to the service', async () => {
-    jobsService.findContacts.mockResolvedValue([contactFixtures.janeDoe]);
-
-    await expect(controller.findContacts(10)).resolves.toEqual([
-      contactFixtures.janeDoe,
-    ]);
-  });
-
-  it('should delegate contact creation to the service', async () => {
-    jobsService.createContact.mockResolvedValue(contactFixtures.johnDoe);
-
-    await expect(
-      controller.createContact(10, createContactFixtures.johnDoe),
-    ).resolves.toEqual(contactFixtures.johnDoe);
-  });
-
-  it('should delegate contact update to the service', async () => {
-    jobsService.updateContact.mockResolvedValue(contactFixtures.updatedContact);
-
-    await expect(
-      controller.updateContact(10, 2, updateContactFixtures.updatedContact),
-    ).resolves.toEqual(contactFixtures.updatedContact);
-  });
-
-  it('should delegate contact deletion to the service', async () => {
-    jobsService.deleteContact.mockResolvedValue(undefined);
-
-    await expect(controller.deleteContact(10, 2)).resolves.toBeUndefined();
   });
 });

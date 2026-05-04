@@ -198,10 +198,18 @@ npx nx run api-e2e:e2e
 
 # View project graph
 npx nx graph
-
-# Generate Angular component example
-npx nx g @nx/angular:component --path=apps/frontend/src/app/navigation/jobs-menu/jobs-menu --standalone
 ```
+
+### Angular component generation
+```sh
+#old style angular naming convention
+npx nx g @nx/angular:component apps/frontend/src/app/feature/jobs/notes-list/notes-list.component
+```
+#these flags are set in nx.json for all components, but can be overridden per component generation
+**--style=none** generate without style file
+**--standalone** generate as a standalone component without being declared in a module
+
+See `CONTRIBUTING.md` for the full Prisma migration workflow and the component checklist.
 
 ## Additional resources
 
