@@ -20,14 +20,7 @@ export class NotesListComponent {
   readonly edit = output<NoteDto>();
   readonly remove = output<NoteDto>();
 
-  constructor() {
-    effect(() => {
-      this.jobsDataAccessService.selectJob(this.jobId());
-    });
-  }
-
-  protected readonly notesResource =
-    this.notesDataAccessService.getNotesResource(this.jobId);
+  protected readonly notesResource = this.notesDataAccessService.notesResource;
 
   protected onEdit(note: NoteDto): void {
     this.edit.emit(note);

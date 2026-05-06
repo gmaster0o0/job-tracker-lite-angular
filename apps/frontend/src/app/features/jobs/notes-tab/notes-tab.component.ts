@@ -10,10 +10,10 @@ import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { provideIcons } from '@ng-icons/core';
 import { lucidePlus } from '@ng-icons/lucide';
-import { CreateContactComponent } from '../create-contact/create-contact.component';
-import { DeleteContactAlertDialogComponent } from '../delete-contact-alert-dialog/delete-contact-alert-dialog.component';
-import { EditContactComponent } from '../edit-contact/edit-contact.component';
 import { NotesListComponent } from '../notes-list/notes-list.component';
+import { EditNoteComponent } from '../edit-note/edit-note.component';
+import { DeleteConfirmationDialogComponent } from '../../../shared';
+import { CreateNoteComponent } from '../create-note/create-note.component';
 
 @Component({
   standalone: true,
@@ -29,42 +29,40 @@ export class NotesTabComponent {
 
   readonly jobId = input.required<number>();
 
-  protected readonly notesResource = this.notesDataAccess.getNotesResource(
-    this.jobId,
-  );
+  protected readonly notesResource = this.notesDataAccess.notesResource;
 
   protected openCreateDialog(): void {
-    this.dialog.open(CreateContactComponent, {
+    this.dialog.open(CreateNoteComponent, {
       contentClass: 'sm:max-w-lg !sm:mx-auto',
       context: {
         jobId: this.jobId(),
         onCreated: async () => {
-          this.notesResource.reload();
+          this.notesDataAccess.notesResource.reload();
         },
       },
     });
   }
 
   protected openEditDialog(note: NoteDto): void {
-    this.dialog.open(EditContactComponent, {
+    this.dialog.open(EditNoteComponent, {
       contentClass: 'sm:max-w-lg !sm:mx-auto',
       context: {
         jobId: this.jobId(),
         note,
         onUpdated: async () => {
-          this.notesResource.reload();
+          this.notesDataAccess.notesResource.reload();
         },
       },
     });
   }
 
   protected openDeleteDialog(note: NoteDto): void {
-    this.dialog.open(DeleteContactAlertDialogComponent, {
+    this.dialog.open(DeleteConfirmationDialogComponent, {
       contentClass: 'sm:max-w-md !sm:mx-auto',
       context: {
         onConfirm: async () => {
           await this.notesDataAccess.deleteNote(this.jobId(), note.id);
-          this.notesResource.reload();
+          this.notesDataAccess.notesResource.reload();
         },
       },
     });

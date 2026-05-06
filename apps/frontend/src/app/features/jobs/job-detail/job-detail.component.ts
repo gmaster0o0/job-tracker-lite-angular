@@ -5,7 +5,11 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
-import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  JobsDataAccessService,
+  ContactsDataAccessService,
+  NotesDataAccessService,
+} from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -66,6 +70,8 @@ export class JobDetailComponent {
   protected readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly jobsDataAccess = inject(JobsDataAccessService);
+  private readonly contactsDataAccess = inject(ContactsDataAccessService);
+  private readonly notesDataAccess = inject(NotesDataAccessService);
   private readonly dialog = inject(HlmDialogService);
 
   protected readonly jobsResource = this.jobsDataAccess.jobsResource;
@@ -142,7 +148,10 @@ export class JobDetailComponent {
 
   constructor() {
     effect(() => {
-      this.jobsDataAccess.selectJob(this.selectedJobId());
+      const jobId: number | null = this.selectedJobId();
+      this.jobsDataAccess.selectJob(jobId);
+      this.contactsDataAccess.selectJob(jobId);
+      this.notesDataAccess.selectJob(jobId);
     });
   }
 

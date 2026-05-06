@@ -4,40 +4,44 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
-import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
-import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { ContactDto, NoteDto } from '@job-tracker-lite-angular/api-interfaces';
+import {
+  ContactsDataAccessService,
+  NotesDataAccessService,
+} from '@job-tracker-lite-angular/frontend-data-access';
+import { EditJobDialogFooterComponent } from '../../../shared/edit-job-dialog-footer/edit-job-dialog-footer.component';
 
-type EditContactDialogContext = {
+type EditNoteDialogContext = {
   jobId: number;
-  contact: ContactDto;
+  note: NoteDto;
   onUpdated?: () => void;
 };
 
 @Component({
   standalone: true,
-  selector: 'app-edit-contact',
+  selector: 'app-edit-note',
   imports: [
     CommonModule,
     ReactiveFormsModule,
     HlmButtonImports,
     HlmInputImports,
+    EditJobDialogFooterComponent,
   ],
-  templateUrl: './edit-contact.component.html',
+  templateUrl: './edit-note.component.html',
 })
-export class EditContactComponent {
+export class EditNoteComponent {
   private readonly fb = inject(FormBuilder);
-  private readonly contactsDataAccess = inject(ContactsDataAccessService);
+  private readonly notesDataAccess = inject(NotesDataAccessService);
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
-  private readonly context = injectBrnDialogContext<EditContactDialogContext>({
+  private readonly context = injectBrnDialogContext<EditNoteDialogContext>({
     optional: true,
   }) ?? {
     jobId: 0,
-    contact: {
+    note: {
       id: 0,
       jobId: 0,
-      name: '',
-      email: '',
-      phoneNumber: '',
+      title: '',
+      body: '',
       createdAt: '',
       updatedAt: '',
     },
@@ -47,12 +51,8 @@ export class EditContactComponent {
   protected readonly submitError = signal<string | null>(null);
 
   protected readonly form = this.fb.nonNullable.group({
-    name: [this.context.contact.name, Validators.required],
-    email: [
-      this.context.contact.email,
-      [Validators.required, Validators.email],
-    ],
-    phoneNumber: [this.context.contact.phoneNumber, Validators.required],
+    title: [this.context.note.title, Validators.required],
+    body: [this.context.note.body, Validators.required],
   });
 
   protected async submit(): Promise<void> {
@@ -65,20 +65,19 @@ export class EditContactComponent {
     this.isSubmitting.set(true);
 
     try {
-      const updated = await this.contactsDataAccess.updateContact(
+      const updated = await this.notesDataAccess.updateNote(
         this.context.jobId,
-        this.context.contact.id,
+        this.context.note.id,
         {
-          name: this.form.controls.name.value.trim(),
-          email: this.form.controls.email.value.trim(),
-          phoneNumber: this.form.controls.phoneNumber.value.trim(),
+          title: this.form.controls.title.value.trim(),
+          body: this.form.controls.body.value.trim(),
         },
       );
 
       this.context.onUpdated?.();
       this.dialogRef?.close(updated);
     } catch {
-      this.submitError.set('Failed to update contact. Please try again.');
+      this.submitError.set('Failed to update note. Please try again.');
     } finally {
       this.isSubmitting.set(false);
     }

@@ -14,7 +14,7 @@
     type="button"
     variant="destructive"
     [disabled]="isBusy()"
-    (click)="confirm.emit()"
+    (click)="onConfirm()"
   >
     {{ isBusy() ? busyLabel() : confirmLabel() }}
   </button>

@@ -25,11 +25,6 @@ export class JobsDataAccessService {
     return id === null ? undefined : `/api/jobs/${id}`;
   });
 
-  jobContactsResource = httpResource<ContactDto[]>(() => {
-    const id = this.selectedJobId();
-    return id === null ? undefined : `/api/jobs/${id}/contacts`;
-  });
-
   selectJob(id: number | null): void {
     this.selectedJobId.set(id);
   }

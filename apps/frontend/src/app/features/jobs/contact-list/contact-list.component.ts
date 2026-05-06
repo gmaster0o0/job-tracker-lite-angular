@@ -22,14 +22,8 @@ export class ContactListComponent {
   readonly edit = output<ContactDto>();
   readonly remove = output<ContactDto>();
 
-  constructor() {
-    effect(() => {
-      this.jobsDataAccessService.selectJob(this.jobId());
-    });
-  }
-
   protected readonly contactsResource =
-    this.contactsDataAccessService.getContactsResource(this.jobId);
+    this.contactsDataAccessService.contactsResource;
 
   protected onEdit(contact: ContactDto): void {
     this.edit.emit(contact);

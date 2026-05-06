@@ -12,7 +12,7 @@
       <p>No notes yet.</p>
     </div>
   } @else {
-    <div class="grid grid-cols-1 gap-6 p-4 pb-24 lg:grid-cols-2 xl:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 p-4 pb-24 lg:grid-cols-2">
       @for (note of notesResource.value() ?? []; track note.id) {
         <app-notes-list-item
           [note]="note"

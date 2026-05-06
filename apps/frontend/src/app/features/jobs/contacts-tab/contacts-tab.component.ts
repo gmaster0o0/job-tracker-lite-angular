@@ -34,7 +34,8 @@ export class ContactsTabComponent {
 
   readonly jobId = input.required<number>();
 
-  protected readonly contactsResource = this.jobsDataAccess.jobContactsResource;
+  protected readonly contactsResource =
+    this.contactsDataAccess.contactsResource;
 
   protected openCreateDialog(): void {
     this.dialog.open(CreateContactComponent, {
@@ -42,7 +43,7 @@ export class ContactsTabComponent {
       context: {
         jobId: this.jobId(),
         onCreated: async () => {
-          this.jobsDataAccess.jobContactsResource.reload();
+          this.contactsDataAccess.contactsResource.reload();
         },
       },
     });
@@ -55,7 +56,7 @@ export class ContactsTabComponent {
         jobId: this.jobId(),
         contact,
         onUpdated: async () => {
-          this.jobsDataAccess.jobContactsResource.reload();
+          this.contactsDataAccess.contactsResource.reload();
         },
       },
     });
@@ -68,7 +69,7 @@ export class ContactsTabComponent {
         contactName: contact.name,
         onConfirm: async () => {
           await this.contactsDataAccess.deleteContact(this.jobId(), contact.id);
-          this.jobsDataAccess.jobContactsResource.reload();
+          this.contactsDataAccess.contactsResource.reload();
         },
       },
     });
