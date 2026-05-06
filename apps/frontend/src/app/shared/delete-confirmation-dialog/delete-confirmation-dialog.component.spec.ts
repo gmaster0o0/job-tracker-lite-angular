@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrnDialogRef, BRN_DIALOG_CONTEXT } from '@spartan-ng/brain/dialog';
-import { dialogRefMock } from '@job-tracker-lite-angular/testing';
+import { BrnDialogRef, BrnDialogContext } from '@spartan-ng/brain/dialog';
+import {
+  dialogRefMock,
+  deleteConfirmationDialogFixtures,
+} from '@job-tracker-lite-angular/testing';
 import { DeleteConfirmationDialogComponent } from './delete-confirmation-dialog.component';
 
 @Component({
@@ -29,14 +32,8 @@ describe('DeleteConfirmationDialogComponent', () => {
       providers: [
         { provide: BrnDialogRef, useValue: dialogRefMock },
         {
-          provide: BRN_DIALOG_CONTEXT,
-          useValue: {
-            title: 'Remove item?',
-            confirmLabel: 'Delete item',
-            busyLabel: 'Deleting item...',
-            cancelLabel: 'Keep item',
-            isBusy: false,
-          },
+          provide: BrnDialogContext,
+          useValue: deleteConfirmationDialogFixtures.default,
         },
       ],
     }).compileComponents();
@@ -74,14 +71,8 @@ describe('DeleteConfirmationDialogComponent', () => {
       providers: [
         { provide: BrnDialogRef, useValue: dialogRefMock },
         {
-          provide: BRN_DIALOG_CONTEXT,
-          useValue: {
-            title: 'Remove item?',
-            confirmLabel: 'Delete item',
-            busyLabel: 'Deleting item...',
-            cancelLabel: 'Keep item',
-            isBusy: true,
-          },
+          provide: BrnDialogContext,
+          useValue: deleteConfirmationDialogFixtures.busy,
         },
       ],
     }).compileComponents();

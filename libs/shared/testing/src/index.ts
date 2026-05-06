@@ -4,6 +4,7 @@ export * from './lib/fixtures/seed.fixtures';
 export * from './lib/fixtures/health.fixtures';
 export * from './lib/fixtures/ui.fixtures';
 export * from './lib/fixtures/prisma.fixtures';
+export * from './lib/fixtures/dialog.fixtures';
 export * from './lib/mocks/jobs-data-access.mock';
 export * from './lib/mocks/contacts-data-access.mock';
 export * from './lib/mocks/prisma-service.mock';
