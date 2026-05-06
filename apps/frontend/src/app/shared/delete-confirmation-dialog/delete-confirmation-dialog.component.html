@@ -1,5 +1,5 @@
 <hlm-alert-dialog-header>
-  <h3 hlmAlertDialogTitle>{{ title() }}</h3>
+  <h3 hlmAlertDialogTitle>{{ title }}</h3>
   <p hlmAlertDialogDescription>
     <ng-content select="[deleteDialogDescription]"></ng-content>
   </p>
@@ -7,15 +7,15 @@
 
 <hlm-alert-dialog-footer>
   <button hlmBtn hlmDialogClose type="button" variant="outline">
-    {{ cancelLabel() }}
+    {{ cancelLabel }}
   </button>
   <button
     hlmBtn
     type="button"
     variant="destructive"
-    [disabled]="isBusy()"
+    [disabled]="isBusy"
     (click)="onConfirm()"
   >
-    {{ isBusy() ? busyLabel() : confirmLabel() }}
+    {{ isBusy ? busyLabel : confirmLabel }}
   </button>
 </hlm-alert-dialog-footer>

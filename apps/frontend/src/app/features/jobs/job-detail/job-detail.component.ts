@@ -20,10 +20,10 @@ import { BrnTabsImports } from '@spartan-ng/brain/tabs';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { CreateJobComponent } from '../create-job/create-job.component';
 import { EditJobComponent } from '../edit-job/edit-job.component';
-import { DeleteJobAlertDialogComponent } from '../delete-job-alert-dialog/delete-job-alert-dialog.component';
 import { ContactsTabComponent } from '../contacts-tab/contacts-tab.component';
 import { JobOverviewComponent } from '../job-overview/job-overview.component';
 import { ProgessionStepperComponent } from '../../../shared/progession-stepper/progession-stepper.component';
+import { DeleteConfirmationDialogComponent } from '../../../shared/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { provideIcons } from '@ng-icons/core';
 import {
   lucideCircleX,
@@ -180,10 +180,11 @@ export class JobDetailComponent {
   }
 
   protected openDeleteJobDialog(job: JobDto): void {
-    this.dialog.open(DeleteJobAlertDialogComponent, {
+    this.dialog.open(DeleteConfirmationDialogComponent, {
       contentClass: 'sm:max-w-xl !sm:mx-auto',
       context: {
-        company: job.company,
+        title: `Delete ${job.company} job?`,
+        confirmLabel: 'Delete Job',
         onConfirm: async () => {
           await this.jobsDataAccess.deleteJob(job.id);
           this.router.navigate(['/jobs']);

@@ -12,8 +12,8 @@ import { provideIcons } from '@ng-icons/core';
 import { lucidePlus } from '@ng-icons/lucide';
 import { ContactListComponent } from '../contact-list/contact-list.component';
 import { CreateContactComponent } from '../create-contact/create-contact.component';
-import { DeleteContactAlertDialogComponent } from '../delete-contact-alert-dialog/delete-contact-alert-dialog.component';
 import { EditContactComponent } from '../edit-contact/edit-contact.component';
+import { DeleteConfirmationDialogComponent } from '../../../shared/delete-confirmation-dialog/delete-confirmation-dialog.component';
 
 @Component({
   standalone: true,
@@ -63,10 +63,11 @@ export class ContactsTabComponent {
   }
 
   protected openDeleteDialog(contact: ContactDto): void {
-    this.dialog.open(DeleteContactAlertDialogComponent, {
+    this.dialog.open(DeleteConfirmationDialogComponent, {
       contentClass: 'sm:max-w-md !sm:mx-auto',
       context: {
-        contactName: contact.name,
+        title: `Delete ${contact.name}?`,
+        confirmLabel: 'Delete Contact',
         onConfirm: async () => {
           await this.contactsDataAccess.deleteContact(this.jobId(), contact.id);
           this.contactsDataAccess.contactsResource.reload();

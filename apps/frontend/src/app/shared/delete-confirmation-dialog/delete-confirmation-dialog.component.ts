@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import {
   HlmAlertDialogDescription,
@@ -11,6 +11,11 @@ import { HlmDialogClose } from '@spartan-ng/helm/dialog';
 
 type DeleteConfirmationDialogContext = {
   onConfirm?: () => void | Promise<void>;
+  title?: string;
+  confirmLabel?: string;
+  busyLabel?: string;
+  cancelLabel?: string;
+  isBusy?: boolean;
 };
 
 @Component({
@@ -33,11 +38,11 @@ export class DeleteConfirmationDialogComponent {
       optional: true,
     }) ?? {};
 
-  readonly title = input('Are you sure?');
-  readonly confirmLabel = input('Delete');
-  readonly busyLabel = input('Deleting...');
-  readonly cancelLabel = input('Cancel');
-  readonly isBusy = input(false);
+  protected readonly title = this.context.title ?? 'Are you sure?';
+  protected readonly confirmLabel = this.context.confirmLabel ?? 'Delete';
+  protected readonly busyLabel = this.context.busyLabel ?? 'Deleting...';
+  protected readonly cancelLabel = this.context.cancelLabel ?? 'Cancel';
+  protected readonly isBusy = this.context.isBusy ?? false;
   readonly confirm = output<void>();
 
   protected async onConfirm(): Promise<void> {
