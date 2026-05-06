@@ -13,9 +13,9 @@
     hlmBtn
     type="button"
     variant="destructive"
-    [disabled]="isBusy"
+    [disabled]="effectiveIsBusy"
     (click)="onConfirm()"
   >
-    {{ isBusy ? busyLabel : confirmLabel }}
+    {{ effectiveIsBusy ? busyLabel : confirmLabel }}
   </button>
 </hlm-alert-dialog-footer>
