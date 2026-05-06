@@ -4,11 +4,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
-import { ContactDto, NoteDto } from '@job-tracker-lite-angular/api-interfaces';
-import {
-  ContactsDataAccessService,
-  NotesDataAccessService,
-} from '@job-tracker-lite-angular/frontend-data-access';
+import { NoteDto } from '@job-tracker-lite-angular/api-interfaces';
+import { NotesDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { EditJobDialogFooterComponent } from '../../../shared/edit-job-dialog-footer/edit-job-dialog-footer.component';
 
 type EditNoteDialogContext = {

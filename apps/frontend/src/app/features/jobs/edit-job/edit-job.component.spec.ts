@@ -8,12 +8,19 @@ import {
   createJobFixtures,
 } from '@job-tracker-lite-angular/testing';
 import { vi } from 'vitest';
+import { BrnDialogRef } from '@spartan-ng/brain/dialog';
+import { createBrnDialogRefMock } from '@job-tracker-lite-angular/testing';
 import { EditJobComponent } from './edit-job.component';
+
+// use shared mock from libs/shared/testing
 
 describe('EditJobComponent', () => {
   it('should create', async () => {
     await TestBed.configureTestingModule({
       imports: [EditJobComponent],
+      providers: [
+        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
+      ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(EditJobComponent);
@@ -27,6 +34,7 @@ describe('EditJobComponent', () => {
       imports: [EditJobComponent],
       providers: [
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
+        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
       ],
     }).compileComponents();
 
@@ -53,6 +61,7 @@ describe('EditJobComponent', () => {
           provide: DIALOG_DATA,
           useValue: { job: jobFixtures.frontendEngineer },
         },
+        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
       ],
     }).compileComponents();
 
@@ -78,6 +87,7 @@ describe('EditJobComponent', () => {
       imports: [EditJobComponent],
       providers: [
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
+        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
       ],
     }).compileComponents();
 
@@ -105,6 +115,7 @@ describe('EditJobComponent', () => {
           provide: DIALOG_DATA,
           useValue: { job: jobFixtures.frontendEngineer },
         },
+        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
       ],
     }).compileComponents();
 

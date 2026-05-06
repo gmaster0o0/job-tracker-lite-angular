@@ -9,6 +9,7 @@ import { NotesListItemComponent } from '../notes-list-item/notes-list-item.compo
 import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-notes-list',
   imports: [CommonModule, NotesListItemComponent],
   templateUrl: './notes-list.component.html',

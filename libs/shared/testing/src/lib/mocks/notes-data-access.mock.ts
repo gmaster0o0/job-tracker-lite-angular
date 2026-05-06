@@ -42,6 +42,10 @@ export function createNotesDataAccessMock(
 
   return {
     getNotesResource: () => notesResource,
+    notesResource,
+    selectJob: () => {
+      /*empty*/
+    },
     createNote: options.createNote ?? (async () => noteFixtures.janeDoe),
     updateNote: options.updateNote ?? (async () => noteFixtures.updatedNote),
     deleteNote: options.deleteNote ?? (async () => undefined),

@@ -9,6 +9,7 @@ import { provideIcons } from '@ng-icons/core';
 import { lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
 
 @Component({
+  standalone: true,
   selector: 'app-notes-list-item',
   imports: [
     CommonModule,

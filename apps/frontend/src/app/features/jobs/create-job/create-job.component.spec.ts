@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { Validators } from '@angular/forms';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import {
   jobFixtures,
@@ -6,12 +7,19 @@ import {
   createJobFixtures,
 } from '@job-tracker-lite-angular/testing';
 import { vi } from 'vitest';
+import { BrnDialogRef } from '@spartan-ng/brain/dialog';
+import { createBrnDialogRefMock } from '@job-tracker-lite-angular/testing';
 import { CreateJobComponent } from './create-job.component';
+
+// use shared mock from libs/shared/testing
 
 describe('CreateJobComponent', () => {
   it('should create', async () => {
     await TestBed.configureTestingModule({
       imports: [CreateJobComponent],
+      providers: [
+        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
+      ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(CreateJobComponent);
@@ -21,17 +29,26 @@ describe('CreateJobComponent', () => {
   it('should have form with required fields', async () => {
     await TestBed.configureTestingModule({
       imports: [CreateJobComponent],
+      providers: [
+        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
+      ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(CreateJobComponent);
     const component = fixture.componentInstance as any;
 
-    expect(component.form.get('position')?.hasValidator('required')).toBe(true);
-    expect(component.form.get('company')?.hasValidator('required')).toBe(true);
-    expect(component.form.get('link')?.hasValidator('required')).toBe(true);
-    expect(component.form.get('description')?.hasValidator('required')).toBe(
+    expect(
+      component.form.get('position')?.hasValidator(Validators.required),
+    ).toBe(true);
+    expect(
+      component.form.get('company')?.hasValidator(Validators.required),
+    ).toBe(true);
+    expect(component.form.get('link')?.hasValidator(Validators.required)).toBe(
       true,
     );
+    expect(
+      component.form.get('description')?.hasValidator(Validators.required),
+    ).toBe(true);
   });
 
   it('should submit and create job', async () => {
@@ -43,6 +60,7 @@ describe('CreateJobComponent', () => {
       imports: [CreateJobComponent],
       providers: [
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
+        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
       ],
     }).compileComponents();
 
@@ -65,6 +83,7 @@ describe('CreateJobComponent', () => {
       imports: [CreateJobComponent],
       providers: [
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
+        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
       ],
     }).compileComponents();
 
@@ -87,6 +106,7 @@ describe('CreateJobComponent', () => {
       imports: [CreateJobComponent],
       providers: [
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
+        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
       ],
     }).compileComponents();
 
