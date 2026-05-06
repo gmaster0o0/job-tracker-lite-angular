@@ -83,6 +83,9 @@
       "@job-tracker-lite-angular/testing": [
         "./libs/shared/testing/src/index.ts"
       ],
+      "@job-tracker-lite-angular/frontend-shared": [
+        "./apps/frontend/src/app/shared/index.ts"
+      ],
       "@spartan-ng/helm/dropdown-menu": [
         "./libs/shared-ui/dropdown-menu/src/index.ts"
       ],

@@ -1,11 +1,9 @@
 import { Component, inject, input, output } from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
-import {
-  HlmAlertDialogDescription,
-  HlmAlertDialogFooter,
-  HlmAlertDialogHeader,
-  HlmAlertDialogTitle,
-} from '@spartan-ng/helm/alert-dialog';
+import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
+import { HlmIconImports } from '@spartan-ng/helm/icon';
+import { provideIcons } from '@ng-icons/core';
+import { lucideUndo2, lucideTrash } from '@ng-icons/lucide';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmDialogClose } from '@spartan-ng/helm/dialog';
 
@@ -15,20 +13,15 @@ type DeleteConfirmationDialogContext = {
   confirmLabel?: string;
   busyLabel?: string;
   cancelLabel?: string;
+  description?: string;
   isBusy?: boolean;
 };
 
 @Component({
   standalone: true,
   selector: 'app-delete-confirmation-dialog',
-  imports: [
-    HlmAlertDialogDescription,
-    HlmAlertDialogFooter,
-    HlmAlertDialogHeader,
-    HlmAlertDialogTitle,
-    HlmButton,
-    HlmDialogClose,
-  ],
+  imports: [HlmAlertDialogImports, HlmButton, HlmDialogClose, HlmIconImports],
+  providers: [provideIcons({ lucideUndo2, lucideTrash })],
   templateUrl: './delete-confirmation-dialog.component.html',
 })
 export class DeleteConfirmationDialogComponent {
@@ -44,6 +37,7 @@ export class DeleteConfirmationDialogComponent {
   protected readonly confirmLabel = this.context.confirmLabel ?? 'Delete';
   protected readonly busyLabel = this.context.busyLabel ?? 'Deleting...';
   protected readonly cancelLabel = this.context.cancelLabel ?? 'Cancel';
+  protected readonly description = this.context.description ?? null;
   protected readonly effectiveIsBusy =
     this.isBusy() || (this.context.isBusy ?? false);
   readonly confirm = output<void>();

@@ -184,6 +184,8 @@ export class JobDetailComponent {
       contentClass: 'sm:max-w-xl !sm:mx-auto',
       context: {
         title: `Delete ${job.company} job?`,
+        description:
+          'Are you absolutely sure? This action cannot be undone. This will permanently delete the resource.',
         confirmLabel: 'Delete Job',
         onConfirm: async () => {
           await this.jobsDataAccess.deleteJob(job.id);

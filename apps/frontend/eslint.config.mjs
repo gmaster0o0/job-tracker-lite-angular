@@ -1,5 +1,6 @@
 import nx from '@nx/eslint-plugin';
 import baseConfig from '../../eslint.config.mjs';
+import angular from 'angular-eslint';
 
 export default [
   ...nx.configs['flat/angular'],
@@ -28,7 +29,10 @@ export default [
   },
   {
     files: ['**/*.html'],
-    // Override or add rules here
-    rules: {},
+    // enforce template rules (prefer control-flow over structural directives)
+    rules: {
+      '@angular-eslint/template/prefer-control-flow': 'error',
+      '@angular-eslint/template/no-negated-async': 'error',
+    },
   },
 ];

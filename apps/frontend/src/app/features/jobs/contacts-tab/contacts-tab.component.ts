@@ -67,6 +67,8 @@ export class ContactsTabComponent {
       contentClass: 'sm:max-w-md !sm:mx-auto',
       context: {
         title: `Delete ${contact.name}?`,
+        description:
+          'Are you absolutely sure? This action cannot be undone. This will permanently delete the resource.',
         confirmLabel: 'Delete Contact',
         onConfirm: async () => {
           await this.contactsDataAccess.deleteContact(this.jobId(), contact.id);

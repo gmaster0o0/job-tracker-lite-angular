@@ -5,8 +5,8 @@ import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
+import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
 import { NotesDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
-import { NoteDto } from '@job-tracker-lite-angular/api-interfaces';
 import { HlmFieldGroup, HlmField, HlmFieldError } from '@spartan-ng/helm/field';
 import { CreateJobDialogFooterComponent } from '../../../shared/create-job-dialog-footer/create-job-dialog-footer.component';
 
@@ -24,6 +24,7 @@ type CreateNoteDialogContext = {
     HlmButtonImports,
     HlmInputImports,
     HlmDialogImports,
+    HlmTextareaImports,
     HlmFieldGroup,
     HlmField,
     HlmFieldError,

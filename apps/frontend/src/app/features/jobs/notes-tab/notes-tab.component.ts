@@ -12,7 +12,7 @@ import { provideIcons } from '@ng-icons/core';
 import { lucidePlus } from '@ng-icons/lucide';
 import { NotesListComponent } from '../notes-list/notes-list.component';
 import { EditNoteComponent } from '../edit-note/edit-note.component';
-import { DeleteConfirmationDialogComponent } from '../../../shared';
+import { DeleteConfirmationDialogComponent } from '../../../shared/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { CreateNoteComponent } from '../create-note/create-note.component';
 
 @Component({
@@ -33,7 +33,7 @@ export class NotesTabComponent {
 
   protected openCreateDialog(): void {
     this.dialog.open(CreateNoteComponent, {
-      contentClass: 'sm:max-w-lg !sm:mx-auto',
+      contentClass: 'sm:max-w-2xl w-[80vw]',
       context: {
         jobId: this.jobId(),
         onCreated: async () => {
@@ -45,7 +45,7 @@ export class NotesTabComponent {
 
   protected openEditDialog(note: NoteDto): void {
     this.dialog.open(EditNoteComponent, {
-      contentClass: 'sm:max-w-lg !sm:mx-auto',
+      contentClass: 'sm:max-w-2xl w-[80vw]',
       context: {
         jobId: this.jobId(),
         note,
@@ -60,6 +60,8 @@ export class NotesTabComponent {
     this.dialog.open(DeleteConfirmationDialogComponent, {
       contentClass: 'sm:max-w-md !sm:mx-auto',
       context: {
+        description:
+          'Are you absolutely sure? This action cannot be undone. This will permanently delete the resource.',
         onConfirm: async () => {
           await this.notesDataAccess.deleteNote(this.jobId(), note.id);
           this.notesDataAccess.notesResource.reload();
