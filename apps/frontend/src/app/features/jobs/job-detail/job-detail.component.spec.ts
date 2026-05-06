@@ -11,7 +11,7 @@ import {
 import { ProgessionStepperComponent } from '../../../shared/progession-stepper/progession-stepper.component';
 import { JobDetailComponent } from './job-detail.component';
 import {
-  createContactsDataAccessMock,
+  createNotesDataAccessMock,
   createJobsDataAccessMock,
   jobFixtures,
 } from '@job-tracker-lite-angular/testing';
@@ -41,7 +41,7 @@ describe('JobDetailComponent', () => {
         { provide: JobsDataAccessService, useValue: dataAccessServiceMock },
         {
           provide: ContactsDataAccessService,
-          useValue: createContactsDataAccessMock(),
+          useValue: createNotesDataAccessMock(),
         },
       ],
     }).compileComponents();

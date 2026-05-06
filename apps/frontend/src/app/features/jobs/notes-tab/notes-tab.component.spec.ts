@@ -3,35 +3,35 @@ import { By } from '@angular/platform-browser';
 import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import {
   JobsDataAccessService,
-  ContactsDataAccessService,
+  NotesDataAccessService,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import {
-  createContactsDataAccessMock,
   createJobsDataAccessMock,
+  createNotesDataAccessMock,
 } from '@job-tracker-lite-angular/testing';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { vi } from 'vitest';
-import { ContactTabComponent } from '../contact-tab/contact-tab.component';
+import { NotesTabComponent } from './notes-tab.component';
 
-describe('ContactTabComponent', () => {
-  async function setup(contacts: ContactDto[]) {
+describe('NotesTabComponent', () => {
+  async function setup(notes: ContactDto[]) {
     const dialogMock = { open: vi.fn() };
-    const jobsDataAccessMock = createJobsDataAccessMock({ contacts });
-    const contactsDataAccessMock = createContactsDataAccessMock();
+    const jobsDataAccessMock = createJobsDataAccessMock({ notes });
+    const notesDataAccessMock = createNotesDataAccessMock();
 
     await TestBed.configureTestingModule({
-      imports: [ContactTabComponent],
+      imports: [NotesTabComponent],
       providers: [
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
         {
-          provide: ContactsDataAccessService,
-          useValue: contactsDataAccessMock,
+          provide: NotesDataAccessService,
+          useValue: notesDataAccessMock,
         },
         { provide: HlmDialogService, useValue: dialogMock },
       ],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(ContactTabComponent);
+    const fixture = TestBed.createComponent(NotesTabComponent);
     fixture.componentRef.setInput('jobId', 10);
     fixture.detectChanges();
 

@@ -31,21 +31,23 @@
     "typecheck-lib": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx tsc --noEmit --pretty -p libs/frontend/tsconfig.lib.json"
+        "command": "npx tsc --noEmit --pretty -p libs/frontend/tsconfig.lib.json",
+        "forwardAllArgs": false
       }
     },
     "typecheck-spec": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx tsc --noEmit --pretty -p libs/frontend/tsconfig.spec.json"
+        "command": "npx tsc --noEmit --pretty -p libs/frontend/tsconfig.spec.json",
+        "forwardAllArgs": false
       }
     },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx run frontend:typecheck-lib",
-          "nx run frontend:typecheck-spec"
+          "nx run data-access:typecheck-lib",
+          "nx run data-access:typecheck-spec"
         ],
         "parallel": true
       }

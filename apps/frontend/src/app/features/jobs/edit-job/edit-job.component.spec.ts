@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { BrnDialogContext } from '@spartan-ng/brain/dialog';
+import { DIALOG_DATA } from '@angular/cdk/dialog';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import {
   jobFixtures,
@@ -31,7 +31,7 @@ describe('EditJobComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(EditJobComponent);
-    const component = fixture.componentInstance;
+    const component = fixture.componentInstance as any;
 
     // Since context is optional, job is undefined, form is empty
     expect(component.form.value).toEqual(createJobFixtures.empty);
@@ -50,22 +50,22 @@ describe('EditJobComponent', () => {
       providers: [
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
         {
-          provide: BrnDialogContext,
+          provide: DIALOG_DATA,
           useValue: { job: jobFixtures.frontendEngineer },
         },
       ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(EditJobComponent);
-    const component = fixture.componentInstance;
+    const component = fixture.componentInstance as any;
 
-    component.form.setValue(updateJobFixtures.updatedFrontendEngineer);
+    component.form.setValue(updateJobFixtures['updatedFrontendEngineer']);
 
     await component.submit();
 
     expect(updateJob).toHaveBeenCalledWith(
       jobFixtures.frontendEngineer.id,
-      updateJobFixtures.updatedFrontendEngineer,
+      updateJobFixtures['updatedFrontendEngineer'],
     );
   });
 
@@ -82,7 +82,7 @@ describe('EditJobComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(EditJobComponent);
-    const component = fixture.componentInstance;
+    const component = fixture.componentInstance as any;
 
     // job is undefined
     component.form.setValue(createJobFixtures.empty);
@@ -102,16 +102,16 @@ describe('EditJobComponent', () => {
       providers: [
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
         {
-          provide: BrnDialogContext,
+          provide: DIALOG_DATA,
           useValue: { job: jobFixtures.frontendEngineer },
         },
       ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(EditJobComponent);
-    const component = fixture.componentInstance;
+    const component = fixture.componentInstance as any;
 
-    component.form.setValue(updateJobFixtures.updatedFrontendEngineer);
+    component.form.setValue(updateJobFixtures['updatedFrontendEngineer']);
 
     await component.submit();
 

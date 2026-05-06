@@ -69,13 +69,15 @@
     "typecheck-app": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx tsc --noEmit --pretty -p apps/frontend/tsconfig.app.json"
+        "command": "npx tsc --noEmit --pretty -p apps/frontend/tsconfig.app.json",
+        "forwardAllArgs": false
       }
     },
     "typecheck-spec": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx tsc --noEmit --pretty -p apps/frontend/tsconfig.spec.json"
+        "command": "npx tsc --noEmit --pretty -p apps/frontend/tsconfig.spec.json",
+        "forwardAllArgs": false
       }
     },
     "typecheck": {
@@ -85,7 +87,8 @@
           "nx run frontend:typecheck-app",
           "nx run frontend:typecheck-spec"
         ],
-        "parallel": true
+        "parallel": true,
+        "forwardAllArgs": false
       }
     },
     "test": {

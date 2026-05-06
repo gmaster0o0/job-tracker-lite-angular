@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrnDialogRef, BrnDialogContext } from '@spartan-ng/brain/dialog';
+import { BrnDialogRef } from '@spartan-ng/brain/dialog';
+import { DIALOG_DATA } from '@angular/cdk/dialog';
 import {
   dialogRefMock,
   deleteConfirmationDialogFixtures,
@@ -32,7 +33,7 @@ describe('DeleteConfirmationDialogComponent', () => {
       providers: [
         { provide: BrnDialogRef, useValue: dialogRefMock },
         {
-          provide: BrnDialogContext,
+          provide: DIALOG_DATA,
           useValue: deleteConfirmationDialogFixtures.default,
         },
       ],
@@ -71,7 +72,7 @@ describe('DeleteConfirmationDialogComponent', () => {
       providers: [
         { provide: BrnDialogRef, useValue: dialogRefMock },
         {
-          provide: BrnDialogContext,
+          provide: DIALOG_DATA,
           useValue: deleteConfirmationDialogFixtures.busy,
         },
       ],

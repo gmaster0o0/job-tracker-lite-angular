@@ -24,7 +24,7 @@ describe('CreateJobComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(CreateJobComponent);
-    const component = fixture.componentInstance;
+    const component = fixture.componentInstance as any;
 
     expect(component.form.get('position')?.hasValidator('required')).toBe(true);
     expect(component.form.get('company')?.hasValidator('required')).toBe(true);
@@ -47,7 +47,7 @@ describe('CreateJobComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(CreateJobComponent);
-    const component = fixture.componentInstance;
+    const component = fixture.componentInstance as any;
 
     component.form.setValue(createJobFixtures.designer);
 
@@ -91,7 +91,7 @@ describe('CreateJobComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(CreateJobComponent);
-    const component = fixture.componentInstance;
+    const component = fixture.componentInstance as any;
 
     component.form.setValue({
       position: 'Frontend Engineer',

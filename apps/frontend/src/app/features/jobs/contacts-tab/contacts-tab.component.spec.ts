@@ -11,7 +11,7 @@ import {
 } from '@job-tracker-lite-angular/testing';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { vi } from 'vitest';
-import { ContactsTabComponent } from '../contact-tab/contacts-tab.component';
+import { ContactsTabComponent } from './contacts-tab.component';
 
 describe('ContactsTabComponent', () => {
   async function setup(contacts: ContactDto[]) {
