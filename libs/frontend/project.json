@@ -28,10 +28,26 @@
     "lint": {
       "executor": "@nx/eslint:lint"
     },
+    "typecheck-lib": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsc --noEmit --pretty -p libs/frontend/tsconfig.lib.json"
+      }
+    },
+    "typecheck-spec": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsc --noEmit --pretty -p libs/frontend/tsconfig.spec.json"
+      }
+    },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx tsc -p libs/frontend/tsconfig.lib.json --noEmit"
+        "commands": [
+          "nx run frontend:typecheck-lib",
+          "nx run frontend:typecheck-spec"
+        ],
+        "parallel": true
       }
     }
   }

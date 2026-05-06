@@ -28,10 +28,26 @@
         "command": "ts-node --project libs/shared/prisma/tsconfig.json libs/shared/prisma/src/seed.ts"
       }
     },
+    "typecheck-lib": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsc --noEmit --pretty -p libs/shared/prisma/tsconfig.lib.json"
+      }
+    },
+    "typecheck-spec": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsc --noEmit --pretty -p libs/shared/prisma/tsconfig.spec.json"
+      }
+    },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx tsc -p libs/shared/prisma/tsconfig.lib.json --noEmit"
+        "commands": [
+          "nx run prisma:typecheck-lib",
+          "nx run prisma:typecheck-spec"
+        ],
+        "parallel": true
       }
     }
   }

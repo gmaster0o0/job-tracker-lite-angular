@@ -15,5 +15,12 @@
         "assets": ["libs/shared/testing/*.md"]
       }
     }
+    ,
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsc --noEmit --pretty -p libs/shared/testing/tsconfig.lib.json"
+      }
+    }
   }
 }

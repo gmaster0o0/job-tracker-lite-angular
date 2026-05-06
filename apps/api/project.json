@@ -72,10 +72,17 @@
         "passWithNoTests": true
       }
     },
+    "typecheck-app": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsc --noEmit --pretty -p apps/api/tsconfig.json"
+      }
+    },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx tsc -p apps/api/tsconfig.app.json --noEmit"
+        "commands": ["nx run api:typecheck-app"],
+        "parallel": true
       }
     }
   }
