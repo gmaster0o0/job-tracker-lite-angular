@@ -1,4 +1,4 @@
-import { Component, inject, effect, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { NoteDto } from '@job-tracker-lite-angular/api-interfaces';
 import {
   JobsDataAccessService,

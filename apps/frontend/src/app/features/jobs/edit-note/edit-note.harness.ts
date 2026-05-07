@@ -11,35 +11,22 @@ export class EditNoteComponentHarness extends ComponentHarness {
   private getCancelButton = this.locatorFor('button[type="button"]');
   private getErrorMessage = this.locatorForOptional('.text-red-600');
 
-  async setTitle(title: string): Promise<void> {
-    const input = await this.getTitleInput();
-    await input.clear();
-    await input.sendKeys(title);
-    await input.dispatchEvent('input');
-  }
-
-  async setBody(body: string): Promise<void> {
-    const input = await this.getBodyInput();
-    await input.clear();
-    await input.sendKeys(body);
-    await input.dispatchEvent('input');
-  }
-
-  async setFormValues(values: Partial<UpdateNoteDto>): Promise<void> {
+  async fillForm(values: Partial<UpdateNoteDto>): Promise<void> {
     if (values.title !== undefined) {
-      await this.setTitle(values.title);
+      const input = await this.getTitleInput();
+      await input.clear();
+      await input.sendKeys(values.title);
+      await input.dispatchEvent('input');
     }
     if (values.body !== undefined) {
-      await this.setBody(values.body);
+      const input = await this.getBodyInput();
+      await input.clear();
+      await input.sendKeys(values.body);
+      await input.dispatchEvent('input');
     }
   }
 
   async submit(): Promise<void> {
-    const button = await this.getSubmitButton();
-    await button.click();
-  }
-
-  async clickSubmit(): Promise<void> {
     const button = await this.getSubmitButton();
     await button.click();
   }

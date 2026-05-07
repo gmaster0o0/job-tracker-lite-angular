@@ -5,25 +5,16 @@ import {
   noteFixtures,
   createNoteFixtures,
   updateNoteFixtures,
+  createJobsServiceMock,
 } from '@job-tracker-lite-angular/testing';
 
 describe('NotesController', () => {
   let notesController: NotesController;
-
-  let jobsService: {
-    findNotes: jest.Mock;
-    createNote: jest.Mock;
-    updateNote: jest.Mock;
-    deleteNote: jest.Mock;
-  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let jobsService: any;
 
   beforeEach(async () => {
-    jobsService = {
-      findNotes: jest.fn(),
-      createNote: jest.fn(),
-      updateNote: jest.fn(),
-      deleteNote: jest.fn(),
-    };
+    jobsService = createJobsServiceMock();
 
     const moduleRef = await Test.createTestingModule({
       controllers: [NotesController],

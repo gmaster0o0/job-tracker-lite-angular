@@ -5,30 +5,16 @@ import {
   createJobFixtures,
   jobFixtures,
   jobResultFixtures,
+  createJobsServiceMock,
 } from '@job-tracker-lite-angular/testing';
 
 describe('JobsController', () => {
   let controller: JobsController;
-  let jobsService: {
-    findAll: jest.Mock;
-    create: jest.Mock;
-    updateStatus: jest.Mock;
-    findContacts: jest.Mock;
-    createContact: jest.Mock;
-    updateContact: jest.Mock;
-    deleteContact: jest.Mock;
-  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let jobsService: any;
 
   beforeEach(async () => {
-    jobsService = {
-      findAll: jest.fn(),
-      create: jest.fn(),
-      updateStatus: jest.fn(),
-      findContacts: jest.fn(),
-      createContact: jest.fn(),
-      updateContact: jest.fn(),
-      deleteContact: jest.fn(),
-    };
+    jobsService = createJobsServiceMock();
 
     const moduleRef = await Test.createTestingModule({
       controllers: [JobsController],

@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
-import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
@@ -21,7 +20,6 @@ type CreateNoteDialogContext = {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    HlmButtonImports,
     HlmInputImports,
     HlmDialogImports,
     HlmTextareaImports,
@@ -70,9 +68,5 @@ export class CreateNoteComponent {
     } finally {
       this.isSubmitting.set(false);
     }
-  }
-
-  protected cancel(): void {
-    this.dialogRef?.close();
   }
 }

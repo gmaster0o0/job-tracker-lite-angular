@@ -1,5 +1,4 @@
 import { Route } from '@angular/router';
-import { StatusComponent } from './status/status.component';
 
 export const appRoutes: Route[] = [
   {
@@ -14,7 +13,7 @@ export const appRoutes: Route[] = [
         path: '',
         pathMatch: 'full',
         loadComponent: () =>
-          import('./features/home/home.component').then((m) => m.HomeComponent),
+          import('./status/status.component').then((m) => m.StatusComponent),
       },
       {
         path: '',
@@ -121,10 +120,6 @@ export const appRoutes: Route[] = [
         ],
       },
     ],
-  },
-  {
-    path: 'status',
-    component: StatusComponent,
   },
   {
     path: '**',

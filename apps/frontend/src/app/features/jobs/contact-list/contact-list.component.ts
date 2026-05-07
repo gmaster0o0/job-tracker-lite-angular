@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, output, effect } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';

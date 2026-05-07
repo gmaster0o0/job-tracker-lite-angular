@@ -11,7 +11,7 @@ import {
   UpdateNoteDto,
 } from '@job-tracker-lite-angular/api-interfaces';
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Contact, Job, JobStatus, Note } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 
@@ -63,7 +63,7 @@ export class JobsService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2025'
       ) {
-        throw new Error('NOT_FOUND');
+        throw new NotFoundException(`Job with id ${id} not found`);
       }
 
       throw error;
@@ -137,7 +137,9 @@ export class JobsService {
     });
 
     if (!existing) {
-      throw new Error('NOT_FOUND');
+      throw new NotFoundException(
+        `Contact with id ${contactId} not found for job ${jobId}`,
+      );
     }
 
     const contact = await this.prisma.contact.update({
@@ -149,18 +151,22 @@ export class JobsService {
   }
 
   async deleteContact(jobId: number, contactId: number): Promise<void> {
-    const existing = await this.prisma.contact.findFirst({
-      where: { id: contactId, jobId },
-      select: { id: true },
-    });
+    try {
+      const result = await this.prisma.contact.deleteMany({
+        where: { id: contactId, jobId },
+      });
 
-    if (!existing) {
-      throw new Error('NOT_FOUND');
+      if (result.count === 0) {
+        throw new NotFoundException(
+          `Contact with id ${contactId} not found for job ${jobId}`,
+        );
+      }
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw error;
     }
-
-    await this.prisma.contact.delete({
-      where: { id: contactId },
-    });
   }
   /**
    * Fetches all notes for a given job, ordered by creation date (newest first).
@@ -215,7 +221,9 @@ export class JobsService {
     });
 
     if (!existing) {
-      throw new Error('NOT_FOUND');
+      throw new NotFoundException(
+        `Note with id ${noteId} not found for job ${jobId}`,
+      );
     }
 
     const note = await this.prisma.note.update({
@@ -231,23 +239,27 @@ export class JobsService {
    * @param noteId - The ID of the note to delete.
    */
   async deleteNote(jobId: number, noteId: number): Promise<void> {
-    const existing = await this.prisma.note.findFirst({
-      where: { id: noteId, jobId },
-      select: { id: true },
-    });
+    try {
+      const result = await this.prisma.note.deleteMany({
+        where: { id: noteId, jobId },
+      });
 
-    if (!existing) {
-      throw new Error('NOT_FOUND');
+      if (result.count === 0) {
+        throw new NotFoundException(
+          `Note with id ${noteId} not found for job ${jobId}`,
+        );
+      }
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw error;
     }
-
-    await this.prisma.note.delete({
-      where: { id: noteId },
-    });
   }
 
   /**
    * Helper method to check if a job exists.
-   * Throws a NOT_FOUND error if it doesn't.
+   * Throws a NotFoundException if it doesn't.
    * @param jobId - The ID of the job to check.
    */
   private async assertJobExists(jobId: number): Promise<void> {
@@ -260,7 +272,7 @@ export class JobsService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2025'
       ) {
-        throw new Error('NOT_FOUND');
+        throw new NotFoundException(`Job with id ${jobId} not found`);
       }
 
       throw error;
