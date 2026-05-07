@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { httpResource } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -13,9 +13,15 @@ import {
 })
 export class ContactsDataAccessService {
   private readonly http = inject(HttpClient);
+  private readonly selectedJobId = signal<number | null>(null);
 
-  getContactsResource(jobId: number) {
-    return httpResource<ContactDto[]>(() => `/api/jobs/${jobId}/contacts`);
+  contactsResource = httpResource<ContactDto[]>(() => {
+    const id = this.selectedJobId();
+    return id === null ? undefined : `/api/jobs/${id}/contacts`;
+  });
+
+  selectJob(id: number | null): void {
+    this.selectedJobId.set(id);
   }
 
   async createContact(

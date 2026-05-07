@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { AppComponent } from './app.component';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
-import { createJobsDataAccessMock } from '@job-tracker-lite-angular/shared-testing';
+import { createJobsDataAccessMock } from '@job-tracker-lite-angular/testing';
 
 @Component({
   standalone: true,

@@ -1,10 +1,14 @@
 import { Component, input } from '@angular/core';
 import { HlmButton } from '@spartan-ng/helm/button';
+import { provideIcons } from '@ng-icons/core';
+import { lucideSave, lucideLoader2 } from '@ng-icons/lucide';
+import { HlmIcon } from '@spartan-ng/helm/icon';
 
 @Component({
   standalone: true,
   selector: 'app-job-form-submit-button',
-  imports: [HlmButton],
+  imports: [HlmButton, HlmIcon],
+  providers: [provideIcons({ lucideSave, lucideLoader2 })],
   templateUrl: './job-form-submit-button.component.html',
 })
 export class JobFormSubmitButtonComponent {

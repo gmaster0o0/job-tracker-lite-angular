@@ -156,10 +156,10 @@
             <app-job-overview [description]="job()!.description" />
           </div>
           <div hlmTabsContent="contacts" class="flex-1 min-h-0 mt-4">
-            <app-contact-tab [jobId]="job()!.id" />
+            <app-contacts-tab [jobId]="job()!.id" />
           </div>
           <div hlmTabsContent="notes" class="flex-1 min-h-0 mt-4">
-            <p class="text-sm text-muted-foreground">Notes coming soon.</p>
+            <app-notes-tab [jobId]="job()!.id" />
           </div>
           <div hlmTabsContent="cover-letter" class="flex-1 min-h-0 mt-4">
             <p class="text-sm text-muted-foreground">

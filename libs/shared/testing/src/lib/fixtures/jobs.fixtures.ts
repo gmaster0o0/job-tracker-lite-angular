@@ -1,4 +1,8 @@
-import { CreateJobDto, JobDto } from '@job-tracker-lite-angular/api-interfaces';
+import {
+  CreateJobDto,
+  JobDto,
+  UpdateJobDto,
+} from '@job-tracker-lite-angular/api-interfaces';
 
 export const jobFixtureTimestamp = '2026-04-29T09:00:00.000Z';
 
@@ -134,9 +138,19 @@ export const jobFixtures: JobFixturesMap = {
   },
 };
 
+export const updateJobFixtures: Record<string, UpdateJobDto> = {
+  updatedFrontendEngineer: {
+    position: 'Senior Frontend Engineer',
+    company: 'Updated Company',
+    link: 'https://updated.com',
+    description: 'Updated description',
+  },
+};
+
 export interface CreateJobFixturesMap {
   designer: CreateJobDto;
   productDesigner: CreateJobDto;
+  empty: CreateJobDto;
 }
 
 export const createJobFixtures: CreateJobFixturesMap = {
@@ -151,6 +165,12 @@ export const createJobFixtures: CreateJobFixturesMap = {
     link: 'https://example.com/jobs/product-designer',
     description: 'Design the experience',
     company: 'Northwind',
+  },
+  empty: {
+    company: '',
+    position: '',
+    link: '',
+    description: '',
   },
 };
 

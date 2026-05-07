@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { healthFixture } from '@job-tracker-lite-angular/shared-testing';
+import { healthFixture } from '@job-tracker-lite-angular/testing';
 
 describe('AppController', () => {
   let app: TestingModule;

@@ -9,7 +9,7 @@ import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-da
 
 type CreateContactDialogContext = {
   jobId: number;
-  onCreated?: (contact: ContactDto) => void;
+  onCreated?: () => void;
 };
 
 @Component({
@@ -56,7 +56,7 @@ export class CreateContactComponent {
         phoneNumber: this.form.controls.phoneNumber.value.trim(),
       });
 
-      this.context.onCreated?.(created);
+      this.context.onCreated?.();
       this.dialogRef?.close(created);
     } catch {
       this.submitError.set('Failed to create contact. Please try again.');

@@ -1,7 +1,9 @@
 import {
   ContactDto,
+  CreateJobDto,
   JobDto,
   JobStatusDto,
+  UpdateJobDto,
 } from '@job-tracker-lite-angular/api-interfaces';
 import { jobFixtures } from '../fixtures/jobs.fixtures';
 
@@ -17,6 +19,7 @@ export type JobsDataAccessMockOptions = {
   detail?: JobDto;
   detailError?: unknown;
   contacts?: ContactDto[];
+  notes?: ContactDto[];
 };
 
 export function createJobsDataAccessMock(
@@ -24,9 +27,12 @@ export function createJobsDataAccessMock(
 ) {
   const selectJobCalls: Array<number | null> = [];
   const updateJobStatusCalls: Array<[number, JobStatusDto]> = [];
+  const createJobCalls: Array<CreateJobDto> = [];
+  const updateJobCalls: Array<[number, UpdateJobDto]> = [];
   const jobs = options.jobs ?? [];
   const detail = options.detail ?? jobs[0] ?? jobFixtures.frontendEngineer;
   const contacts = options.contacts ?? [];
+  const notes = options.notes ?? [];
 
   const jobsResource: ResourceState<JobDto[]> = {
     value: () => jobs,
@@ -49,10 +55,18 @@ export function createJobsDataAccessMock(
     error: () => null,
   };
 
+  const jobNotesResource: ResourceState<ContactDto[]> = {
+    value: () => notes,
+    isLoading: () => false,
+    reload: () => undefined,
+    error: () => null,
+  };
+
   return {
     jobsResource,
     jobResource,
     jobContactsResource,
+    jobNotesResource,
     selectJob: (id: number | null) => {
       selectJobCalls.push(id);
     },
@@ -65,9 +79,27 @@ export function createJobsDataAccessMock(
         status,
       };
     },
+    createJob: async (dto: CreateJobDto) => {
+      createJobCalls.push(dto);
+      return {
+        ...jobFixtures.frontendEngineer,
+        ...dto,
+        id: 1,
+      };
+    },
+    updateJob: async (id: number, dto: UpdateJobDto) => {
+      updateJobCalls.push([id, dto]);
+      return {
+        ...detail,
+        id,
+        ...dto,
+      };
+    },
     __calls: {
       selectJobCalls,
       updateJobStatusCalls,
+      createJobCalls,
+      updateJobCalls,
     },
   };
 }

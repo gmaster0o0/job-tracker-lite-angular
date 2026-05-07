@@ -1,0 +1,38 @@
+<div class="space-y-4">
+  <header class="space-y-1">
+    <h2 class="text-lg font-semibold text-slate-900">Edit Note</h2>
+    <p class="text-sm text-muted-foreground">Update the note details.</p>
+  </header>
+
+  <form
+    class="space-y-4"
+    [formGroup]="form"
+    id="edit-note-form"
+    (ngSubmit)="submit()"
+  >
+    <div class="space-y-1">
+      <label class="text-sm font-medium text-slate-700" for="edit-note-title"
+        >Title</label
+      >
+      <input id="edit-note-title" hlmInput formControlName="title" />
+    </div>
+
+    <div class="space-y-1">
+      <label class="text-sm font-medium text-slate-700" for="edit-note-body"
+        >Body</label
+      >
+
+      <input id="edit-note-body" hlmInput type="text" formControlName="body" />
+    </div>
+
+    @if (submitError()) {
+      <p class="text-sm text-red-600">{{ submitError() }}</p>
+    }
+
+    <app-edit-job-dialog-footer
+      [isSubmitting]="isSubmitting()"
+      (cancel)="cancel()"
+      formId="edit-note-form"
+    ></app-edit-job-dialog-footer>
+  </form>
+</div>

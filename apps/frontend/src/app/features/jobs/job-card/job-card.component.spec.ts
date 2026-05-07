@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { jobFixtures } from '@job-tracker-lite-angular/shared-testing';
+import { jobFixtures } from '@job-tracker-lite-angular/testing';
 import { JobCardComponent } from './job-card.component';
 
 describe('JobCardComponent', () => {

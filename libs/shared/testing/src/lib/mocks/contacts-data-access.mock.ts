@@ -43,6 +43,10 @@ export function createContactsDataAccessMock(
 
   return {
     getContactsResource: () => contactsResource,
+    contactsResource,
+    selectJob: () => {
+      /*empty*/
+    },
     createContact:
       options.createContact ?? (async () => contactFixtures.janeDoe),
     updateContact:

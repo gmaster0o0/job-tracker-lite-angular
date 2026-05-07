@@ -1,21 +1,31 @@
-<hlm-alert-dialog-header>
-  <h3 hlmAlertDialogTitle>{{ title() }}</h3>
-  <p hlmAlertDialogDescription>
-    <ng-content select="[deleteDialogDescription]"></ng-content>
-  </p>
-</hlm-alert-dialog-header>
+<hlm-alert-dialog>
+  <hlm-alert-dialog-header>
+    <h3 hlmAlertDialogTitle>{{ title }}</h3>
+    <p hlmAlertDialogDescription>
+      <ng-content select="[deleteDialogDescription]"></ng-content>
+      @if (description) {
+        <ng-container>{{ description }}</ng-container>
+      }
+    </p>
+  </hlm-alert-dialog-header>
 
-<hlm-alert-dialog-footer>
-  <button hlmBtn hlmDialogClose type="button" variant="outline">
-    {{ cancelLabel() }}
-  </button>
-  <button
-    hlmBtn
-    type="button"
-    variant="destructive"
-    [disabled]="isBusy()"
-    (click)="confirm.emit()"
-  >
-    {{ isBusy() ? busyLabel() : confirmLabel() }}
-  </button>
-</hlm-alert-dialog-footer>
+  <hlm-alert-dialog-footer>
+    <button hlmBtn hlmDialogClose type="button" variant="outline">
+      <ng-icon hlm name="lucideUndo2" size="sm" />
+      {{ cancelLabel }}
+    </button>
+    <button
+      hlmBtn
+      type="button"
+      [disabled]="effectiveIsBusy"
+      (click)="onConfirm()"
+    >
+      @if (effectiveIsBusy) {
+        {{ busyLabel }}
+      } @else {
+        <ng-icon hlm name="lucideTrash" size="sm" />
+        {{ confirmLabel }}
+      }
+    </button>
+  </hlm-alert-dialog-footer>
+</hlm-alert-dialog>

@@ -1,8 +1,13 @@
-import { Contact, Job, JobStatus } from '@prisma/client';
-import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
+import { Contact, Note, Job, JobStatus } from '@prisma/client';
+import { ContactDto, NoteDto } from '@job-tracker-lite-angular/api-interfaces';
 import { contactFixtures } from './contacts.fixtures';
+import { noteFixtures } from './notes.fixtures';
 import { jobFixtures, jobResultFixtures } from './jobs.fixtures';
-import { seedContactFixtures, seedJobFixtures } from './seed.fixtures';
+import {
+  seedContactFixtures,
+  seedJobFixtures,
+  seedNoteFixtures,
+} from './seed.fixtures';
 
 function toPrismaJobStatus(status: string): JobStatus {
   switch (status) {
@@ -36,6 +41,14 @@ function toPrismaContact(contact: ContactDto): Contact {
     createdAt: new Date(contact.createdAt),
     updatedAt: new Date(contact.updatedAt),
   } as Contact;
+}
+
+function toPrismaNote(note: NoteDto): Note {
+  return {
+    ...note,
+    createdAt: new Date(note.createdAt),
+    updatedAt: new Date(note.updatedAt),
+  } as Note;
 }
 
 export interface PrismaJobFixturesMap {
@@ -102,6 +115,12 @@ export interface PrismaContactFixturesMap {
   updatedContact: Contact;
 }
 
+export interface PrismaNoteFixturesMap {
+  janeDoe: Note;
+  johnDoe: Note;
+  updatedNote: Note;
+}
+
 export const prismaContactFixtures: PrismaContactFixturesMap = {
   janeDoe: toPrismaContact(contactFixtures.janeDoe),
   johnDoe: toPrismaContact(contactFixtures.johnDoe),
@@ -113,4 +132,17 @@ export const allPrismaContactFixtures: Contact[] = [
   prismaContactFixtures.johnDoe,
   prismaContactFixtures.updatedContact,
   ...seedContactFixtures.map((contact) => toPrismaContact(contact)),
+];
+
+export const prismaNoteFixtures: PrismaNoteFixturesMap = {
+  janeDoe: toPrismaNote(noteFixtures.janeDoe),
+  johnDoe: toPrismaNote(noteFixtures.johnDoe),
+  updatedNote: toPrismaNote(noteFixtures.updatedNote),
+};
+
+export const allPrismaNoteFixtures: Note[] = [
+  prismaNoteFixtures.janeDoe,
+  prismaNoteFixtures.johnDoe,
+  prismaNoteFixtures.updatedNote,
+  ...seedNoteFixtures.map((note) => toPrismaNote(note)),
 ];

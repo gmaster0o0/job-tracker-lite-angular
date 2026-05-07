@@ -6,7 +6,7 @@ import {
   contactFixtures,
   createContactFixtures,
   createContactsDataAccessMock,
-} from '@job-tracker-lite-angular/shared-testing';
+} from '@job-tracker-lite-angular/testing';
 
 describe('CreateContactComponent', () => {
   it('creates component', async () => {

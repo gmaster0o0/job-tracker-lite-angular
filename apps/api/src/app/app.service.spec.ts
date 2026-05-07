@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { AppService } from './app.service';
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
-import { createPrismaServiceMock } from '@job-tracker-lite-angular/shared-testing';
+import { createPrismaServiceMock } from '@job-tracker-lite-angular/testing';
 
 describe('AppService', () => {
   let service: AppService;

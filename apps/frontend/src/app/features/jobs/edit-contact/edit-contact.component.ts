@@ -10,7 +10,7 @@ import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-da
 type EditContactDialogContext = {
   jobId: number;
   contact: ContactDto;
-  onUpdated?: (contact: ContactDto) => void;
+  onUpdated?: () => void;
 };
 
 @Component({
@@ -75,7 +75,7 @@ export class EditContactComponent {
         },
       );
 
-      this.context.onUpdated?.(updated);
+      this.context.onUpdated?.();
       this.dialogRef?.close(updated);
     } catch {
       this.submitError.set('Failed to update contact. Please try again.');

@@ -2,14 +2,17 @@ import {
   ContactDto,
   CreateContactDto,
   CreateJobDto,
+  CreateNoteDto,
   JobDto,
   JobStatusDto,
+  NoteDto,
   UpdateContactDto,
   UpdateJobDto,
+  UpdateNoteDto,
 } from '@job-tracker-lite-angular/api-interfaces';
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
-import { Injectable } from '@nestjs/common';
-import { Contact, Job, JobStatus } from '@prisma/client';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Contact, Job, JobStatus, Note } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 
 const prismaToDtoStatus: Record<JobStatus, JobStatusDto> = {
@@ -60,7 +63,7 @@ export class JobsService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2025'
       ) {
-        throw new Error('NOT_FOUND');
+        throw new NotFoundException(`Job with id ${id} not found`);
       }
 
       throw error;
@@ -134,7 +137,9 @@ export class JobsService {
     });
 
     if (!existing) {
-      throw new Error('NOT_FOUND');
+      throw new NotFoundException(
+        `Contact with id ${contactId} not found for job ${jobId}`,
+      );
     }
 
     const contact = await this.prisma.contact.update({
@@ -146,20 +151,117 @@ export class JobsService {
   }
 
   async deleteContact(jobId: number, contactId: number): Promise<void> {
-    const existing = await this.prisma.contact.findFirst({
-      where: { id: contactId, jobId },
-      select: { id: true },
+    try {
+      const result = await this.prisma.contact.deleteMany({
+        where: { id: contactId, jobId },
+      });
+
+      if (result.count === 0) {
+        throw new NotFoundException(
+          `Contact with id ${contactId} not found for job ${jobId}`,
+        );
+      }
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw error;
+    }
+  }
+  /**
+   * Fetches all notes for a given job, ordered by creation date (newest first).
+   * @param jobId - The ID of the job to fetch notes for.
+   * @returns A promise that resolves to an array of NoteDto objects.
+   */
+  async findNotes(jobId: number): Promise<NoteDto[]> {
+    await this.assertJobExists(jobId);
+
+    const notes = await this.prisma.note.findMany({
+      where: { jobId },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return notes.map(mapNoteToDto);
+  }
+  /**
+   * Creates a new note for a given job.
+   * @param jobId - The ID of the job to create the note for.
+   * @param noteContent - The content of the note to create.
+   * @returns A promise that resolves to the created NoteDto object.
+   */
+  async createNote(
+    jobId: number,
+    noteContent: CreateNoteDto,
+  ): Promise<NoteDto> {
+    await this.assertJobExists(jobId);
+
+    const note = await this.prisma.note.create({
+      data: {
+        ...noteContent,
+        jobId,
+      },
+    });
+
+    return mapNoteToDto(note);
+  }
+  /**
+   * Updates an existing note for a given job.
+   * @param jobId - The ID of the job the note belongs to.
+   * @param noteId - The ID of the note to update.
+   * @param updateContent - The content to update the note with.
+   * @returns A promise that resolves to the updated NoteDto object.
+   */
+  async updateNote(
+    jobId: number,
+    noteId: number,
+    updateContent: UpdateNoteDto,
+  ): Promise<NoteDto> {
+    const existing = await this.prisma.note.findFirst({
+      where: { id: noteId, jobId },
     });
 
     if (!existing) {
-      throw new Error('NOT_FOUND');
+      throw new NotFoundException(
+        `Note with id ${noteId} not found for job ${jobId}`,
+      );
     }
 
-    await this.prisma.contact.delete({
-      where: { id: contactId },
+    const note = await this.prisma.note.update({
+      where: { id: noteId },
+      data: updateContent,
     });
+
+    return mapNoteToDto(note);
+  }
+  /**
+   * Deletes a note for a given job.
+   * @param jobId - The ID of the job the note belongs to.
+   * @param noteId - The ID of the note to delete.
+   */
+  async deleteNote(jobId: number, noteId: number): Promise<void> {
+    try {
+      const result = await this.prisma.note.deleteMany({
+        where: { id: noteId, jobId },
+      });
+
+      if (result.count === 0) {
+        throw new NotFoundException(
+          `Note with id ${noteId} not found for job ${jobId}`,
+        );
+      }
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw error;
+    }
   }
 
+  /**
+   * Helper method to check if a job exists.
+   * Throws a NotFoundException if it doesn't.
+   * @param jobId - The ID of the job to check.
+   */
   private async assertJobExists(jobId: number): Promise<void> {
     try {
       await this.prisma.job.findUniqueOrThrow({
@@ -170,14 +272,19 @@ export class JobsService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2025'
       ) {
-        throw new Error('NOT_FOUND');
+        throw new NotFoundException(`Job with id ${jobId} not found`);
       }
 
       throw error;
     }
   }
 }
-
+/**
+ * Mapper function to map a Job entity from Prisma
+ * to a JobDto for the API response.
+ * @param job - The Job entity from Prisma.
+ * @returns The mapped JobDto object.
+ */
 function mapJobToDto(job: Job): JobDto {
   return {
     id: job.id,
@@ -190,7 +297,12 @@ function mapJobToDto(job: Job): JobDto {
     updatedAt: job.updatedAt.toISOString(),
   };
 }
-
+/**
+ * Mapper function to map a Contact entity from Prisma
+ * to a ContactDto for the API response.
+ * @param contact - The Contact entity from Prisma.
+ * @returns The mapped ContactDto object.
+ */
 function mapContactToDto(contact: Contact): ContactDto {
   return {
     id: contact.id,
@@ -200,5 +312,21 @@ function mapContactToDto(contact: Contact): ContactDto {
     phoneNumber: contact.phoneNumber,
     createdAt: contact.createdAt.toISOString(),
     updatedAt: contact.updatedAt.toISOString(),
+  };
+}
+/**
+ * Mapper function to map a Note entity from Prisma
+ * to a NoteDto for the API response.
+ * @param note - The Note entity from Prisma.
+ * @returns The mapped NoteDto object.
+ */
+function mapNoteToDto(note: Note): NoteDto {
+  return {
+    id: note.id,
+    jobId: note.jobId,
+    title: note.title,
+    body: note.body,
+    createdAt: note.createdAt.toISOString(),
+    updatedAt: note.updatedAt.toISOString(),
   };
 }

@@ -2,27 +2,23 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
-import { dialogRefMock } from '@job-tracker-lite-angular/shared-testing';
+import { DIALOG_DATA } from '@angular/cdk/dialog';
+import {
+  dialogRefMock,
+  deleteConfirmationDialogFixtures,
+} from '@job-tracker-lite-angular/testing';
 import { DeleteConfirmationDialogComponent } from './delete-confirmation-dialog.component';
 
 @Component({
   standalone: true,
   imports: [DeleteConfirmationDialogComponent],
   template: `
-    <app-delete-confirmation-dialog
-      title="Remove item?"
-      confirmLabel="Delete item"
-      busyLabel="Deleting item..."
-      cancelLabel="Keep item"
-      [isBusy]="isBusy"
-      (confirm)="onConfirm()"
-    >
+    <app-delete-confirmation-dialog (confirm)="onConfirm()">
       <span deleteDialogDescription>Delete this item permanently.</span>
     </app-delete-confirmation-dialog>
   `,
 })
 class HostComponent {
-  isBusy = false;
   confirmCalls = 0;
 
   onConfirm(): void {
@@ -34,7 +30,13 @@ describe('DeleteConfirmationDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HostComponent],
-      providers: [{ provide: BrnDialogRef, useValue: dialogRefMock }],
+      providers: [
+        { provide: BrnDialogRef, useValue: dialogRefMock },
+        {
+          provide: DIALOG_DATA,
+          useValue: deleteConfirmationDialogFixtures.default,
+        },
+      ],
     }).compileComponents();
   });
 
@@ -64,9 +66,19 @@ describe('DeleteConfirmationDialogComponent', () => {
     expect(host.confirmCalls).toBe(1);
   });
 
-  it('should show the busy state when deleting', () => {
+  it('should show the busy state when deleting', async () => {
+    await TestBed.configureTestingModule({
+      imports: [HostComponent],
+      providers: [
+        { provide: BrnDialogRef, useValue: dialogRefMock },
+        {
+          provide: DIALOG_DATA,
+          useValue: deleteConfirmationDialogFixtures.busy,
+        },
+      ],
+    }).compileComponents();
+
     const fixture = TestBed.createComponent(HostComponent);
-    fixture.componentInstance.isBusy = true;
     fixture.detectChanges();
 
     const buttons = fixture.debugElement.queryAll(By.css('button'));

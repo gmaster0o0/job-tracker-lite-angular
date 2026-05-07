@@ -4,5 +4,11 @@
   [attr.form]="formId()"
   [disabled]="disabled() || isSubmitting()"
 >
-  {{ isSubmitting() ? submittingLabel() : idleLabel() }}
+  @if (isSubmitting()) {
+    <ng-icon hlm name="lucideLoader2" size="sm" class="animate-spin" />
+    {{ submittingLabel() }}
+  } @else {
+    <ng-icon hlm name="lucideSave" size="sm" />
+    {{ idleLabel() }}
+  }
 </button>

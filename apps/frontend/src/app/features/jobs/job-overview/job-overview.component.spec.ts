@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { JobOverviewComponent } from './job-overview.component';
-import { jobOverviewMarkdown } from '@job-tracker-lite-angular/shared-testing';
+import { jobOverviewMarkdown } from '@job-tracker-lite-angular/testing';
 
 describe('JobOverviewComponent', () => {
   beforeEach(async () => {

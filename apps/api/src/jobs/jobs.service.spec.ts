@@ -11,7 +11,7 @@ import {
   prismaContactFixtures,
   prismaJobFixtures,
   prismaJobResultFixtures,
-} from '@job-tracker-lite-angular/shared-testing';
+} from '@job-tracker-lite-angular/testing';
 
 describe('JobsService', () => {
   let service: JobsService;

@@ -1,0 +1,52 @@
+<hlm-dialog-header>
+  <h2 hlmDialogTitle>Create Note</h2>
+  <p hlmDialogDescription>Fill in the details for the new job.</p>
+</hlm-dialog-header>
+
+<form [formGroup]="form" id="createNoteForm" (ngSubmit)="submit()">
+  <hlm-field-group>
+    <hlm-field>
+      <label hlmLabel for="title">Title*</label>
+      <input
+        hlmInput
+        id="title"
+        formControlName="title"
+        placeholder="Simple title for the note"
+        class="w-full"
+      />
+      @if (form.get('title')?.invalid && form.get('title')?.touched) {
+        <hlm-field-error validator="required"
+          >Title is a required field.</hlm-field-error
+        >
+      } @else {
+        <p hlmDialogDescription>Simple title for the note</p>
+      }
+    </hlm-field>
+    <hlm-field>
+      <label hlmLabel for="body">Write something*</label>
+      <textarea
+        hlmTextarea
+        id="body"
+        formControlName="body"
+        placeholder="A brief overview of the role"
+        rows="4"
+      ></textarea>
+      @if (form.get('body')?.invalid && form.get('body')?.touched) {
+        <hlm-field-error validator="required"
+          >Body is a required field.</hlm-field-error
+        >
+      }
+    </hlm-field>
+
+    @if (submitError()) {
+      <div class="text-sm font-medium text-destructive">
+        {{ submitError() }}
+      </div>
+    }
+  </hlm-field-group>
+</form>
+<app-create-job-dialog-footer
+  formId="createNoteForm"
+  [disableSubmit]="form.invalid"
+  [isSubmitting]="isSubmitting()"
+/>

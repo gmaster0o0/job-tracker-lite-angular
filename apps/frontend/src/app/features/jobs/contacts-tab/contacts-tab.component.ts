@@ -12,12 +12,12 @@ import { provideIcons } from '@ng-icons/core';
 import { lucidePlus } from '@ng-icons/lucide';
 import { ContactListComponent } from '../contact-list/contact-list.component';
 import { CreateContactComponent } from '../create-contact/create-contact.component';
-import { DeleteContactAlertDialogComponent } from '../delete-contact-alert-dialog/delete-contact-alert-dialog.component';
 import { EditContactComponent } from '../edit-contact/edit-contact.component';
+import { DeleteConfirmationDialogComponent } from '../../../shared/delete-confirmation-dialog/delete-confirmation-dialog.component';
 
 @Component({
   standalone: true,
-  selector: 'app-contact-tab',
+  selector: 'app-contacts-tab',
   imports: [
     CommonModule,
     HlmButtonImports,
@@ -25,16 +25,17 @@ import { EditContactComponent } from '../edit-contact/edit-contact.component';
     ContactListComponent,
   ],
   providers: [provideIcons({ lucidePlus })],
-  templateUrl: './contact-tab.component.html',
+  templateUrl: './contacts-tab.component.html',
 })
-export class ContactTabComponent {
+export class ContactsTabComponent {
   private readonly jobsDataAccess = inject(JobsDataAccessService);
   private readonly contactsDataAccess = inject(ContactsDataAccessService);
   private readonly dialog = inject(HlmDialogService);
 
   readonly jobId = input.required<number>();
 
-  protected readonly contactsResource = this.jobsDataAccess.jobContactsResource;
+  protected readonly contactsResource =
+    this.contactsDataAccess.contactsResource;
 
   protected openCreateDialog(): void {
     this.dialog.open(CreateContactComponent, {
@@ -42,7 +43,7 @@ export class ContactTabComponent {
       context: {
         jobId: this.jobId(),
         onCreated: async () => {
-          this.jobsDataAccess.jobContactsResource.reload();
+          this.contactsDataAccess.contactsResource.reload();
         },
       },
     });
@@ -55,20 +56,23 @@ export class ContactTabComponent {
         jobId: this.jobId(),
         contact,
         onUpdated: async () => {
-          this.jobsDataAccess.jobContactsResource.reload();
+          this.contactsDataAccess.contactsResource.reload();
         },
       },
     });
   }
 
   protected openDeleteDialog(contact: ContactDto): void {
-    this.dialog.open(DeleteContactAlertDialogComponent, {
+    this.dialog.open(DeleteConfirmationDialogComponent, {
       contentClass: 'sm:max-w-md !sm:mx-auto',
       context: {
-        contactName: contact.name,
+        title: `Delete ${contact.name}?`,
+        description:
+          'Are you absolutely sure? This action cannot be undone. This will permanently delete the resource.',
+        confirmLabel: 'Delete Contact',
         onConfirm: async () => {
           await this.contactsDataAccess.deleteContact(this.jobId(), contact.id);
-          this.jobsDataAccess.jobContactsResource.reload();
+          this.contactsDataAccess.contactsResource.reload();
         },
       },
     });

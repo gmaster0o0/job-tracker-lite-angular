@@ -2,10 +2,14 @@ import { JobStatus } from '@prisma/client';
 import { PrismaService } from './lib/prisma.service';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
+import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
 import {
   getSeedContactsForJob,
   seedJobFixtures,
-} from '@job-tracker-lite-angular/shared-testing';
+  SeedContactTemplate,
+  getSeedNotesForJob,
+  SeedNoteTemplate,
+} from '@job-tracker-lite-angular/testing';
 
 const envPath = path.join(process.cwd(), '.env');
 dotenv.config({ path: envPath });
@@ -18,7 +22,7 @@ const statusMap: Record<string, JobStatus> = {
   rejected: JobStatus.REJECTED,
 };
 
-const seedJobs = seedJobFixtures.map((job) => ({
+const seedJobs = seedJobFixtures.map((job: JobDto) => ({
   ...job,
   status: statusMap[job.status] ?? JobStatus.REJECTED,
 }));
@@ -45,11 +49,24 @@ async function main() {
 
     if (contacts.length > 0) {
       await prisma.contact.createMany({
-        data: contacts.map((contact) => ({
+        data: contacts.map((contact: SeedContactTemplate) => ({
           jobId: seededJob.id,
           name: contact.name,
           email: contact.email,
           phoneNumber: contact.phoneNumber,
+        })),
+      });
+    }
+
+    const notes = getSeedNotesForJob(jobIndex);
+    await prisma.note.deleteMany({ where: { jobId: seededJob.id } });
+
+    if (notes.length > 0) {
+      await prisma.note.createMany({
+        data: notes.map((note: SeedNoteTemplate) => ({
+          jobId: seededJob.id,
+          title: note.title,
+          body: note.body,
         })),
       });
     }
@@ -58,7 +75,7 @@ async function main() {
   await prisma.$disconnect();
 
   console.log(
-    `Seeded ${seedJobs.length} jobs with 0-2 contacts each (deterministic).`,
+    `Seeded ${seedJobs.length} jobs with 0-2 contacts and 0-1 notes each (deterministic).`,
   );
 }
 

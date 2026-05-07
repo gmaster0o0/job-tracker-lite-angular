@@ -19,13 +19,10 @@ export class JobsDataAccessService {
   private readonly selectedJobId = signal<number | null>(null);
 
   jobsResource = httpResource<JobDto[]>(() => `/api/jobs`);
+
   jobResource = httpResource<JobDto>(() => {
     const id = this.selectedJobId();
     return id === null ? undefined : `/api/jobs/${id}`;
-  });
-  jobContactsResource = httpResource<ContactDto[]>(() => {
-    const id = this.selectedJobId();
-    return id === null ? undefined : `/api/jobs/${id}/contacts`;
   });
 
   selectJob(id: number | null): void {
