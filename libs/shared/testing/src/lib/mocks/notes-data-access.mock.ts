@@ -2,10 +2,8 @@ import {
   NoteDto,
   CreateNoteDto,
   UpdateNoteDto,
-  ContactDto,
 } from '@job-tracker-lite-angular/api-interfaces';
 import { noteFixtures, createNoteFixtures } from '../fixtures/notes.fixtures';
-import { ContactsDataAccessMockOptions } from './contacts-data-access.mock';
 
 type ResourceState<T> = {
   value: () => T;

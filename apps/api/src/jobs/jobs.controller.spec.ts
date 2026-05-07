@@ -10,11 +10,10 @@ import {
 
 describe('JobsController', () => {
   let controller: JobsController;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let jobsService: any;
 
   beforeEach(async () => {
-    jobsService = createJobsServiceMock();
+    jobsService = createJobsServiceMock(jest.fn);
 
     const moduleRef = await Test.createTestingModule({
       controllers: [JobsController],

@@ -36,7 +36,7 @@ describe('EditNoteComponent', () => {
   });
 
   it('should submit and call update', async () => {
-    await harness.setFormValues(updateNoteFixtures.updatedNote);
+    await harness.fillForm(updateNoteFixtures.updatedNote);
     await harness.submit();
 
     expect(updateNote).toHaveBeenCalledWith(

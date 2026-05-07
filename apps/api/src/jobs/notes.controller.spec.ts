@@ -10,11 +10,10 @@ import {
 
 describe('NotesController', () => {
   let notesController: NotesController;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let jobsService: any;
 
   beforeEach(async () => {
-    jobsService = createJobsServiceMock();
+    jobsService = createJobsServiceMock(jest.fn);
 
     const moduleRef = await Test.createTestingModule({
       controllers: [NotesController],
