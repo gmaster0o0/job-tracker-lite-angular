@@ -1,23 +1,30 @@
 <div class="px-4 py-8 sm:px-6 lg:px-8">
   <hlm-card size="sm" class="mx-auto w-full max-w-sm">
     <hlm-card-header class="mb-6">
-      <h1 hlmCardTitle>Health Check</h1>
+      <div class="flex items-center justify-between gap-2">
+        <h1 hlmCardTitle>Health Check</h1>
+        <button hlmBtn routerLink="/" variant="outline" aria-label="Back">
+          <ng-icon name="lucideArrowLeft" class="w-4 h-4" />
+          <span>Back</span>
+        </button>
+      </div>
     </hlm-card-header>
     <div hlmCardContent>
-      @if (health.value(); as healthData) {
+      @if (health(); as healthData) {
         <div class="grid gap-6 sm:grid-cols-2">
           <hlm-card>
             <hlm-card-header>
+              <span style="display: none">{{ 0 | uptime }}</span>
               <h3 hlmCardTitle>API</h3>
             </hlm-card-header>
             <div hlmCardContent>
               <span
                 hlmBadge
                 class="text-white"
-                [class.bg-green-500]="healthData.status === 'UP'"
-                [class.bg-red-500]="healthData.status === 'DOWN'"
+                [class.bg-green-500]="healthData.status === 'ok'"
+                [class.bg-red-500]="healthData.status === 'error'"
               >
-                {{ healthData.status }}
+                {{ healthData.status.toUpperCase() }}
               </span>
             </div>
           </hlm-card>
@@ -26,13 +33,16 @@
               <h3 hlmCardTitle>Database</h3>
             </hlm-card-header>
             <div hlmCardContent>
+              @let dbStatus =
+                healthData.info.database?.status ??
+                healthData.error.database?.status;
               <span
                 hlmBadge
                 class="text-white"
-                [class.bg-green-500]="healthData.database === 'UP'"
-                [class.bg-red-500]="healthData.database === 'DOWN'"
+                [class.bg-green-500]="dbStatus === 'up'"
+                [class.bg-red-500]="dbStatus === 'down'"
               >
-                {{ healthData.database }}
+                {{ dbStatus?.toUpperCase() || 'UNKNOWN' }}
               </span>
             </div>
           </hlm-card>
@@ -44,14 +54,26 @@
           </hlm-card-header>
           <div hlmCardContent>
             <p hlmCardDescription>
-              {{ healthData.timestamp | date: 'medium' }}
+              {{ healthData.details.server?.timestamp | date: 'medium' }}
             </p>
           </div>
+          <span hlmCardFooter>
+            Uptime:
+            {{
+              healthData.details.server?.uptime ??
+                healthData.info.server?.uptime ??
+                healthData.error.server?.uptime | uptime
+            }}
+          </span>
         </hlm-card>
-      } @else {
+      } @else if (healthResource.isLoading()) {
         <div>
           <hlm-spinner></hlm-spinner>
           <p>Loading health check…</p>
+        </div>
+      } @else {
+        <div>
+          <p class="text-red-500">Failed to load health check data.</p>
         </div>
       }
     </div>

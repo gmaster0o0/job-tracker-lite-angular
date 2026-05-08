@@ -1,7 +1,28 @@
 import { HealthResponseDto } from '@job-tracker-lite-angular/api-interfaces';
 
 export const healthFixture: HealthResponseDto = {
-  status: 'UP',
-  database: 'UP',
-  timestamp: '2026-04-29T09:00:00.000Z',
+  status: 'ok',
+  info: {
+    server: {
+      status: 'up',
+      uptime: '765s',
+      timestamp: '2026-04-29T09:00:00.000Z',
+    },
+    database: {
+      status: 'up',
+      timestamp: '2026-04-29T09:00:00.000Z',
+    },
+  },
+  error: {},
+  details: {
+    server: {
+      status: 'up',
+      uptime: '765s',
+      timestamp: '2026-04-29T09:00:00.000Z',
+    },
+    database: {
+      status: 'up',
+      timestamp: '2026-04-29T09:00:00.000Z',
+    },
+  },
 };

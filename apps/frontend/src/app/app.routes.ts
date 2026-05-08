@@ -13,7 +13,7 @@ export const appRoutes: Route[] = [
         path: '',
         pathMatch: 'full',
         loadComponent: () =>
-          import('./status/status.component').then((m) => m.StatusComponent),
+          import('./features/home/home.component').then((m) => m.HomeComponent),
       },
       {
         path: '',
@@ -120,6 +120,11 @@ export const appRoutes: Route[] = [
         ],
       },
     ],
+  },
+  {
+    path: 'status',
+    loadComponent: () =>
+      import('./status/status.component').then((m) => m.StatusComponent),
   },
   {
     path: '**',
