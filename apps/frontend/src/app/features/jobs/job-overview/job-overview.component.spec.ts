@@ -1,6 +1,8 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { JobOverviewComponent } from './job-overview.component';
 import { jobOverviewMarkdown } from '@job-tracker-lite-angular/testing';
+import { JobOverviewHarness } from './job-overview.harness';
 
 describe('JobOverviewComponent', () => {
   beforeEach(async () => {
@@ -9,24 +11,32 @@ describe('JobOverviewComponent', () => {
     }).compileComponents();
   });
 
-  it('should render markdown into formatted HTML', () => {
+  it('should render markdown into formatted HTML', async () => {
     const fixture = TestBed.createComponent(JobOverviewComponent);
     fixture.componentRef.setInput('description', jobOverviewMarkdown);
     fixture.detectChanges();
 
-    const article = fixture.nativeElement.querySelector(
-      'article',
-    ) as HTMLElement;
-    expect(article.innerHTML).toContain('<h1>Job Description</h1>');
-    expect(article.innerHTML).toContain('<strong>important</strong>');
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      JobOverviewHarness,
+    );
+
+    const html = await harness.getArticleHtml();
+    expect(html).toContain('<h1>Job Description</h1>');
+    expect(html).toContain('<strong>important</strong>');
   });
 
-  it('should show fallback text when description is empty', () => {
+  it('should show fallback text when description is empty', async () => {
     const fixture = TestBed.createComponent(JobOverviewComponent);
     fixture.componentRef.setInput('description', '   ');
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain(
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      JobOverviewHarness,
+    );
+
+    expect(await harness.getTextContent()).toContain(
       'No description provided.',
     );
   });

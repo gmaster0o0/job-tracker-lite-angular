@@ -1,5 +1,5 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import {
   JobsDataAccessService,
@@ -12,6 +12,7 @@ import {
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { vi } from 'vitest';
 import { NotesTabComponent } from './notes-tab.component';
+import { NotesTabHarness } from './notes-tab.harness';
 
 describe('NotesTabComponent', () => {
   async function setup(notes: ContactDto[]) {
@@ -35,25 +36,25 @@ describe('NotesTabComponent', () => {
     fixture.componentRef.setInput('jobId', 10);
     fixture.detectChanges();
 
-    return { fixture, dialogMock };
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      NotesTabHarness,
+    );
+
+    return { fixture, harness, dialogMock };
   }
 
-  it.skip('should render contact tab header and add button', async () => {
-    const { fixture } = await setup([]);
+  it('should render notes tab header and add button', async () => {
+    const { harness } = await setup([]);
 
-    expect(fixture.nativeElement.textContent).toContain('Contacts');
-    expect(
-      fixture.debugElement.query(
-        By.css('button[title="Add Contact"], button[type="button"]'),
-      ),
-    ).toBeTruthy();
+    expect(await harness.getHeaderText()).toContain('Notes');
+    expect(await harness.hasAddNoteButton()).toBe(true);
   });
 
-  it.skip('should open create dialog when Add Contact clicked', async () => {
-    const { fixture, dialogMock } = await setup([]);
+  it('should open create dialog when Add Note clicked', async () => {
+    const { harness, dialogMock } = await setup([]);
 
-    const button = fixture.debugElement.query(By.css('button[type="button"]'));
-    button.nativeElement.click();
+    await harness.clickAddNote();
 
     expect(dialogMock.open).toHaveBeenCalled();
   });

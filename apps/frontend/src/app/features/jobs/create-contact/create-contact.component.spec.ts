@@ -1,7 +1,9 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { vi } from 'vitest';
 import { CreateContactComponent } from './create-contact.component';
+import { CreateContactHarness } from './create-contact.harness';
 import {
   contactFixtures,
   createContactFixtures,
@@ -14,7 +16,11 @@ describe('CreateContactComponent', () => {
       imports: [CreateContactComponent],
     }).compileComponents();
     const fixture = TestBed.createComponent(CreateContactComponent);
-    expect(fixture.componentInstance).toBeTruthy();
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      CreateContactHarness,
+    );
+    expect(harness).toBeTruthy();
   });
 
   it('should submit and call data access', async () => {
@@ -31,11 +37,14 @@ describe('CreateContactComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(CreateContactComponent);
-    const component = fixture.componentInstance as any;
+    fixture.detectChanges();
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      CreateContactHarness,
+    );
 
-    component.form.setValue(createContactFixtures.janeDoe);
-
-    await component.submit();
+    await harness.fillForm(createContactFixtures.janeDoe);
+    await harness.submit();
 
     expect(createContact).toHaveBeenCalledWith(
       0,

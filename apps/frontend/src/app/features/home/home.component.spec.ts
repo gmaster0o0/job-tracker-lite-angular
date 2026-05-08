@@ -1,21 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { TestBed } from '@angular/core/testing';
 import { HomeComponent } from './home.component';
+import { HomeHarness } from './home.harness';
 
 describe('HomeComponent', () => {
-  let component: HomeComponent;
-  let fixture: ComponentFixture<HomeComponent>;
+  let harness: HomeHarness;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HomeComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(HomeComponent);
-    component = fixture.componentInstance;
+    const fixture = TestBed.createComponent(HomeComponent);
     await fixture.whenStable();
+    harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      HomeHarness,
+    );
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness).toBeTruthy();
   });
 });

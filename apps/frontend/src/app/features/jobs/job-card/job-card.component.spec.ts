@@ -1,6 +1,8 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { jobFixtures } from '@job-tracker-lite-angular/testing';
 import { JobCardComponent } from './job-card.component';
+import { JobCardHarness } from './job-card.harness';
 
 describe('JobCardComponent', () => {
   beforeEach(async () => {
@@ -14,8 +16,15 @@ describe('JobCardComponent', () => {
     fixture.componentRef.setInput('job', jobFixtures.frontendEngineer);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('Frontend Engineer');
-    expect(fixture.nativeElement.textContent).toContain('Acme Labs');
-    expect(fixture.nativeElement.textContent).toContain('saved');
+    return TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      JobCardHarness,
+    ).then(async (harness) => {
+      const text = await harness.getTextContent();
+
+      expect(text).toContain('Frontend Engineer');
+      expect(text).toContain('Acme Labs');
+      expect(text).toContain('saved');
+    });
   });
 });

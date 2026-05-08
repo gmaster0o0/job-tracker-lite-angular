@@ -1,10 +1,4 @@
-import {
-  Component,
-  SecurityContext,
-  computed,
-  inject,
-  input,
-} from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmScrollAreaImports } from '@spartan-ng/helm/scroll-area';

@@ -1,9 +1,11 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { AppComponent } from './app.component';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { createJobsDataAccessMock } from '@job-tracker-lite-angular/testing';
+import { AppHarness } from './app.harness';
 
 @Component({
   standalone: true,
@@ -48,9 +50,13 @@ describe('AppComponent', () => {
     }).compileComponents();
   });
 
-  it('should create the shell component', () => {
+  it('should create the shell component', async () => {
     const fixture = TestBed.createComponent(AppComponent);
-    expect(fixture.componentInstance).toBeTruthy();
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      AppHarness,
+    );
+    expect(harness).toBeTruthy();
   });
 
   it('should render with router outlet', async () => {
@@ -58,7 +64,10 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    const routerOutlet = fixture.nativeElement.querySelector('router-outlet');
-    expect(routerOutlet).toBeTruthy();
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      AppHarness,
+    );
+    expect(await harness.hasRouterOutlet()).toBe(true);
   });
 });

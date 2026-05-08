@@ -1,7 +1,8 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { JobFormSubmitButtonComponent } from './job-form-submit-button.component';
+import { JobFormSubmitButtonHarness } from './job-form-submit-button.harness';
 
 @Component({
   standalone: true,
@@ -22,33 +23,38 @@ class HostComponent {
 }
 
 describe('JobFormSubmitButtonComponent', () => {
+  let harness: JobFormSubmitButtonHarness;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HostComponent],
     }).compileComponents();
-  });
 
-  it.skip('should render idle label when not submitting', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
-
-    const button = fixture.debugElement.query(By.css('button'))
-      .nativeElement as HTMLButtonElement;
-
-    expect(button.textContent).toContain('Create');
-    expect(button.disabled).toBe(false);
-    expect(button.getAttribute('form')).toBe('jobForm');
+    harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      JobFormSubmitButtonHarness,
+    );
   });
 
-  it.skip('should render submitting label and disable button while submitting', () => {
+  it('should render idle label when not submitting', async () => {
+    expect(await harness.getLabelText()).toContain('Create');
+    expect(await harness.isDisabled()).toBe(false);
+    expect(await harness.getFormId()).toBe('jobForm');
+  });
+
+  it('should render submitting label and disable button while submitting', async () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.isSubmitting = true;
     fixture.detectChanges();
+    const localHarness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      JobFormSubmitButtonHarness,
+    );
 
-    const button = fixture.debugElement.query(By.css('button'))
-      .nativeElement as HTMLButtonElement;
-
-    expect(button.textContent).toContain('Saving...');
-    expect(button.disabled).toBe(true);
+    expect(await localHarness.getLabelText()).toContain('Saving...');
+    expect(await localHarness.isDisabled()).toBe(true);
+    expect(await localHarness.isSubmittingStateVisible()).toBe(true);
   });
 });
