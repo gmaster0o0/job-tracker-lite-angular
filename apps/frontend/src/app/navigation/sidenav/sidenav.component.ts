@@ -8,6 +8,7 @@ import { provideIcons } from '@ng-icons/core';
 import { lucideLogOut, lucideArrowLeft } from '@ng-icons/lucide';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
+import { version as appVersion } from '../../../environments/version';
 @Component({
   standalone: true,
   selector: 'app-sidenav',
@@ -37,4 +38,5 @@ export class SidenavComponent {
       initialValue: this.router.url === '/',
     },
   );
+  protected readonly version = appVersion;
 }
