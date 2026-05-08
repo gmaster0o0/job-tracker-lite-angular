@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { PrismaModule } from '@job-tracker-lite-angular/prisma';
 import { JobsModule } from '../jobs/jobs.module';
+import { HealthModule } from './healthcheck/healthcheck.module';
 
 @Module({
-  imports: [PrismaModule, JobsModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [PrismaModule, JobsModule, HealthModule],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

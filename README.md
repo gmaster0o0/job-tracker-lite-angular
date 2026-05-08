@@ -196,6 +196,9 @@ npx nx run-many --target=test --all
 npx nx run frontend-e2e:e2e
 npx nx run api-e2e:e2e
 
+# generate nestjs code example
+npx nx g @nx/nest:controller apps/api/src/app/health/health
+
 # View project graph
 npx nx graph
 ```

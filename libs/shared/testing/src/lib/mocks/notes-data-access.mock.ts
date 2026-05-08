@@ -4,13 +4,7 @@ import {
   UpdateNoteDto,
 } from '@job-tracker-lite-angular/api-interfaces';
 import { noteFixtures, createNoteFixtures } from '../fixtures/notes.fixtures';
-
-type ResourceState<T> = {
-  value: () => T;
-  isLoading: () => boolean;
-  reload: () => void;
-  error: () => unknown;
-};
+import { ResourceState } from './ResourceState';
 
 export type NotesDataAccessMockOptions = {
   notes?: NoteDto[];

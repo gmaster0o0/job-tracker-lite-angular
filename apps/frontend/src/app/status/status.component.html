@@ -1,59 +1,81 @@
-<div class="min-h-screen bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-4xl">
-    <section
-      class="rounded-3xl bg-white/90 p-8 shadow-xl shadow-slate-200/80 ring-1 ring-slate-200"
-    >
-      <header class="mb-6">
-        <p
-          class="text-sm font-semibold uppercase tracking-[0.3em] text-teal-700"
-        >
-          Health Check
-        </p>
-        <h1 class="mt-4 text-3xl font-semibold text-slate-950">
-          Backend health status
-        </h1>
-      </header>
-
-      @if (health.value(); as healthData) {
+<div class="px-4 py-8 sm:px-6 lg:px-8">
+  <hlm-card size="sm" class="mx-auto w-full max-w-sm">
+    <hlm-card-header class="mb-6">
+      <div class="flex items-center justify-between gap-2">
+        <h1 hlmCardTitle>Health Check</h1>
+        <button hlmBtn routerLink="/" variant="outline" aria-label="Back">
+          <ng-icon name="lucideArrowLeft" class="w-4 h-4" />
+          <span>Back</span>
+        </button>
+      </div>
+    </hlm-card-header>
+    <div hlmCardContent>
+      @if (health(); as healthData) {
         <div class="grid gap-6 sm:grid-cols-2">
-          <div class="rounded-3xl bg-slate-50 p-6 ring-1 ring-slate-200">
-            <p
-              class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500"
-            >
-              API
-            </p>
-            <p class="mt-3 text-3xl font-semibold text-slate-900">
-              {{ healthData.status }}
-            </p>
-          </div>
-          <div class="rounded-3xl bg-slate-50 p-6 ring-1 ring-slate-200">
-            <p
-              class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500"
-            >
-              Database
-            </p>
-            <p class="mt-3 text-3xl font-semibold text-slate-900">
-              {{ healthData.database }}
-            </p>
-          </div>
+          <hlm-card>
+            <hlm-card-header>
+              <span style="display: none">{{ 0 | uptime }}</span>
+              <h3 hlmCardTitle>API</h3>
+            </hlm-card-header>
+            <div hlmCardContent>
+              <span
+                hlmBadge
+                class="text-white"
+                [class.bg-green-500]="healthData.status === 'ok'"
+                [class.bg-red-500]="healthData.status === 'error'"
+              >
+                {{ healthData.status.toUpperCase() }}
+              </span>
+            </div>
+          </hlm-card>
+          <hlm-card>
+            <hlm-card-header>
+              <h3 hlmCardTitle>Database</h3>
+            </hlm-card-header>
+            <div hlmCardContent>
+              @let dbStatus =
+                healthData.info.database?.status ??
+                healthData.error.database?.status;
+              <span
+                hlmBadge
+                class="text-white"
+                [class.bg-green-500]="dbStatus === 'up'"
+                [class.bg-red-500]="dbStatus === 'down'"
+              >
+                {{ dbStatus?.toUpperCase() || 'UNKNOWN' }}
+              </span>
+            </div>
+          </hlm-card>
         </div>
-        <div class="mt-8 rounded-3xl bg-slate-50 p-6 ring-1 ring-slate-200">
-          <p
-            class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500"
-          >
-            Last checked
-          </p>
-          <p class="mt-3 text-slate-700">
-            {{ healthData.timestamp | date: 'medium' }}
-          </p>
+
+        <hlm-card class="mt-6">
+          <hlm-card-header>
+            <h3 hlmCardTitle>Last checked</h3>
+          </hlm-card-header>
+          <div hlmCardContent>
+            <p hlmCardDescription>
+              {{ healthData.details.server?.timestamp | date: 'medium' }}
+            </p>
+          </div>
+          <span hlmCardFooter>
+            Uptime:
+            {{
+              healthData.details.server?.uptime ??
+                healthData.info.server?.uptime ??
+                healthData.error.server?.uptime | uptime
+            }}
+          </span>
+        </hlm-card>
+      } @else if (healthResource.isLoading()) {
+        <div>
+          <hlm-spinner></hlm-spinner>
+          <p>Loading health check…</p>
         </div>
       } @else {
-        <div
-          class="rounded-3xl bg-slate-50 p-8 text-center text-slate-700 ring-1 ring-slate-200"
-        >
-          Loading health check…
+        <div>
+          <p class="text-red-500">Failed to load health check data.</p>
         </div>
       }
-    </section>
-  </div>
+    </div>
+  </hlm-card>
 </div>

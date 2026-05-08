@@ -6,5 +6,5 @@ import { HealthResponseDto } from '@job-tracker-lite-angular/api-interfaces';
   providedIn: 'root',
 })
 export class DataAccessService {
-  healthResource = httpResource<HealthResponseDto>(() => `/api`);
+  healthResource = httpResource<HealthResponseDto>(() => `/api/health`);
 }

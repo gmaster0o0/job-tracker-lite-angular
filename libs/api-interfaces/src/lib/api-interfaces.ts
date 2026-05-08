@@ -9,10 +9,26 @@ export type User = {
   password: string;
 };
 
+export interface HealthIndicator {
+  status: 'up' | 'down';
+  uptime?: string;
+  timestamp?: string;
+}
+
 export interface HealthResponseDto {
-  status: 'UP' | 'DOWN';
-  database: 'UP' | 'DOWN';
-  timestamp: string;
+  status: 'ok' | 'error';
+  info: {
+    server?: HealthIndicator;
+    database?: HealthIndicator;
+  };
+  error: {
+    server?: HealthIndicator;
+    database?: HealthIndicator;
+  };
+  details: {
+    server?: HealthIndicator;
+    database?: HealthIndicator;
+  };
 }
 
 export type JobStatusDto =

@@ -11,4 +11,5 @@ export * from './lib/mocks/notes-data-access.mock';
 export * from './lib/mocks/prisma-service.mock';
 export * from './lib/mocks/brn-dialog-ref.mock';
 export * from './lib/mocks/jobs-service.mock';
+export * from './lib/mocks/data-access.mock';
 export * from './lib/fixtures/notes.fixtures';

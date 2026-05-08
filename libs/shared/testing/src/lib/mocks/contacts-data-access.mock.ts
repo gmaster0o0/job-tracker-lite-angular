@@ -7,13 +7,7 @@ import {
   contactFixtures,
   createContactFixtures,
 } from '../fixtures/contacts.fixtures';
-
-type ResourceState<T> = {
-  value: () => T;
-  isLoading: () => boolean;
-  reload: () => void;
-  error: () => unknown;
-};
+import { ResourceState } from './ResourceState';
 
 export type ContactsDataAccessMockOptions = {
   contacts?: ContactDto[];
