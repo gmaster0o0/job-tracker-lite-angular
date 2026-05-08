@@ -1,0 +1,43 @@
+{
+  "header": "# Job Tracker Lite - Changelog\n",
+  "releaseCommitMessageFormat": "build(release): {{currentTag}}",
+  "types": [
+    {
+      "type": "feat",
+      "section": "🚀New Features"
+    },
+    {
+      "type": "fix",
+      "section": "🐞Bug Fixes"
+    },
+    {
+      "type": "perf",
+      "section": "⚡Performance Improvements"
+    },
+    {
+      "type": "build",
+      "section": "Build System and Versioning",
+      "hidden": false
+    },
+    {
+      "type": "ci",
+      "hidden": true
+    },
+    {
+      "type": "docs",
+      "hidden": true
+    },
+    {
+      "type": "test",
+      "hidden": true
+    },
+    {
+      "type": "refactor",
+      "hidden": true
+    },
+    {
+      "type": "style",
+      "hidden": true
+    }
+  ]
+}

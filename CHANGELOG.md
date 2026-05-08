@@ -1,0 +1,22 @@
+# Job Tracker Lite - Changelog
+
+## 0.3.0 (2026-05-08)
+
+
+### Bug Fixes
+
+* **jobs:** onUpdated callback to contact dialogs for resource reload ([#12](https://github.com/gmaster0o0/job-tracker-lite-angular/issues/12)) ([a5f217b](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/a5f217b8611e2e903c4008f97eef941c3e6dcb1e))
+* **jobs:** tab scrolling and markdown rendering ([bb5a9e8](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/bb5a9e8471b067c87e00cfccf4a0cf3aa5813841)), closes [#13](https://github.com/gmaster0o0/job-tracker-lite-angular/issues/13)
+
+
+### New Features
+
+* **api:** add prisma, db, and basic healthcheck ([942ec35](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/942ec356cdf946de0ef08ff8245288bdd2b1abcc))
+* centralized testdata, mocking, and seeding data ([#8](https://github.com/gmaster0o0/job-tracker-lite-angular/issues/8)) ([84b0a15](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/84b0a15d1b4e9f2b94f957553ea7998610254a2c))
+* **contacts:** enhance contact list with scrolling ([#17](https://github.com/gmaster0o0/job-tracker-lite-angular/issues/17)) ([1e083d0](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/1e083d087ffb0384c9d5e0d0955d41a99d96023c)), closes [#11](https://github.com/gmaster0o0/job-tracker-lite-angular/issues/11)
+* **frontend:** overhaul app layout/routing and add shared UI-based job navigation ([8168663](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/8168663da31202a1168c21d96e7a43510caba8b1))
+* initialize  application ([1e9ad1e](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/1e9ad1ec19d8d9f23887ffd18f1e3f5590e638bd))
+* **jobs:** add job list UI, jobs API CRUD, card components, lint + Husky ([3eca18d](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/3eca18da6d2962a8dcde752672da53686868018c))
+* **jobs:** add tooltips for buttons and status indicators ([#16](https://github.com/gmaster0o0/job-tracker-lite-angular/issues/16)) ([daada0c](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/daada0ca327d25953e2af2b1d590fafa694b3c09))
+* **jobs:** add update and delete job functionality with dialogs ([086ffd5](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/086ffd5282e9c6503c2c2ceb863017804e51d52d))
+* **jobs:** implement notes ([#18](https://github.com/gmaster0o0/job-tracker-lite-angular/issues/18)) ([92667ce](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/92667cef6ea47e3b99d429125376d4fbbf49753f))
