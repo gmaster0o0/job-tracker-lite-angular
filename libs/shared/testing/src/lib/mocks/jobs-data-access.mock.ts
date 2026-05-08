@@ -6,13 +6,7 @@ import {
   UpdateJobDto,
 } from '@job-tracker-lite-angular/api-interfaces';
 import { jobFixtures } from '../fixtures/jobs.fixtures';
-
-type ResourceState<T> = {
-  value: () => T;
-  isLoading: () => boolean;
-  reload: () => void;
-  error: () => unknown;
-};
+import { ResourceState } from './ResourceState';
 
 export type JobsDataAccessMockOptions = {
   jobs?: JobDto[];

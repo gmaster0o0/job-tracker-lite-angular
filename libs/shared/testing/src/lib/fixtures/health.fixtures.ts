@@ -26,3 +26,21 @@ export const healthFixture: HealthResponseDto = {
     },
   },
 };
+
+export const degradedHealth: HealthResponseDto = {
+  status: 'error',
+  info: {
+    server: { status: 'up', uptime: '120s' },
+  },
+  error: {
+    server: { status: 'up', uptime: '120s' },
+    database: { status: 'down' },
+  },
+  details: {
+    server: {
+      status: 'up',
+      uptime: '120s',
+      timestamp: '2026-05-09T09:00:00.000Z',
+    },
+  },
+};
