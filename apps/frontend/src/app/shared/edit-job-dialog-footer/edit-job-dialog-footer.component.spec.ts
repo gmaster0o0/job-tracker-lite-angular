@@ -1,8 +1,9 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import { EditJobDialogFooterComponent } from './edit-job-dialog-footer.component';
+import { EditJobDialogFooterHarness } from './edit-job-dialog-footer.harness';
 
 @Component({
   standalone: true,
@@ -41,19 +42,26 @@ describe('EditJobDialogFooterComponent', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
 
-    const text = (fixture.nativeElement as HTMLElement).textContent;
-    expect(text).toContain('Cancel');
-    expect(text).toContain('Save Changes');
+    return TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      EditJobDialogFooterHarness,
+    ).then(async (harness) => {
+      const text = await harness.getTextContent();
+      expect(text).toContain('Cancel');
+      expect(text).toContain('Save Changes');
+    });
   });
 
-  it('should disable submit button when disabled by input', () => {
+  it('should disable submit button when disabled by input', async () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.disableSubmit = true;
     fixture.detectChanges();
 
-    const submitButton = fixture.debugElement.queryAll(By.css('button'))[1]
-      .nativeElement as HTMLButtonElement;
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      EditJobDialogFooterHarness,
+    );
 
-    expect(submitButton.disabled).toBe(true);
+    expect(await harness.isSubmitDisabled()).toBe(true);
   });
 });

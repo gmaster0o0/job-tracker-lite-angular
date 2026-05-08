@@ -1,22 +1,26 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SidenavComponent } from './sidenav.component';
+import { SidenavHarness } from './sidenav.harness';
 
 describe('SidenavComponent', () => {
-  let component: SidenavComponent;
-  let fixture: ComponentFixture<SidenavComponent>;
+  let harness: SidenavHarness;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, SidenavComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SidenavComponent);
-    component = fixture.componentInstance;
+    const fixture = TestBed.createComponent(SidenavComponent);
     await fixture.whenStable();
+    harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      SidenavHarness,
+    );
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness).toBeTruthy();
   });
 });

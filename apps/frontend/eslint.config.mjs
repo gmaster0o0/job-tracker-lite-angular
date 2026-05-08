@@ -1,6 +1,5 @@
 import nx from '@nx/eslint-plugin';
 import baseConfig from '../../eslint.config.mjs';
-import angular from 'angular-eslint';
 
 export default [
   ...nx.configs['flat/angular'],

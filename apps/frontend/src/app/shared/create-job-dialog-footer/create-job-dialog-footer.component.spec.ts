@@ -1,8 +1,9 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import { CreateJobDialogFooterComponent } from './create-job-dialog-footer.component';
+import { CreateJobDialogFooterHarness } from './create-job-dialog-footer.harness';
 
 @Component({
   standalone: true,
@@ -41,20 +42,27 @@ describe('CreateJobDialogFooterComponent', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
 
-    const text = (fixture.nativeElement as HTMLElement).textContent;
-    expect(text).toContain('Cancel');
-    expect(text).toContain('Create');
+    return TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      CreateJobDialogFooterHarness,
+    ).then(async (harness) => {
+      const text = await harness.getTextContent();
+      expect(text).toContain('Cancel');
+      expect(text).toContain('Create');
+    });
   });
 
-  it('should show saving label while submitting', () => {
+  it('should show saving label while submitting', async () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.isSubmitting = true;
     fixture.detectChanges();
 
-    const submitButton = fixture.debugElement.queryAll(By.css('button'))[1]
-      .nativeElement as HTMLButtonElement;
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      CreateJobDialogFooterHarness,
+    );
 
-    expect(submitButton.textContent).toContain('Saving...');
-    expect(submitButton.disabled).toBe(true);
+    expect(await harness.getSubmitLabelText()).toContain('Saving...');
+    expect(await harness.isSubmitDisabled()).toBe(true);
   });
 });

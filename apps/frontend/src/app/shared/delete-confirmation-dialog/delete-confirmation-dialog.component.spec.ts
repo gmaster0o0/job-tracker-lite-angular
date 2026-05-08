@@ -1,6 +1,6 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
 import {
@@ -8,6 +8,7 @@ import {
   deleteConfirmationDialogFixtures,
 } from '@job-tracker-lite-angular/testing';
 import { DeleteConfirmationDialogComponent } from './delete-confirmation-dialog.component';
+import { DeleteConfirmationDialogHarness } from './delete-confirmation-dialog.harness';
 
 @Component({
   standalone: true,
@@ -40,26 +41,33 @@ describe('DeleteConfirmationDialogComponent', () => {
     }).compileComponents();
   });
 
-  it('should render the provided title, description and labels', () => {
+  it('should render the provided title, description and labels', async () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
 
-    const nativeElement = fixture.nativeElement as HTMLElement;
-
-    expect(nativeElement.textContent).toContain('Remove item?');
-    expect(nativeElement.textContent).toContain(
-      'Delete this item permanently.',
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      DeleteConfirmationDialogHarness,
     );
-    expect(nativeElement.textContent).toContain('Keep item');
-    expect(nativeElement.textContent).toContain('Delete item');
+
+    const text = await harness.getTextContent();
+
+    expect(text).toContain('Remove item?');
+    expect(text).toContain('Delete this item permanently.');
+    expect(text).toContain('Keep item');
+    expect(text).toContain('Delete item');
   });
 
-  it('should emit confirm action', () => {
+  it('should emit confirm action', async () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
 
-    const buttons = fixture.debugElement.queryAll(By.css('button'));
-    buttons[1].nativeElement.click();
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      DeleteConfirmationDialogHarness,
+    );
+
+    await harness.clickConfirm();
     fixture.detectChanges();
 
     const host = fixture.componentInstance;
@@ -81,8 +89,12 @@ describe('DeleteConfirmationDialogComponent', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
 
-    const buttons = fixture.debugElement.queryAll(By.css('button'));
-    expect((buttons[1].nativeElement as HTMLButtonElement).disabled).toBe(true);
-    expect(buttons[1].nativeElement.textContent).toContain('Deleting item...');
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      DeleteConfirmationDialogHarness,
+    );
+
+    expect(await harness.isConfirmDisabled()).toBe(true);
+    expect(await harness.getConfirmLabelText()).toContain('Deleting item...');
   });
 });

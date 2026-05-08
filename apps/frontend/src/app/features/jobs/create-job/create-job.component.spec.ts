@@ -1,5 +1,5 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
-import { Validators } from '@angular/forms';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import {
   jobFixtures,
@@ -10,6 +10,7 @@ import { vi } from 'vitest';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import { createBrnDialogRefMock } from '@job-tracker-lite-angular/testing';
 import { CreateJobComponent } from './create-job.component';
+import { CreateJobHarness } from './create-job.harness';
 
 // use shared mock from libs/shared/testing
 
@@ -23,10 +24,14 @@ describe('CreateJobComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(CreateJobComponent);
-    expect(fixture.componentInstance).toBeTruthy();
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      CreateJobHarness,
+    );
+    expect(harness).toBeTruthy();
   });
 
-  it('should have form with required fields', async () => {
+  it('should keep submit disabled while form is invalid', async () => {
     await TestBed.configureTestingModule({
       imports: [CreateJobComponent],
       providers: [
@@ -35,20 +40,13 @@ describe('CreateJobComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(CreateJobComponent);
-    const component = fixture.componentInstance as any;
-
-    expect(
-      component.form.get('position')?.hasValidator(Validators.required),
-    ).toBe(true);
-    expect(
-      component.form.get('company')?.hasValidator(Validators.required),
-    ).toBe(true);
-    expect(component.form.get('link')?.hasValidator(Validators.required)).toBe(
-      true,
+    fixture.detectChanges();
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      CreateJobHarness,
     );
-    expect(
-      component.form.get('description')?.hasValidator(Validators.required),
-    ).toBe(true);
+
+    expect(await harness.isSubmitDisabled()).toBe(true);
   });
 
   it('should submit and create job', async () => {
@@ -65,11 +63,14 @@ describe('CreateJobComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(CreateJobComponent);
-    const component = fixture.componentInstance as any;
+    fixture.detectChanges();
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      CreateJobHarness,
+    );
 
-    component.form.setValue(createJobFixtures.designer);
-
-    await component.submit();
+    await harness.fillForm(createJobFixtures.designer);
+    await harness.submit();
 
     expect(createJob).toHaveBeenCalledWith(createJobFixtures.designer);
   });
@@ -88,11 +89,14 @@ describe('CreateJobComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(CreateJobComponent);
-    const component = fixture.componentInstance as any;
+    fixture.detectChanges();
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      CreateJobHarness,
+    );
 
-    component.form.setValue(createJobFixtures.empty);
-
-    await component.submit();
+    await harness.fillForm(createJobFixtures.empty);
+    await harness.submit();
 
     expect(createJob).not.toHaveBeenCalled();
   });
@@ -111,18 +115,22 @@ describe('CreateJobComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(CreateJobComponent);
-    const component = fixture.componentInstance as any;
+    fixture.detectChanges();
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      CreateJobHarness,
+    );
 
-    component.form.setValue({
+    await harness.fillForm({
       position: 'Frontend Engineer',
       company: 'Acme Labs',
       link: 'https://example.com',
       description: 'Great job',
     });
 
-    await component.submit();
+    await harness.submit();
 
-    expect(component.submitError()).toBe(
+    expect(await harness.getSubmitErrorText()).toContain(
       'Failed to create job. Please try again.',
     );
   });

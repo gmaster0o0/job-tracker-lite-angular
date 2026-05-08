@@ -4,7 +4,6 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
-import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 
 type CreateContactDialogContext = {

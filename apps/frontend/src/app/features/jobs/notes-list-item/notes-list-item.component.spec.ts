@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { TestBed } from '@angular/core/testing';
 import { NotesListItemComponent } from './notes-list-item.component';
 import { noteFixtures } from '@job-tracker-lite-angular/testing';
+import { NotesListItemHarness } from './notes-list-item.harness';
 
 @Component({
   standalone: true,
@@ -13,21 +15,23 @@ class HostComponent {
 }
 
 describe('NotesListItemComponent', () => {
-  let component: HostComponent;
-  let fixture: ComponentFixture<HostComponent>;
+  let harness: NotesListItemHarness;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HostComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(HostComponent);
-    component = fixture.componentInstance;
+    const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     await fixture.whenStable();
+    harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      NotesListItemHarness,
+    );
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness).toBeTruthy();
   });
 });

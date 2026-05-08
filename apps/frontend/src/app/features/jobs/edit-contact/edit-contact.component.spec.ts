@@ -1,8 +1,10 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { vi } from 'vitest';
 import { EditContactComponent } from './edit-contact.component';
 import { UpdateContactDto } from '@job-tracker-lite-angular/api-interfaces';
+import { EditContactHarness } from './edit-contact.harness';
 import {
   contactFixtures,
   createContactsDataAccessMock,
@@ -26,13 +28,14 @@ describe('EditContactComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(EditContactComponent);
-    const component = fixture.componentInstance as any;
-
-    component.form.setValue(
-      updateContactFixtures.updatedContact as UpdateContactDto,
+    fixture.detectChanges();
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      EditContactHarness,
     );
 
-    await component.submit();
+    await harness.fillForm(updateContactFixtures.updatedContact);
+    await harness.submit();
 
     expect(updateContact).toHaveBeenCalledWith(0, 0, {
       name: 'Updated',

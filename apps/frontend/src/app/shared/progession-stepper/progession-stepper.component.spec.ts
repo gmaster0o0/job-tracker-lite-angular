@@ -1,7 +1,8 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { ProgessionStepperComponent } from './progession-stepper.component';
 import { jobStepperLabels } from '@job-tracker-lite-angular/testing';
+import { ProgessionStepperHarness } from './progession-stepper.harness';
 
 describe('ProgessionStepperComponent', () => {
   const labels = jobStepperLabels;
@@ -18,44 +19,49 @@ describe('ProgessionStepperComponent', () => {
     fixture.componentRef.setInput('activeIndex', 2);
     fixture.detectChanges();
 
-    const checks = fixture.debugElement.queryAll(
-      By.css('ng-icon[name="lucideCheck"]'),
-    );
-    expect(checks.length).toBe(3);
+    return TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      ProgessionStepperHarness,
+    ).then(async (harness) => {
+      expect(await harness.getCompletedChecksCount()).toBe(3);
+    });
   });
 
-  it('should emit selected status when a step is clicked', () => {
+  it('should emit selected status when a step is clicked', async () => {
     const fixture = TestBed.createComponent(ProgessionStepperComponent);
     fixture.componentRef.setInput('labels', labels);
     fixture.componentRef.setInput('activeIndex', 0);
     fixture.detectChanges();
+
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      ProgessionStepperHarness,
+    );
 
     const emitted: number[] = [];
     fixture.componentInstance.stepSelected.subscribe((index) =>
       emitted.push(index),
     );
 
-    const stepButtons = fixture.debugElement.queryAll(By.css('button.h-10'));
-    stepButtons[1].nativeElement.click();
+    await harness.clickStep(1);
     fixture.detectChanges();
 
     expect(emitted).toEqual([1]);
   });
 
-  it.skip('should show rejected styling and no completed checks when rejected', () => {
+  it('should show rejected styling and no completed checks when rejected', async () => {
     const fixture = TestBed.createComponent(ProgessionStepperComponent);
     fixture.componentRef.setInput('labels', labels);
     fixture.componentRef.setInput('activeIndex', -1);
     fixture.componentRef.setInput('errorState', true);
     fixture.detectChanges();
 
-    const checks = fixture.debugElement.queryAll(
-      By.css('ng-icon[name="lucideCheck"]'),
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      ProgessionStepperHarness,
     );
-    expect(checks.length).toBe(0);
 
-    const firstStep = fixture.debugElement.query(By.css('button.h-10'))
-      .nativeElement as HTMLButtonElement;
-    expect(firstStep.className).toContain('border-red-500');
+    expect(await harness.getCompletedChecksCount()).toBe(0);
+    expect(await harness.stepHasRejectedStyling(0)).toBe(true);
   });
 });

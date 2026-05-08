@@ -1,10 +1,12 @@
 import { Component, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { TestBed } from '@angular/core/testing';
 import { NotesListComponent } from './notes-list.component';
 import {
   NotesDataAccessService,
   JobsDataAccessService,
 } from '@job-tracker-lite-angular/frontend-data-access';
+import { NotesListHarness } from './notes-list.harness';
 
 @Component({
   standalone: true,
@@ -16,8 +18,7 @@ class HostComponent {
 }
 
 describe('NotesListComponent', () => {
-  let component: HostComponent;
-  let fixture: ComponentFixture<HostComponent>;
+  let harness: NotesListHarness;
 
   beforeEach(async () => {
     const notesDataAccessMock = {
@@ -40,13 +41,16 @@ describe('NotesListComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(HostComponent);
-    component = fixture.componentInstance;
+    const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     await fixture.whenStable();
+    harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      NotesListHarness,
+    );
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(harness).toBeTruthy();
   });
 });

@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { convertToParamMap, ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
@@ -9,7 +9,6 @@ import {
   ContactsDataAccessService,
   NotesDataAccessService,
 } from '@job-tracker-lite-angular/frontend-data-access';
-import { ProgessionStepperComponent } from '../../../shared/progession-stepper/progession-stepper.component';
 import { JobDetailComponent } from './job-detail.component';
 import {
   createContactsDataAccessMock,
@@ -17,6 +16,7 @@ import {
   createJobsDataAccessMock,
   jobFixtures,
 } from '@job-tracker-lite-angular/testing';
+import { JobDetailHarness } from './job-detail.harness';
 
 describe('JobDetailComponent', () => {
   const baseJob = jobFixtures.platformEngineer;
@@ -57,43 +57,43 @@ describe('JobDetailComponent', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    return { fixture, dataAccessServiceMock };
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      JobDetailHarness,
+    );
+
+    return { fixture, harness, dataAccessServiceMock };
   }
 
   it('should render overview details for selected job from fallback list', async () => {
-    const { fixture } = await setup({
+    const { harness } = await setup({
       id: '10',
       jobs: [baseJob],
     });
 
-    expect(fixture.nativeElement.textContent).toContain('Platform Engineer');
-    expect(fixture.nativeElement.textContent).toContain('Massive Dynamic');
-    expect(fixture.nativeElement.textContent).toContain(
-      jobFixtures.platformEngineer.description,
-    );
+    const text = await harness.getTextContent();
+    expect(text).toContain('Platform Engineer');
+    expect(text).toContain('Massive Dynamic');
+    expect(text).toContain(jobFixtures.platformEngineer.description);
   });
 
   it('should render not found state when selected job does not exist', async () => {
-    const { fixture } = await setup({
+    const { harness } = await setup({
       id: '999',
       jobs: [baseJob],
       detailError: new HttpErrorResponse({ status: 404 }),
     });
 
-    expect(fixture.nativeElement.textContent).toContain('Job not found.');
+    expect(await harness.getTextContent()).toContain('Job not found.');
   });
 
   it('should update status when stepper emits stepSelected', async () => {
-    const { fixture, dataAccessServiceMock } = await setup({
+    const { fixture, harness, dataAccessServiceMock } = await setup({
       id: '10',
       jobs: [baseJob],
     });
 
-    const stepper = fixture.debugElement.query(
-      By.directive(ProgessionStepperComponent),
-    ).componentInstance as ProgessionStepperComponent;
-
-    stepper.stepSelected.emit(1);
+    await harness.clickProgressStep(1);
     await fixture.whenStable();
 
     expect(dataAccessServiceMock.__calls.updateJobStatusCalls).toEqual([

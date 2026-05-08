@@ -1,6 +1,8 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MainMenuComponent } from './main-menu.component';
+import { MainMenuHarness } from './main-menu.harness';
 
 const noop = () => {
   //emptsy function for matchMedia event listeners
@@ -38,13 +40,18 @@ describe('MainMenuComponent', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    const links = fixture.nativeElement.querySelectorAll('a[href]');
-    expect(links.length).toBe(4);
-
-    const labels = Array.from(links as HTMLAnchorElement[]).map((link) =>
-      link.querySelector('span')?.textContent?.trim(),
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      MainMenuHarness,
     );
-    expect(labels).toEqual(['Jobs', 'Profile', 'Settings', 'About']);
+
+    expect(await harness.getLinkCount()).toBe(4);
+    expect(await harness.getLinkLabels()).toEqual([
+      'Jobs',
+      'Profile',
+      'Settings',
+      'About',
+    ]);
   });
 
   it('should include a link to /jobs', async () => {
@@ -53,10 +60,12 @@ describe('MainMenuComponent', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    const jobsLink = fixture.nativeElement.querySelector(
-      'a[href="/jobs"]',
-    ) as HTMLAnchorElement | null;
-    expect(jobsLink).toBeTruthy();
-    expect(jobsLink?.querySelector('span')?.textContent?.trim()).toBe('Jobs');
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      MainMenuHarness,
+    );
+
+    expect(await harness.hasLinkTo('/jobs')).toBe(true);
+    expect((await harness.getLinkLabels())[0]).toBe('Jobs');
   });
 });
