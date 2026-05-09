@@ -6,7 +6,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { NoteDto } from '@job-tracker-lite-angular/api-interfaces';
 import { NotesDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
-import { EditJobDialogFooterComponent } from '../../../shared/edit-job-dialog-footer/edit-job-dialog-footer.component';
+import { EditJobDialogFooterComponent } from '../../../../shared/edit-job-dialog-footer/edit-job-dialog-footer.component';
 
 type EditNoteDialogContext = {
   jobId: number;
