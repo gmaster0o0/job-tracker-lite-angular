@@ -10,7 +10,7 @@ import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
-import { EditJobDialogFooterComponent } from '../../../shared/edit-job-dialog-footer/edit-job-dialog-footer.component';
+import { EditJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
 
 type EditJobDialogContext = {
   job: JobDto;

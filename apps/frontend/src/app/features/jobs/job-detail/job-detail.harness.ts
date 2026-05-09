@@ -1,5 +1,5 @@
 import { ComponentHarness } from '@angular/cdk/testing';
-import { ProgessionStepperHarness } from '../../../shared/progession-stepper/progession-stepper.harness';
+import { ProgessionStepperHarness } from '@job-tracker-lite-angular/frontend-shared';
 
 export class JobDetailHarness extends ComponentHarness {
   static hostSelector = 'app-job-detail';

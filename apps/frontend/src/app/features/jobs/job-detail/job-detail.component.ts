@@ -22,8 +22,8 @@ import { CreateJobComponent } from '../create-job/create-job.component';
 import { EditJobComponent } from '../edit-job/edit-job.component';
 import { ContactsTabComponent } from '../contacts/contacts-tab/contacts-tab.component';
 import { JobOverviewComponent } from '../job-overview/job-overview.component';
-import { ProgessionStepperComponent } from '../../../shared/progession-stepper/progession-stepper.component';
-import { DeleteConfirmationDialogComponent } from '../../../shared/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import { ProgessionStepperComponent } from '@job-tracker-lite-angular/frontend-shared';
+import { DeleteConfirmationDialogComponent } from '@job-tracker-lite-angular/frontend-shared';
 import { provideIcons } from '@ng-icons/core';
 import {
   lucideCircleX,
