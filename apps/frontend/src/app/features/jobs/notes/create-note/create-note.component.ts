@@ -7,7 +7,7 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
 import { NotesDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmFieldGroup, HlmField, HlmFieldError } from '@spartan-ng/helm/field';
-import { CreateJobDialogFooterComponent } from '../../../shared/create-job-dialog-footer/create-job-dialog-footer.component';
+import { CreateJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
 
 type CreateNoteDialogContext = {
   jobId: number;

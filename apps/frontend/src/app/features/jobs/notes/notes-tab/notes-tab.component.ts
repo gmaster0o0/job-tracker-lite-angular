@@ -12,7 +12,7 @@ import { provideIcons } from '@ng-icons/core';
 import { lucidePlus } from '@ng-icons/lucide';
 import { NotesListComponent } from '../notes-list/notes-list.component';
 import { EditNoteComponent } from '../edit-note/edit-note.component';
-import { DeleteConfirmationDialogComponent } from '../../../shared/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import { DeleteConfirmationDialogComponent } from '@job-tracker-lite-angular/frontend-shared';
 import { CreateNoteComponent } from '../create-note/create-note.component';
 
 @Component({

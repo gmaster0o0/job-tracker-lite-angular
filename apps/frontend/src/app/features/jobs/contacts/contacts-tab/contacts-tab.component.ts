@@ -13,7 +13,7 @@ import { lucidePlus } from '@ng-icons/lucide';
 import { ContactListComponent } from '../contact-list/contact-list.component';
 import { CreateContactComponent } from '../create-contact/create-contact.component';
 import { EditContactComponent } from '../edit-contact/edit-contact.component';
-import { DeleteConfirmationDialogComponent } from '../../../shared/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import { DeleteConfirmationDialogComponent } from '@job-tracker-lite-angular/frontend-shared';
 
 @Component({
   standalone: true,

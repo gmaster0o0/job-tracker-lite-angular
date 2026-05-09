@@ -20,10 +20,10 @@ import { BrnTabsImports } from '@spartan-ng/brain/tabs';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { CreateJobComponent } from '../create-job/create-job.component';
 import { EditJobComponent } from '../edit-job/edit-job.component';
-import { ContactsTabComponent } from '../contacts-tab/contacts-tab.component';
+import { ContactsTabComponent } from '../contacts/contacts-tab/contacts-tab.component';
 import { JobOverviewComponent } from '../job-overview/job-overview.component';
-import { ProgessionStepperComponent } from '../../../shared/progession-stepper/progession-stepper.component';
-import { DeleteConfirmationDialogComponent } from '../../../shared/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import { ProgessionStepperComponent } from '@job-tracker-lite-angular/frontend-shared';
+import { DeleteConfirmationDialogComponent } from '@job-tracker-lite-angular/frontend-shared';
 import { provideIcons } from '@ng-icons/core';
 import {
   lucideCircleX,
@@ -33,7 +33,7 @@ import {
   lucidePencil,
 } from '@ng-icons/lucide';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
-import { NotesTabComponent } from '../notes-tab/notes-tab.component';
+import { NotesTabComponent } from '../notes/notes-tab/notes-tab.component';
 
 type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
 

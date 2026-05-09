@@ -10,7 +10,7 @@ import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
-import { CreateJobDialogFooterComponent } from '../../../shared/create-job-dialog-footer/create-job-dialog-footer.component';
+import { CreateJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
 
 type CreateJobDialogContext = {
   onCreated?: (job: JobDto) => void;
