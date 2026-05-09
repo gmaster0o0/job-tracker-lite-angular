@@ -15,7 +15,8 @@
     "test": "npx nx run-many --target=test --all",
     "lint": "npx nx run-many --target=lint --all",
     "typecheck": "npx nx run-many --target=typecheck --all",
-    "test:push": "npx nx affected -t test --base=origin/main --head=HEAD --parallel=3"
+    "test:push": "npx nx affected -t test --base=origin/main --head=HEAD --parallel=3",
+    "release": "standard-version && node tools/sync-version.js && git add . && git commit --amend --no-edit"
   },
   "private": true,
   "devDependencies": {
