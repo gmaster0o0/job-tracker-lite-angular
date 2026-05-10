@@ -5,6 +5,12 @@
     >
       Loading jobs...
     </div>
+  } @else if (jobsResource.error()) {
+    <div
+      class="flex h-full items-center justify-center text-sm text-destructive"
+    >
+      Unable to load the jobs list. Please check your connection and try again.
+    </div>
   } @else if (jobsResource.value()?.length === 0) {
     <div
       class="flex h-full items-center justify-center text-sm text-muted-foreground"

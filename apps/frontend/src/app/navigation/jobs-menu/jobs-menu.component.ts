@@ -43,6 +43,7 @@ export class JobsMenuComponent {
 
   constructor() {
     effect(() => {
+      if (this.jobsResource.error()) return;
       const data = this.jobsResource.value();
       if (data && data.length > 0 && this.router.url === '/jobs') {
         this.router.navigate(['/jobs', data[0].id], { replaceUrl: true });
