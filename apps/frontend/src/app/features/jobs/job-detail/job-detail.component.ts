@@ -107,7 +107,10 @@ export class JobDetailComponent {
   protected readonly job = computed(
     () => this.jobResource.value() ?? this.fallbackJob(),
   );
-
+  /**
+   * isNotFound  helper signal to determine if the job resource returned a 404 error,
+   * indicating that the job with the specified ID does not exist. This is used to show a specific "Job not found" message in the UI, differentiating it from other types of errors that may occur when fetching the job details.
+   */
   protected readonly isNotFound = computed(() => {
     if (this.fallbackJob()) {
       return false;
