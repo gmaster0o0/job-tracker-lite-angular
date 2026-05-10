@@ -1,0 +1,26 @@
+<a
+  [routerLink]="card().link"
+  hlmCard
+  class="group relative block h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 overflow-hidden"
+>
+  <div hlmCardHeader class="flex justify-between items-start">
+    <div
+      [class]="
+        'w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-transform group-hover:scale-110 ' +
+        card().iconBgClass
+      "
+    >
+      <ng-container *ngTemplateOutlet="iconTemplate()"></ng-container>
+    </div>
+    <ng-icon
+      name="lucideArrowRight"
+      class="size-5 text-muted-foreground transition-all duration-300 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0"
+    />
+  </div>
+  <div hlmCardContent>
+    <h3 hlmCardTitle>{{ card().title }}</h3>
+
+    <p hlmCardDescription>{{ card().description }}</p>
+  </div>
+</a>
+`
