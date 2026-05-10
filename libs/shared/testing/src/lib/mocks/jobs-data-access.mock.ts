@@ -10,6 +10,7 @@ import { ResourceState } from './ResourceState';
 
 export type JobsDataAccessMockOptions = {
   jobs?: JobDto[];
+  jobsError?: unknown;
   detail?: JobDto;
   detailError?: unknown;
   contacts?: ContactDto[];
@@ -32,7 +33,7 @@ export function createJobsDataAccessMock(
     value: () => jobs,
     isLoading: () => false,
     reload: () => undefined,
-    error: () => null,
+    error: () => options.jobsError ?? null,
   };
 
   const jobResource: ResourceState<JobDto> = {

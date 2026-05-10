@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  signal,
-  effect,
-  ApplicationRef,
-} from '@angular/core';
+import { Component, computed, inject, signal, effect } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
@@ -48,20 +41,13 @@ export class JobsMenuComponent {
   protected readonly activeFilter = signal<FilterValue>(null);
   protected readonly showRejected = signal(false);
 
-  private appRef = inject(ApplicationRef);
-
   constructor() {
     effect(() => {
-      const status = this.jobsResource.status();
-      console.log('Jobs resource status:', status);
-      console.log('Jobs resource error:', this.jobsResource.error());
+      if (this.jobsResource.error()) return;
       const data = this.jobsResource.value();
-      console.log('Jobs resource data:', data);
       if (data && data.length > 0 && this.router.url === '/jobs') {
         this.router.navigate(['/jobs', data[0].id], { replaceUrl: true });
       }
-
-      //this.appRef.tick();
     });
   }
 

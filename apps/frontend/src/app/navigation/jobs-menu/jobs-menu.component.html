@@ -57,6 +57,10 @@
       <div class="py-8 text-center text-sm text-muted-foreground">
         Loading jobs...
       </div>
+    } @else if (jobsResource.error()) {
+      <div class="py-8 text-center text-sm text-destructive">
+        Unable to load jobs. Please check your connection and try again.
+      </div>
     } @else {
       <ul class="space-y-1.5">
         @for (job of filteredJobs(); track job.id) {
