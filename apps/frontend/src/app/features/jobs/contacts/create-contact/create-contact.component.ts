@@ -7,7 +7,7 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 
 type CreateContactDialogContext = {
-  jobId: number;
+  jobId: string;
   onCreated?: () => void;
 };
 

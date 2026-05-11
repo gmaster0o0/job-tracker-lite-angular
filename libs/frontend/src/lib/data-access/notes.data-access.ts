@@ -13,19 +13,19 @@ import {
 })
 export class NotesDataAccessService {
   private readonly http = inject(HttpClient);
-  private readonly selectedJobId = signal<number | null>(null);
+  private readonly selectedJobId = signal<string | null>(null);
 
   notesResource = httpResource<NoteDto[]>(() => {
     const id = this.selectedJobId();
     return id === null ? undefined : `/api/jobs/${id}/notes`;
   });
 
-  selectJob(id: number | null): void {
+  selectJob(id: string | null): void {
     this.selectedJobId.set(id);
   }
 
   async createNote(
-    jobId: number,
+    jobId: string,
     createNoteDto: CreateNoteDto,
   ): Promise<NoteDto> {
     const note = await firstValueFrom(
@@ -36,8 +36,8 @@ export class NotesDataAccessService {
   }
 
   async updateNote(
-    jobId: number,
-    noteId: number,
+    jobId: string,
+    noteId: string,
     updateNoteDto: UpdateNoteDto,
   ): Promise<NoteDto> {
     const note = await firstValueFrom(
@@ -50,7 +50,7 @@ export class NotesDataAccessService {
     return note;
   }
 
-  async deleteNote(jobId: number, noteId: number): Promise<void> {
+  async deleteNote(jobId: string, noteId: string): Promise<void> {
     await firstValueFrom(
       this.http.delete<void>(`/api/jobs/${jobId}/notes/${noteId}`),
     );

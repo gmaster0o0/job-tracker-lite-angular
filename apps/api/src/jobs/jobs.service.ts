@@ -50,7 +50,7 @@ export class JobsService {
     return mapJobToDto(job);
   }
 
-  async findOne(id: number): Promise<JobDto> {
+  async findOne(id: string): Promise<JobDto> {
     const job = await this.prisma.job.findUniqueOrThrow({
       where: { id },
     });
@@ -58,7 +58,7 @@ export class JobsService {
     return mapJobToDto(job);
   }
 
-  async updateStatus(id: number, status: JobStatusDto): Promise<JobDto> {
+  async updateStatus(id: string, status: JobStatusDto): Promise<JobDto> {
     const job = await this.prisma.job.update({
       where: { id },
       data: { status: dtoToPrismaStatus[status] },
@@ -67,7 +67,7 @@ export class JobsService {
     return mapJobToDto(job);
   }
 
-  async update(id: number, updateJobDto: UpdateJobDto): Promise<JobDto> {
+  async update(id: string, updateJobDto: UpdateJobDto): Promise<JobDto> {
     const { status, ...rest } = updateJobDto;
     const job = await this.prisma.job.update({
       where: { id },
@@ -80,7 +80,7 @@ export class JobsService {
     return mapJobToDto(job);
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.findOne(id);
 
     await this.prisma.job.delete({
@@ -88,7 +88,7 @@ export class JobsService {
     });
   }
 
-  async findContacts(jobId: number): Promise<ContactDto[]> {
+  async findContacts(jobId: string): Promise<ContactDto[]> {
     const contacts = await this.prisma.contact.findMany({
       where: { jobId },
       orderBy: { createdAt: 'desc' },
@@ -98,7 +98,7 @@ export class JobsService {
   }
 
   async createContact(
-    jobId: number,
+    jobId: string,
     createContactDto: CreateContactDto,
   ): Promise<ContactDto> {
     const contact = await this.prisma.contact.create({
@@ -112,8 +112,8 @@ export class JobsService {
   }
 
   async updateContact(
-    jobId: number,
-    contactId: number,
+    jobId: string,
+    contactId: string,
     updateContactDto: UpdateContactDto,
   ): Promise<ContactDto> {
     const contact = await this.prisma.contact.update({
@@ -127,7 +127,7 @@ export class JobsService {
     return mapContactToDto(contact);
   }
 
-  async deleteContact(jobId: number, contactId: number): Promise<void> {
+  async deleteContact(jobId: string, contactId: string): Promise<void> {
     await this.prisma.contact.delete({
       where: {
         id: contactId,
@@ -140,7 +140,7 @@ export class JobsService {
    * @param jobId - The ID of the job to fetch notes for.
    * @returns A promise that resolves to an array of NoteDto objects.
    */
-  async findNotes(jobId: number): Promise<NoteDto[]> {
+  async findNotes(jobId: string): Promise<NoteDto[]> {
     const notes = await this.prisma.note.findMany({
       where: { jobId },
       orderBy: { createdAt: 'desc' },
@@ -155,7 +155,7 @@ export class JobsService {
    * @returns A promise that resolves to the created NoteDto object.
    */
   async createNote(
-    jobId: number,
+    jobId: string,
     noteContent: CreateNoteDto,
   ): Promise<NoteDto> {
     const note = await this.prisma.note.create({
@@ -175,8 +175,8 @@ export class JobsService {
    * @returns A promise that resolves to the updated NoteDto object.
    */
   async updateNote(
-    jobId: number,
-    noteId: number,
+    jobId: string,
+    noteId: string,
     updateContent: UpdateNoteDto,
   ): Promise<NoteDto> {
     const note = await this.prisma.note.update({
@@ -191,7 +191,7 @@ export class JobsService {
    * @param jobId - The ID of the job the note belongs to.
    * @param noteId - The ID of the note to delete.
    */
-  async deleteNote(jobId: number, noteId: number): Promise<void> {
+  async deleteNote(jobId: string, noteId: string): Promise<void> {
     await this.prisma.note.delete({
       where: { id: noteId, jobId },
     });

@@ -12,24 +12,24 @@ export interface NoteFixturesMap {
 
 export const noteFixtures: NoteFixturesMap = {
   janeDoe: {
-    id: 1,
-    jobId: 10,
+    id: 'ck1234567903',
+    jobId: 'ck1234567899',
     title: 'Jane Doe note title',
     body: 'Jane Doe note body',
     createdAt: '2026-04-29T09:00:00.000Z',
     updatedAt: '2026-04-29T09:00:00.000Z',
   },
   johnDoe: {
-    id: 2,
-    jobId: 10,
+    id: 'ck1234567904',
+    jobId: 'ck1234567899',
     title: 'John Doe note title',
     body: 'John Doe note body',
     createdAt: '2026-04-29T09:00:00.000Z',
     updatedAt: '2026-04-29T09:00:00.000Z',
   },
   updatedNote: {
-    id: 2,
-    jobId: 10,
+    id: 'ck1234567904',
+    jobId: 'ck1234567899',
     title: 'Updated note title',
     body: 'Updated note body',
     createdAt: '2026-04-29T09:00:00.000Z',

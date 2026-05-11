@@ -78,11 +78,21 @@ export function getSeedContactsForJob(
   });
 }
 
-export const seedContactFixtures: readonly ContactDto[] =
-  seedJobFixtures.flatMap((job, jobIndex) =>
+export function getSeedNotesForJob(jobIndex: number): SeedNoteTemplate[] {
+  const noteCount = (jobIndex % 2) + 1; // 1 or 2 notes per job
+
+  return Array.from({ length: noteCount }, (_, noteIndex) => ({
+    title: noteTitlePool[(jobIndex + noteIndex) % noteTitlePool.length],
+    body: noteContentPool[(jobIndex + noteIndex) % noteContentPool.length],
+  }));
+}
+
+export const seedContactFixtures: readonly ContactDto[] = (() => {
+  let contactIdCounter = 1;
+  return seedJobFixtures.flatMap((job, jobIndex) =>
     getSeedContactsForJob(jobIndex, job.company).map(
       (contact, contactIndex) => ({
-        id: job.id * 10 + contactIndex + 1,
+        id: `ck12345679${String(contactIdCounter++).padStart(2, '0')}`,
         jobId: job.id,
         ...contact,
         createdAt: '2026-04-29T09:00:00.000Z',
@@ -90,26 +100,17 @@ export const seedContactFixtures: readonly ContactDto[] =
       }),
     ),
   );
+})();
 
-export function getSeedNotesForJob(jobIndex: number): SeedNoteTemplate[] {
-  const noteCount = jobIndex % 2;
-
-  return Array.from({ length: noteCount }, (_, noteIndex) => {
-    const poolIndex = (jobIndex + noteIndex) % noteContentPool.length;
-    return {
-      title: noteTitlePool[poolIndex],
-      body: noteContentPool[poolIndex],
-    };
-  });
-}
-
-export const seedNoteFixtures: readonly NoteDto[] = seedJobFixtures.flatMap(
-  (job, jobIndex) =>
+export const seedNoteFixtures: readonly NoteDto[] = (() => {
+  let noteIdCounter = 1;
+  return seedJobFixtures.flatMap((job, jobIndex) =>
     getSeedNotesForJob(jobIndex).map((note, noteIndex) => ({
-      id: job.id * 10 + noteIndex + 1,
+      id: `ck12345679${String(noteIdCounter++).padStart(2, '0')}`,
       jobId: job.id,
       ...note,
       createdAt: '2026-04-29T09:00:00.000Z',
       updatedAt: '2026-04-29T09:00:00.000Z',
     })),
-);
+  );
+})();

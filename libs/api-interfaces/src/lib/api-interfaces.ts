@@ -39,7 +39,7 @@ export type JobStatusDto =
   | 'rejected';
 
 export interface JobDto {
-  id: number;
+  id: string;
   position: string;
   link: string;
   description: string;
@@ -69,8 +69,8 @@ export interface UpdateJobStatusDto {
 }
 
 export interface ContactDto {
-  id: number;
-  jobId: number;
+  id: string;
+  jobId: string;
   name: string;
   email: string;
   phoneNumber: string;
@@ -91,8 +91,8 @@ export interface UpdateContactDto {
 }
 
 export interface NoteDto {
-  id: number;
-  jobId: number;
+  id: string;
+  jobId: string;
   title: string;
   body: string;
   createdAt: string;

@@ -68,10 +68,10 @@ export function createJobsMockByScenario(
 export function createJobsDataAccessMock(
   options: JobsDataAccessMockOptions = {},
 ) {
-  const selectJobCalls: Array<number | null> = [];
-  const updateJobStatusCalls: Array<[number, JobStatusDto]> = [];
+  const selectJobCalls: Array<string | null> = [];
+  const updateJobStatusCalls: Array<[string, JobStatusDto]> = [];
   const createJobCalls: Array<CreateJobDto> = [];
-  const updateJobCalls: Array<[number, UpdateJobDto]> = [];
+  const updateJobCalls: Array<[string, UpdateJobDto]> = [];
   const jobs = options.jobs ?? [];
   const job =
     'job' in options ? options.job : (jobs[0] ?? jobFixtures.frontendEngineer);
@@ -111,10 +111,10 @@ export function createJobsDataAccessMock(
     jobResource,
     jobContactsResource,
     jobNotesResource,
-    selectJob: (id: number | null) => {
+    selectJob: (id: string | null) => {
       selectJobCalls.push(id);
     },
-    updateJobStatus: async (id: number, status: JobStatusDto) => {
+    updateJobStatus: async (id: string, status: JobStatusDto) => {
       updateJobStatusCalls.push([id, status]);
 
       return {
@@ -128,10 +128,10 @@ export function createJobsDataAccessMock(
       return {
         ...jobFixtures.frontendEngineer,
         ...dto,
-        id: 1,
+        id: 'ck1234567890',
       };
     },
-    updateJob: async (id: number, dto: UpdateJobDto) => {
+    updateJob: async (id: string, dto: UpdateJobDto) => {
       updateJobCalls.push([id, dto]);
       return {
         ...job,

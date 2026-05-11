@@ -61,41 +61,41 @@ describe('JobsService', () => {
       prismaJobResultFixtures.updatedBackendEngineerInterview,
     );
 
-    const job = await service.updateStatus(9, 'interview');
+    const job = await service.updateStatus('ck1234567891', 'interview');
 
     expect(prismaMock.job.update).toHaveBeenCalledWith({
-      where: { id: 9 },
+      where: { id: 'ck1234567891' },
       data: { status: JobStatus.INTERVIEW },
     });
     expect(job.status).toBe('interview');
   });
 
   it('should return contacts for a job', async () => {
-    prismaMock.job.findUniqueOrThrow.mockResolvedValue({ id: 10 });
+    prismaMock.job.findUniqueOrThrow.mockResolvedValue({ id: 'ck1234567899' });
     prismaMock.contact.findMany.mockResolvedValue([
       prismaContactFixtures.janeDoe,
     ]);
 
-    await expect(service.findContacts(10)).resolves.toEqual([
+    await expect(service.findContacts('ck1234567899')).resolves.toEqual([
       contactFixtures.janeDoe,
     ]);
   });
 
   it('should create a contact for a job', async () => {
-    prismaMock.job.findUniqueOrThrow.mockResolvedValue({ id: 10 });
+    prismaMock.job.findUniqueOrThrow.mockResolvedValue({ id: 'ck1234567899' });
     prismaMock.contact.create.mockResolvedValue(prismaContactFixtures.johnDoe);
 
     const created = await service.createContact(
-      10,
+      'ck1234567899',
       createContactFixtures.johnDoe,
     );
 
     expect(prismaMock.contact.create).toHaveBeenCalledWith({
       data: {
-        jobId: 10,
+        jobId: 'ck1234567899',
         ...createContactFixtures.johnDoe,
       },
     });
-    expect(created.id).toBe(2);
+    expect(created.id).toBe('ck1234567902');
   });
 });

@@ -52,7 +52,7 @@ describe('JobDetailComponent', () => {
     router?: { navigate: (...args: unknown[]) => Promise<boolean> };
     dialog?: { open: (component: unknown, config: unknown) => unknown };
     jobsDataAccessMock?: ReturnType<typeof createJobsDataAccessMock> & {
-      deleteJob?: (id: number) => Promise<void>;
+      deleteJob?: (id: string) => Promise<void>;
     };
   }) {
     const dataAccessServiceMock =
@@ -125,7 +125,7 @@ describe('JobDetailComponent', () => {
 
   it('should render overview details for selected job from fallback list', async () => {
     const { harness } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
     });
 
@@ -163,29 +163,27 @@ describe('JobDetailComponent', () => {
     const dataAccessServiceMock = createJobsMockByScenario('loading');
 
     const { harness } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobsDataAccessMock: dataAccessServiceMock,
     });
 
     expect(await harness.getTextContent()).toContain('Loading job details...');
   });
 
-  it('should render select a job state when route has no valid job id', async () => {
-    const dataAccessServiceMock = createJobsMockByScenario('noData');
+  it('should render job not found when route id does not match an existing job', async () => {
+    const dataAccessServiceMock = createJobsMockByScenario('notFound');
 
     const { harness } = await setup({
-      id: 'invalid',
+      id: 'inv',
       jobsDataAccessMock: dataAccessServiceMock,
     });
 
-    expect(await harness.getTextContent()).toContain(
-      'Select a job from the list to view details.',
-    );
+    expect(await harness.getTextContent()).toContain('Job not found.');
   });
 
   it('should update status when stepper emits stepSelected', async () => {
     const { fixture, harness, dataAccessServiceMock } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
     });
 
@@ -193,13 +191,13 @@ describe('JobDetailComponent', () => {
     await fixture.whenStable();
 
     expect(dataAccessServiceMock.__calls.updateJobStatusCalls).toEqual([
-      [10, 'applied'],
+      [baseJob.id, 'applied'],
     ]);
   });
 
   it('should preserve active tab when an unknown tab is selected', async () => {
     const { fixture } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
     });
 
@@ -212,7 +210,7 @@ describe('JobDetailComponent', () => {
 
   it('should switch active tab when a known tab is selected', async () => {
     const { fixture } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
     });
 
@@ -225,7 +223,7 @@ describe('JobDetailComponent', () => {
 
   it('should format job status to uppercase', async () => {
     const { fixture } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
     });
 
@@ -238,7 +236,7 @@ describe('JobDetailComponent', () => {
   it('should identify rejected jobs and return -1 for rejected progress index', async () => {
     const rejectedJob = jobFixtures.juniorReactDeveloper;
     const { fixture } = await setup({
-      id: '11',
+      id: rejectedJob.id,
       jobs: [rejectedJob],
       job: rejectedJob,
     });
@@ -252,7 +250,7 @@ describe('JobDetailComponent', () => {
 
   it('should not call updateJobStatus when moving to the same status', async () => {
     const { fixture, dataAccessServiceMock } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
       job: baseJob,
     });
@@ -266,7 +264,7 @@ describe('JobDetailComponent', () => {
 
   it('should navigate after creating a new job', async () => {
     const { fixture, dialogOpenCalls, routerNavigateCalls } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
       job: baseJob,
     });
@@ -277,28 +275,28 @@ describe('JobDetailComponent', () => {
 
     expect(dialogOpenCalls).toHaveLength(1);
 
-    const createdJob: JobDto = { ...baseJob, id: 99 };
+    const createdJob: JobDto = { ...baseJob, id: 'ck1234567899' };
     const onCreated = dialogOpenCalls[0].config.context.onCreated;
     expect(onCreated).toBeDefined();
     await onCreated?.(createdJob);
 
-    expect(routerNavigateCalls).toEqual([['/jobs', 99]]);
+    expect(routerNavigateCalls).toEqual([['/jobs', 'ck1234567899']]);
   });
 
   it('should delete job and navigate to jobs when delete is confirmed', async () => {
-    const deleteJobCalls: number[] = [];
+    const deleteJobCalls: string[] = [];
     const dataAccessServiceMock = createJobsDataAccessMock({
       jobs: [baseJob],
       job: baseJob,
     }) as ReturnType<typeof createJobsDataAccessMock> & {
-      deleteJob: (id: number) => Promise<void>;
+      deleteJob: (id: string) => Promise<void>;
     };
-    dataAccessServiceMock.deleteJob = async (id: number) => {
+    dataAccessServiceMock.deleteJob = async (id: string) => {
       deleteJobCalls.push(id);
     };
 
     const { fixture, dialogOpenCalls, routerNavigateCalls } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
       job: baseJob,
       jobsDataAccessMock: dataAccessServiceMock,
@@ -314,7 +312,7 @@ describe('JobDetailComponent', () => {
     expect(onConfirm).toBeDefined();
     await onConfirm?.();
 
-    expect(deleteJobCalls).toEqual([10]);
+    expect(deleteJobCalls).toEqual([baseJob.id]);
     expect(routerNavigateCalls).toEqual([['/jobs']]);
   });
 });

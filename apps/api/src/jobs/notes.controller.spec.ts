@@ -31,7 +31,7 @@ describe('NotesController', () => {
   it('should delegate note operations to the service', async () => {
     jobsService.findNotes.mockResolvedValue([noteFixtures.johnDoe]);
 
-    await expect(notesController.findNotes(10)).resolves.toEqual([
+    await expect(notesController.findNotes('10')).resolves.toEqual([
       noteFixtures.johnDoe,
     ]);
   });
@@ -40,7 +40,7 @@ describe('NotesController', () => {
     jobsService.createNote.mockResolvedValue(noteFixtures.johnDoe);
 
     await expect(
-      notesController.createNote(10, createNoteFixtures.johnDoe),
+      notesController.createNote('10', createNoteFixtures.johnDoe),
     ).resolves.toEqual(noteFixtures.johnDoe);
   });
 
@@ -48,12 +48,14 @@ describe('NotesController', () => {
     jobsService.updateNote.mockResolvedValue(noteFixtures.updatedNote);
 
     await expect(
-      notesController.updateNote(10, 2, updateNoteFixtures.updatedNote),
+      notesController.updateNote('10', '2', updateNoteFixtures.updatedNote),
     ).resolves.toEqual(noteFixtures.updatedNote);
   });
 
   it('should delegate note deletion to the service', async () => {
     jobsService.deleteNote.mockResolvedValue(undefined);
-    await expect(notesController.deleteNote(10, 2)).resolves.toBeUndefined();
+    await expect(
+      notesController.deleteNote('10', '2'),
+    ).resolves.toBeUndefined();
   });
 });

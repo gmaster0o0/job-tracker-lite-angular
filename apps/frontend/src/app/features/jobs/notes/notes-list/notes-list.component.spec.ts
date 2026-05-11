@@ -14,7 +14,7 @@ import { NotesListHarness } from './notes-list.harness';
   template: ` <app-notes-list [jobId]="jobId" /> `,
 })
 class HostComponent {
-  jobId = 1;
+  jobId = '1';
 }
 
 describe('NotesListComponent', () => {

@@ -9,7 +9,7 @@ import { NotesDataAccessService } from '@job-tracker-lite-angular/frontend-data-
 import { EditJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
 
 type EditNoteDialogContext = {
-  jobId: number;
+  jobId: string;
   note: NoteDto;
   onUpdated?: () => void;
 };

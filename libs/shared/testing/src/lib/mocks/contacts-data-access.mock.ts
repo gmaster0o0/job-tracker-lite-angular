@@ -12,15 +12,15 @@ import { ResourceState } from './ResourceState';
 export type ContactsDataAccessMockOptions = {
   contacts?: ContactDto[];
   createContact?: (
-    jobId: number,
+    jobId: string,
     createContactDto: CreateContactDto,
   ) => Promise<ContactDto>;
   updateContact?: (
-    jobId: number,
-    contactId: number,
+    jobId: string,
+    contactId: string,
     updateContactDto: UpdateContactDto,
   ) => Promise<ContactDto>;
-  deleteContact?: (jobId: number, contactId: number) => Promise<void>;
+  deleteContact?: (jobId: string, contactId: string) => Promise<void>;
 };
 
 export function createContactsDataAccessMock(

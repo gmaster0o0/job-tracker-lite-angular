@@ -10,7 +10,9 @@ jest.mock('@prisma/client', () => ({
     $connect = jest.fn().mockResolvedValue(undefined);
     $disconnect = jest.fn().mockResolvedValue(undefined);
 
-    constructor() { /* empty */ }
+    constructor() {
+      /* empty */
+    }
   },
 }));
 
@@ -65,7 +67,7 @@ describe('PrismaService', () => {
 
   describe('testConnection', () => {
     it('should call user.findMany and return the result', async () => {
-      const expected = [{ id: 1, name: 'Test User' }];
+      const expected = [{ id: 'ck1234567890', name: 'Test User' }];
       const findManySpy = jest
         .spyOn(service.user, 'findMany')
         .mockResolvedValue(

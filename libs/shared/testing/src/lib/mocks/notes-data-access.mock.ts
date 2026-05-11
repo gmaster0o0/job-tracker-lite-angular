@@ -9,15 +9,15 @@ import { ResourceState } from './ResourceState';
 export type NotesDataAccessMockOptions = {
   notes?: NoteDto[];
   createNote?: (
-    jobId: number,
+    jobId: string,
     createNoteDto: CreateNoteDto,
   ) => Promise<NoteDto>;
   updateNote?: (
-    jobId: number,
-    noteId: number,
+    jobId: string,
+    noteId: string,
     updateNoteDto: UpdateNoteDto,
   ) => Promise<NoteDto>;
-  deleteNote?: (jobId: number, noteId: number) => Promise<void>;
+  deleteNote?: (jobId: string, noteId: string) => Promise<void>;
 };
 
 export function createNotesDataAccessMock(

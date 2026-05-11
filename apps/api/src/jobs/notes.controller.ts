@@ -11,7 +11,6 @@ import {
   Param,
   Body,
   Patch,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 
@@ -21,16 +20,16 @@ export class NotesController {
 
   @Delete(':noteId')
   async deleteNote(
-    @Param('id', ParseIntPipe) id: number,
-    @Param('noteId', ParseIntPipe) noteId: number,
+    @Param('id') id: string,
+    @Param('noteId') noteId: string,
   ): Promise<void> {
     return await this.jobsService.deleteNote(id, noteId);
   }
 
   @Patch(':noteId')
   async updateNote(
-    @Param('id', ParseIntPipe) id: number,
-    @Param('noteId', ParseIntPipe) noteId: number,
+    @Param('id') id: string,
+    @Param('noteId') noteId: string,
     @Body() updatedNote: UpdateNoteDto,
   ): Promise<NoteDto> {
     return await this.jobsService.updateNote(id, noteId, updatedNote);
@@ -38,14 +37,14 @@ export class NotesController {
 
   @Post()
   async createNote(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() createNoteDto: CreateNoteDto,
   ): Promise<NoteDto> {
     return await this.jobsService.createNote(id, createNoteDto);
   }
 
   @Get()
-  async findNotes(@Param('id', ParseIntPipe) id: number): Promise<NoteDto[]> {
+  async findNotes(@Param('id') id: string): Promise<NoteDto[]> {
     return await this.jobsService.findNotes(id);
   }
 }

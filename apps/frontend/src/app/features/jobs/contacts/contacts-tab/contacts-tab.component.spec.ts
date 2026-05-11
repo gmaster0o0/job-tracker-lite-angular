@@ -33,7 +33,7 @@ describe('ContactsTabComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ContactsTabComponent);
-    fixture.componentRef.setInput('jobId', 10);
+    fixture.componentRef.setInput('jobId', '10');
     fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(

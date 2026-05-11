@@ -6,7 +6,6 @@ import {
   Delete,
   Body,
   Param,
-  ParseIntPipe,
 } from '@nestjs/common';
 
 import {
@@ -21,15 +20,13 @@ export class ContactsController {
   constructor(private readonly jobsService: JobsService) {}
 
   @Get()
-  async findContacts(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<ContactDto[]> {
+  async findContacts(@Param('id') id: string): Promise<ContactDto[]> {
     return this.jobsService.findContacts(id);
   }
 
   @Post()
   async createContact(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() createContactDto: CreateContactDto,
   ): Promise<ContactDto> {
     return this.jobsService.createContact(id, createContactDto);
@@ -37,8 +34,8 @@ export class ContactsController {
 
   @Patch(':contactId')
   async updateContact(
-    @Param('id', ParseIntPipe) id: number,
-    @Param('contactId', ParseIntPipe) contactId: number,
+    @Param('id') id: string,
+    @Param('contactId') contactId: string,
     @Body() updateContactDto: UpdateContactDto,
   ): Promise<ContactDto> {
     return this.jobsService.updateContact(id, contactId, updateContactDto);
@@ -46,8 +43,8 @@ export class ContactsController {
 
   @Delete(':contactId')
   async deleteContact(
-    @Param('id', ParseIntPipe) id: number,
-    @Param('contactId', ParseIntPipe) contactId: number,
+    @Param('id') id: string,
+    @Param('contactId') contactId: string,
   ): Promise<void> {
     await this.jobsService.deleteContact(id, contactId);
   }

@@ -10,7 +10,7 @@ import { HlmFieldGroup, HlmField, HlmFieldError } from '@spartan-ng/helm/field';
 import { CreateJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
 
 type CreateNoteDialogContext = {
-  jobId: number;
+  jobId: string;
   onCreated?: () => void;
 };
 

@@ -28,6 +28,12 @@
         "command": "ts-node --project libs/shared/prisma/tsconfig.json libs/shared/prisma/src/seed.ts"
       }
     },
+    "migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma migrate dev --schema=libs/shared/prisma/db-schema/schema.prisma"
+      }
+    },
     "typecheck-lib": {
       "executor": "nx:run-commands",
       "options": {
