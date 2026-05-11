@@ -8,7 +8,6 @@ import {
   Body,
   Controller,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Delete,
@@ -27,15 +26,7 @@ export class JobsController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<JobDto> {
-    try {
-      return await this.jobsService.findOne(id);
-    } catch (error) {
-      if (error instanceof Error && error.message === 'NOT_FOUND') {
-        throw new NotFoundException(`Job with id ${id} not found`);
-      }
-
-      throw error;
-    }
+    return await this.jobsService.findOne(id);
   }
 
   @Post()
@@ -56,27 +47,11 @@ export class JobsController {
     @Param('id') id: string,
     @Body() updateJobDto: UpdateJobDto,
   ): Promise<JobDto> {
-    try {
-      return await this.jobsService.update(id, updateJobDto);
-    } catch (error) {
-      if (error instanceof Error && error.message === 'NOT_FOUND') {
-        throw new NotFoundException(`Job with id ${id} not found`);
-      }
-
-      throw error;
-    }
+    return await this.jobsService.update(id, updateJobDto);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<void> {
-    try {
-      await this.jobsService.delete(id);
-    } catch (error) {
-      if (error instanceof Error && error.message === 'NOT_FOUND') {
-        throw new NotFoundException(`Job with id ${id} not found`);
-      }
-
-      throw error;
-    }
+    await this.jobsService.delete(id);
   }
 }
