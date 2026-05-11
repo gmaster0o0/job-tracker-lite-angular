@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -9,6 +8,7 @@ import {
   JobsDataAccessService,
   ContactsDataAccessService,
   NotesDataAccessService,
+  isHttpError,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
@@ -107,14 +107,15 @@ export class JobDetailComponent {
   protected readonly job = computed(
     () => this.jobResource.value() ?? this.fallbackJob(),
   );
-
+  /**
+   * isNotFound  helper signal to determine if the job resource returned a 404 error,
+   * indicating that the job with the specified ID does not exist. This is used to show a specific "Job not found" message in the UI, differentiating it from other types of errors that may occur when fetching the job details.
+   */
   protected readonly isNotFound = computed(() => {
-    if (this.fallbackJob()) {
-      return false;
-    }
+    if (this.fallbackJob()) return false;
 
     const error = this.jobResource.error();
-    return error instanceof HttpErrorResponse && error.status === 404;
+    return isHttpError(error) && error.status === 404;
   });
 
   protected readonly tabs: readonly { label: string; value: JobTab }[] = [

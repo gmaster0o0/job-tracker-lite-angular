@@ -49,9 +49,17 @@
 
   <!-- Job List -->
   <div class="flex-1 overflow-y-auto p-3">
-    @if (jobsResource.isLoading()) {
+    @if (jobsResource.error()) {
       <div class="py-8 text-center text-sm text-muted-foreground">
-        Loading jobs…
+        Failed to load jobs. Please try again later.
+      </div>
+    } @else if (jobsResource.isLoading()) {
+      <div class="py-8 text-center text-sm text-muted-foreground">
+        Loading jobs...
+      </div>
+    } @else if (jobsResource.value()?.length === 0) {
+      <div class="py-8 text-center text-sm text-muted-foreground">
+        No jobs found. Try to add.
       </div>
     } @else {
       <ul class="space-y-1.5">
@@ -68,7 +76,7 @@
           </li>
         } @empty {
           <li class="py-8 text-center text-sm text-muted-foreground">
-            No jobs found
+            No jobs found. Try adjusting your search or filters.
           </li>
         }
       </ul>
