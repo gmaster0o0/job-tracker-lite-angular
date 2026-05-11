@@ -19,7 +19,7 @@ describe('ContactListComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ContactListComponent);
-    fixture.componentRef.setInput('jobId', 10);
+    fixture.componentRef.setInput('jobId', '10');
     fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(

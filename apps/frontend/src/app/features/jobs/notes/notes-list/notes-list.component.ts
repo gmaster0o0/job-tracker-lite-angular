@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 export class NotesListComponent {
   private readonly jobsDataAccessService = inject(JobsDataAccessService);
   private readonly notesDataAccessService = inject(NotesDataAccessService);
-  readonly jobId = input.required<number>();
+  readonly jobId = input.required<string>();
   readonly edit = output<NoteDto>();
   readonly remove = output<NoteDto>();
 

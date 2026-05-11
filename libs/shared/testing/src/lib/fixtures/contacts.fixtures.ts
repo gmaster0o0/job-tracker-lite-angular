@@ -12,8 +12,8 @@ export interface ContactFixturesMap {
 
 export const contactFixtures: ContactFixturesMap = {
   janeDoe: {
-    id: 1,
-    jobId: 10,
+    id: 'ck1234567901',
+    jobId: 'ck1234567899',
     name: 'Jane Doe',
     email: 'jane@example.com',
     phoneNumber: '12345',
@@ -21,8 +21,8 @@ export const contactFixtures: ContactFixturesMap = {
     updatedAt: '2026-04-29T09:00:00.000Z',
   },
   johnDoe: {
-    id: 2,
-    jobId: 10,
+    id: 'ck1234567902',
+    jobId: 'ck1234567899',
     name: 'John Doe',
     email: 'john@example.com',
     phoneNumber: '555-111',
@@ -30,8 +30,8 @@ export const contactFixtures: ContactFixturesMap = {
     updatedAt: '2026-04-29T09:00:00.000Z',
   },
   updatedContact: {
-    id: 2,
-    jobId: 10,
+    id: 'ck1234567902',
+    jobId: 'ck1234567899',
     name: 'Updated',
     email: 'updated@example.com',
     phoneNumber: '999',

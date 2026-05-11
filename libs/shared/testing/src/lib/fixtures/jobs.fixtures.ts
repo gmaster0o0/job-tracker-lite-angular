@@ -22,7 +22,7 @@ export interface JobFixturesMap {
 
 export const jobFixtures: JobFixturesMap = {
   frontendEngineer: {
-    id: 1,
+    id: 'ck1234567890',
     position: 'Frontend Engineer',
     link: 'https://example.com/jobs/frontend-engineer',
     description:
@@ -33,7 +33,7 @@ export const jobFixtures: JobFixturesMap = {
     updatedAt: jobFixtureTimestamp,
   },
   backendEngineer: {
-    id: 2,
+    id: 'ck1234567891',
     position: 'Backend Engineer',
     link: 'https://example.com/jobs/backend-engineer',
     description: 'Own Node and Nest services that power recruiting automation.',
@@ -43,7 +43,7 @@ export const jobFixtures: JobFixturesMap = {
     updatedAt: jobFixtureTimestamp,
   },
   fullStackEngineer: {
-    id: 3,
+    id: 'ck1234567892',
     position: 'Full Stack Engineer',
     link: 'https://example.com/jobs/full-stack-engineer',
     description: 'Ship product features across Angular, Nest, and PostgreSQL.',
@@ -53,7 +53,7 @@ export const jobFixtures: JobFixturesMap = {
     updatedAt: jobFixtureTimestamp,
   },
   productDesigner: {
-    id: 4,
+    id: 'ck1234567893',
     position: 'Product Designer',
     link: 'https://example.com/jobs/product-designer',
     description: 'Design application flows for a job tracking workspace.',
@@ -63,7 +63,7 @@ export const jobFixtures: JobFixturesMap = {
     updatedAt: jobFixtureTimestamp,
   },
   engineeringManager: {
-    id: 5,
+    id: 'ck1234567894',
     position: 'Engineering Manager',
     link: 'https://example.com/jobs/engineering-manager',
     description:
@@ -74,7 +74,7 @@ export const jobFixtures: JobFixturesMap = {
     updatedAt: jobFixtureTimestamp,
   },
   devopsEngineer: {
-    id: 6,
+    id: 'ck1234567895',
     position: 'DevOps Engineer',
     link: 'https://example.com/jobs/devops-engineer',
     description:
@@ -85,7 +85,7 @@ export const jobFixtures: JobFixturesMap = {
     updatedAt: jobFixtureTimestamp,
   },
   qaAutomationEngineer: {
-    id: 7,
+    id: 'ck1234567896',
     position: 'QA Automation Engineer',
     link: 'https://example.com/jobs/qa-automation-engineer',
     description:
@@ -96,7 +96,7 @@ export const jobFixtures: JobFixturesMap = {
     updatedAt: jobFixtureTimestamp,
   },
   dataAnalyst: {
-    id: 8,
+    id: 'ck1234567897',
     position: 'Data Analyst',
     link: 'https://example.com/jobs/data-analyst',
     description: 'Turn recruiting funnel metrics into actionable insights.',
@@ -106,7 +106,7 @@ export const jobFixtures: JobFixturesMap = {
     updatedAt: jobFixtureTimestamp,
   },
   technicalRecruiter: {
-    id: 9,
+    id: 'ck1234567898',
     position: 'Technical Recruiter',
     link: 'https://example.com/jobs/technical-recruiter',
     description:
@@ -117,7 +117,7 @@ export const jobFixtures: JobFixturesMap = {
     updatedAt: jobFixtureTimestamp,
   },
   platformEngineer: {
-    id: 10,
+    id: 'ck1234567899',
     position: 'Platform Engineer',
     link: 'https://example.com/jobs/platform-engineer',
     description: 'Standardize shared tooling and libraries in an Nx monorepo.',
@@ -127,7 +127,7 @@ export const jobFixtures: JobFixturesMap = {
     updatedAt: jobFixtureTimestamp,
   },
   juniorReactDeveloper: {
-    id: 11,
+    id: 'ck1234567900',
     position: 'Junior React Developer',
     link: 'https://example.com/jobs/junior-react-developer',
     description: 'Help build internal dashboards.',
@@ -181,7 +181,7 @@ export interface JobResultFixturesMap {
 
 export const jobResultFixtures: JobResultFixturesMap = {
   createdProductDesigner: {
-    id: 7,
+    id: 'ck1234567896',
     position: 'Product Designer',
     link: 'https://example.com/jobs/product-designer',
     description: 'Design the experience',
@@ -191,7 +191,7 @@ export const jobResultFixtures: JobResultFixturesMap = {
     updatedAt: jobFixtureTimestamp,
   },
   updatedBackendEngineerInterview: {
-    id: 9,
+    id: 'ck1234567891',
     position: 'Backend Engineer',
     link: 'https://example.com/jobs/backend-engineer',
     description: 'Own Node and Nest services that power recruiting automation.',

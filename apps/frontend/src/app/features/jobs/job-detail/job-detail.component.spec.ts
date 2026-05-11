@@ -52,7 +52,7 @@ describe('JobDetailComponent', () => {
     router?: { navigate: (...args: unknown[]) => Promise<boolean> };
     dialog?: { open: (component: unknown, config: unknown) => unknown };
     jobsDataAccessMock?: ReturnType<typeof createJobsDataAccessMock> & {
-      deleteJob?: (id: number) => Promise<void>;
+      deleteJob?: (id: string) => Promise<void>;
     };
   }) {
     const dataAccessServiceMock =
@@ -173,10 +173,14 @@ describe('JobDetailComponent', () => {
   it('should render select a job state when route has no valid job id', async () => {
     const dataAccessServiceMock = createJobsMockByScenario('noData');
 
-    const { harness } = await setup({
+    const { fixture, harness } = await setup({
       id: 'invalid',
       jobsDataAccessMock: dataAccessServiceMock,
     });
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
 
     expect(await harness.getTextContent()).toContain(
       'Select a job from the list to view details.',
@@ -193,7 +197,7 @@ describe('JobDetailComponent', () => {
     await fixture.whenStable();
 
     expect(dataAccessServiceMock.__calls.updateJobStatusCalls).toEqual([
-      [10, 'applied'],
+      ['ck1234567899', 'applied'],
     ]);
   });
 
@@ -277,23 +281,23 @@ describe('JobDetailComponent', () => {
 
     expect(dialogOpenCalls).toHaveLength(1);
 
-    const createdJob: JobDto = { ...baseJob, id: 99 };
+    const createdJob: JobDto = { ...baseJob, id: 'ck1234567899' };
     const onCreated = dialogOpenCalls[0].config.context.onCreated;
     expect(onCreated).toBeDefined();
     await onCreated?.(createdJob);
 
-    expect(routerNavigateCalls).toEqual([['/jobs', 99]]);
+    expect(routerNavigateCalls).toEqual([['/jobs', 'ck1234567899']]);
   });
 
   it('should delete job and navigate to jobs when delete is confirmed', async () => {
-    const deleteJobCalls: number[] = [];
+    const deleteJobCalls: string[] = [];
     const dataAccessServiceMock = createJobsDataAccessMock({
       jobs: [baseJob],
       job: baseJob,
     }) as ReturnType<typeof createJobsDataAccessMock> & {
-      deleteJob: (id: number) => Promise<void>;
+      deleteJob: (id: string) => Promise<void>;
     };
-    dataAccessServiceMock.deleteJob = async (id: number) => {
+    dataAccessServiceMock.deleteJob = async (id: string) => {
       deleteJobCalls.push(id);
     };
 
@@ -314,7 +318,7 @@ describe('JobDetailComponent', () => {
     expect(onConfirm).toBeDefined();
     await onConfirm?.();
 
-    expect(deleteJobCalls).toEqual([10]);
+    expect(deleteJobCalls).toEqual(['ck1234567899']);
     expect(routerNavigateCalls).toEqual([['/jobs']]);
   });
 });

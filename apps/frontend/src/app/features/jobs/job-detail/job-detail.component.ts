@@ -84,12 +84,7 @@ export class JobDetailComponent {
     this.route.paramMap.pipe(
       map((params) => {
         const id = params.get('id');
-        if (!id) {
-          return null;
-        }
-
-        const parsed = Number(id);
-        return Number.isNaN(parsed) ? null : parsed;
+        return id;
       }),
     ),
     { initialValue: null },
@@ -149,7 +144,7 @@ export class JobDetailComponent {
 
   constructor() {
     effect(() => {
-      const jobId: number | null = this.selectedJobId();
+      const jobId: string | null = this.selectedJobId();
       this.jobsDataAccess.selectJob(jobId);
       this.contactsDataAccess.selectJob(jobId);
       this.notesDataAccess.selectJob(jobId);

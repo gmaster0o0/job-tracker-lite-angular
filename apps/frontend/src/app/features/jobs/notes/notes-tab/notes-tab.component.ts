@@ -27,7 +27,7 @@ export class NotesTabComponent {
   private readonly notesDataAccess = inject(NotesDataAccessService);
   private readonly dialog = inject(HlmDialogService);
 
-  readonly jobId = input.required<number>();
+  readonly jobId = input.required<string>();
 
   protected readonly notesResource = this.notesDataAccess.notesResource;
 

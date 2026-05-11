@@ -18,7 +18,7 @@ export class ContactListComponent {
     ContactsDataAccessService,
   );
 
-  readonly jobId = input.required<number>();
+  readonly jobId = input.required<string>();
   readonly edit = output<ContactDto>();
   readonly remove = output<ContactDto>();
 

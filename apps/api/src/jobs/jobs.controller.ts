@@ -10,7 +10,6 @@ import {
   Get,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Patch,
   Delete,
   Post,
@@ -27,7 +26,7 @@ export class JobsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<JobDto> {
+  async findOne(@Param('id') id: string): Promise<JobDto> {
     try {
       return await this.jobsService.findOne(id);
     } catch (error) {
@@ -46,7 +45,7 @@ export class JobsController {
 
   @Patch(':id/status')
   async updateStatus(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() updateJobStatusDto: UpdateJobStatusDto,
   ): Promise<JobDto> {
     return this.jobsService.updateStatus(id, updateJobStatusDto.status);
@@ -54,7 +53,7 @@ export class JobsController {
 
   @Patch(':id')
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() updateJobDto: UpdateJobDto,
   ): Promise<JobDto> {
     try {
@@ -69,7 +68,7 @@ export class JobsController {
   }
 
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  async delete(@Param('id') id: string): Promise<void> {
     try {
       await this.jobsService.delete(id);
     } catch (error) {

@@ -8,7 +8,7 @@ import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 
 type EditContactDialogContext = {
-  jobId: number;
+  jobId: string;
   contact: ContactDto;
   onUpdated?: () => void;
 };

@@ -13,7 +13,7 @@ describe('CreateNoteComponent', () => {
 
   beforeEach(async () => {
     const notesDataAccessMock = {
-      createNote: async () => ({ id: 1 }),
+      createNote: async () => ({ id: 'ck1234567903' }),
     };
 
     await TestBed.configureTestingModule({

@@ -49,14 +49,14 @@ describe('JobsController', () => {
   it('should delegate status changes to the service', async () => {
     jobsService.updateStatus.mockResolvedValue({
       ...jobFixtures.backendEngineer,
-      id: 3,
+      id: 'ck1234567892',
     });
 
     await expect(
-      controller.updateStatus(3, { status: 'applied' }),
+      controller.updateStatus('ck1234567892', { status: 'applied' }),
     ).resolves.toEqual({
       ...jobFixtures.backendEngineer,
-      id: 3,
+      id: 'ck1234567892',
     });
   });
 });

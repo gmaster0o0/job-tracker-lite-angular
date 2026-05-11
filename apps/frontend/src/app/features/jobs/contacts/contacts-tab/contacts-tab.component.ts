@@ -32,7 +32,7 @@ export class ContactsTabComponent {
   private readonly contactsDataAccess = inject(ContactsDataAccessService);
   private readonly dialog = inject(HlmDialogService);
 
-  readonly jobId = input.required<number>();
+  readonly jobId = input.required<string>();
 
   protected readonly contactsResource =
     this.contactsDataAccess.contactsResource;

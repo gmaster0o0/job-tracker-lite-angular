@@ -15,7 +15,7 @@ import {
 })
 export class JobsDataAccessService {
   private readonly http = inject(HttpClient);
-  private readonly selectedJobId = signal<number | null>(null);
+  private readonly selectedJobId = signal<string | null>(null);
 
   jobsResource = httpResource<JobDto[]>(() => `/api/jobs`);
 
@@ -24,7 +24,7 @@ export class JobsDataAccessService {
     return id === null ? undefined : `/api/jobs/${id}`;
   });
 
-  selectJob(id: number | null): void {
+  selectJob(id: string | null): void {
     this.selectedJobId.set(id);
   }
 
@@ -37,7 +37,7 @@ export class JobsDataAccessService {
     return created;
   }
 
-  async updateJobStatus(id: number, status: JobStatusDto): Promise<JobDto> {
+  async updateJobStatus(id: string, status: JobStatusDto): Promise<JobDto> {
     const dto: UpdateJobStatusDto = { status };
     const updated = await firstValueFrom(
       this.http.patch<JobDto>(`/api/jobs/${id}/status`, dto),
@@ -47,7 +47,7 @@ export class JobsDataAccessService {
     return updated;
   }
 
-  async updateJob(id: number, dto: UpdateJobDto): Promise<JobDto> {
+  async updateJob(id: string, dto: UpdateJobDto): Promise<JobDto> {
     const updated = await firstValueFrom(
       this.http.patch<JobDto>(`/api/jobs/${id}`, dto),
     );
@@ -56,7 +56,7 @@ export class JobsDataAccessService {
     return updated;
   }
 
-  async deleteJob(id: number): Promise<void> {
+  async deleteJob(id: string): Promise<void> {
     await firstValueFrom(this.http.delete(`/api/jobs/${id}`));
     this.jobsResource.reload();
   }

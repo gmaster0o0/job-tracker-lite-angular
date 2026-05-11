@@ -1,5 +1,7 @@
-import { JobStatus } from '@prisma/client';
-import { PrismaService } from './lib/prisma.service';
+console.log('Seed script started');
+
+import { PrismaClient, JobStatus } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
@@ -23,14 +25,26 @@ const statusMap: Record<string, JobStatus> = {
 };
 
 const seedJobs = seedJobFixtures.map((job: JobDto) => ({
-  ...job,
+  position: job.position,
+  link: job.link,
+  description: job.description,
+  company: job.company,
   status: statusMap[job.status] ?? JobStatus.REJECTED,
 }));
 
 async function main() {
-  const prisma = new PrismaService();
+  console.log('Starting seed...');
+  const databaseUrl = process.env['DATABASE_URL']?.trim();
+  console.log('DATABASE_URL:', databaseUrl ? 'set' : 'not set');
+
+  if (!databaseUrl) {
+    throw new Error('DATABASE_URL must be set');
+  }
+
+  const prisma = new PrismaClient({ adapter: new PrismaPg(databaseUrl) });
 
   await prisma.$connect();
+  console.log('Connected to database');
 
   for (const [jobIndex, job] of seedJobs.entries()) {
     const seededJob = await prisma.job.upsert({

@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { ContactsController } from './contacts.contoller';
+import { ContactsController } from './contacts.controller';
 import { JobsService } from './jobs.service';
 import {
   contactFixtures,
@@ -30,7 +30,7 @@ describe('ContactsController', () => {
   it('should delegate contact listing to the service', async () => {
     jobsService.findContacts.mockResolvedValue([contactFixtures.janeDoe]);
 
-    await expect(contactsController.findContacts(10)).resolves.toEqual([
+    await expect(contactsController.findContacts('10')).resolves.toEqual([
       contactFixtures.janeDoe,
     ]);
   });
@@ -39,7 +39,7 @@ describe('ContactsController', () => {
     jobsService.createContact.mockResolvedValue(contactFixtures.johnDoe);
 
     await expect(
-      contactsController.createContact(10, createContactFixtures.johnDoe),
+      contactsController.createContact('10', createContactFixtures.johnDoe),
     ).resolves.toEqual(contactFixtures.johnDoe);
   });
 
@@ -48,8 +48,8 @@ describe('ContactsController', () => {
 
     await expect(
       contactsController.updateContact(
-        10,
-        2,
+        '10',
+        '2',
         updateContactFixtures.updatedContact,
       ),
     ).resolves.toEqual(contactFixtures.updatedContact);
@@ -59,7 +59,7 @@ describe('ContactsController', () => {
     jobsService.deleteContact.mockResolvedValue(undefined);
 
     await expect(
-      contactsController.deleteContact(10, 2),
+      contactsController.deleteContact('10', '2'),
     ).resolves.toBeUndefined();
   });
 });
