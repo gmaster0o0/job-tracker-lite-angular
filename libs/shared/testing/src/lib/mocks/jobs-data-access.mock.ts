@@ -8,7 +8,6 @@ import {
 import { jobFixtures } from '../fixtures/jobs.fixtures';
 import { ResourceState } from './ResourceState';
 import { JobsScenario } from '../scenarios/jobs.scnearios';
-import { HttpErrorResponse } from '@angular/common/http';
 
 export type JobsDataAccessMockOptions = {
   jobs?: JobDto[];
@@ -20,6 +19,7 @@ export type JobsDataAccessMockOptions = {
   contacts?: ContactDto[];
   notes?: ContactDto[];
 };
+
 /**
  * Factory function to create a jobs data access mock based on a given scenario.
  * @param scenario
@@ -42,13 +42,13 @@ export function createJobsMockByScenario(
       return createJobsDataAccessMock({
         jobs: [],
         job: undefined,
-        jobError: new HttpErrorResponse({ status: 404 }),
+        jobError: { status: 404, statusText: 'Not Found' },
       });
     case 'serverError':
       return createJobsDataAccessMock({
         jobs: [],
         job: undefined,
-        jobError: new HttpErrorResponse({ status: 500 }),
+        jobError: { status: 500, statusText: 'Internal Server Error' },
       });
     case 'loading':
       return createJobsDataAccessMock({
