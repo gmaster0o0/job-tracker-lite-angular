@@ -125,7 +125,7 @@ describe('JobDetailComponent', () => {
 
   it('should render overview details for selected job from fallback list', async () => {
     const { harness } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
     });
 
@@ -163,33 +163,27 @@ describe('JobDetailComponent', () => {
     const dataAccessServiceMock = createJobsMockByScenario('loading');
 
     const { harness } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobsDataAccessMock: dataAccessServiceMock,
     });
 
     expect(await harness.getTextContent()).toContain('Loading job details...');
   });
 
-  it('should render select a job state when route has no valid job id', async () => {
-    const dataAccessServiceMock = createJobsMockByScenario('noData');
+  it('should render job not found when route id does not match an existing job', async () => {
+    const dataAccessServiceMock = createJobsMockByScenario('notFound');
 
-    const { fixture, harness } = await setup({
-      id: 'invalid',
+    const { harness } = await setup({
+      id: 'inv',
       jobsDataAccessMock: dataAccessServiceMock,
     });
 
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
-
-    expect(await harness.getTextContent()).toContain(
-      'Select a job from the list to view details.',
-    );
+    expect(await harness.getTextContent()).toContain('Job not found.');
   });
 
   it('should update status when stepper emits stepSelected', async () => {
     const { fixture, harness, dataAccessServiceMock } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
     });
 
@@ -197,13 +191,13 @@ describe('JobDetailComponent', () => {
     await fixture.whenStable();
 
     expect(dataAccessServiceMock.__calls.updateJobStatusCalls).toEqual([
-      ['ck1234567899', 'applied'],
+      [baseJob.id, 'applied'],
     ]);
   });
 
   it('should preserve active tab when an unknown tab is selected', async () => {
     const { fixture } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
     });
 
@@ -216,7 +210,7 @@ describe('JobDetailComponent', () => {
 
   it('should switch active tab when a known tab is selected', async () => {
     const { fixture } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
     });
 
@@ -229,7 +223,7 @@ describe('JobDetailComponent', () => {
 
   it('should format job status to uppercase', async () => {
     const { fixture } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
     });
 
@@ -242,7 +236,7 @@ describe('JobDetailComponent', () => {
   it('should identify rejected jobs and return -1 for rejected progress index', async () => {
     const rejectedJob = jobFixtures.juniorReactDeveloper;
     const { fixture } = await setup({
-      id: '11',
+      id: rejectedJob.id,
       jobs: [rejectedJob],
       job: rejectedJob,
     });
@@ -256,7 +250,7 @@ describe('JobDetailComponent', () => {
 
   it('should not call updateJobStatus when moving to the same status', async () => {
     const { fixture, dataAccessServiceMock } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
       job: baseJob,
     });
@@ -270,7 +264,7 @@ describe('JobDetailComponent', () => {
 
   it('should navigate after creating a new job', async () => {
     const { fixture, dialogOpenCalls, routerNavigateCalls } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
       job: baseJob,
     });
@@ -302,7 +296,7 @@ describe('JobDetailComponent', () => {
     };
 
     const { fixture, dialogOpenCalls, routerNavigateCalls } = await setup({
-      id: '10',
+      id: baseJob.id,
       jobs: [baseJob],
       job: baseJob,
       jobsDataAccessMock: dataAccessServiceMock,
@@ -318,7 +312,7 @@ describe('JobDetailComponent', () => {
     expect(onConfirm).toBeDefined();
     await onConfirm?.();
 
-    expect(deleteJobCalls).toEqual(['ck1234567899']);
+    expect(deleteJobCalls).toEqual([baseJob.id]);
     expect(routerNavigateCalls).toEqual([['/jobs']]);
   });
 });
