@@ -13,7 +13,6 @@ import {
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Contact, Job, JobStatus, Note } from '@prisma/client';
-import { Prisma } from '@prisma/client';
 
 const prismaToDtoStatus: Record<JobStatus, JobStatusDto> = {
   SAVED: 'saved',
@@ -52,22 +51,11 @@ export class JobsService {
   }
 
   async findOne(id: number): Promise<JobDto> {
-    try {
-      const job = await this.prisma.job.findUniqueOrThrow({
-        where: { id },
-      });
+    const job = await this.prisma.job.findUniqueOrThrow({
+      where: { id },
+    });
 
-      return mapJobToDto(job);
-    } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new NotFoundException(`Job with id ${id} not found`);
-      }
-
-      throw error;
-    }
+    return mapJobToDto(job);
   }
 
   async updateStatus(id: number, status: JobStatusDto): Promise<JobDto> {
@@ -101,8 +89,6 @@ export class JobsService {
   }
 
   async findContacts(jobId: number): Promise<ContactDto[]> {
-    await this.assertJobExists(jobId);
-
     const contacts = await this.prisma.contact.findMany({
       where: { jobId },
       orderBy: { createdAt: 'desc' },
@@ -115,8 +101,6 @@ export class JobsService {
     jobId: number,
     createContactDto: CreateContactDto,
   ): Promise<ContactDto> {
-    await this.assertJobExists(jobId);
-
     const contact = await this.prisma.contact.create({
       data: {
         ...createContactDto,
@@ -132,18 +116,11 @@ export class JobsService {
     contactId: number,
     updateContactDto: UpdateContactDto,
   ): Promise<ContactDto> {
-    const existing = await this.prisma.contact.findFirst({
-      where: { id: contactId, jobId },
-    });
-
-    if (!existing) {
-      throw new NotFoundException(
-        `Contact with id ${contactId} not found for job ${jobId}`,
-      );
-    }
-
     const contact = await this.prisma.contact.update({
-      where: { id: contactId },
+      where: {
+        id: contactId,
+        jobId: jobId,
+      },
       data: updateContactDto,
     });
 
@@ -151,22 +128,12 @@ export class JobsService {
   }
 
   async deleteContact(jobId: number, contactId: number): Promise<void> {
-    try {
-      const result = await this.prisma.contact.deleteMany({
-        where: { id: contactId, jobId },
-      });
-
-      if (result.count === 0) {
-        throw new NotFoundException(
-          `Contact with id ${contactId} not found for job ${jobId}`,
-        );
-      }
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw error;
-    }
+    await this.prisma.contact.delete({
+      where: {
+        id: contactId,
+        jobId: jobId,
+      },
+    });
   }
   /**
    * Fetches all notes for a given job, ordered by creation date (newest first).
@@ -174,8 +141,6 @@ export class JobsService {
    * @returns A promise that resolves to an array of NoteDto objects.
    */
   async findNotes(jobId: number): Promise<NoteDto[]> {
-    await this.assertJobExists(jobId);
-
     const notes = await this.prisma.note.findMany({
       where: { jobId },
       orderBy: { createdAt: 'desc' },
@@ -193,8 +158,6 @@ export class JobsService {
     jobId: number,
     noteContent: CreateNoteDto,
   ): Promise<NoteDto> {
-    await this.assertJobExists(jobId);
-
     const note = await this.prisma.note.create({
       data: {
         ...noteContent,
@@ -216,18 +179,8 @@ export class JobsService {
     noteId: number,
     updateContent: UpdateNoteDto,
   ): Promise<NoteDto> {
-    const existing = await this.prisma.note.findFirst({
-      where: { id: noteId, jobId },
-    });
-
-    if (!existing) {
-      throw new NotFoundException(
-        `Note with id ${noteId} not found for job ${jobId}`,
-      );
-    }
-
     const note = await this.prisma.note.update({
-      where: { id: noteId },
+      where: { id: noteId, jobId },
       data: updateContent,
     });
 
@@ -239,44 +192,9 @@ export class JobsService {
    * @param noteId - The ID of the note to delete.
    */
   async deleteNote(jobId: number, noteId: number): Promise<void> {
-    try {
-      const result = await this.prisma.note.deleteMany({
-        where: { id: noteId, jobId },
-      });
-
-      if (result.count === 0) {
-        throw new NotFoundException(
-          `Note with id ${noteId} not found for job ${jobId}`,
-        );
-      }
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw error;
-    }
-  }
-
-  /**
-   * Helper method to check if a job exists.
-   * Throws a NotFoundException if it doesn't.
-   * @param jobId - The ID of the job to check.
-   */
-  private async assertJobExists(jobId: number): Promise<void> {
-    try {
-      await this.prisma.job.findUniqueOrThrow({
-        where: { id: jobId },
-      });
-    } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new NotFoundException(`Job with id ${jobId} not found`);
-      }
-
-      throw error;
-    }
+    await this.prisma.note.delete({
+      where: { id: noteId, jobId },
+    });
   }
 }
 /**
