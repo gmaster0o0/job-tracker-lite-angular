@@ -66,8 +66,8 @@ export const appRoutes: Route[] = [
             path: '',
             outlet: 'sidenav',
             loadComponent: () =>
-              import('./navigation/main-menu/main-menu.component').then(
-                (m) => m.MainMenuComponent,
+              import('./navigation/settings-menu/settings-menu.component').then(
+                (m) => m.SettingsMenuComponent,
               ),
           },
           {
@@ -76,6 +76,13 @@ export const appRoutes: Route[] = [
               import('./features/settings/settings.component').then(
                 (m) => m.SettingsComponent,
               ),
+          },
+          {
+            path: 'preferences',
+            loadComponent: () =>
+              import(
+                './features/settings/preferences/preferences.component'
+              ).then((m) => m.PreferencesComponent),
           },
         ],
       },
