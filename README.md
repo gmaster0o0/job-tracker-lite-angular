@@ -206,7 +206,7 @@ npx nx graph
 ### Angular component generation
 ```sh
 #old style angular naming convention
-npx nx g @nx/angular:component apps/frontend/src/app/feature/jobs/notes-list/notes-list.component
+npx nx g @nx/angular:component apps/frontend/src/app/features/jobs/notes-list/notes-list.component
 ```
 #these flags are set in nx.json for all components, but can be overridden per component generation
 **--style=none** generate without style file

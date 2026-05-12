@@ -1,0 +1,32 @@
+<hlm-card>
+  <hlm-card-header class="flex items-start justify-between">
+    <div>
+      <h3 hlmCardTitle><ng-icon name="lucideGlobe" /> Language</h3>
+      <p hlmCardDescription>
+        Select your preferred language for the interface.
+      </p>
+    </div>
+    <app-save-button [formId]="formId" [idleLabel]="'Save'"></app-save-button>
+  </hlm-card-header>
+  <div hlmCardContent>
+    <hlm-select>
+      <hlm-select-trigger class="w-56">
+        <hlm-select-value placeholder="Select a language" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-group>
+          @for (language of languageOptions; track language.value) {
+            <hlm-select-item [value]="language">{{
+              language.label
+            }}</hlm-select-item>
+          }
+        </hlm-select-group>
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  <hlm-card-footer>
+    <p hlmCardDescription>
+      Note: Language changes will be applied to the entire interface.
+    </p>
+  </hlm-card-footer>
+</hlm-card>
