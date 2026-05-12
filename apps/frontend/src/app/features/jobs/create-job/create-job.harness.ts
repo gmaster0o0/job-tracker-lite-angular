@@ -15,7 +15,7 @@ export class CreateJobHarness extends ComponentHarness {
     '[formControlName="description"]',
   );
   private readonly getSubmitButton = this.locatorFor(
-    'app-job-form-submit-button button[type="submit"]',
+    'app-save-button button[type="submit"]',
   );
   private readonly getErrorMessage =
     this.locatorForOptional('.text-destructive');

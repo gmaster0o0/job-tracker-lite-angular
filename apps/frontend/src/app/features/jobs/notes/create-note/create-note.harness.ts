@@ -7,7 +7,7 @@ export class CreateNoteHarness extends ComponentHarness {
   private readonly getTitleInput = this.locatorFor('[formControlName="title"]');
   private readonly getBodyInput = this.locatorFor('[formControlName="body"]');
   private readonly getSubmitButton = this.locatorFor(
-    'app-job-form-submit-button button[type="submit"]',
+    'app-save-button button[type="submit"]',
   );
 
   async fillForm(values: Partial<CreateNoteDto>): Promise<void> {

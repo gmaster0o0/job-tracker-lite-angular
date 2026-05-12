@@ -6,12 +6,12 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 
 @Component({
   standalone: true,
-  selector: 'app-job-form-submit-button',
+  selector: 'app-save-button',
   imports: [HlmButton, HlmIcon],
   providers: [provideIcons({ lucideSave, lucideLoader2 })],
-  templateUrl: './job-form-submit-button.component.html',
+  templateUrl: './save-button.component.html',
 })
-export class JobFormSubmitButtonComponent {
+export class SaveButtonComponent {
   readonly formId = input.required<string>();
   readonly disabled = input(false);
   readonly isSubmitting = input(false);

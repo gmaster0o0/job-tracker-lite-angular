@@ -4,7 +4,7 @@ import { HlmDialogClose, HlmDialogFooter } from '@spartan-ng/helm/dialog';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { provideIcons } from '@ng-icons/core';
 import { lucideUndo2 } from '@ng-icons/lucide';
-import { JobFormSubmitButtonComponent } from '../job-form-submit-button/job-form-submit-button.component';
+import { SaveButtonComponent } from '../save-button/save-button.component';
 
 @Component({
   standalone: true,
@@ -14,7 +14,7 @@ import { JobFormSubmitButtonComponent } from '../job-form-submit-button/job-form
     HlmButton,
     HlmDialogClose,
     HlmIconImports,
-    JobFormSubmitButtonComponent,
+    SaveButtonComponent,
   ],
   providers: [provideIcons({ lucideUndo2 })],
   templateUrl: './create-job-dialog-footer.component.html',
