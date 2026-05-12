@@ -1,4 +1,4 @@
-import { Component, effect, inject, model, signal } from '@angular/core';
+import { Component, effect, inject, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HlmCardImports } from 'spartan/ui/helm';
 import { provideIcons } from '@ng-icons/core';
@@ -31,7 +31,9 @@ export interface AppearanceCard {
 })
 export class AppearanceComponent {
   private themeService = inject(ThemeService);
-  public appearance = model<'light' | 'dark' | 'system'>('light');
+  public appearance = model<'light' | 'dark' | 'system'>(
+    this.themeService.theme(),
+  );
 
   constructor() {
     effect(
