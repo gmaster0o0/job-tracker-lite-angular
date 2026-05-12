@@ -1,5 +1,20 @@
 # Job Tracker Lite - Changelog
 
+### [0.3.1](https://github.com/gmaster0o0/job-tracker-lite-angular/compare/v0.3.0...v0.3.1) (2026-05-12)
+
+
+### 🐞Bug Fixes
+
+* **db:** seeding bug ([#44](https://github.com/gmaster0o0/job-tracker-lite-angular/issues/44)) ([f985e12](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/f985e12663a48a4b854e6441438e064c507bfdef))
+* **jobs:** loading error and test improvements ([1369bc1](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/1369bc1de1dc34da086d7426734a6b29c2114d0a))
+
+
+### 🚀New Features
+
+* **home:** implement homepage with dynamic cards ([#32](https://github.com/gmaster0o0/job-tracker-lite-angular/issues/32)) ([6e0ddd2](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/6e0ddd2cda8b6ef76bbfc9eb026ea569926c5ea2))
+* **settings:** preference UI with theme changer ([8e48987](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/8e489871dc88df29cc30c74da7cbf28871829d89))
+* **prisma:** PrismaClientExceptionFilter for error handling ([#36](https://github.com/gmaster0o0/job-tracker-lite-angular/issues/36)) ([d9084b3](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/d9084b37424fa8b48a865817a4fa2159574c7845))
+
 ## 0.3.0 (2026-05-08)
 
 

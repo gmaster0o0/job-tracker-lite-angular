@@ -1,6 +1,6 @@
 {
   "name": "@job-tracker-lite-angular/source",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
@@ -16,7 +16,7 @@
     "lint": "npx nx run-many --target=lint --all",
     "typecheck": "npx nx run-many --target=typecheck --all",
     "test:push": "npx nx affected -t test --base=origin/main --head=HEAD --parallel=3",
-    "release": "standard-version && node tools/sync-version.js && git add . && git commit --amend --no-edit"
+    "release": "npx standard-version && node tools/sync-version.js && git add . && git commit --amend --no-edit"
   },
   "private": true,
   "devDependencies": {
@@ -75,6 +75,7 @@
     "postcss": "^8.4.5",
     "prettier": "~3.6.2",
     "prisma": "^7.8.0",
+    "standard-version": "^9.5.0",
     "tailwindcss": "^4.2.4",
     "ts-jest": "^29.4.0",
     "ts-node": "10.9.1",

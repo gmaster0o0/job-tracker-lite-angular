@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
-// A gyökér package.json beolvasása
+// Read the main package.json to get the current version
 const packageJson = require('../package.json');
 
-// Az Nx struktúrád szerinti elérési út az Angular environment fájlhoz
+// Path to the angular environment file where the version is defined
 const envPath = path.resolve(
   __dirname,
   '../apps/frontend/src/environments/version.ts',
@@ -12,14 +12,14 @@ const envPath = path.resolve(
 try {
   const content = fs.readFileSync(envPath, 'utf8');
 
-  // Lecseréli a 'version: ...' részt, függetlenül attól mi volt ott
+  // Replace the 'version: ...' part, regardless of what was there
   const updatedContent = content.replace(
     /version:\s*'.*'/g,
     `version: '${packageJson.version}'`,
   );
 
   fs.writeFileSync(envPath, updatedContent, 'utf8');
-  console.log(`🚀 Verzió szinkronizálva: ${packageJson.version}`);
+  console.log(`🚀 Version synchronized: ${packageJson.version}`);
 } catch (err) {
-  console.error('❌ Hiba a verzió szinkronizálásakor:', err.message);
+  console.error('❌ Error synchronizing version:', err.message);
 }
