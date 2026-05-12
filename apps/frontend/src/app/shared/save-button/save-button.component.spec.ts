@@ -1,14 +1,14 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { JobFormSubmitButtonComponent } from './job-form-submit-button.component';
-import { JobFormSubmitButtonHarness } from './job-form-submit-button.harness';
+import { SaveButtonComponent } from './save-button.component';
+import { SaveButtonHarness } from './save-button.harness';
 
 @Component({
   standalone: true,
-  imports: [JobFormSubmitButtonComponent],
+  imports: [SaveButtonComponent],
   template: `
-    <app-job-form-submit-button
+    <app-save-button
       formId="jobForm"
       [disabled]="disabled"
       [isSubmitting]="isSubmitting"
@@ -22,8 +22,8 @@ class HostComponent {
   isSubmitting = false;
 }
 
-describe('JobFormSubmitButtonComponent', () => {
-  let harness: JobFormSubmitButtonHarness;
+describe('SaveButtonComponent', () => {
+  let harness: SaveButtonHarness;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -34,7 +34,7 @@ describe('JobFormSubmitButtonComponent', () => {
     fixture.detectChanges();
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
-      JobFormSubmitButtonHarness,
+      SaveButtonHarness,
     );
   });
 
@@ -50,7 +50,7 @@ describe('JobFormSubmitButtonComponent', () => {
     fixture.detectChanges();
     const localHarness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
-      JobFormSubmitButtonHarness,
+      SaveButtonHarness,
     );
 
     expect(await localHarness.getLabelText()).toContain('Saving...');
