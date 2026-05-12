@@ -13,3 +13,4 @@ export * from './lib/mocks/brn-dialog-ref.mock';
 export * from './lib/mocks/jobs-service.mock';
 export * from './lib/mocks/data-access.mock';
 export * from './lib/fixtures/notes.fixtures';
+export * from './lib/mocks/browser.mocks';
