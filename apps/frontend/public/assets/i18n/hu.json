@@ -1,0 +1,17 @@
+{
+  "preferences": {
+    "preferences": "Preferences",
+    "preferencesDescription": "Customize the application to your liking.",
+    "language": {
+      "title": "Nyelv",
+      "description": "Válassza ki az alapértelmezett nyelvet.",
+      "label": "Felhasználói felület nyelve",
+      "select": "Válassz nyelvet",
+      "languageNote": "Megjegyzés: A nyelvváltás a teljes kezelőfelületre vonatkozik."
+    },
+    "appearance": {
+      "title": "Megjelenés",
+      "description": "Válassza ki, hogyan jelenjen meg az alkalmazás."
+    }
+  }
+}

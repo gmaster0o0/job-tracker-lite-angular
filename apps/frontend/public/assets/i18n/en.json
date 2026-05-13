@@ -1,0 +1,17 @@
+{
+  "preferences": {
+    "preferences": "Preferences",
+    "preferencesDescription": "Customize the application to your liking.",
+    "language": {
+      "title": "Language",
+      "description": "Pick the UI language for the application.",
+      "label": "Interface language",
+      "select": "Select language",
+      "languageNote": "Note: Changing language affects the entire UI."
+    },
+    "appearance": {
+      "title": "Appearance",
+      "description": "Choose how the application should appear."
+    }
+  }
+}
