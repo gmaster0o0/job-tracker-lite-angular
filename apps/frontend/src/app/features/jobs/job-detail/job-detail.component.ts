@@ -76,6 +76,7 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
   templateUrl: './job-detail.component.html',
 })
 export class JobDetailComponent {
+  // Injecting necessary services and modules
   protected readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly jobsDataAccess = inject(JobsDataAccessService);
@@ -83,6 +84,22 @@ export class JobDetailComponent {
   private readonly notesDataAccess = inject(NotesDataAccessService);
   private readonly dialog = inject(HlmDialogService);
 
+  private readonly deleteDescription = translateSignal(
+    'jobs.deleteDialog.description',
+  );
+  private readonly deleteConfirmLabel = translateSignal(
+    'jobs.deleteDialog.confirmLabel',
+  );
+  private readonly deleteTitleKey = 'jobs.deleteDialog.title';
+  private readonly deleteTitleParams = computed(() => ({
+    company: this.job()?.company ?? '',
+  }));
+  private readonly deleteTitle = translateSignal(
+    this.deleteTitleKey,
+    this.deleteTitleParams,
+  );
+
+  // Resource signals for jobs, contacts, and notes
   protected readonly jobsResource = this.jobsDataAccess.jobsResource;
   protected readonly jobResource = this.jobsDataAccess.jobResource;
 
@@ -201,11 +218,9 @@ export class JobDetailComponent {
     this.dialog.open(DeleteConfirmationDialogComponent, {
       contentClass: 'sm:max-w-xl !sm:mx-auto',
       context: {
-        title: translateSignal('jobs.deleteDialog.title', {
-          company: job.company,
-        }),
-        description: translateSignal('jobs.deleteDialog.description'),
-        confirmLabel: translateSignal('jobs.deleteDialog.confirmLabel'),
+        title: this.deleteTitle(),
+        description: this.deleteDescription(),
+        confirmLabel: this.deleteConfirmLabel(),
         onConfirm: async () => {
           await this.jobsDataAccess.deleteJob(job.id);
           this.router.navigate(['/jobs']);
