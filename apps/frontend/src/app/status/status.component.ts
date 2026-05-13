@@ -14,6 +14,7 @@ import { provideIcons } from '@ng-icons/core';
 import { lucideArrowLeft } from '@ng-icons/lucide';
 import { TranslocoModule } from '@jsverse/transloco';
 
+
 @Component({
   standalone: true,
   imports: [

@@ -1,0 +1,42 @@
+<hlm-card>
+  <hlm-card-header class="flex items-start justify-between">
+    <div>
+      <h3 hlmCardTitle>
+        <ng-icon name="lucideGlobe" />
+        {{ 'preferences.dateformat.title' | transloco }}
+      </h3>
+      <p hlmCardDescription>
+        {{ 'preferences.dateformat.description' | transloco }}
+      </p>
+    </div>
+  </hlm-card-header>
+  <div hlmCardContent>
+    <hlm-select
+      [value]="currentDateFormatValue()"
+      (valueChange)="handleDateFormatChange($event)"
+    >
+      <hlm-select-label class="mb-2">{{
+        'preferences.dateformat.label' | transloco
+      }}</hlm-select-label>
+      <hlm-select-trigger class="w-56">
+        <hlm-select-value
+          placeholder="{{ 'preferences.dateformat.select' | transloco }}"
+        />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-group>
+          @for (dateFormat of dateFormatOptions; track dateFormat.value) {
+            <hlm-select-item [value]="dateFormat">{{
+              dateFormat.label
+            }}</hlm-select-item>
+          }
+        </hlm-select-group>
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  <hlm-card-footer>
+    <p hlmCardDescription>
+      {{ 'preferences.dateformat.dateFormatNote' | transloco }}
+    </p>
+  </hlm-card-footer>
+</hlm-card>

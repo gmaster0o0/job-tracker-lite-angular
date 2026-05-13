@@ -23,8 +23,8 @@ export class LanguageComponent {
   formId = 'language-form';
 
   protected readonly languageOptions: readonly LangOption[] = [
-    { value: 'en', label: 'English' },
-    { value: 'hu', label: 'Magyar' },
+    { value: 'en', label: 'English/EN' },
+    { value: 'hu', label: 'Magyar/HU' },
   ] as const;
 
   protected readonly currentLangValue = computed(() =>

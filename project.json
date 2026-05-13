@@ -1,0 +1,11 @@
+{
+  "name": "@job-tracker-lite-angular/source",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["./*.ts", "./*.js", "./*.mjs", "./*.cjs"]
+      }
+    }
+  }
+}
