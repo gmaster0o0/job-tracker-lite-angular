@@ -1,0 +1,181 @@
+{
+  "status": {
+    "title": "Heath Status",
+    "api": "API",
+    "database": "Adatbázis",
+    "lastChecked": "Utolsó ellenőrzés",
+    "uptime": "Üzemidő",
+    "loadingHealth": "Egészség betöltése",
+    "loadFailed": "Nem sikerült betölteni az állapotot"
+  },
+  "common": {
+    "back": "Vissza",
+    "cancel": "Mégse",
+    "saveChanges": "Mentés",
+    "create": "Létrehozás",
+    "logout": "Kijelentkezés",
+    "overview": "Áttekintés",
+    "contacts": "Kapcsolatok",
+    "notes": "Jegyzetek",
+    "saving": "Mentés...",
+    "jobs": "Munkák",
+    "profile": "Profil",
+    "settings": "Beállítások",
+    "about": "Az alkalmazásról"
+  },
+  "jobs": {
+    "menu": {
+      "searchPlaceholder": "Munkák vagy cégek keresése...",
+      "loadFailed": "Nem sikerült betölteni a munkákat",
+      "loading": "Munkák betöltése...",
+      "empty": "Még nincs munka",
+      "noResults": "Nincs találat"
+    },
+    "notes": {
+      "title": "Jegyzetek",
+      "add": "Jegyzet hozzáadása",
+      "loading": "Jegyzetek betöltése...",
+      "empty": "Nincsenek jegyzetek",
+      "editTitle": "Jegyzet szerkesztése",
+      "editDescription": "Jegyzet szerkesztése",
+      "fields": {
+        "title": "Cím",
+        "body": "Tartalom"
+      },
+      "createTitle": "Jegyzet létrehozása",
+      "createDescription": "Új jegyzet hozzáadása"
+    },
+    "detail": {
+      "loadFailed": "Nem sikerült betölteni a munkarészleteket",
+      "notFound": "Munka nem található",
+      "loading": "Munka betöltése...",
+      "selectJob": "Nincs munka kiválasztva",
+      "reject": "Elutasítás",
+      "addNew": "Új munka hozzáadása",
+      "edit": "Szerkesztés",
+      "delete": "Törlés",
+      "coverLetter": "Kísérőlevél",
+      "coverLetterComingSoon": "Hamarosan érkezik"
+    },
+    "edit": {
+      "title": "Munka részleteinek szerkesztése",
+      "description": "Munkaadatok frissítése"
+    },
+    "fields": {
+      "position": {
+        "label": "Pozíció megnevezése",
+        "placeholder": "pl. Szoftverfejlesztő",
+        "example": "pl. Szoftverfejlesztő",
+        "required": "Kérjük, töltse ki a pozíciót"
+      },
+      "company": {
+        "label": "Cég",
+        "placeholder": "pl. Google",
+        "example": "pl. Google",
+        "required": "Kérjük, töltse ki a céget"
+      },
+      "link": {
+        "label": "Job Link",
+        "placeholder": "https://...",
+        "description": "Link az eredeti álláshirdetéshez",
+        "required": ""
+      },
+      "description": {
+        "label": "Munkaköri leírás",
+        "placeholder": "Ide másolja a munkaköri leírást...",
+        "example": "",
+        "required": ""
+      }
+    },
+    "create": {
+      "title": "Új munkalehetőség hozzáadása",
+      "description": "Hozzon létre egy új munkát a követéshez"
+    },
+    "contacts": {
+      "title": "Kapcsolatok"
+    },
+    "filters": {
+      "all": "Mind",
+      "saved": "Mentve",
+      "applied": "Jelentkezve",
+      "interview": "Interjú",
+      "offer": "Ajánlat"
+    },
+    "tabs": {
+      "overview": "Áttekintés",
+      "contacts": "Kapcsolatok",
+      "notes": "Jegyzetek",
+      "coverLetter": "Kísérőlevél"
+    },
+    "progression": {
+      "saved": "Mentve",
+      "applied": "Jelentkezve",
+      "interview": "Interjú",
+      "offer": "Ajánlat"
+    },
+    "deleteDialog": {
+      "title": "Jelentkezés törlése",
+      "description": "Biztosan törölni szeretné ezt a munkát?",
+      "confirmLabel": "Törlés"
+    }
+  },
+  "preferences": {
+    "preferences": "Beállítások",
+    "preferencesDescription": "Szabja személyre az alkalmazás használatát.",
+    "language": {
+      "title": "Nyelv",
+      "description": "Válassza ki az alapértelmezett nyelvet.",
+      "label": "Felület nyelve",
+      "select": "Válasszon nyelvet",
+      "languageNote": "Megjegyzés: A nyelvváltás a teljes kezelőfelületre vonatkozik."
+    }
+  },
+  "appearance": {
+    "title": "Megjelenés",
+    "description": "Válassza ki, hogyan jelenjen meg az alkalmazás.",
+    "light": "Világos",
+    "dark": "Sötét",
+    "system": "Rendszer"
+  },
+  "contacts": {
+    "edit": {
+      "title": "Kapcsolat szerkesztése",
+      "description": "Frissítse a kapcsolattartó adatait"
+    },
+    "fields": {
+      "name": "Név",
+      "email": "E-mail",
+      "phone": "Telefonszám"
+    },
+    "create": {
+      "name": "Név",
+      "email": "E-mail",
+      "phone": "Telefonszám"
+    },
+    "list": {
+      "loading": "Betöltés...",
+      "empty": "Nincsenek kapcsolatok"
+    }
+  },
+  "home": {
+    "welcome": "Üdvözöljük újra",
+    "subtitle": "Hol szeretné kezdeni a mai napot?",
+    "jobs": {
+      "description": "Kezelje jelentkezéseit és kövesse nyomon a haladást."
+    },
+    "profile": {
+      "description": "Frissítse nyilvános profilját és önéletrajzát."
+    },
+    "settings": {
+      "description": "Konfigurálja preferenciáit és fiókbeállításait."
+    }
+  },
+  "settings": {
+    "preferences": "Beállítások",
+    "account": "Fiókbeállítások",
+    "privacy": "Adatvédelmi beállítások"
+  },
+  "setting": {
+    "preferences": "Beállítások"
+  }
+}

@@ -1,7 +1,11 @@
 <div class="space-y-4">
   <header class="space-y-1">
-    <h2 class="text-lg font-semibold text-slate-900">Edit Note</h2>
-    <p class="text-sm text-muted-foreground">Update the note details.</p>
+    <h2 class="text-lg font-semibold text-slate-900">
+      {{ 'jobs.notes.editTitle' | transloco }}
+    </h2>
+    <p class="text-sm text-muted-foreground">
+      {{ 'jobs.notes.editDescription' | transloco }}
+    </p>
   </header>
 
   <form
@@ -11,16 +15,16 @@
     (ngSubmit)="submit()"
   >
     <div class="space-y-1">
-      <label class="text-sm font-medium text-slate-700" for="edit-note-title"
-        >Title</label
-      >
+      <label class="text-sm font-medium text-slate-700" for="edit-note-title">{{
+        'jobs.notes.fields.title' | transloco
+      }}</label>
       <input id="edit-note-title" hlmInput formControlName="title" />
     </div>
 
     <div class="space-y-1">
-      <label class="text-sm font-medium text-slate-700" for="edit-note-body"
-        >Body</label
-      >
+      <label class="text-sm font-medium text-slate-700" for="edit-note-body">{{
+        'jobs.notes.fields.body' | transloco
+      }}</label>
 
       <input id="edit-note-body" hlmInput type="text" formControlName="body" />
     </div>

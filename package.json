@@ -1,6 +1,6 @@
 {
   "name": "@job-tracker-lite-angular/source",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
@@ -16,7 +16,9 @@
     "lint": "npx nx run-many --target=lint --all",
     "typecheck": "npx nx run-many --target=typecheck --all",
     "test:push": "npx nx affected -t test --base=origin/main --head=HEAD --parallel=3",
-    "release": "npx standard-version && node tools/sync-version.js && git add . && git commit --amend --no-edit"
+    "release": "npx standard-version && node tools/sync-version.js && git add . && git commit --amend --no-edit",
+    "i18n:extract": "npx transloco-keys-manager extract --project frontend --input \"apps/frontend/src\" --translations-path \"./apps/frontend/public/assets/i18n/\"",
+    "i18n:find": "npx transloco-keys-manager find --project frontend --input \"apps/frontend/src\" --translations-path \"./apps/frontend/public/assets/i18n/\""
   },
   "private": true,
   "devDependencies": {
@@ -29,6 +31,7 @@
     "@commitlint/cli": "^20.5.2",
     "@commitlint/config-angular": "^20.5.0",
     "@eslint/js": "^9.8.0",
+    "@jsverse/transloco-keys-manager": "^8.1.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/terminus": "^11.1.1",
     "@nestjs/testing": "^11.0.0",
@@ -71,6 +74,7 @@
     "jsonc-eslint-parser": "^2.1.0",
     "lint-staged": "^16.4.0",
     "ng-packagr": "~21.2.0",
+    "ngx-build-plus": "^20.0.0",
     "nx": "^22.7.1",
     "postcss": "^8.4.5",
     "prettier": "~3.6.2",
@@ -94,6 +98,8 @@
     "@angular/forms": "~21.2.0",
     "@angular/platform-browser": "~21.2.0",
     "@angular/router": "~21.2.0",
+    "@jsverse/transloco": "^8.3.0",
+    "@jsverse/transloco-schematics": "^8.3.0",
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",

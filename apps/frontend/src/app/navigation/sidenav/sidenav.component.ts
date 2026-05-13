@@ -9,6 +9,7 @@ import { lucideLogOut, lucideArrowLeft } from '@ng-icons/lucide';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
 import { version as appVersion } from '../../../environments/version';
+import { TranslocoModule } from '@jsverse/transloco';
 @Component({
   standalone: true,
   selector: 'app-sidenav',
@@ -24,6 +25,7 @@ import { version as appVersion } from '../../../environments/version';
     HlmButtonImports,
     HlmTooltipImports,
     RouterLink,
+    TranslocoModule,
   ],
   templateUrl: './sidenav.component.html',
 })

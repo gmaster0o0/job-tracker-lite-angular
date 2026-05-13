@@ -12,6 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { HealthResponseDto } from '@job-tracker-lite-angular/api-interfaces';
 import { provideIcons } from '@ng-icons/core';
 import { lucideArrowLeft } from '@ng-icons/lucide';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   standalone: true,
@@ -25,6 +26,7 @@ import { lucideArrowLeft } from '@ng-icons/lucide';
     HlmButtonImports,
     HlmIconImports,
     RouterLink,
+    TranslocoModule,
   ],
   providers: [
     provideIcons({

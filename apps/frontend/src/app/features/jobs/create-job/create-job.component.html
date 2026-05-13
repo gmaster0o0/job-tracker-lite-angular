@@ -1,6 +1,6 @@
 <hlm-dialog-header>
-  <h2 hlmDialogTitle>Create Job</h2>
-  <p hlmDialogDescription>Fill in the details for the new job.</p>
+  <h2 hlmDialogTitle>{{ 'jobs.create.title' | transloco }}</h2>
+  <p hlmDialogDescription>{{ 'jobs.create.description' | transloco }}</p>
 </hlm-dialog-header>
 
 <form
@@ -11,75 +11,91 @@
 >
   <hlm-field-group>
     <hlm-field>
-      <label hlmLabel for="position">Position*</label>
+      <label hlmLabel for="position">{{
+        'jobs.fields.position.label' | transloco
+      }}</label>
       <input
         hlmInput
         id="position"
         formControlName="position"
-        placeholder="e.g. Frontend Engineer"
+        placeholder="{{ 'jobs.fields.position.placeholder' | transloco }}"
         class="w-full"
       />
       @if (form.get('position')?.invalid && form.get('position')?.touched) {
-        <hlm-field-error validator="required"
-          >Position is a required field.</hlm-field-error
-        >
+        <hlm-field-error validator="required">{{
+          'jobs.fields.position.required' | transloco
+        }}</hlm-field-error>
       } @else {
-        <p hlmDialogDescription>e.g. Frontend Engineer</p>
+        <p hlmDialogDescription>
+          {{ 'jobs.fields.position.example' | transloco }}
+        </p>
       }
     </hlm-field>
     <hlm-field>
-      <label hlmLabel for="company">Company*</label>
+      <label hlmLabel for="company">{{
+        'jobs.fields.company.label' | transloco
+      }}</label>
       <input
         hlmInput
         id="company"
         formControlName="company"
-        placeholder="e.g. Acme Inc"
+        placeholder="{{ 'jobs.fields.company.placeholder' | transloco }}"
         class="w-full"
       />
       @if (form.get('company')?.invalid && form.get('company')?.touched) {
-        <hlm-field-error validator="required"
-          >Company is a required field.</hlm-field-error
-        >
+        <hlm-field-error validator="required">{{
+          'jobs.fields.company.required' | transloco
+        }}</hlm-field-error>
       } @else {
-        <p hlmDialogDescription>e.g. Acme Inc</p>
+        <p hlmDialogDescription>
+          {{ 'jobs.fields.company.example' | transloco }}
+        </p>
       }
     </hlm-field>
     <hlm-field>
-      <label hlmLabel for="link">Job Link*</label>
+      <label hlmLabel for="link">{{
+        'jobs.fields.link.label' | transloco
+      }}</label>
       <input
         hlmInput
         id="link"
         formControlName="link"
-        placeholder="https://..."
+        placeholder="{{ 'jobs.fields.link.placeholder' | transloco }}"
         class="w-full"
       />
       @if (form.get('link')?.invalid && form.get('link')?.touched) {
-        <hlm-field-error validator="required"
-          >Job link is a required field.</hlm-field-error
-        >
+        <hlm-field-error validator="required">{{
+          'jobs.fields.link.required' | transloco
+        }}</hlm-field-error>
       } @else {
-        <p hlmDialogDescription>Link to the job posting</p>
+        <p hlmDialogDescription>
+          {{ 'jobs.fields.link.description' | transloco }}
+        </p>
       }
     </hlm-field>
 
     <hlm-field>
-      <label hlmLabel for="description">Description*</label>
+      <label hlmLabel for="description">{{
+        'jobs.fields.description.label' | transloco
+      }}</label>
       <textarea
         hlmTextarea
         id="description"
         formControlName="description"
-        placeholder="A brief overview of the role"
+        placeholder="{{ 'jobs.fields.description.placeholder' | transloco }}"
         rows="4"
         class="min-h-[120px] h-[120px] [field-sizing:fixed] overflow-y-auto"
       ></textarea>
       @if (
         form.get('description')?.invalid && form.get('description')?.touched
       ) {
-        <hlm-field-error validator="required"
-          >Description is a required field.</hlm-field-error
-        >
+        <hlm-field-error validator="required">{{
+          'jobs.fields.description.required' | transloco
+        }}</hlm-field-error>
       } @else {
-        <p hlmDialogDescription>A brief overview of the role</p>
+        <p hlmDialogDescription>
+          {{ 'jobs.fields.description.example' | transloco }}
+        </p>
       }
     </hlm-field>
 

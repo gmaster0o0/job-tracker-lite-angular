@@ -4,12 +4,13 @@ import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { createJobsDataAccessMock } from '@job-tracker-lite-angular/testing';
 import { ContactListComponent } from './contact-list.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { ContactListHarness } from './contact-list.harness';
 
 describe('ContactListComponent', () => {
   async function setup(contacts: ContactDto[]) {
     await TestBed.configureTestingModule({
-      imports: [ContactListComponent],
+      imports: [ContactListComponent, getTranslocoModule()],
       providers: [
         {
           provide: JobsDataAccessService,

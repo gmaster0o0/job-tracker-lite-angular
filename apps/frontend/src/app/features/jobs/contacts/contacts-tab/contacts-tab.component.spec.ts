@@ -12,6 +12,7 @@ import {
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { vi } from 'vitest';
 import { ContactsTabComponent } from './contacts-tab.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { ContactsTabHarness } from './contacts-tab.harness';
 
 describe('ContactsTabComponent', () => {
@@ -21,7 +22,7 @@ describe('ContactsTabComponent', () => {
     const contactsDataAccessMock = createContactsDataAccessMock();
 
     await TestBed.configureTestingModule({
-      imports: [ContactsTabComponent],
+      imports: [ContactsTabComponent, getTranslocoModule()],
       providers: [
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
         {

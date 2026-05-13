@@ -7,6 +7,7 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { NoteDto } from '@job-tracker-lite-angular/api-interfaces';
 import { NotesDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { EditJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
+import { TranslocoModule } from '@jsverse/transloco';
 
 type EditNoteDialogContext = {
   jobId: string;
@@ -23,6 +24,7 @@ type EditNoteDialogContext = {
     HlmButtonImports,
     HlmInputImports,
     EditJobDialogFooterComponent,
+    TranslocoModule,
   ],
   templateUrl: './edit-note.component.html',
 })

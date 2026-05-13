@@ -1,4 +1,5 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomeCardComponent } from './home-card.component';
 import { provideRouter } from '@angular/router';
@@ -6,20 +7,32 @@ import { HomeCardHarness } from './home-card.harness';
 
 describe('HomeCardComponent', () => {
   let harness: HomeCardHarness;
-  let fixture: ComponentFixture<HomeCardComponent>;
+  let fixture: ComponentFixture<unknown>;
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    @Component({
+      template: `
+        <app-home-card [card]="card" [iconTemplate]="iconTpl"></app-home-card>
+        <ng-template #iconTpl><span>ICON</span></ng-template>
+      `,
+      standalone: true,
       imports: [HomeCardComponent],
+    })
+    class TestHostComponent {
+      card = {
+        title: () => 'Test',
+        description: () => 'Test',
+        link: '/test',
+        iconName: 'test',
+        iconBgClass: 'bg-blue-100',
+      };
+    }
+
+    await TestBed.configureTestingModule({
+      imports: [TestHostComponent],
       providers: [provideRouter([])],
     }).compileComponents();
-    fixture = TestBed.createComponent(HomeCardComponent);
-    fixture.componentRef.setInput('card', {
-      title: 'Test',
-      description: 'Test',
-      link: '/test',
-      iconBgClass: 'bg-blue-100',
-    });
-    fixture.componentRef.setInput('iconTemplate', null);
+
+    fixture = TestBed.createComponent(TestHostComponent);
 
     fixture.detectChanges();
     await fixture.whenStable();

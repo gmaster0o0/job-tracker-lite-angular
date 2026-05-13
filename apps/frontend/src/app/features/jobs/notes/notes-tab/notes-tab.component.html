@@ -1,7 +1,9 @@
 <div class="space-y-6">
   <div class="space-y-3">
     <div class="flex items-center justify-between gap-4">
-      <h2 class="text-3xl font-semibold text-slate-900">Notes</h2>
+      <h2 class="text-3xl font-semibold text-slate-900">
+        {{ 'jobs.notes.title' | transloco }}
+      </h2>
       <button
         hlmBtn
         variant="outline"
@@ -9,7 +11,7 @@
         (click)="openCreateDialog()"
       >
         <ng-icon hlm size="sm" name="lucidePlus" class="mr-2" />
-        Add Notes
+        {{ 'jobs.notes.add' | transloco }}
       </button>
     </div>
   </div>

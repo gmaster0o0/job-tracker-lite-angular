@@ -1,13 +1,15 @@
 <hlm-dialog-footer>
   <button hlmBtn variant="outline" type="button" hlmDialogClose>
-    <ng-icon hlm name="lucideUndo2" size="sm" />Cancel
+    <ng-icon hlm name="lucideUndo2" size="sm" />{{
+      'common.cancel' | transloco
+    }}
   </button>
 
   <app-save-button
     [formId]="formId()"
     [disabled]="disableSubmit()"
     [isSubmitting]="isSubmitting()"
-    idleLabel="Save Changes"
+    [idleLabel]="'common.saveChanges' | transloco"
     submittingLabel="Saving..."
   />
 </hlm-dialog-footer>

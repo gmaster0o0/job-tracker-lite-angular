@@ -2,10 +2,10 @@
   <hlm-card size="sm" class="mx-auto w-full max-w-sm">
     <hlm-card-header class="mb-6">
       <div class="flex items-center justify-between gap-2">
-        <h1 hlmCardTitle>Health Check</h1>
+        <h1 hlmCardTitle>{{ 'status.title' | transloco }}</h1>
         <button hlmBtn routerLink="/" variant="outline" aria-label="Back">
           <ng-icon name="lucideArrowLeft" class="w-4 h-4" />
-          <span>Back</span>
+          <span>{{ 'common.back' | transloco }}</span>
         </button>
       </div>
     </hlm-card-header>
@@ -15,7 +15,7 @@
           <hlm-card>
             <hlm-card-header>
               <span style="display: none">{{ 0 | uptime }}</span>
-              <h3 hlmCardTitle>API</h3>
+              <h3 hlmCardTitle>{{ 'status.api' | transloco }}</h3>
             </hlm-card-header>
             <div hlmCardContent>
               <span
@@ -30,7 +30,7 @@
           </hlm-card>
           <hlm-card>
             <hlm-card-header>
-              <h3 hlmCardTitle>Database</h3>
+              <h3 hlmCardTitle>{{ 'status.database' | transloco }}</h3>
             </hlm-card-header>
             <div hlmCardContent>
               @let dbStatus =
@@ -50,7 +50,7 @@
 
         <hlm-card class="mt-6">
           <hlm-card-header>
-            <h3 hlmCardTitle>Last checked</h3>
+            <h3 hlmCardTitle>{{ 'status.lastChecked' | transloco }}</h3>
           </hlm-card-header>
           <div hlmCardContent>
             <p hlmCardDescription>
@@ -58,7 +58,7 @@
             </p>
           </div>
           <span hlmCardFooter>
-            Uptime:
+            {{ 'status.uptime' | transloco }}
             {{
               healthData.details.server?.uptime ??
                 healthData.info.server?.uptime ??
@@ -69,11 +69,11 @@
       } @else if (healthResource.isLoading()) {
         <div>
           <hlm-spinner></hlm-spinner>
-          <p>Loading health check…</p>
+          <p>{{ 'status.loadingHealth' | transloco }}</p>
         </div>
       } @else {
         <div>
-          <p class="text-red-500">Failed to load health check data.</p>
+          <p class="text-red-500">{{ 'status.loadFailed' | transloco }}</p>
         </div>
       }
     </div>

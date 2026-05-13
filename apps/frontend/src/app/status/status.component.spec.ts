@@ -11,6 +11,7 @@ import {
 } from '@job-tracker-lite-angular/testing';
 import { describe, expect, it } from 'vitest';
 import { StatusComponent } from './status.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { StatusHarness } from './status.harness';
 
 describe('StatusComponent', () => {
@@ -23,7 +24,7 @@ describe('StatusComponent', () => {
     const dataAccessMock = createDataAccessMock(options);
 
     await TestBed.configureTestingModule({
-      imports: [StatusComponent],
+      imports: [StatusComponent, getTranslocoModule()],
       providers: [
         provideRouter([]),
         { provide: DataAccessService, useValue: dataAccessMock },

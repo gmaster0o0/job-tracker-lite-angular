@@ -6,12 +6,13 @@ import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { lucideMonitor, lucideMoon, lucideSun } from '@ng-icons/lucide';
 import { HlmRadioGroupImports } from '@spartan-ng/helm/radio-group';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { translateSignal, TranslocoModule } from '@jsverse/transloco';
 
 import { hlm } from '@spartan-ng/helm/utils';
 import { ThemeService } from '@job-tracker-lite-angular/frontend-data-access';
 
 export interface AppearanceCard {
-  label: string;
+  label: () => string;
   iconName: string;
   value: 'light' | 'dark' | 'system';
 }
@@ -24,6 +25,7 @@ export interface AppearanceCard {
     HlmRadioGroupImports,
     HlmButtonImports,
     FormsModule,
+    TranslocoModule,
   ],
   providers: [provideIcons({ lucideSun, lucideMoon, lucideMonitor })],
   standalone: true,
@@ -45,9 +47,21 @@ export class AppearanceComponent {
   }
 
   public readonly appearanceOptions: AppearanceCard[] = [
-    { label: 'Light', iconName: 'lucideSun', value: 'light' },
-    { label: 'Dark', iconName: 'lucideMoon', value: 'dark' },
-    { label: 'System', iconName: 'lucideMonitor', value: 'system' },
+    {
+      label: translateSignal('appearance.light'),
+      iconName: 'lucideSun',
+      value: 'light',
+    },
+    {
+      label: translateSignal('appearance.dark'),
+      iconName: 'lucideMoon',
+      value: 'dark',
+    },
+    {
+      label: translateSignal('appearance.system'),
+      iconName: 'lucideMonitor',
+      value: 'system',
+    },
   ];
 
   cardClass(optionValue: string) {

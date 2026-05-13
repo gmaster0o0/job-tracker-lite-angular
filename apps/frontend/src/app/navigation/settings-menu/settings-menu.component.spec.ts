@@ -1,9 +1,10 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { describe, expect, it, beforeEach } from 'vitest';
 import { SettingsMenuComponent } from './settings-menu.component';
 import { SettingsMenuHarness } from './settings-menu.harness';
+import { provideRouter } from '@angular/router';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('SettingsMenuComponent', () => {
   let component: SettingsMenuComponent;
@@ -12,7 +13,8 @@ describe('SettingsMenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SettingsMenuComponent, RouterTestingModule],
+      imports: [SettingsMenuComponent, getTranslocoModule()],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SettingsMenuComponent);

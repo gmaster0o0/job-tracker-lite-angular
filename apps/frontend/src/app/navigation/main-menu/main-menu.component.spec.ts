@@ -1,8 +1,9 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MainMenuComponent } from './main-menu.component';
 import { MainMenuHarness } from './main-menu.harness';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
+import { provideRouter } from '@angular/router';
 
 const noop = () => {
   //emptsy function for matchMedia event listeners
@@ -30,7 +31,8 @@ describe('MainMenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MainMenuComponent],
+      imports: [MainMenuComponent, getTranslocoModule()],
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 

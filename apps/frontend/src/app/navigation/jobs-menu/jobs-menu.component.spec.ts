@@ -1,6 +1,7 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { JobsMenuComponent } from './jobs-menu.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { createJobsDataAccessMock } from '@job-tracker-lite-angular/testing';
 import { JobsMenuHarness } from './jobs-menu.harness';
@@ -11,7 +12,7 @@ describe('JobsMenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [JobsMenuComponent],
+      imports: [JobsMenuComponent, getTranslocoModule()],
       providers: [
         {
           provide: JobsDataAccessService,

@@ -13,9 +13,18 @@ try {
   const content = fs.readFileSync(envPath, 'utf8');
 
   // Replace the 'version: ...' part, regardless of what was there
-  const updatedContent = content.replace(
-    /version:\s*'.*'/g,
-    `version: '${packageJson.version}'`,
+  let updatedContent = content;
+
+  // Handle `export const version = 'x'` (common in standalone version files)
+  updatedContent = updatedContent.replace(
+    /(export\s+const\s+version\s*=\s*)(['"`])[^'"`]*\2(;?)/,
+    `$1'${packageJson.version}'$3`,
+  );
+
+  // Handle object property `version: 'x'` (common in environment objects)
+  updatedContent = updatedContent.replace(
+    /(version\s*:\s*)(['"`])[^'"`]*\2(;?)/g,
+    `$1'${packageJson.version}'$3`,
   );
 
   fs.writeFileSync(envPath, updatedContent, 'utf8');

@@ -11,6 +11,7 @@ import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-a
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { EditJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
+import { TranslocoModule } from '@jsverse/transloco';
 
 type EditJobDialogContext = {
   job: JobDto;
@@ -29,6 +30,7 @@ type EditJobDialogContext = {
     HlmTextarea,
     HlmDialogImports,
     EditJobDialogFooterComponent,
+    TranslocoModule,
   ],
   templateUrl: './edit-job.component.html',
 })

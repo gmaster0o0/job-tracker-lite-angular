@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import { CreateJobDialogFooterComponent } from './create-job-dialog-footer.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { CreateJobDialogFooterHarness } from './create-job-dialog-footer.harness';
 
 @Component({
@@ -24,7 +25,7 @@ class HostComponent {
 describe('CreateJobDialogFooterComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HostComponent],
+      imports: [HostComponent, getTranslocoModule()],
       providers: [
         {
           provide: BrnDialogRef,

@@ -1,20 +1,28 @@
 <div class="space-y-4">
   <header class="space-y-1">
-    <h2 class="text-lg font-semibold text-slate-900">Edit Contact</h2>
-    <p class="text-sm text-muted-foreground">Update the contact details.</p>
+    <h2 class="text-lg font-semibold text-slate-900">
+      {{ 'contacts.edit.title' | transloco }}
+    </h2>
+    <p class="text-sm text-muted-foreground">
+      {{ 'contacts.edit.description' | transloco }}
+    </p>
   </header>
 
   <form class="space-y-4" [formGroup]="form" (ngSubmit)="submit()">
     <div class="space-y-1">
-      <label class="text-sm font-medium text-slate-700" for="edit-contact-name"
-        >Name</label
+      <label
+        class="text-sm font-medium text-slate-700"
+        for="edit-contact-name"
+        >{{ 'contacts.fields.name' | transloco }}</label
       >
       <input id="edit-contact-name" hlmInput formControlName="name" />
     </div>
 
     <div class="space-y-1">
-      <label class="text-sm font-medium text-slate-700" for="edit-contact-email"
-        >Email</label
+      <label
+        class="text-sm font-medium text-slate-700"
+        for="edit-contact-email"
+        >{{ 'contacts.fields.email' | transloco }}</label
       >
       <input
         id="edit-contact-email"
@@ -25,8 +33,10 @@
     </div>
 
     <div class="space-y-1">
-      <label class="text-sm font-medium text-slate-700" for="edit-contact-phone"
-        >Phone Number</label
+      <label
+        class="text-sm font-medium text-slate-700"
+        for="edit-contact-phone"
+        >{{ 'contacts.fields.phone' | transloco }}</label
       >
       <input id="edit-contact-phone" hlmInput formControlName="phoneNumber" />
     </div>
@@ -43,10 +53,14 @@
         [disabled]="isSubmitting()"
         (click)="cancel()"
       >
-        Cancel
+        {{ 'common.cancel' | transloco }}
       </button>
       <button hlmBtn type="submit" [disabled]="isSubmitting() || form.invalid">
-        {{ isSubmitting() ? 'Saving...' : 'Save Changes' }}
+        {{
+          isSubmitting()
+            ? ('common.saving' | transloco)
+            : ('common.saveChanges' | transloco)
+        }}
       </button>
     </div>
   </form>

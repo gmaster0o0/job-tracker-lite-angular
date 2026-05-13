@@ -6,6 +6,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { TranslocoModule } from '@jsverse/transloco';
 
 type EditContactDialogContext = {
   jobId: string;
@@ -21,6 +22,7 @@ type EditContactDialogContext = {
     ReactiveFormsModule,
     HlmButtonImports,
     HlmInputImports,
+    TranslocoModule,
   ],
   templateUrl: './edit-contact.component.html',
 })

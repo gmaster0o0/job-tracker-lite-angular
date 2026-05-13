@@ -11,6 +11,7 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { CreateJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
+import { TranslocoModule } from '@jsverse/transloco';
 
 type CreateJobDialogContext = {
   onCreated?: (job: JobDto) => void;
@@ -29,6 +30,7 @@ type CreateJobDialogContext = {
     HlmTextarea,
     HlmDialogImports,
     CreateJobDialogFooterComponent,
+    TranslocoModule,
   ],
   templateUrl: './create-job.component.html',
 })

@@ -202,11 +202,16 @@ npx nx g @nx/nest:controller apps/api/src/app/health/health
 # View project graph
 npx nx graph
 ```
+### Using Transloco Key Manager
+
+```sh
+npx transloco-keys-manager extract --input "apps/frontend/src" --translations-path "apps/frontend/public/assets/i18n/"
+```
 
 ### Angular component generation
 ```sh
 #old style angular naming convention
-npx nx g @nx/angular:component apps/frontend/src/app/feature/jobs/notes-list/notes-list.component
+npx nx g @nx/angular:component apps/frontend/src/app/features/jobs/notes-list/notes-list.component
 ```
 #these flags are set in nx.json for all components, but can be overridden per component generation
 **--style=none** generate without style file

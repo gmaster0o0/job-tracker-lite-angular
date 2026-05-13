@@ -1,0 +1,42 @@
+<hlm-card>
+  <hlm-card-header class="flex items-start justify-between">
+    <div>
+      <h3 hlmCardTitle>
+        <ng-icon name="lucideGlobe" />
+        {{ 'preferences.language.title' | transloco }}
+      </h3>
+      <p hlmCardDescription>
+        {{ 'preferences.language.description' | transloco }}
+      </p>
+    </div>
+  </hlm-card-header>
+  <div hlmCardContent>
+    <hlm-select
+      [value]="currentLangValue()"
+      (valueChange)="handleLangChange($event)"
+    >
+      <hlm-select-label class="mb-2">{{
+        'preferences.language.label' | transloco
+      }}</hlm-select-label>
+      <hlm-select-trigger class="w-56">
+        <hlm-select-value
+          placeholder="{{ 'preferences.language.select' | transloco }}"
+        />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-group>
+          @for (language of languageOptions; track language.value) {
+            <hlm-select-item [value]="language">{{
+              language.label
+            }}</hlm-select-item>
+          }
+        </hlm-select-group>
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  <hlm-card-footer>
+    <p hlmCardDescription>
+      {{ 'preferences.language.languageNote' | transloco }}
+    </p>
+  </hlm-card-footer>
+</hlm-card>

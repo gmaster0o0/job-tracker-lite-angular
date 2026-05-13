@@ -110,6 +110,9 @@
       ],
       "@spartan-ng/helm/radio-group": [
         "./libs/shared-ui/radio-group/src/index.ts"
+      ],
+      "@spartan-ng/helm/select": [
+        "./libs/shared-ui/select/src/index.ts"
       ]
     }
   },

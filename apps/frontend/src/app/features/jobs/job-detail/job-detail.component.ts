@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  type Signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
@@ -34,6 +41,7 @@ import {
 } from '@ng-icons/lucide';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { NotesTabComponent } from '../notes/notes-tab/notes-tab.component';
+import { translateSignal, TranslocoModule } from '@jsverse/transloco';
 
 type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
 
@@ -54,6 +62,7 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
     HlmTooltipImports,
     ContactsTabComponent,
     NotesTabComponent,
+    TranslocoModule,
   ],
   providers: [
     provideIcons({
@@ -67,6 +76,7 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
   templateUrl: './job-detail.component.html',
 })
 export class JobDetailComponent {
+  // Injecting necessary services and modules
   protected readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly jobsDataAccess = inject(JobsDataAccessService);
@@ -74,6 +84,22 @@ export class JobDetailComponent {
   private readonly notesDataAccess = inject(NotesDataAccessService);
   private readonly dialog = inject(HlmDialogService);
 
+  private readonly deleteDescription = translateSignal(
+    'jobs.deleteDialog.description',
+  );
+  private readonly deleteConfirmLabel = translateSignal(
+    'jobs.deleteDialog.confirmLabel',
+  );
+  private readonly deleteTitleKey = 'jobs.deleteDialog.title';
+  private readonly deleteTitleParams = computed(() => ({
+    company: this.job()?.company ?? '',
+  }));
+  private readonly deleteTitle = translateSignal(
+    this.deleteTitleKey,
+    this.deleteTitleParams,
+  );
+
+  // Resource signals for jobs, contacts, and notes
   protected readonly jobsResource = this.jobsDataAccess.jobsResource;
   protected readonly jobResource = this.jobsDataAccess.jobResource;
 
@@ -113,11 +139,20 @@ export class JobDetailComponent {
     return isHttpError(error) && error.status === 404;
   });
 
-  protected readonly tabs: readonly { label: string; value: JobTab }[] = [
-    { label: 'Overview', value: 'overview' },
-    { label: 'Contacts', value: 'contacts' },
-    { label: 'Notes', value: 'notes' },
-    { label: 'Cover Letter', value: 'cover-letter' },
+  protected readonly tabs: readonly { label: () => string; value: JobTab }[] = [
+    {
+      label: translateSignal('jobs.tabs.overview'),
+      value: 'overview',
+    },
+    {
+      label: translateSignal('jobs.tabs.contacts'),
+      value: 'contacts',
+    },
+    { label: translateSignal('jobs.tabs.notes'), value: 'notes' },
+    {
+      label: translateSignal('jobs.tabs.coverLetter'),
+      value: 'cover-letter',
+    },
   ];
 
   protected readonly progressionStatuses: readonly JobStatusDto[] = [
@@ -127,12 +162,16 @@ export class JobDetailComponent {
     'job offered',
   ];
 
-  protected readonly progressionLabels: readonly string[] = [
-    'Save',
-    'Applied',
-    'Interview',
-    'Offer',
+  protected readonly progressionLabelSignals: readonly Signal<string>[] = [
+    translateSignal('jobs.progression.saved'),
+    translateSignal('jobs.progression.applied'),
+    translateSignal('jobs.progression.interview'),
+    translateSignal('jobs.progression.offer'),
   ];
+
+  protected readonly progressionLabels = computed(() =>
+    this.progressionLabelSignals.map((s) => s()),
+  );
 
   protected readonly statusBadgeClasses: Record<JobStatusDto, string> = {
     saved: 'bg-sky-100 text-sky-700 border-sky-200',
@@ -179,10 +218,9 @@ export class JobDetailComponent {
     this.dialog.open(DeleteConfirmationDialogComponent, {
       contentClass: 'sm:max-w-xl !sm:mx-auto',
       context: {
-        title: `Delete ${job.company} job?`,
-        description:
-          'Are you absolutely sure? This action cannot be undone. This will permanently delete the resource.',
-        confirmLabel: 'Delete Job',
+        title: this.deleteTitle(),
+        description: this.deleteDescription(),
+        confirmLabel: this.deleteConfirmLabel(),
         onConfirm: async () => {
           await this.jobsDataAccess.deleteJob(job.id);
           this.router.navigate(['/jobs']);

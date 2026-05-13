@@ -1,8 +1,10 @@
 <hlm-card>
   <hlm-card-header class="flex items-start justify-between">
     <div>
-      <h3 hlmCardTitle><ng-icon name="lucideSun" /> Appearance</h3>
-      <p hlmCardDescription>Choose how the app looks on your device.</p>
+      <h3 hlmCardTitle>
+        <ng-icon name="lucideSun" /> {{ 'appearance.title' | transloco }}
+      </h3>
+      <p hlmCardDescription>{{ 'appearance.description' | transloco }}</p>
     </div>
   </hlm-card-header>
   <div hlmCardContent>
@@ -19,7 +21,7 @@
           />
           <div [class]="cardClass(option.value)">
             <ng-icon [name]="option.iconName" />
-            <span>{{ option.label }}</span>
+            <span>{{ option.label() }}</span>
           </div>
         </label>
       }

@@ -28,8 +28,6 @@ export class JobOverviewComponent {
 
     const html = typeof parsed === 'string' ? parsed : '';
 
-    // A sanitize helyett használjuk a bypassSecurityTrustHtml-t,
-    // hogy a Tailwind szelektorok és a HTML struktúra érintetlen maradjon
     return this.sanitizer.bypassSecurityTrustHtml(html);
   });
 }

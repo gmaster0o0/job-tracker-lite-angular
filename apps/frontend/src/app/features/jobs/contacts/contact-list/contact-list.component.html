@@ -3,13 +3,13 @@
     <div
       class="rounded-xl border border-slate-200 border-dashed p-12 text-center text-sm text-muted-foreground"
     >
-      Loading contacts...
+      {{ 'contacts.list.loading' | transloco }}
     </div>
   } @else if ((contactsResource.value()?.length ?? 0) === 0) {
     <div
       class="space-y-4 rounded-xl border border-slate-200 border-dashed p-12 text-center text-lg text-slate-500"
     >
-      <p>No contacts yet.</p>
+      <p>{{ 'contacts.list.empty' | transloco }}</p>
     </div>
   } @else {
     <div class="grid grid-cols-1 gap-6 p-4 pb-24 lg:grid-cols-2 xl:grid-cols-3">
