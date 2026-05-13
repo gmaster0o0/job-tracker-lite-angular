@@ -1,5 +1,25 @@
 # Job Tracker Lite - Changelog
 
+### [0.3.2](https://github.com/gmaster0o0/job-tracker-lite-angular/compare/v0.3.1...v0.3.2) (2026-05-13)
+
+
+### 🚀New Features
+
+* **language:**  transloco for language support and translations ([d0209d2](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/d0209d259b304140abbd6808e9b9f59b55098cec))
+* **language:** add language selection and translation support ([6e74e21](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/6e74e2150ab9a6c41baa3c4f6ef0ab377497727c))
+* **select:** add select component ([84aa707](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/84aa7073b79e02ce957807d06d5f9c1e65ac0239))
+* **setting/language:** add language settings wtih transloco ([6cc6780](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/6cc6780cf7fde25a54164997b32a6940d08f3398))
+
+
+### 🐞Bug Fixes
+
+* **sync-version:** handle export const and object formats ([ae9e818](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/ae9e8184d4d6cac858b7883313e8c5fb77388de3))
+
+
+### Build System and Versioning
+
+* **package:** add @jsverse/transloco for language support ([146d25f](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/146d25fb8bc614a5a114b37e32c06277501e9c1f))
+
 ### [0.3.1](https://github.com/gmaster0o0/job-tracker-lite-angular/compare/v0.3.0...v0.3.1) (2026-05-12)
 
 
