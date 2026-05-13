@@ -34,7 +34,7 @@ import {
 } from '@ng-icons/lucide';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { NotesTabComponent } from '../notes/notes-tab/notes-tab.component';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
 
@@ -75,6 +75,7 @@ export class JobDetailComponent {
   private readonly contactsDataAccess = inject(ContactsDataAccessService);
   private readonly notesDataAccess = inject(NotesDataAccessService);
   private readonly dialog = inject(HlmDialogService);
+  private readonly transloco = inject(TranslocoService);
 
   protected readonly jobsResource = this.jobsDataAccess.jobsResource;
   protected readonly jobResource = this.jobsDataAccess.jobResource;
@@ -116,10 +117,19 @@ export class JobDetailComponent {
   });
 
   protected readonly tabs: readonly { label: string; value: JobTab }[] = [
-    { label: 'Overview', value: 'overview' },
-    { label: 'Contacts', value: 'contacts' },
-    { label: 'Notes', value: 'notes' },
-    { label: 'Cover Letter', value: 'cover-letter' },
+    {
+      label: this.transloco.translate('jobs.tabs.overview'),
+      value: 'overview',
+    },
+    {
+      label: this.transloco.translate('jobs.tabs.contacts'),
+      value: 'contacts',
+    },
+    { label: this.transloco.translate('jobs.tabs.notes'), value: 'notes' },
+    {
+      label: this.transloco.translate('jobs.tabs.coverLetter'),
+      value: 'cover-letter',
+    },
   ];
 
   protected readonly progressionStatuses: readonly JobStatusDto[] = [
@@ -130,10 +140,10 @@ export class JobDetailComponent {
   ];
 
   protected readonly progressionLabels: readonly string[] = [
-    'Save',
-    'Applied',
-    'Interview',
-    'Offer',
+    this.transloco.translate('jobs.progression.saved'),
+    this.transloco.translate('jobs.progression.applied'),
+    this.transloco.translate('jobs.progression.interview'),
+    this.transloco.translate('jobs.progression.offer'),
   ];
 
   protected readonly statusBadgeClasses: Record<JobStatusDto, string> = {
@@ -181,10 +191,13 @@ export class JobDetailComponent {
     this.dialog.open(DeleteConfirmationDialogComponent, {
       contentClass: 'sm:max-w-xl !sm:mx-auto',
       context: {
-        title: `Delete ${job.company} job?`,
-        description:
-          'Are you absolutely sure? This action cannot be undone. This will permanently delete the resource.',
-        confirmLabel: 'Delete Job',
+        title: this.transloco.translate('jobs.deleteDialog.title', {
+          company: job.company,
+        }),
+        description: this.transloco.translate('jobs.deleteDialog.description'),
+        confirmLabel: this.transloco.translate(
+          'jobs.deleteDialog.confirmLabel',
+        ),
         onConfirm: async () => {
           await this.jobsDataAccess.deleteJob(job.id);
           this.router.navigate(['/jobs']);

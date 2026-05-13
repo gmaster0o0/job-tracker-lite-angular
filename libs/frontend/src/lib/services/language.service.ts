@@ -7,6 +7,12 @@ export class LanguageService {
 
   readonly currentLang = signal(this._transloco.getActiveLang());
   constructor() {
+    const saved = localStorage.getItem('user-lang');
+    if (saved) {
+      this._transloco.setActiveLang(saved);
+      this.currentLang.set(saved);
+    }
+
     effect(() => {
       localStorage.setItem('user-lang', this.currentLang());
     });

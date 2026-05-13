@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, type Signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
 import {
@@ -9,9 +9,10 @@ import {
 } from '@ng-icons/lucide';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
+import { TranslocoService, translateSignal } from '@jsverse/transloco';
 
 type MainMenuItem = {
-  readonly label: string;
+  readonly label: Signal<string>;
   readonly icon: string;
   readonly path: string;
 };
@@ -31,10 +32,27 @@ type MainMenuItem = {
   templateUrl: './main-menu.component.html',
 })
 export class MainMenuComponent {
+  private readonly transloco = inject(TranslocoService);
   protected readonly items: readonly MainMenuItem[] = [
-    { label: 'Jobs', icon: 'lucideBriefcase', path: '/jobs' },
-    { label: 'Profile', icon: 'lucideUser', path: '/profile' },
-    { label: 'Settings', icon: 'lucideSettings', path: '/settings' },
-    { label: 'About', icon: 'lucideInfo', path: '/about' },
+    {
+      label: translateSignal('common.jobs'),
+      icon: 'lucideBriefcase',
+      path: '/jobs',
+    },
+    {
+      label: translateSignal('common.profile'),
+      icon: 'lucideUser',
+      path: '/profile',
+    },
+    {
+      label: translateSignal('common.settings'),
+      icon: 'lucideSettings',
+      path: '/settings',
+    },
+    {
+      label: translateSignal('common.about'),
+      icon: 'lucideInfo',
+      path: '/about',
+    },
   ];
 }

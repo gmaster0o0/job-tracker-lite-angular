@@ -1,11 +1,11 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HomeCardComponent } from './home-card/home-card.component';
 import { lucideBriefcase, lucideSettings, lucideUser } from '@ng-icons/lucide';
 import { provideIcons } from '@ng-icons/core';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 export interface HomeCard {
   title: string;
@@ -33,24 +33,25 @@ export class HomeComponent {
   @ViewChild('profileIcon', { static: true }) profileIcon!: TemplateRef<void>;
   @ViewChild('settingsIcon', { static: true }) settingsIcon!: TemplateRef<void>;
 
+  private readonly transloco = inject(TranslocoService);
   readonly homeCards: HomeCard[] = [
     {
-      title: 'Jobs',
-      description: 'Manage your job applications and track progress.',
+      title: this.transloco.translate('common.jobs'),
+      description: this.transloco.translate('home.jobs.description'),
       link: '/jobs',
       iconName: 'jobs',
       iconBgClass: 'bg-blue-100',
     },
     {
-      title: 'Profile',
-      description: 'Update your public profile and manage your CV.',
+      title: this.transloco.translate('common.profile'),
+      description: this.transloco.translate('home.profile.description'),
       link: '/profile',
       iconName: 'profile',
       iconBgClass: 'bg-purple-100',
     },
     {
-      title: 'Settings',
-      description: 'Configure your preferences and account settings.',
+      title: this.transloco.translate('common.settings'),
+      description: this.transloco.translate('home.settings.description'),
       link: '/settings',
       iconName: 'settings',
       iconBgClass: 'bg-slate-100',

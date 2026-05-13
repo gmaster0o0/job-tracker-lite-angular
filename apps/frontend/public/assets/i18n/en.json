@@ -1,11 +1,11 @@
 {
   "status": {
-    "title": "status.title",
-    "api": "status.api",
-    "database": "status.database",
-    "lastChecked": "status.lastChecked",
+    "title": "Health Check",
+    "api": "API",
+    "database": "Database",
+    "lastChecked": "Last Checked",
     "uptime": "Uptime:",
-    "loadingHealth": "status.loadingHealth",
+    "loadingHealth": "Loading health check data...",
     "loadFailed": "Failed to load health check data."
   },
   "common": {
@@ -13,10 +13,15 @@
     "cancel": "Cancel",
     "saveChanges": "Save Changes",
     "create": "Create",
-    "overview": "OVERVIEW",
-    "contacts": "CONTACTS",
-    "notes": "NOTES",
-    "saving": "Saving..."
+    "logout": "Logout",
+    "overview": "Overview",
+    "contacts": "Contacts",
+    "notes": "Notes",
+    "saving": "Saving...",
+    "jobs": "Jobs",
+    "profile": "Profile",
+    "settings": "Settings",
+    "about": "About"
   },
   "jobs": {
     "menu": {
@@ -88,6 +93,30 @@
     },
     "contacts": {
       "title": "Contacts"
+    },
+    "filters": {
+      "all": "All",
+      "saved": "Saved",
+      "applied": "Applied",
+      "interview": "Interview",
+      "offer": "Offer"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "contacts": "Contacts",
+      "notes": "Notes",
+      "coverLetter": "Cover Letter"
+    },
+    "progression": {
+      "saved": "Saved",
+      "applied": "Applied",
+      "interview": "Interview",
+      "offer": "Offer"
+    },
+    "deleteDialog": {
+      "title": "Delete Job",
+      "description": "Are you sure you want to delete this job?",
+      "confirmLabel": "Delete"
     }
   },
   "preferences": {
@@ -100,6 +129,13 @@
       "select": "Select language",
       "languageNote": "Note: Language changes will be applied to the entire interface."
     }
+  },
+  "appearance": {
+    "title": "Appearance",
+    "description": "Choose how the app looks on your device.",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   },
   "contacts": {
     "edit": {
@@ -123,6 +159,20 @@
   },
   "home": {
     "welcome": "Welcome Back",
-    "subtitle": "Where would you like to start today?"
+    "subtitle": "Where would you like to start today?",
+    "jobs": {
+      "description": "Manage your job applications and track progress."
+    },
+    "profile": {
+      "description": "Update your public profile and manage your CV."
+    },
+    "settings": {
+      "description": "Configure your preferences and account settings."
+    }
+  },
+  "settings": {
+    "preferences": "Preferences",
+    "account": "Account",
+    "privacy": "Privacy"
   }
 }

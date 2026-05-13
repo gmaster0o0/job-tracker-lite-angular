@@ -9,7 +9,7 @@
           class="w-full gap-3"
         >
           <ng-icon hlm size="sm" [name]="item.icon"></ng-icon>
-          <span class="truncate">{{ item.label }}</span>
+          <span class="truncate">{{ item.label() }}</span>
         </a>
       </li>
     }

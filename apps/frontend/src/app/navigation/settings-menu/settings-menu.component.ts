@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import { lucideShield, lucideSettings, lucideKey } from '@ng-icons/lucide';
+import { TranslocoService } from '@jsverse/transloco';
 
 type SettingsMenuItem = {
   readonly label: string;
@@ -19,13 +20,22 @@ type SettingsMenuItem = {
   templateUrl: './settings-menu.component.html',
 })
 export class SettingsMenuComponent {
+  private readonly transloco = inject(TranslocoService);
   protected readonly items: readonly SettingsMenuItem[] = [
     {
-      label: 'Preferences',
+      label: this.transloco.translate('settings.preferences'),
       icon: 'lucideSettings',
       path: '/settings/preferences',
     },
-    { label: 'Account', icon: 'lucideKey', path: '/settings/account' },
-    { label: 'Privacy', icon: 'lucideShield', path: '/settings/privacy' },
+    {
+      label: this.transloco.translate('settings.account'),
+      icon: 'lucideKey',
+      path: '/settings/account',
+    },
+    {
+      label: this.transloco.translate('settings.privacy'),
+      icon: 'lucideShield',
+      path: '/settings/privacy',
+    },
   ];
 }

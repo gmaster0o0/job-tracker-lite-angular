@@ -4,6 +4,7 @@ import { describe, expect, it, beforeEach } from 'vitest';
 import { AppearanceComponent } from './appearance.component';
 import { AppearanceHarness } from './appearance.harness';
 import { ThemeService } from '@job-tracker-lite-angular/frontend-data-access';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('AppearanceComponent', () => {
   let component: AppearanceComponent;
@@ -13,7 +14,7 @@ describe('AppearanceComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppearanceComponent],
+      imports: [AppearanceComponent, getTranslocoModule()],
       providers: [ThemeService],
     }).compileComponents();
 

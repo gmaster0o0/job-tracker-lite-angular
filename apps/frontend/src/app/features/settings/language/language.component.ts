@@ -34,7 +34,6 @@ export class LanguageComponent {
   );
 
   handleLangChange(newLang: LangOption | null | undefined) {
-    console.log('Selected language:', newLang);
     if (newLang) {
       this.languageService.setLanguage(newLang.value);
     }
