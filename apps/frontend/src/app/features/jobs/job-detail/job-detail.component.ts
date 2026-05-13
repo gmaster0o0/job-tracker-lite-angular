@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  type Signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
@@ -34,7 +41,7 @@ import {
 } from '@ng-icons/lucide';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { NotesTabComponent } from '../notes/notes-tab/notes-tab.component';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { translateSignal, TranslocoModule } from '@jsverse/transloco';
 
 type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
 
@@ -75,7 +82,6 @@ export class JobDetailComponent {
   private readonly contactsDataAccess = inject(ContactsDataAccessService);
   private readonly notesDataAccess = inject(NotesDataAccessService);
   private readonly dialog = inject(HlmDialogService);
-  private readonly transloco = inject(TranslocoService);
 
   protected readonly jobsResource = this.jobsDataAccess.jobsResource;
   protected readonly jobResource = this.jobsDataAccess.jobResource;
@@ -116,18 +122,18 @@ export class JobDetailComponent {
     return isHttpError(error) && error.status === 404;
   });
 
-  protected readonly tabs: readonly { label: string; value: JobTab }[] = [
+  protected readonly tabs: readonly { label: () => string; value: JobTab }[] = [
     {
-      label: this.transloco.translate('jobs.tabs.overview'),
+      label: translateSignal('jobs.tabs.overview'),
       value: 'overview',
     },
     {
-      label: this.transloco.translate('jobs.tabs.contacts'),
+      label: translateSignal('jobs.tabs.contacts'),
       value: 'contacts',
     },
-    { label: this.transloco.translate('jobs.tabs.notes'), value: 'notes' },
+    { label: translateSignal('jobs.tabs.notes'), value: 'notes' },
     {
-      label: this.transloco.translate('jobs.tabs.coverLetter'),
+      label: translateSignal('jobs.tabs.coverLetter'),
       value: 'cover-letter',
     },
   ];
@@ -139,12 +145,16 @@ export class JobDetailComponent {
     'job offered',
   ];
 
-  protected readonly progressionLabels: readonly string[] = [
-    this.transloco.translate('jobs.progression.saved'),
-    this.transloco.translate('jobs.progression.applied'),
-    this.transloco.translate('jobs.progression.interview'),
-    this.transloco.translate('jobs.progression.offer'),
+  protected readonly progressionLabelSignals: readonly Signal<string>[] = [
+    translateSignal('jobs.progression.saved'),
+    translateSignal('jobs.progression.applied'),
+    translateSignal('jobs.progression.interview'),
+    translateSignal('jobs.progression.offer'),
   ];
+
+  protected readonly progressionLabels = computed(() =>
+    this.progressionLabelSignals.map((s) => s()),
+  );
 
   protected readonly statusBadgeClasses: Record<JobStatusDto, string> = {
     saved: 'bg-sky-100 text-sky-700 border-sky-200',
@@ -191,13 +201,11 @@ export class JobDetailComponent {
     this.dialog.open(DeleteConfirmationDialogComponent, {
       contentClass: 'sm:max-w-xl !sm:mx-auto',
       context: {
-        title: this.transloco.translate('jobs.deleteDialog.title', {
+        title: translateSignal('jobs.deleteDialog.title', {
           company: job.company,
         }),
-        description: this.transloco.translate('jobs.deleteDialog.description'),
-        confirmLabel: this.transloco.translate(
-          'jobs.deleteDialog.confirmLabel',
-        ),
+        description: translateSignal('jobs.deleteDialog.description'),
+        confirmLabel: translateSignal('jobs.deleteDialog.confirmLabel'),
         onConfirm: async () => {
           await this.jobsDataAccess.deleteJob(job.id);
           this.router.navigate(['/jobs']);

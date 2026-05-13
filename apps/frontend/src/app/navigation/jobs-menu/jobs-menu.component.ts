@@ -9,12 +9,12 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { provideIcons } from '@ng-icons/core';
 import { lucideSearch, lucideGhost } from '@ng-icons/lucide';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { translateSignal, TranslocoModule } from '@jsverse/transloco';
 
 type FilterValue = JobStatusDto | null;
 
 type FilterChip = {
-  readonly label: string;
+  readonly label: () => string;
   readonly value: FilterValue;
 };
 
@@ -37,7 +37,6 @@ type FilterChip = {
 export class JobsMenuComponent {
   private readonly router = inject(Router);
   private readonly jobsDataAccess = inject(JobsDataAccessService);
-  private readonly transloco = inject(TranslocoService);
   protected readonly jobsResource = this.jobsDataAccess.jobsResource;
 
   protected readonly searchQuery = signal('');
@@ -55,18 +54,18 @@ export class JobsMenuComponent {
   }
 
   protected readonly chips: readonly FilterChip[] = [
-    { label: this.transloco.translate('jobs.filters.all'), value: null },
-    { label: this.transloco.translate('jobs.filters.saved'), value: 'saved' },
+    { label: translateSignal('jobs.filters.all'), value: null },
+    { label: translateSignal('jobs.filters.saved'), value: 'saved' },
     {
-      label: this.transloco.translate('jobs.filters.applied'),
+      label: translateSignal('jobs.filters.applied'),
       value: 'applied',
     },
     {
-      label: this.transloco.translate('jobs.filters.interview'),
+      label: translateSignal('jobs.filters.interview'),
       value: 'interview',
     },
     {
-      label: this.transloco.translate('jobs.filters.offer'),
+      label: translateSignal('jobs.filters.offer'),
       value: 'job offered',
     },
   ];

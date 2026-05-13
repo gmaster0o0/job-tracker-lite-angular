@@ -4,10 +4,10 @@ import { provideIcons } from '@ng-icons/core';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import { lucideShield, lucideSettings, lucideKey } from '@ng-icons/lucide';
-import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoService, translateSignal } from '@jsverse/transloco';
 
 type SettingsMenuItem = {
-  readonly label: string;
+  readonly label: () => string;
   readonly icon: string;
   readonly path: string;
 };
@@ -23,17 +23,17 @@ export class SettingsMenuComponent {
   private readonly transloco = inject(TranslocoService);
   protected readonly items: readonly SettingsMenuItem[] = [
     {
-      label: this.transloco.translate('settings.preferences'),
+      label: translateSignal('settings.preferences'),
       icon: 'lucideSettings',
       path: '/settings/preferences',
     },
     {
-      label: this.transloco.translate('settings.account'),
+      label: translateSignal('settings.account'),
       icon: 'lucideKey',
       path: '/settings/account',
     },
     {
-      label: this.transloco.translate('settings.privacy'),
+      label: translateSignal('settings.privacy'),
       icon: 'lucideShield',
       path: '/settings/privacy',
     },

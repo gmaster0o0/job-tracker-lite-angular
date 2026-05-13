@@ -21,7 +21,7 @@
           />
           <div [class]="cardClass(option.value)">
             <ng-icon [name]="option.iconName" />
-            <span>{{ option.label }}</span>
+            <span>{{ option.label() }}</span>
           </div>
         </label>
       }

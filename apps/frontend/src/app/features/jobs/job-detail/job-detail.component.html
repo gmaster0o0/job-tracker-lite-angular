@@ -131,7 +131,7 @@
         class="flex-none mb-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
       >
         <app-progession-stepper
-          [labels]="progressionLabels"
+          [labels]="progressionLabels()"
           [activeIndex]="currentProgressIndex(job()!)"
           [errorState]="isRejected(job()!)"
           [disabled]="isUpdatingStatus()"

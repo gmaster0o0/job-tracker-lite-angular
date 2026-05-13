@@ -6,13 +6,13 @@ import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { lucideMonitor, lucideMoon, lucideSun } from '@ng-icons/lucide';
 import { HlmRadioGroupImports } from '@spartan-ng/helm/radio-group';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { translateSignal, TranslocoModule } from '@jsverse/transloco';
 
 import { hlm } from '@spartan-ng/helm/utils';
 import { ThemeService } from '@job-tracker-lite-angular/frontend-data-access';
 
 export interface AppearanceCard {
-  label: string;
+  label: () => string;
   iconName: string;
   value: 'light' | 'dark' | 'system';
 }
@@ -32,7 +32,6 @@ export interface AppearanceCard {
   templateUrl: './appearance.component.html',
 })
 export class AppearanceComponent {
-  private readonly transloco = inject(TranslocoService);
   private themeService = inject(ThemeService);
   public appearance = model<'light' | 'dark' | 'system'>(
     this.themeService.theme(),
@@ -49,17 +48,17 @@ export class AppearanceComponent {
 
   public readonly appearanceOptions: AppearanceCard[] = [
     {
-      label: this.transloco.translate('appearance.light'),
+      label: translateSignal('appearance.light'),
       iconName: 'lucideSun',
       value: 'light',
     },
     {
-      label: this.transloco.translate('appearance.dark'),
+      label: translateSignal('appearance.dark'),
       iconName: 'lucideMoon',
       value: 'dark',
     },
     {
-      label: this.transloco.translate('appearance.system'),
+      label: translateSignal('appearance.system'),
       iconName: 'lucideMonitor',
       value: 'system',
     },
