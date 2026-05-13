@@ -1,47 +1,29 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import {
   jobFixtures,
   createJobsDataAccessMock,
   updateJobFixtures,
-  createJobFixtures,
 } from '@job-tracker-lite-angular/testing';
 import { vi } from 'vitest';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import { createBrnDialogRefMock } from '@job-tracker-lite-angular/testing';
 import { EditJobComponent } from './edit-job.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { EditJobHarness } from './edit-job.harness';
 
-// use shared mock from libs/shared/testing
-
 describe('EditJobComponent', () => {
-  it('should create', async () => {
-    await TestBed.configureTestingModule({
-      imports: [EditJobComponent],
-      providers: [
-        {
-          provide: DIALOG_DATA,
-          useValue: { job: jobFixtures.frontendEngineer },
-        },
-        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
-      ],
-    }).compileComponents();
+  let fixture: ComponentFixture<EditJobComponent>;
+  let harness: EditJobHarness;
+  let jobsDataAccessMock: any;
 
-    const fixture = TestBed.createComponent(EditJobComponent);
-    const harness = await TestbedHarnessEnvironment.harnessForFixture(
-      fixture,
-      EditJobHarness,
-    );
-    expect(harness).toBeTruthy();
-  });
-
-  it('should initialize form with job data', async () => {
-    const jobsDataAccessMock = createJobsDataAccessMock();
+  beforeEach(async () => {
+    jobsDataAccessMock = createJobsDataAccessMock();
 
     await TestBed.configureTestingModule({
-      imports: [EditJobComponent],
+      imports: [EditJobComponent, getTranslocoModule()],
       providers: [
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
         {
@@ -52,12 +34,20 @@ describe('EditJobComponent', () => {
       ],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(EditJobComponent);
-    fixture.detectChanges();
-    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+    fixture = TestBed.createComponent(EditJobComponent);
+    harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       EditJobHarness,
     );
+    // do NOT call fixture.detectChanges() here so tests can set spies first
+  });
+
+  it('should create', async () => {
+    expect(harness).toBeTruthy();
+  });
+
+  it('should initialize form with job data', async () => {
+    fixture.detectChanges();
 
     expect(await harness.getCompanyValue()).toBe(
       jobFixtures.frontendEngineer.company,
@@ -72,27 +62,9 @@ describe('EditJobComponent', () => {
       ...jobFixtures.frontendEngineer,
       company: 'Updated Company',
     });
-    const jobsDataAccessMock = createJobsDataAccessMock();
     jobsDataAccessMock.updateJob = updateJob;
 
-    await TestBed.configureTestingModule({
-      imports: [EditJobComponent],
-      providers: [
-        { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
-        {
-          provide: DIALOG_DATA,
-          useValue: { job: jobFixtures.frontendEngineer },
-        },
-        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
-      ],
-    }).compileComponents();
-
-    const fixture = TestBed.createComponent(EditJobComponent);
     fixture.detectChanges();
-    const harness = await TestbedHarnessEnvironment.harnessForFixture(
-      fixture,
-      EditJobHarness,
-    );
 
     await harness.fillForm(updateJobFixtures['updatedFrontendEngineer']);
     await harness.submit();
@@ -105,27 +77,9 @@ describe('EditJobComponent', () => {
 
   it('should not submit if form invalid', async () => {
     const updateJob = vi.fn();
-    const jobsDataAccessMock = createJobsDataAccessMock();
     jobsDataAccessMock.updateJob = updateJob;
 
-    await TestBed.configureTestingModule({
-      imports: [EditJobComponent],
-      providers: [
-        { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
-        {
-          provide: DIALOG_DATA,
-          useValue: { job: jobFixtures.frontendEngineer },
-        },
-        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
-      ],
-    }).compileComponents();
-
-    const fixture = TestBed.createComponent(EditJobComponent);
     fixture.detectChanges();
-    const harness = await TestbedHarnessEnvironment.harnessForFixture(
-      fixture,
-      EditJobHarness,
-    );
 
     await harness.fillForm({ company: '' });
     await harness.submit();
@@ -135,27 +89,9 @@ describe('EditJobComponent', () => {
 
   it('should set submit error on failure', async () => {
     const updateJob = vi.fn().mockRejectedValue(new Error('API error'));
-    const jobsDataAccessMock = createJobsDataAccessMock();
     jobsDataAccessMock.updateJob = updateJob;
 
-    await TestBed.configureTestingModule({
-      imports: [EditJobComponent],
-      providers: [
-        { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
-        {
-          provide: DIALOG_DATA,
-          useValue: { job: jobFixtures.frontendEngineer },
-        },
-        { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
-      ],
-    }).compileComponents();
-
-    const fixture = TestBed.createComponent(EditJobComponent);
     fixture.detectChanges();
-    const harness = await TestbedHarnessEnvironment.harnessForFixture(
-      fixture,
-      EditJobHarness,
-    );
 
     await harness.fillForm(updateJobFixtures['updatedFrontendEngineer']);
     await harness.submit();

@@ -14,11 +14,18 @@ import { NotesListComponent } from '../notes-list/notes-list.component';
 import { EditNoteComponent } from '../edit-note/edit-note.component';
 import { DeleteConfirmationDialogComponent } from '@job-tracker-lite-angular/frontend-shared';
 import { CreateNoteComponent } from '../create-note/create-note.component';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   standalone: true,
   selector: 'app-notes-tab',
-  imports: [CommonModule, HlmButtonImports, HlmIconImports, NotesListComponent],
+  imports: [
+    CommonModule,
+    HlmButtonImports,
+    HlmIconImports,
+    NotesListComponent,
+    TranslocoModule,
+  ],
   providers: [provideIcons({ lucidePlus })],
   templateUrl: './notes-tab.component.html',
 })

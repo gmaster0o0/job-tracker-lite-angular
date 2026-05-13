@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { NotesListComponent } from './notes-list.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import {
   NotesDataAccessService,
   JobsDataAccessService,
@@ -34,7 +35,7 @@ describe('NotesListComponent', () => {
     const jobsDataAccessMock = {};
 
     await TestBed.configureTestingModule({
-      imports: [HostComponent],
+      imports: [HostComponent, getTranslocoModule()],
       providers: [
         { provide: NotesDataAccessService, useValue: notesDataAccessMock },
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },

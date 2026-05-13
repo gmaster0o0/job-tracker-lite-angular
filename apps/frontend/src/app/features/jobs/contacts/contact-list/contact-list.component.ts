@@ -5,11 +5,12 @@ import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { ContactListItemComponent } from '../contact-list-item/contact-list-item.component';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   standalone: true,
   selector: 'app-contact-list',
-  imports: [CommonModule, ContactListItemComponent],
+  imports: [CommonModule, ContactListItemComponent, TranslocoModule],
   templateUrl: './contact-list.component.html',
 })
 export class ContactListComponent {

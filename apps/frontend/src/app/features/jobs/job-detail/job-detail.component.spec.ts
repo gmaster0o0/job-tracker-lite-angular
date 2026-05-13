@@ -10,6 +10,7 @@ import {
 } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { JobDetailComponent } from './job-detail.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import {
   createContactsDataAccessMock,
   createNotesDataAccessMock,
@@ -55,6 +56,7 @@ describe('JobDetailComponent', () => {
       deleteJob?: (id: string) => Promise<void>;
     };
   }) {
+    // TODO why this mock is here?
     const dataAccessServiceMock =
       options.jobsDataAccessMock ??
       createJobsDataAccessMock({
@@ -84,7 +86,7 @@ describe('JobDetailComponent', () => {
       } as const);
 
     await TestBed.configureTestingModule({
-      imports: [JobDetailComponent],
+      imports: [JobDetailComponent, getTranslocoModule()],
       providers: [
         {
           provide: ActivatedRoute,

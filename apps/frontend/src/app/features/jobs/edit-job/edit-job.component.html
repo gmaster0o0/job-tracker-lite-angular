@@ -1,7 +1,7 @@
 <hlm-dialog-header>
-  <h2 hlmDialogTitle>Edit Job</h2>
+  <h2 hlmDialogTitle>{{ 'jobs.edit.title' | transloco }}</h2>
   <p hlmDialogDescription>
-    Update the details for the job at {{ job.company }}.
+    {{ 'jobs.edit.description' | transloco: { company: job.company } }}
   </p>
 </hlm-dialog-header>
 
@@ -13,12 +13,14 @@
 >
   <hlm-field-group>
     <hlm-field>
-      <label hlmLabel for="position">Position*</label>
+      <label hlmLabel for="position">{{
+        'jobs.fields.position.label' | transloco
+      }}</label>
       <input
         hlmInput
         id="position"
         formControlName="position"
-        placeholder="e.g. Frontend Engineer"
+        placeholder="{{ 'jobs.fields.position.placeholder' | transloco }}"
         class="w-full"
       />
       @if (form.get('position')?.invalid && form.get('position')?.touched) {
@@ -26,16 +28,20 @@
           >Position is a required field.</hlm-field-error
         >
       } @else {
-        <p hlmDialogDescription>e.g. Frontend Engineer</p>
+        <p hlmDialogDescription>
+          {{ 'jobs.fields.position.example' | transloco }}
+        </p>
       }
     </hlm-field>
     <hlm-field>
-      <label hlmLabel for="company">Company*</label>
+      <label hlmLabel for="company">{{
+        'jobs.fields.company.label' | transloco
+      }}</label>
       <input
         hlmInput
         id="company"
         formControlName="company"
-        placeholder="e.g. Acme Inc"
+        placeholder="{{ 'jobs.fields.company.placeholder' | transloco }}"
         class="w-full"
       />
       @if (form.get('company')?.invalid && form.get('company')?.touched) {
@@ -43,16 +49,20 @@
           >Company is a required field.</hlm-field-error
         >
       } @else {
-        <p hlmDialogDescription>e.g. Acme Inc</p>
+        <p hlmDialogDescription>
+          {{ 'jobs.fields.company.example' | transloco }}
+        </p>
       }
     </hlm-field>
     <hlm-field>
-      <label hlmLabel for="link">Job Link*</label>
+      <label hlmLabel for="link">{{
+        'jobs.fields.link.label' | transloco
+      }}</label>
       <input
         hlmInput
         id="link"
         formControlName="link"
-        placeholder="https://..."
+        placeholder="{{ 'jobs.fields.link.placeholder' | transloco }}"
         class="w-full"
       />
       @if (form.get('link')?.invalid && form.get('link')?.touched) {
@@ -60,17 +70,21 @@
           >Job link is a required field.</hlm-field-error
         >
       } @else {
-        <p hlmDialogDescription>Link to the job posting</p>
+        <p hlmDialogDescription>
+          {{ 'jobs.fields.link.description' | transloco }}
+        </p>
       }
     </hlm-field>
 
     <hlm-field>
-      <label hlmLabel for="description">Description*</label>
+      <label hlmLabel for="description">{{
+        'jobs.fields.description.label' | transloco
+      }}</label>
       <textarea
         hlmTextarea
         id="description"
         formControlName="description"
-        placeholder="A brief overview of the role"
+        placeholder="{{ 'jobs.fields.description.placeholder' | transloco }}"
         rows="4"
         class="w-full min-h-[120px] h-[120px] [field-sizing:fixed] resize-none overflow-y-auto"
       ></textarea>
@@ -81,7 +95,9 @@
           >Description is a required field.</hlm-field-error
         >
       } @else {
-        <p hlmDialogDescription>A brief overview of the role</p>
+        <p hlmDialogDescription>
+          {{ 'jobs.fields.description.example' | transloco }}
+        </p>
       }
     </hlm-field>
 

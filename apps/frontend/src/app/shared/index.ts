@@ -8,3 +8,4 @@ export * from './progession-stepper/progession-stepper.component';
 export * from './progession-stepper/progession-stepper.harness';
 export * from './save-button/save-button.component';
 export * from './save-button/save-button.harness';
+export * from './transloco-testing.module';

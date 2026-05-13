@@ -202,6 +202,11 @@ npx nx g @nx/nest:controller apps/api/src/app/health/health
 # View project graph
 npx nx graph
 ```
+### Using Transloco Key Manager
+
+```sh
+npx transloco-keys-manager extract --input "apps/frontend/src" --translations-path "apps/frontend/public/assets/i18n/"
+```
 
 ### Angular component generation
 ```sh

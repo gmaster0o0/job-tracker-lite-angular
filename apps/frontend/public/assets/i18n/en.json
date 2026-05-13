@@ -1,17 +1,128 @@
 {
+  "status": {
+    "title": "status.title",
+    "api": "status.api",
+    "database": "status.database",
+    "lastChecked": "status.lastChecked",
+    "uptime": "Uptime:",
+    "loadingHealth": "status.loadingHealth",
+    "loadFailed": "Failed to load health check data."
+  },
+  "common": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "saveChanges": "Save Changes",
+    "create": "Create",
+    "overview": "OVERVIEW",
+    "contacts": "CONTACTS",
+    "notes": "NOTES",
+    "saving": "Saving..."
+  },
+  "jobs": {
+    "menu": {
+      "searchPlaceholder": "Search jobs or companies...",
+      "loadFailed": "Failed to load jobs",
+      "loading": "Loading jobs...",
+      "empty": "No jobs yet",
+      "noResults": "No results found"
+    },
+    "notes": {
+      "title": "Notes",
+      "add": "Add Note",
+      "loading": "Loading notes...",
+      "empty": "No notes yet",
+      "editTitle": "Edit Note",
+      "editDescription": "Edit your note",
+      "fields": {
+        "title": "Title",
+        "body": "Body"
+      },
+      "createTitle": "Create Note",
+      "createDescription": "Add a new note"
+    },
+    "detail": {
+      "loadFailed": "Failed to load job details. Please try again later.",
+      "notFound": "Job not found.",
+      "loading": "Loading job details...",
+      "selectJob": "No Job Selected",
+      "reject": "Reject",
+      "addNew": "Add New Job",
+      "edit": "Edit",
+      "delete": "Delete",
+      "coverLetter": "Cover Letter",
+      "coverLetterComingSoon": "Coming Soon"
+    },
+    "edit": {
+      "title": "Edit Job Details",
+      "description": "Update job information"
+    },
+    "fields": {
+      "position": {
+        "label": "Job Title",
+        "placeholder": "e.g. Software Engineer",
+        "example": "e.g. Software Engineer",
+        "required": "Please fill in the title"
+      },
+      "company": {
+        "label": "Company",
+        "placeholder": "e.g. Google",
+        "example": "e.g. Google",
+        "required": "Please fill in the company"
+      },
+      "link": {
+        "label": "Job Link",
+        "placeholder": "https://...",
+        "description": "Link to the original job posting",
+        "required": ""
+      },
+      "description": {
+        "label": "Job Description",
+        "placeholder": "Paste job description here...",
+        "example": "",
+        "required": ""
+      }
+    },
+    "create": {
+      "title": "Add New Job Opportunity",
+      "description": "Create a new job entry to track your application"
+    },
+    "contacts": {
+      "title": "Contacts"
+    }
+  },
   "preferences": {
     "preferences": "Preferences",
-    "preferencesDescription": "Customize the application to your liking.",
+    "preferencesDescription": "Customize your experience with the app.",
     "language": {
       "title": "Language",
-      "description": "Pick the UI language for the application.",
-      "label": "Interface language",
+      "description": "Select your preferred language for the interface.",
+      "label": "Interface Language",
       "select": "Select language",
-      "languageNote": "Note: Changing language affects the entire UI."
-    },
-    "appearance": {
-      "title": "Appearance",
-      "description": "Choose how the application should appear."
+      "languageNote": "Note: Language changes will be applied to the entire interface."
     }
+  },
+  "contacts": {
+    "edit": {
+      "title": "Edit Contact",
+      "description": "Update contact information"
+    },
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone"
+    },
+    "create": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone"
+    },
+    "list": {
+      "loading": "Loading...",
+      "empty": "No contacts yet."
+    }
+  },
+  "home": {
+    "welcome": "Welcome Back",
+    "subtitle": "Where would you like to start today?"
   }
 }

@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PreferencesComponent } from './preferences.component';
 import { PreferencesHarness } from './preferences.harness';
 import { ThemeService } from '@job-tracker-lite-angular/frontend-data-access';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('PreferencesComponent', () => {
   let component: PreferencesComponent;
@@ -12,7 +13,7 @@ describe('PreferencesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PreferencesComponent],
+      imports: [PreferencesComponent, getTranslocoModule()],
       providers: [ThemeService],
     }).compileComponents();
 

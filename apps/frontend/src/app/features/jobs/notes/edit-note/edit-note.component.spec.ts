@@ -5,6 +5,7 @@ import { vi } from 'vitest';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import { createBrnDialogRefMock } from '@job-tracker-lite-angular/testing';
 import { EditNoteComponent } from './edit-note.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { EditNoteComponentHarness } from './edit-note.harness';
 import { UpdateNoteDto } from '@job-tracker-lite-angular/api-interfaces';
 import {
@@ -20,7 +21,7 @@ describe('EditNoteComponent', () => {
     updateNote = vi.fn().mockResolvedValue(noteFixtures.updatedNote);
 
     await TestBed.configureTestingModule({
-      imports: [EditNoteComponent],
+      imports: [EditNoteComponent, getTranslocoModule()],
       providers: [
         { provide: NotesDataAccessService, useValue: { updateNote } },
         { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },

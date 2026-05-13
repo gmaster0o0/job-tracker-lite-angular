@@ -34,6 +34,7 @@ import {
 } from '@ng-icons/lucide';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { NotesTabComponent } from '../notes/notes-tab/notes-tab.component';
+import { TranslocoModule } from '@jsverse/transloco';
 
 type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
 
@@ -54,6 +55,7 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
     HlmTooltipImports,
     ContactsTabComponent,
     NotesTabComponent,
+    TranslocoModule,
   ],
   providers: [
     provideIcons({

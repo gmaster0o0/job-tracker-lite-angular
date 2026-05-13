@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { vi } from 'vitest';
 import { EditContactComponent } from './edit-contact.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { UpdateContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import { EditContactHarness } from './edit-contact.harness';
 import {
@@ -18,7 +19,7 @@ describe('EditContactComponent', () => {
       .mockResolvedValue(contactFixtures.updatedContact);
 
     await TestBed.configureTestingModule({
-      imports: [EditContactComponent],
+      imports: [EditContactComponent, getTranslocoModule()],
       providers: [
         {
           provide: ContactsDataAccessService,

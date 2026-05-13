@@ -1,34 +1,40 @@
 <hlm-dialog-header>
-  <h2 hlmDialogTitle>Create Note</h2>
-  <p hlmDialogDescription>Fill in the details for the new job.</p>
+  <h2 hlmDialogTitle>{{ 'jobs.notes.createTitle' | transloco }}</h2>
+  <p hlmDialogDescription>{{ 'jobs.notes.createDescription' | transloco }}</p>
 </hlm-dialog-header>
 
 <form [formGroup]="form" id="createNoteForm" (ngSubmit)="submit()">
   <hlm-field-group>
     <hlm-field>
-      <label hlmLabel for="title">Title*</label>
+      <label hlmLabel for="title">{{
+        'jobs.notes.fields.title.label' | transloco
+      }}</label>
       <input
         hlmInput
         id="title"
         formControlName="title"
-        placeholder="Simple title for the note"
+        placeholder="{{ 'jobs.notes.fields.title.placeholder' | transloco }}"
         class="w-full"
       />
       @if (form.get('title')?.invalid && form.get('title')?.touched) {
-        <hlm-field-error validator="required"
-          >Title is a required field.</hlm-field-error
-        >
+        <hlm-field-error validator="required">{{
+          'jobs.notes.fields.title.required' | transloco
+        }}</hlm-field-error>
       } @else {
-        <p hlmDialogDescription>Simple title for the note</p>
+        <p hlmDialogDescription>
+          {{ 'jobs.notes.fields.title.example' | transloco }}
+        </p>
       }
     </hlm-field>
     <hlm-field>
-      <label hlmLabel for="body">Write something*</label>
+      <label hlmLabel for="body">{{
+        'jobs.notes.fields.body.label' | transloco
+      }}</label>
       <textarea
         hlmTextarea
         id="body"
         formControlName="body"
-        placeholder="A brief overview of the role"
+        placeholder="{{ 'jobs.notes.fields.body.placeholder' | transloco }}"
         rows="4"
       ></textarea>
       @if (form.get('body')?.invalid && form.get('body')?.touched) {

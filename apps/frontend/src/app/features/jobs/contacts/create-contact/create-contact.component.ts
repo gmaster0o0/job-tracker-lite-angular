@@ -5,6 +5,7 @@ import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { TranslocoModule } from '@jsverse/transloco';
 
 type CreateContactDialogContext = {
   jobId: string;
@@ -19,6 +20,7 @@ type CreateContactDialogContext = {
     ReactiveFormsModule,
     HlmButtonImports,
     HlmInputImports,
+    TranslocoModule,
   ],
   templateUrl: './create-contact.component.html',
 })

@@ -6,7 +6,6 @@ import { lucideGlobe } from '@ng-icons/lucide';
 import { LanguageService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TranslocoModule } from '@jsverse/transloco';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
-import { SaveButtonComponent } from '@job-tracker-lite-angular/frontend-shared';
 
 interface LangOption {
   readonly value: string;
@@ -15,13 +14,7 @@ interface LangOption {
 
 @Component({
   selector: 'app-language',
-  imports: [
-    HlmCardImports,
-    HlmIconImports,
-    HlmSelectImports,
-    TranslocoModule,
-    SaveButtonComponent,
-  ],
+  imports: [HlmCardImports, HlmIconImports, HlmSelectImports, TranslocoModule],
   templateUrl: './language.component.html',
   providers: [provideIcons({ lucideGlobe })],
 })
@@ -30,8 +23,8 @@ export class LanguageComponent {
   formId = 'language-form';
 
   protected readonly languageOptions: readonly LangOption[] = [
-    { value: 'hu', label: 'Magyar' },
     { value: 'en', label: 'English' },
+    { value: 'hu', label: 'Magyar' },
   ] as const;
 
   protected readonly currentLangValue = computed(() =>

@@ -8,6 +8,7 @@ import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
 import { NotesDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmFieldGroup, HlmField, HlmFieldError } from '@spartan-ng/helm/field';
 import { CreateJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
+import { TranslocoModule } from '@jsverse/transloco';
 
 type CreateNoteDialogContext = {
   jobId: string;
@@ -27,6 +28,7 @@ type CreateNoteDialogContext = {
     HlmField,
     HlmFieldError,
     CreateJobDialogFooterComponent,
+    TranslocoModule,
   ],
   templateUrl: './create-note.component.html',
 })

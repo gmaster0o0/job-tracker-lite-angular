@@ -5,6 +5,7 @@ import { HomeCardComponent } from './home-card/home-card.component';
 import { lucideBriefcase, lucideSettings, lucideUser } from '@ng-icons/lucide';
 import { provideIcons } from '@ng-icons/core';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
+import { TranslocoModule } from '@jsverse/transloco';
 
 export interface HomeCard {
   title: string;
@@ -23,6 +24,7 @@ export interface HomeCard {
     HlmButtonImports,
     HomeCardComponent,
     HlmIconImports,
+    TranslocoModule,
   ],
   templateUrl: './home.component.html',
 })

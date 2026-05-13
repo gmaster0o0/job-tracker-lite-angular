@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { vi } from 'vitest';
 import { CreateContactComponent } from './create-contact.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { CreateContactHarness } from './create-contact.harness';
 import {
   contactFixtures,
@@ -13,7 +14,7 @@ import {
 describe('CreateContactComponent', () => {
   it('creates component', async () => {
     await TestBed.configureTestingModule({
-      imports: [CreateContactComponent],
+      imports: [CreateContactComponent, getTranslocoModule()],
     }).compileComponents();
     const fixture = TestBed.createComponent(CreateContactComponent);
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
@@ -27,7 +28,7 @@ describe('CreateContactComponent', () => {
     const createContact = vi.fn().mockResolvedValue(contactFixtures.janeDoe);
 
     await TestBed.configureTestingModule({
-      imports: [CreateContactComponent],
+      imports: [CreateContactComponent, getTranslocoModule()],
       providers: [
         {
           provide: ContactsDataAccessService,

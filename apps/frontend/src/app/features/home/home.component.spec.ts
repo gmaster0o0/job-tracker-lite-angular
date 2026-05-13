@@ -3,12 +3,13 @@ import { TestBed } from '@angular/core/testing';
 import { HomeComponent } from './home.component';
 import { HomeHarness } from './home.harness';
 import { provideRouter } from '@angular/router';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('HomeComponent', () => {
   let harness: HomeHarness;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HomeComponent],
+      imports: [HomeComponent, getTranslocoModule()],
       providers: [provideRouter([])],
     }).compileComponents();
 

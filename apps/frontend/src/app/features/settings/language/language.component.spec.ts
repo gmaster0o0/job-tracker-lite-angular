@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LanguageComponent } from './language.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('LanguageComponent', () => {
   let component: LanguageComponent;
@@ -7,7 +8,7 @@ describe('LanguageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LanguageComponent],
+      imports: [LanguageComponent, getTranslocoModule()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LanguageComponent);

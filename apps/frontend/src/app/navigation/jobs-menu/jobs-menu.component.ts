@@ -9,6 +9,7 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { provideIcons } from '@ng-icons/core';
 import { lucideSearch, lucideGhost } from '@ng-icons/lucide';
+import { TranslocoModule } from '@jsverse/transloco';
 
 type FilterValue = JobStatusDto | null;
 
@@ -28,6 +29,7 @@ type FilterChip = {
     HlmIconImports,
     HlmInputImports,
     HlmTooltipImports,
+    TranslocoModule,
   ],
   providers: [provideIcons({ lucideSearch, lucideGhost })],
   templateUrl: './jobs-menu.component.html',

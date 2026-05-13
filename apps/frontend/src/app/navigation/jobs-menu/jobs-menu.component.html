@@ -12,7 +12,7 @@
       <input
         hlmInput
         type="search"
-        placeholder="Search jobs or companies..."
+        placeholder="{{ 'jobs.menu.searchPlaceholder' | transloco }}"
         class="w-full pl-9 text-sm"
         (input)="onSearch($event)"
       />
@@ -51,15 +51,15 @@
   <div class="flex-1 overflow-y-auto p-3">
     @if (jobsResource.error()) {
       <div class="py-8 text-center text-sm text-muted-foreground">
-        Failed to load jobs. Please try again later.
+        {{ 'jobs.menu.loadFailed' | transloco }}
       </div>
     } @else if (jobsResource.isLoading()) {
       <div class="py-8 text-center text-sm text-muted-foreground">
-        Loading jobs...
+        {{ 'jobs.menu.loading' | transloco }}
       </div>
     } @else if (jobsResource.value()?.length === 0) {
       <div class="py-8 text-center text-sm text-muted-foreground">
-        No jobs found. Try to add.
+        {{ 'jobs.menu.empty' | transloco }}
       </div>
     } @else {
       <ul class="space-y-1.5">
@@ -76,7 +76,7 @@
           </li>
         } @empty {
           <li class="py-8 text-center text-sm text-muted-foreground">
-            No jobs found. Try adjusting your search or filters.
+            {{ 'jobs.menu.noResults' | transloco }}
           </li>
         }
       </ul>

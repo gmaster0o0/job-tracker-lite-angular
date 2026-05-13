@@ -7,11 +7,12 @@ import {
 
 import { NotesListItemComponent } from '../notes-list-item/notes-list-item.component';
 import { CommonModule } from '@angular/common';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   standalone: true,
   selector: 'app-notes-list',
-  imports: [CommonModule, NotesListItemComponent],
+  imports: [CommonModule, NotesListItemComponent, TranslocoModule],
   templateUrl: './notes-list.component.html',
 })
 export class NotesListComponent {

@@ -12,6 +12,7 @@ import {
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { vi } from 'vitest';
 import { NotesTabComponent } from './notes-tab.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { NotesTabHarness } from './notes-tab.harness';
 
 describe('NotesTabComponent', () => {
@@ -21,7 +22,7 @@ describe('NotesTabComponent', () => {
     const notesDataAccessMock = createNotesDataAccessMock();
 
     await TestBed.configureTestingModule({
-      imports: [NotesTabComponent],
+      imports: [NotesTabComponent, getTranslocoModule()],
       providers: [
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
         {

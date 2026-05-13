@@ -1,6 +1,7 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { CreateNoteComponent } from './create-note.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { NotesDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import { createBrnDialogRefMock } from '@job-tracker-lite-angular/testing';
@@ -17,7 +18,7 @@ describe('CreateNoteComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [CreateNoteComponent],
+      imports: [CreateNoteComponent, getTranslocoModule()],
       providers: [
         { provide: NotesDataAccessService, useValue: notesDataAccessMock },
         { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },

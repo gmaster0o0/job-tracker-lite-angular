@@ -1,23 +1,31 @@
 <div class="space-y-4">
   <form [formGroup]="form" (ngSubmit)="submit()">
     <div>
-      <label for="create-contact-name">Name</label>
+      <label for="create-contact-name">{{
+        'contacts.create.name' | transloco
+      }}</label>
       <input id="create-contact-name" hlmInput formControlName="name" />
     </div>
 
     <div>
-      <label for="create-contact-email">Email</label>
+      <label for="create-contact-email">{{
+        'contacts.create.email' | transloco
+      }}</label>
       <input id="create-contact-email" hlmInput formControlName="email" />
     </div>
 
     <div>
-      <label for="create-contact-phone">Phone</label>
+      <label for="create-contact-phone">{{
+        'contacts.create.phone' | transloco
+      }}</label>
       <input id="create-contact-phone" hlmInput formControlName="phoneNumber" />
     </div>
 
     <div class="flex items-center gap-2">
-      <button hlmBtn type="submit">Create</button>
-      <button hlmBtn type="button" (click)="cancel()">Cancel</button>
+      <button hlmBtn type="submit">{{ 'common.create' | transloco }}</button>
+      <button hlmBtn type="button" (click)="cancel()">
+        {{ 'common.cancel' | transloco }}
+      </button>
     </div>
   </form>
 </div>

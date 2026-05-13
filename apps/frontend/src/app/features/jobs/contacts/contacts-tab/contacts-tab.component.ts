@@ -14,7 +14,7 @@ import { ContactListComponent } from '../contact-list/contact-list.component';
 import { CreateContactComponent } from '../create-contact/create-contact.component';
 import { EditContactComponent } from '../edit-contact/edit-contact.component';
 import { DeleteConfirmationDialogComponent } from '@job-tracker-lite-angular/frontend-shared';
-
+import { TranslocoModule } from '@jsverse/transloco';
 @Component({
   standalone: true,
   selector: 'app-contacts-tab',
@@ -23,6 +23,7 @@ import { DeleteConfirmationDialogComponent } from '@job-tracker-lite-angular/fro
     HlmButtonImports,
     HlmIconImports,
     ContactListComponent,
+    TranslocoModule,
   ],
   providers: [provideIcons({ lucidePlus })],
   templateUrl: './contacts-tab.component.html',
