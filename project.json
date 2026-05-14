@@ -12,6 +12,17 @@
         "lintFilePatterns": ["./*.ts", "./*.js", "./*.mjs", "./*.cjs"]
       },
       "inputs": ["{workspaceRoot}/project.json"]
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "echo \"Skipping typecheck for @job-tracker-lite-angular/source\""
+        ],
+        "parallel": false
+      },
+      "outputs": [],
+      "inputs": ["{workspaceRoot}/project.json"]
     }
   }
 }
