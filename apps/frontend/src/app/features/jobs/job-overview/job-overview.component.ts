@@ -13,15 +13,15 @@ import { marked } from 'marked';
 export class JobOverviewComponent {
   private readonly sanitizer = inject(DomSanitizer);
 
-  readonly description = input.required<string>();
+  description = input<string | null | undefined>('');
 
   protected readonly renderedDescription = computed(() => {
-    const content = this.description().trim();
-    if (!content) {
+    const content = this.description();
+    if (!content || !content.trim()) {
       return '<p class="text-sm text-muted-foreground">No description provided.</p>';
     }
 
-    const parsed = marked.parse(content, {
+    const parsed = marked.parse(content.trim(), {
       gfm: true,
       breaks: true,
     });
