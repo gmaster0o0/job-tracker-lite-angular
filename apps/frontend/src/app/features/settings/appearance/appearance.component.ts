@@ -38,12 +38,9 @@ export class AppearanceComponent {
   );
 
   constructor() {
-    effect(
-      () => {
-        this.themeService.theme.set(this.appearance());
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => {
+      this.themeService.theme.set(this.appearance());
+    });
   }
 
   public readonly appearanceOptions: AppearanceCard[] = [
