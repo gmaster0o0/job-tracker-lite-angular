@@ -1,0 +1,6 @@
+{
+  "name": "tools-config",
+  "root": "tools/config",
+  "projectType": "library",
+  "targets": {}
+}
