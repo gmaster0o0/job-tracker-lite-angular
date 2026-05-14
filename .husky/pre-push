@@ -5,6 +5,9 @@ echo "Parallel testing started..."
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 BASE_BRANCH="origin/main"
 
+echo "Fetching origin to ensure base branch refs exist..."
+git fetch origin --quiet || true
+
 if git show-ref --verify --quiet "refs/remotes/origin/${CURRENT_BRANCH}"; then
   BASE_BRANCH="origin/${CURRENT_BRANCH}"
 elif git show-ref --verify --quiet "refs/remotes/origin/master"; then
