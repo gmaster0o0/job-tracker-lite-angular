@@ -33,7 +33,7 @@
       <span
         class="text-xs font-semibold uppercase tracking-wider text-slate-400"
       >
-        {{ job().createdAt | date: 'MM/dd/yyyy' }}
+        {{ job().createdAt | appDate }}
       </span>
 
       <span class="text-xs font-medium text-sky-600"> 1 contacts </span>
@@ -64,7 +64,7 @@
 
     <div class="mt-4 flex items-center justify-between">
       <span class="text-[10px] text-slate-400">
-        {{ job().createdAt | date: 'MM/dd/yyyy' }}
+        {{ job().createdAt | appDate }}
       </span>
     </div>
   </div>

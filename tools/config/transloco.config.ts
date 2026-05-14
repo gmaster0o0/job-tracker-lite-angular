@@ -1,7 +1,7 @@
 export const config = {
   rootTranslationsPath: 'apps/frontend/public/assets/i18n/',
   defaultLang: 'en',
-  langs: [ 'en','hu'],
+  langs: ['en', 'hu'],
   keysManager: {
     input: 'apps/frontend/public/assets/i18n',
     output: 'apps/frontend/public/assets/i18n',

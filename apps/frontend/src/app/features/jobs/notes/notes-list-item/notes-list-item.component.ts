@@ -7,6 +7,7 @@ import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { provideIcons } from '@ng-icons/core';
 import { lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
+import { AppDatePipe } from '@job-tracker-lite-angular/frontend-data-access';
 
 @Component({
   standalone: true,
@@ -17,6 +18,7 @@ import { lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
     HlmCardImports,
     HlmIconImports,
     HlmTooltipImports,
+    AppDatePipe,
   ],
   providers: provideIcons({ lucidePencil, lucideTrash2 }),
   templateUrl: './notes-list-item.component.html',

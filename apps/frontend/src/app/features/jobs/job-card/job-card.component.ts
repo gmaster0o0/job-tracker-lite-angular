@@ -3,11 +3,12 @@ import { Component, input } from '@angular/core';
 import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmCardImports } from '@spartan-ng/helm/card';
+import { AppDatePipe } from '@job-tracker-lite-angular/frontend-data-access';
 
 @Component({
   standalone: true,
   selector: 'app-job-card',
-  imports: [CommonModule, HlmBadgeImports, HlmCardImports],
+  imports: [CommonModule, HlmBadgeImports, HlmCardImports, AppDatePipe],
   templateUrl: './job-card.component.html',
 })
 export class JobCardComponent {
