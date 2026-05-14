@@ -8,12 +8,13 @@ import {
   Param,
 } from '@nestjs/common';
 
-import {
-  ContactDto,
-  UpdateContactDto,
-  CreateContactDto,
-} from '@job-tracker-lite-angular/api-interfaces';
+import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsService } from './jobs.service';
+import {
+  CreateContactDtoRequest,
+  UpdateContactDtoRequest,
+} from './dto/contacts.dto';
+import { ParseCuidPipe } from '@job-tracker-lite-angular/core-utils';
 
 @Controller('jobs/:id/contacts')
 export class ContactsController {
@@ -26,25 +27,25 @@ export class ContactsController {
 
   @Post()
   async createContact(
-    @Param('id') id: string,
-    @Body() createContactDto: CreateContactDto,
+    @Param('id', ParseCuidPipe) id: string,
+    @Body() createContactDto: CreateContactDtoRequest,
   ): Promise<ContactDto> {
     return this.jobsService.createContact(id, createContactDto);
   }
 
   @Patch(':contactId')
   async updateContact(
-    @Param('id') id: string,
-    @Param('contactId') contactId: string,
-    @Body() updateContactDto: UpdateContactDto,
+    @Param('id', ParseCuidPipe) id: string,
+    @Param('contactId', ParseCuidPipe) contactId: string,
+    @Body() updateContactDto: UpdateContactDtoRequest,
   ): Promise<ContactDto> {
     return this.jobsService.updateContact(id, contactId, updateContactDto);
   }
 
   @Delete(':contactId')
   async deleteContact(
-    @Param('id') id: string,
-    @Param('contactId') contactId: string,
+    @Param('id', ParseCuidPipe) id: string,
+    @Param('contactId', ParseCuidPipe) contactId: string,
   ): Promise<void> {
     await this.jobsService.deleteContact(id, contactId);
   }

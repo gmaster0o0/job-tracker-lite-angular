@@ -41,8 +41,8 @@ export type JobStatusDto =
 export interface JobDto {
   id: string;
   position: string;
-  link: string;
-  description: string;
+  link?: string;
+  description?: string;
   company: string;
   status: JobStatusDto;
   createdAt: string;
@@ -51,9 +51,9 @@ export interface JobDto {
 
 export interface CreateJobDto {
   position: string;
-  link: string;
-  description: string;
+  link?: string;
   company: string;
+  description?: string;
 }
 
 export interface UpdateJobDto {
@@ -80,8 +80,8 @@ export interface ContactDto {
 
 export interface CreateContactDto {
   name: string;
-  email: string;
-  phoneNumber: string;
+  email?: string;
+  phoneNumber?: string;
 }
 
 export interface UpdateContactDto {

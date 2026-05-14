@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '@job-tracker-lite-angular/prisma';
-import { JobsModule } from '../jobs/jobs.module';
+import { JobsModule } from './jobs/jobs.module';
 import { HealthModule } from './healthcheck/healthcheck.module';
 
 @Module({

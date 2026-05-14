@@ -23,8 +23,8 @@ model User {
 model Job {
   id          String    @id @default(cuid())
   position    String
-  link        String    @unique
-  description String
+  link        String?    @unique
+  description String?
   company     String
   status      JobStatus @default(SAVED)
   contacts    Contact[]
@@ -36,8 +36,8 @@ model Job {
 model Contact {
   id          String   @id @default(cuid())
   name        String
-  email       String
-  phoneNumber String
+  email       String?
+  phoneNumber String?
   jobId       String
   job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
