@@ -2,6 +2,11 @@
 
 echo "Parallel testing started..."
 
+# Enable tracing and log all output to .husky/pre-push.log for debugging
+# Use a simple redirect (avoid process substitution which /bin/sh may not support)
+exec > .husky/pre-push.log 2>&1
+set -x
+
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 BASE_BRANCH="origin/main"
 

@@ -23,6 +23,17 @@
       },
       "outputs": [],
       "inputs": ["{workspaceRoot}/project.json"]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "echo \"Skipping tests for @job-tracker-lite-angular/source\""
+        ],
+        "parallel": false
+      },
+      "outputs": [],
+      "inputs": ["{workspaceRoot}/project.json"]
     }
   }
 }
