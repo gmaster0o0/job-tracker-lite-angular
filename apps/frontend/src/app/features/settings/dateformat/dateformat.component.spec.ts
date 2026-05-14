@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DateformatComponent } from './dateformat.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('DateformatComponent', () => {
   let component: DateformatComponent;
@@ -7,7 +8,7 @@ describe('DateformatComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DateformatComponent],
+      imports: [DateformatComponent, getTranslocoModule()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DateformatComponent);
