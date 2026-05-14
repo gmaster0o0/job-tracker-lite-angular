@@ -120,7 +120,7 @@
     }
   },
   "preferences": {
-    "preferences": "Beállítások",
+    "preferences": "Testreszabás",
     "preferencesDescription": "Szabja személyre az alkalmazás használatát.",
     "language": {
       "title": "Nyelv",
