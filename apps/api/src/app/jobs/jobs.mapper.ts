@@ -1,10 +1,5 @@
-import {
-  ContactDto,
-  NoteDto,
-  JobDto,
-  JobStatusDto,
-} from '@job-tracker-lite-angular/schemas';
-import { Contact, Job, JobStatus, Note } from '@prisma/client';
+import { ContactDto, NoteDto, JobDto } from '@job-tracker-lite-angular/schemas';
+import { Contact, Job, Note } from '@prisma/client';
 
 /**
  * Mapper function to map a Job entity from Prisma

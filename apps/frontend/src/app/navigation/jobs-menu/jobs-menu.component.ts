@@ -10,6 +10,7 @@ import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { provideIcons } from '@ng-icons/core';
 import { lucideSearch, lucideGhost } from '@ng-icons/lucide';
 import { translateSignal, TranslocoModule } from '@jsverse/transloco';
+import { JobStatus } from '@job-tracker-lite-angular/schemas';
 
 type FilterValue = JobStatusDto | null;
 
@@ -55,18 +56,18 @@ export class JobsMenuComponent {
 
   protected readonly chips: readonly FilterChip[] = [
     { label: translateSignal('jobs.filters.all'), value: null },
-    { label: translateSignal('jobs.filters.saved'), value: 'saved' },
+    { label: translateSignal('jobs.filters.saved'), value: JobStatus.SAVED },
     {
       label: translateSignal('jobs.filters.applied'),
-      value: 'applied',
+      value: JobStatus.APPLIED,
     },
     {
       label: translateSignal('jobs.filters.interview'),
-      value: 'interview',
+      value: JobStatus.INTERVIEW,
     },
     {
       label: translateSignal('jobs.filters.offer'),
-      value: 'job offered',
+      value: JobStatus.JOB_OFFERED,
     },
   ];
 
@@ -77,7 +78,7 @@ export class JobsMenuComponent {
     const showRejected = this.showRejected();
 
     return data.filter((job) => {
-      if (!showRejected && job.status === 'rejected') {
+      if (!showRejected && job.status === JobStatus.REJECTED) {
         return false;
       }
 

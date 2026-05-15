@@ -7,6 +7,7 @@ import {
   jobResultFixtures,
   createJobsServiceMock,
 } from '@job-tracker-lite-angular/testing';
+import { JobStatus } from '@job-tracker-lite-angular/schemas';
 
 describe('JobsController', () => {
   let controller: JobsController;
@@ -53,7 +54,7 @@ describe('JobsController', () => {
     });
 
     await expect(
-      controller.updateStatus('ck1234567892', { status: 'APPLIED' }),
+      controller.updateStatus('ck1234567892', { status: JobStatus.APPLIED }),
     ).resolves.toEqual({
       ...jobFixtures.backendEngineer,
       id: 'ck1234567892',

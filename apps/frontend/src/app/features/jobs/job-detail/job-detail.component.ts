@@ -42,6 +42,7 @@ import {
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { NotesTabComponent } from '../notes/notes-tab/notes-tab.component';
 import { translateSignal, TranslocoModule } from '@jsverse/transloco';
+import { JobStatus } from '@job-tracker-lite-angular/schemas';
 
 type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
 
@@ -156,10 +157,10 @@ export class JobDetailComponent {
   ];
 
   protected readonly progressionStatuses: readonly JobStatusDto[] = [
-    'saved',
-    'applied',
-    'interview',
-    'job offered',
+    JobStatus.SAVED,
+    JobStatus.APPLIED,
+    JobStatus.INTERVIEW,
+    JobStatus.JOB_OFFERED,
   ];
 
   protected readonly progressionLabelSignals: readonly Signal<string>[] = [
@@ -174,11 +175,12 @@ export class JobDetailComponent {
   );
 
   protected readonly statusBadgeClasses: Record<JobStatusDto, string> = {
-    saved: 'bg-sky-100 text-sky-700 border-sky-200',
-    applied: 'bg-amber-100 text-amber-700 border-amber-200',
-    interview: 'bg-violet-100 text-violet-700 border-violet-200',
-    'job offered': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    rejected: 'bg-red-100 text-red-700 border-red-200',
+    [JobStatus.SAVED]: 'bg-sky-100 text-sky-700 border-sky-200',
+    [JobStatus.APPLIED]: 'bg-amber-100 text-amber-700 border-amber-200',
+    [JobStatus.INTERVIEW]: 'bg-violet-100 text-violet-700 border-violet-200',
+    [JobStatus.JOB_OFFERED]:
+      'bg-emerald-100 text-emerald-700 border-emerald-200',
+    [JobStatus.REJECTED]: 'bg-red-100 text-red-700 border-red-200',
   };
 
   constructor() {
@@ -239,7 +241,7 @@ export class JobDetailComponent {
   }
 
   protected isRejected(job: JobDto): boolean {
-    return job.status === 'rejected';
+    return job.status === JobStatus.REJECTED;
   }
 
   protected currentProgressIndex(job: JobDto): number {
@@ -277,13 +279,13 @@ export class JobDetailComponent {
   }
 
   protected async reject(job: JobDto): Promise<void> {
-    if (this.isUpdatingStatus() || job.status === 'rejected') {
+    if (this.isUpdatingStatus() || job.status === JobStatus.REJECTED) {
       return;
     }
 
     this.isUpdatingStatus.set(true);
     try {
-      await this.jobsDataAccess.updateJobStatus(job.id, 'rejected');
+      await this.jobsDataAccess.updateJobStatus(job.id, JobStatus.REJECTED);
     } finally {
       this.isUpdatingStatus.set(false);
     }
