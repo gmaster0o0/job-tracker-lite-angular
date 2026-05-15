@@ -8,44 +8,49 @@ import {
   Param,
 } from '@nestjs/common';
 
+import {
+  CreateContactDto,
+  jobIdParamSchema,
+  UpdateContactDto,
+} from '@job-tracker-lite-angular/schemas';
 import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsService } from './jobs.service';
-import {
-  CreateContactDtoRequest,
-  UpdateContactDtoRequest,
-} from './dto/contacts.dto';
-import { ParseCuidPipe } from '@job-tracker-lite-angular/core-utils';
+import { ZodValidationPipe } from '@job-tracker-lite-angular/core-utils';
 
 @Controller('jobs/:id/contacts')
 export class ContactsController {
   constructor(private readonly jobsService: JobsService) {}
 
   @Get()
-  async findContacts(@Param('id') id: string): Promise<ContactDto[]> {
+  async findContacts(
+    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+  ): Promise<ContactDto[]> {
     return this.jobsService.findContacts(id);
   }
 
   @Post()
   async createContact(
-    @Param('id', ParseCuidPipe) id: string,
-    @Body() createContactDto: CreateContactDtoRequest,
+    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+    @Body() createContactDto: CreateContactDto,
   ): Promise<ContactDto> {
     return this.jobsService.createContact(id, createContactDto);
   }
 
   @Patch(':contactId')
   async updateContact(
-    @Param('id', ParseCuidPipe) id: string,
-    @Param('contactId', ParseCuidPipe) contactId: string,
-    @Body() updateContactDto: UpdateContactDtoRequest,
+    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+    @Param('contactId', new ZodValidationPipe(jobIdParamSchema))
+    contactId: string,
+    @Body() updateContactDto: UpdateContactDto,
   ): Promise<ContactDto> {
     return this.jobsService.updateContact(id, contactId, updateContactDto);
   }
 
   @Delete(':contactId')
   async deleteContact(
-    @Param('id', ParseCuidPipe) id: string,
-    @Param('contactId', ParseCuidPipe) contactId: string,
+    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+    @Param('contactId', new ZodValidationPipe(jobIdParamSchema))
+    contactId: string,
   ): Promise<void> {
     await this.jobsService.deleteContact(id, contactId);
   }

@@ -9,12 +9,12 @@ import {
 } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import {
-  CreateJobsDtoRequest,
-  UpdateJobsDtoRequest,
-  UpdateJobsStatusDtoRequest,
-} from './dto/jobs.dto';
-import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
-import { ParseCuidPipe } from '@job-tracker-lite-angular/core-utils';
+  CreateJobDto,
+  UpdateJobDto,
+  jobIdParamSchema,
+} from '@job-tracker-lite-angular/schemas';
+import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
+import { ZodValidationPipe } from '@job-tracker-lite-angular/core-utils';
 
 @Controller('jobs')
 export class JobsController {
@@ -26,33 +26,37 @@ export class JobsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseCuidPipe) id: string): Promise<JobDto> {
+  async findOne(
+    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+  ): Promise<JobDto> {
     return await this.jobsService.findOne(id);
   }
 
   @Post()
-  async create(@Body() createJobDto: CreateJobsDtoRequest): Promise<JobDto> {
+  async create(@Body() createJobDto: CreateJobDto): Promise<JobDto> {
     return this.jobsService.create(createJobDto);
   }
 
   @Patch(':id/status')
   async updateStatus(
-    @Param('id', ParseCuidPipe) id: string,
-    @Body() updateJobStatusDto: UpdateJobsStatusDtoRequest,
+    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+    @Body() updateJobStatusDto: { status: JobStatusDto },
   ): Promise<JobDto> {
     return this.jobsService.updateStatus(id, updateJobStatusDto.status);
   }
 
   @Patch(':id')
   async update(
-    @Param('id', ParseCuidPipe) id: string,
-    @Body() updateJobDto: UpdateJobsDtoRequest,
+    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+    @Body() updateJobDto: UpdateJobDto,
   ): Promise<JobDto> {
     return await this.jobsService.update(id, updateJobDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id', ParseCuidPipe) id: string): Promise<void> {
+  async delete(
+    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+  ): Promise<void> {
     await this.jobsService.delete(id);
   }
 }

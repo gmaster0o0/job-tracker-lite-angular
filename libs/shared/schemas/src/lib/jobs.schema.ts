@@ -3,11 +3,12 @@ import { z } from 'zod';
 export const jobStatusSchema = z.enum([
   'saved',
   'applied',
-  'interviewing',
-  'offer',
+  'interview',
+  'job offered',
   'rejected',
 ]);
-export type JobStatusDTO = z.infer<typeof jobStatusSchema>;
+
+export type JobStatusDto = z.infer<typeof jobStatusSchema>;
 
 //Job schema with DTO
 export const JobSchema = z.object({
@@ -20,7 +21,7 @@ export const JobSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
 });
-export type JobDTO = z.infer<typeof JobSchema>;
+export type JobDto = z.infer<typeof JobSchema>;
 
 //create job schema with DTO
 export const createJobSchema = z.object({

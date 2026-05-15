@@ -1,4 +1,3 @@
-import { NoteDto } from '@job-tracker-lite-angular/api-interfaces';
 import {
   Controller,
   Get,
@@ -8,9 +7,14 @@ import {
   Body,
   Patch,
 } from '@nestjs/common';
+import {
+  CreateNoteDto,
+  UpdateNoteDto,
+  jobIdParamSchema,
+} from '@job-tracker-lite-angular/schemas';
+import { NoteDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsService } from './jobs.service';
-import { ParseCuidPipe } from '@job-tracker-lite-angular/core-utils';
-import { CreateNoteDtoRequest, UpdateNoteDtoRequest } from './dto/notes.dto';
+import { ZodValidationPipe } from '@job-tracker-lite-angular/core-utils';
 
 @Controller('jobs/:id/notes')
 export class NotesController {
@@ -18,31 +22,33 @@ export class NotesController {
 
   @Delete(':noteId')
   async deleteNote(
-    @Param('id', ParseCuidPipe) id: string,
-    @Param('noteId', ParseCuidPipe) noteId: string,
+    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+    @Param('noteId', new ZodValidationPipe(jobIdParamSchema)) noteId: string,
   ): Promise<void> {
     return await this.jobsService.deleteNote(id, noteId);
   }
 
   @Patch(':noteId')
   async updateNote(
-    @Param('id', ParseCuidPipe) id: string,
-    @Param('noteId', ParseCuidPipe) noteId: string,
-    @Body() updatedNote: UpdateNoteDtoRequest,
+    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+    @Param('noteId', new ZodValidationPipe(jobIdParamSchema)) noteId: string,
+    @Body() updatedNote: UpdateNoteDto,
   ): Promise<NoteDto> {
     return await this.jobsService.updateNote(id, noteId, updatedNote);
   }
 
   @Post()
   async createNote(
-    @Param('id', ParseCuidPipe) id: string,
-    @Body() createNoteDto: CreateNoteDtoRequest,
+    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+    @Body() createNoteDto: CreateNoteDto,
   ): Promise<NoteDto> {
     return await this.jobsService.createNote(id, createNoteDto);
   }
 
   @Get()
-  async findNotes(@Param('id', ParseCuidPipe) id: string): Promise<NoteDto[]> {
+  async findNotes(
+    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+  ): Promise<NoteDto[]> {
     return await this.jobsService.findNotes(id);
   }
 }
