@@ -53,7 +53,7 @@ describe('JobsController', () => {
     });
 
     await expect(
-      controller.updateStatus('ck1234567892', { status: 'applied' }),
+      controller.updateStatus('ck1234567892', { status: 'APPLIED' }),
     ).resolves.toEqual({
       ...jobFixtures.backendEngineer,
       id: 'ck1234567892',

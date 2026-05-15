@@ -19,7 +19,7 @@ export const mapJobToDto = (job: Job): JobDto => {
     link: job.link,
     description: job.description,
     company: job.company,
-    status: prismaToDtoStatus[job.status],
+    status: job.status,
     createdAt: job.createdAt.toISOString(),
     updatedAt: job.updatedAt.toISOString(),
   };
@@ -56,20 +56,4 @@ export const mapNoteToDto = (note: Note): NoteDto => {
     createdAt: note.createdAt.toISOString(),
     updatedAt: note.updatedAt.toISOString(),
   };
-};
-
-export const prismaToDtoStatus: Record<JobStatus, JobStatusDto> = {
-  SAVED: 'saved',
-  APPLIED: 'applied',
-  INTERVIEW: 'interview',
-  JOB_OFFERED: 'job offered',
-  REJECTED: 'rejected',
-};
-
-export const dtoToPrismaStatus: Record<JobStatusDto, JobStatus> = {
-  saved: 'SAVED',
-  applied: 'APPLIED',
-  interview: 'INTERVIEW',
-  'job offered': 'JOB_OFFERED',
-  rejected: 'REJECTED',
 };

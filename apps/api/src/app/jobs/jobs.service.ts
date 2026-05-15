@@ -1,11 +1,6 @@
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import { Injectable } from '@nestjs/common';
-import {
-  mapContactToDto,
-  mapJobToDto,
-  mapNoteToDto,
-  dtoToPrismaStatus,
-} from './jobs.mapper';
+import { mapContactToDto, mapJobToDto, mapNoteToDto } from './jobs.mapper';
 import {
   ContactDto,
   CreateContactDto,
@@ -50,7 +45,7 @@ export class JobsService {
   async updateStatus(id: string, status: JobStatusDto): Promise<JobDto> {
     const job = await this.prisma.job.update({
       where: { id },
-      data: { status: dtoToPrismaStatus[status] },
+      data: { status: status },
     });
 
     return mapJobToDto(job);
@@ -62,7 +57,7 @@ export class JobsService {
       where: { id },
       data: {
         ...rest,
-        ...(status ? { status: dtoToPrismaStatus[status] } : {}),
+        ...(status ? { status: status } : {}),
       },
     });
 

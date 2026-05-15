@@ -21,3 +21,7 @@ export type CreateNoteDto = z.infer<typeof createNoteSchema>;
 // update note schema with DTO
 export const updateNoteSchema = createNoteSchema.partial();
 export type UpdateNoteDto = z.infer<typeof updateNoteSchema>;
+
+export const noteIdParamSchema = z.object({
+  id: z.cuid2(),
+});
