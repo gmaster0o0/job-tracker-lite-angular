@@ -1,5 +1,5 @@
 import { ComponentHarness } from '@angular/cdk/testing';
-import { CreateJobDto } from '@job-tracker-lite-angular/api-interfaces';
+import { CreateJobDto } from '@job-tracker-lite-angular/schemas';
 
 export class CreateJobHarness extends ComponentHarness {
   static hostSelector = 'app-create-job';

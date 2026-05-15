@@ -2,7 +2,7 @@ import {
   NoteDto,
   CreateNoteDto,
   UpdateNoteDto,
-} from '@job-tracker-lite-angular/api-interfaces';
+} from '@job-tracker-lite-angular/schemas';
 
 export interface NoteFixturesMap {
   janeDoe: NoteDto;

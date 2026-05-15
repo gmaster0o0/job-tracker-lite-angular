@@ -7,37 +7,47 @@ export const jobStatusSchema = z.enum([
   'job offered',
   'rejected',
 ]);
-
 export type JobStatusDto = z.infer<typeof jobStatusSchema>;
 
 //Job schema with DTO
-export const JobSchema = z.object({
+export const jobSchema = z.object({
   id: z.cuid2(),
   position: z.string(),
-  link: z.string().optional(),
-  description: z.string().optional(),
   company: z.string(),
+  link: z.url().nullable(),
+  description: z.string().nullable(),
   status: jobStatusSchema,
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
 });
-export type JobDto = z.infer<typeof JobSchema>;
+export type JobDto = z.infer<typeof jobSchema>;
 
 //create job schema with DTO
 export const createJobSchema = z.object({
   position: z.string().min(1),
-  link: z.url().optional(),
   company: z.string().min(1),
-  description: z.string().optional(),
+  link: z.url().nullable(),
+  description: z.string().nullable(),
+  status: jobStatusSchema.default('saved'),
 });
 export type CreateJobDto = z.infer<typeof createJobSchema>;
 
 //update job schema with DTO
-export const updateJobSchema = createJobSchema.partial().extend({
-  status: jobStatusSchema.optional(),
-});
+export const updateJobSchema = createJobSchema.partial();
 export type UpdateJobDto = z.infer<typeof updateJobSchema>;
 
 export const jobIdParamSchema = z.object({
   id: z.cuid2(),
 });
+
+export const jobResponseSchema = z.object({
+  id: z.cuid2(),
+  position: z.string(),
+  company: z.string(),
+  link: z.url().nullable(),
+  description: z.string().nullable(),
+  status: jobStatusSchema,
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
+});
+export type JobResponseDto = z.infer<typeof jobResponseSchema>;

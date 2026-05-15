@@ -9,11 +9,11 @@ import {
 } from '@nestjs/common';
 
 import {
+  ContactDto,
   CreateContactDto,
   jobIdParamSchema,
   UpdateContactDto,
 } from '@job-tracker-lite-angular/schemas';
-import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsService } from './jobs.service';
 import { ZodValidationPipe } from '@job-tracker-lite-angular/core-utils';
 

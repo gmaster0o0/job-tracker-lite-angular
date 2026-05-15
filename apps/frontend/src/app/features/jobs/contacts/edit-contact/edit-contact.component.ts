@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
-import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
+import { ContactDto } from '@job-tracker-lite-angular/schemas';
 import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TranslocoModule } from '@jsverse/transloco';
 

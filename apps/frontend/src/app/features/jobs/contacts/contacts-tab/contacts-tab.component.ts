@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
-import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
+import { ContactDto } from '@job-tracker-lite-angular/schemas';
 import {
   JobsDataAccessService,
   ContactsDataAccessService,

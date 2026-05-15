@@ -10,10 +10,10 @@ import {
 import { JobsService } from './jobs.service';
 import {
   CreateJobDto,
+  JobDto,
   UpdateJobDto,
   jobIdParamSchema,
 } from '@job-tracker-lite-angular/schemas';
-import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
 import { ZodValidationPipe } from '@job-tracker-lite-angular/core-utils';
 
 @Controller('jobs')

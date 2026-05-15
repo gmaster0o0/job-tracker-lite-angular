@@ -10,7 +10,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
-import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
+import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/schemas';
 import {
   JobsDataAccessService,
   ContactsDataAccessService,

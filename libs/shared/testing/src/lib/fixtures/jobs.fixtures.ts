@@ -2,7 +2,7 @@ import {
   CreateJobDto,
   JobDto,
   UpdateJobDto,
-} from '@job-tracker-lite-angular/api-interfaces';
+} from '@job-tracker-lite-angular/schemas';
 
 export const jobFixtureTimestamp = '2026-04-29T09:00:00.000Z';
 

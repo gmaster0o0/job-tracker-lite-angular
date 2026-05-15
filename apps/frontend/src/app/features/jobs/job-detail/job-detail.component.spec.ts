@@ -2,7 +2,7 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { convertToParamMap, ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
-import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
+import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/schemas';
 import {
   JobsDataAccessService,
   ContactsDataAccessService,

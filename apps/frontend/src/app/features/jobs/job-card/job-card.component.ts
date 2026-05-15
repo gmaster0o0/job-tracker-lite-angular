@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
-import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
+import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/schemas';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { AppDatePipe } from '@job-tracker-lite-angular/frontend-data-access';

@@ -1,6 +1,6 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
-import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
+import { ContactDto } from '@job-tracker-lite-angular/schemas';
 import {
   JobsDataAccessService,
   NotesDataAccessService,

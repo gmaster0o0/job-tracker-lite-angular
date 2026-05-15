@@ -9,10 +9,10 @@ import {
 } from '@nestjs/common';
 import {
   CreateNoteDto,
+  NoteDto,
   UpdateNoteDto,
   jobIdParamSchema,
 } from '@job-tracker-lite-angular/schemas';
-import { NoteDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsService } from './jobs.service';
 import { ZodValidationPipe } from '@job-tracker-lite-angular/core-utils';
 

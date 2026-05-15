@@ -1,5 +1,5 @@
 import { ComponentHarness } from '@angular/cdk/testing';
-import { UpdateContactDto } from '@job-tracker-lite-angular/api-interfaces';
+import { UpdateContactDto } from '@job-tracker-lite-angular/schemas';
 
 export class EditContactHarness extends ComponentHarness {
   static hostSelector = 'app-edit-contact';
