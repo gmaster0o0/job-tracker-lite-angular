@@ -1,5 +1,5 @@
 import { ComponentHarness } from '@angular/cdk/testing';
-import { UpdateContactDto } from '@job-tracker-lite-angular/api-interfaces';
+import { UpdateContactDto } from '@job-tracker-lite-angular/schemas';
 
 export class EditContactHarness extends ComponentHarness {
   static hostSelector = 'app-edit-contact';
@@ -23,14 +23,20 @@ export class EditContactHarness extends ComponentHarness {
     if (values.email !== undefined) {
       const input = await this.getEmailInput();
       await input.clear();
-      await input.sendKeys(values.email);
+      const email = values.email ?? '';
+      if (email.length > 0) {
+        await input.sendKeys(email);
+      }
       await input.dispatchEvent('input');
     }
 
     if (values.phoneNumber !== undefined) {
       const input = await this.getPhoneInput();
       await input.clear();
-      await input.sendKeys(values.phoneNumber);
+      const phone = values.phoneNumber ?? '';
+      if (phone.length > 0) {
+        await input.sendKeys(phone);
+      }
       await input.dispatchEvent('input');
     }
   }

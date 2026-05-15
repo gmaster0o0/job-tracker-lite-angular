@@ -1,5 +1,5 @@
 import { Contact, Note, Job, JobStatus } from '@prisma/client';
-import { ContactDto, NoteDto } from '@job-tracker-lite-angular/api-interfaces';
+import { ContactDto, NoteDto } from '@job-tracker-lite-angular/schemas';
 import { contactFixtures } from './contacts.fixtures';
 import { noteFixtures } from './notes.fixtures';
 import { jobFixtures, jobResultFixtures } from './jobs.fixtures';

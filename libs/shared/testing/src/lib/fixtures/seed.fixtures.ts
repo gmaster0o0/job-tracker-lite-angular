@@ -1,8 +1,4 @@
-import {
-  ContactDto,
-  JobDto,
-  NoteDto,
-} from '@job-tracker-lite-angular/api-interfaces';
+import { ContactDto, JobDto, NoteDto } from '@job-tracker-lite-angular/schemas';
 import { jobFixtures } from './jobs.fixtures';
 
 export interface SeedContactTemplate {

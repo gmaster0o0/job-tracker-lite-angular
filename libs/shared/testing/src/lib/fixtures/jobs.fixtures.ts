@@ -2,7 +2,8 @@ import {
   CreateJobDto,
   JobDto,
   UpdateJobDto,
-} from '@job-tracker-lite-angular/api-interfaces';
+} from '@job-tracker-lite-angular/schemas';
+import { JobStatus } from '@prisma/client';
 
 export const jobFixtureTimestamp = '2026-04-29T09:00:00.000Z';
 
@@ -28,7 +29,7 @@ export const jobFixtures: JobFixturesMap = {
     description:
       'Build polished Angular workflows for an internal hiring platform.',
     company: 'Acme Labs',
-    status: 'saved',
+    status: JobStatus.SAVED,
     createdAt: jobFixtureTimestamp,
     updatedAt: jobFixtureTimestamp,
   },
@@ -38,7 +39,7 @@ export const jobFixtures: JobFixturesMap = {
     link: 'https://example.com/jobs/backend-engineer',
     description: 'Own Node and Nest services that power recruiting automation.',
     company: 'Globex',
-    status: 'applied',
+    status: JobStatus.APPLIED,
     createdAt: jobFixtureTimestamp,
     updatedAt: jobFixtureTimestamp,
   },
@@ -48,7 +49,7 @@ export const jobFixtures: JobFixturesMap = {
     link: 'https://example.com/jobs/full-stack-engineer',
     description: 'Ship product features across Angular, Nest, and PostgreSQL.',
     company: 'Initech',
-    status: 'interview',
+    status: JobStatus.INTERVIEW,
     createdAt: jobFixtureTimestamp,
     updatedAt: jobFixtureTimestamp,
   },
@@ -58,7 +59,7 @@ export const jobFixtures: JobFixturesMap = {
     link: 'https://example.com/jobs/product-designer',
     description: 'Design application flows for a job tracking workspace.',
     company: 'Northwind',
-    status: 'job offered',
+    status: JobStatus.JOB_OFFERED,
     createdAt: jobFixtureTimestamp,
     updatedAt: jobFixtureTimestamp,
   },
@@ -69,7 +70,7 @@ export const jobFixtures: JobFixturesMap = {
     description:
       'Lead a platform team focused on developer tooling and velocity.',
     company: 'Umbrella Tech',
-    status: 'applied',
+    status: JobStatus.APPLIED,
     createdAt: jobFixtureTimestamp,
     updatedAt: jobFixtureTimestamp,
   },
@@ -80,7 +81,7 @@ export const jobFixtures: JobFixturesMap = {
     description:
       'Improve CI/CD and containerized local development for the team.',
     company: 'Stark Systems',
-    status: 'saved',
+    status: JobStatus.SAVED,
     createdAt: jobFixtureTimestamp,
     updatedAt: jobFixtureTimestamp,
   },
@@ -91,7 +92,7 @@ export const jobFixtures: JobFixturesMap = {
     description:
       'Expand Jest and Playwright coverage across the hiring workflow.',
     company: 'Wayne Enterprises',
-    status: 'interview',
+    status: JobStatus.INTERVIEW,
     createdAt: jobFixtureTimestamp,
     updatedAt: jobFixtureTimestamp,
   },
@@ -101,7 +102,7 @@ export const jobFixtures: JobFixturesMap = {
     link: 'https://example.com/jobs/data-analyst',
     description: 'Turn recruiting funnel metrics into actionable insights.',
     company: 'Soylent Analytics',
-    status: 'saved',
+    status: JobStatus.SAVED,
     createdAt: jobFixtureTimestamp,
     updatedAt: jobFixtureTimestamp,
   },
@@ -112,7 +113,7 @@ export const jobFixtures: JobFixturesMap = {
     description:
       'Partner with engineering leaders to source senior candidates.',
     company: 'Hooli Talent',
-    status: 'applied',
+    status: JobStatus.APPLIED,
     createdAt: jobFixtureTimestamp,
     updatedAt: jobFixtureTimestamp,
   },
@@ -122,7 +123,7 @@ export const jobFixtures: JobFixturesMap = {
     link: 'https://example.com/jobs/platform-engineer',
     description: 'Standardize shared tooling and libraries in an Nx monorepo.',
     company: 'Massive Dynamic',
-    status: 'job offered',
+    status: JobStatus.JOB_OFFERED,
     createdAt: jobFixtureTimestamp,
     updatedAt: jobFixtureTimestamp,
   },
@@ -132,7 +133,7 @@ export const jobFixtures: JobFixturesMap = {
     link: 'https://example.com/jobs/junior-react-developer',
     description: 'Help build internal dashboards.',
     company: 'Initrode',
-    status: 'rejected',
+    status: JobStatus.REJECTED,
     createdAt: jobFixtureTimestamp,
     updatedAt: jobFixtureTimestamp,
   },
@@ -159,19 +160,19 @@ export const createJobFixtures: CreateJobFixturesMap = {
     link: 'https://example.com/jobs/designer',
     description: 'Shape product UI',
     company: 'Initech',
-  },
+  } as CreateJobDto,
   productDesigner: {
     position: 'Product Designer',
     link: 'https://example.com/jobs/product-designer',
     description: 'Design the experience',
     company: 'Northwind',
-  },
+  } as CreateJobDto,
   empty: {
     company: '',
     position: '',
     link: '',
     description: '',
-  },
+  } as CreateJobDto,
 };
 
 export interface JobResultFixturesMap {
@@ -186,7 +187,7 @@ export const jobResultFixtures: JobResultFixturesMap = {
     link: 'https://example.com/jobs/product-designer',
     description: 'Design the experience',
     company: 'Northwind',
-    status: 'saved',
+    status: JobStatus.SAVED,
     createdAt: jobFixtureTimestamp,
     updatedAt: jobFixtureTimestamp,
   },
@@ -196,7 +197,7 @@ export const jobResultFixtures: JobResultFixturesMap = {
     link: 'https://example.com/jobs/backend-engineer',
     description: 'Own Node and Nest services that power recruiting automation.',
     company: 'Globex',
-    status: 'interview',
+    status: JobStatus.INTERVIEW,
     createdAt: jobFixtureTimestamp,
     updatedAt: jobFixtureTimestamp,
   },

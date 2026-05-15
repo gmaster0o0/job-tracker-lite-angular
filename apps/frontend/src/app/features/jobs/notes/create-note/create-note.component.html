@@ -41,6 +41,10 @@
         <hlm-field-error validator="required"
           >Body is a required field.</hlm-field-error
         >
+      } @else {
+        <p hlmDialogDescription>
+          {{ 'jobs.notes.fields.body.example' | transloco }}
+        </p>
       }
     </hlm-field>
 

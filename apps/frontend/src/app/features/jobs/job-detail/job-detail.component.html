@@ -45,7 +45,7 @@
               </span>
               <div
                 hlmTooltip="Click to the progress stepper and change the status"
-                [tooltipDisabled]="job()!.status !== 'rejected'"
+                [tooltipDisabled]="job()!.status !== JobStatus.REJECTED"
               >
                 <button
                   hlmBtn
@@ -53,7 +53,7 @@
                   variant="destructive"
                   size="sm"
                   [disabled]="
-                    isUpdatingStatus() || job()!.status === 'rejected'
+                    isUpdatingStatus() || job()!.status === JobStatus.REJECTED
                   "
                   (click)="reject(job()!)"
                 >

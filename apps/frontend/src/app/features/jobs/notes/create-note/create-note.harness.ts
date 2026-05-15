@@ -1,5 +1,5 @@
 import { ComponentHarness } from '@angular/cdk/testing';
-import { CreateNoteDto } from '@job-tracker-lite-angular/api-interfaces';
+import { CreateNoteDto } from '@job-tracker-lite-angular/schemas';
 
 export class CreateNoteHarness extends ComponentHarness {
   static hostSelector = 'app-create-note';

@@ -53,7 +53,7 @@ describe('JobsService', () => {
     expect(prismaMock.job.create).toHaveBeenCalledWith({
       data: createJobFixtures.productDesigner,
     });
-    expect(job.status).toBe('saved');
+    expect(job.status).toBe(JobStatus.SAVED);
   });
 
   it('should update job status', async () => {
@@ -61,13 +61,13 @@ describe('JobsService', () => {
       prismaJobResultFixtures.updatedBackendEngineerInterview,
     );
 
-    const job = await service.updateStatus('ck1234567891', 'interview');
+    const job = await service.updateStatus('ck1234567891', 'INTERVIEW');
 
     expect(prismaMock.job.update).toHaveBeenCalledWith({
       where: { id: 'ck1234567891' },
       data: { status: JobStatus.INTERVIEW },
     });
-    expect(job.status).toBe('interview');
+    expect(job.status).toBe(JobStatus.INTERVIEW);
   });
 
   it('should return contacts for a job', async () => {

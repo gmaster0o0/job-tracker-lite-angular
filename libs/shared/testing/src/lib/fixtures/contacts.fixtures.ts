@@ -2,7 +2,7 @@ import {
   ContactDto,
   CreateContactDto,
   UpdateContactDto,
-} from '@job-tracker-lite-angular/api-interfaces';
+} from '@job-tracker-lite-angular/schemas';
 
 export interface ContactFixturesMap {
   janeDoe: ContactDto;
