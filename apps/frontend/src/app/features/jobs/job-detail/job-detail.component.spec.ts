@@ -194,7 +194,7 @@ describe('JobDetailComponent', () => {
     await fixture.whenStable();
 
     expect(dataAccessServiceMock.__calls.updateJobStatusCalls).toEqual([
-      [baseJob.id, 'applied'],
+      [baseJob.id, JobStatus.APPLIED],
     ]);
   });
 
