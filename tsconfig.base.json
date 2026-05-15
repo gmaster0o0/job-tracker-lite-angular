@@ -18,9 +18,6 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "paths": {
-      "@job-tracker-lite-angular/api-interfaces": [
-        "./libs/api-interfaces/src/index.ts"
-      ],
       "@job-tracker-lite-angular/frontend-data-access": [
         "./libs/frontend/src/index.ts"
       ],
@@ -71,7 +68,8 @@
       "@spartan-ng/helm/select": ["./libs/shared-ui/select/src/index.ts"],
       "@job-tracker-lite-angular/core-utils": [
         "./libs/shared/core-utils/src/index.ts"
-      ]
+      ],
+      "@job-tracker-lite-angular/schemas": ["./libs/shared/schemas/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

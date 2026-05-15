@@ -64,12 +64,12 @@
         class="w-full"
       />
       @if (form.get('link')?.invalid && form.get('link')?.touched) {
-        <hlm-field-error validator="required">{{
-          'jobs.fields.link.required' | transloco
+        <hlm-field-error>{{
+          'jobs.fields.link.validation' | transloco
         }}</hlm-field-error>
       } @else {
         <p hlmDialogDescription>
-          {{ 'jobs.fields.link.description' | transloco }}
+          {{ 'jobs.fields.link.example' | transloco }}
         </p>
       }
     </hlm-field>
@@ -89,8 +89,8 @@
       @if (
         form.get('description')?.invalid && form.get('description')?.touched
       ) {
-        <hlm-field-error validator="required">{{
-          'jobs.fields.description.required' | transloco
+        <hlm-field-error>{{
+          'jobs.fields.description.validation' | transloco
         }}</hlm-field-error>
       } @else {
         <p hlmDialogDescription>

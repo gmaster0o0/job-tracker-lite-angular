@@ -6,7 +6,7 @@ import {
   NoteDto,
   CreateNoteDto,
   UpdateNoteDto,
-} from '@job-tracker-lite-angular/api-interfaces';
+} from '@job-tracker-lite-angular/schemas';
 
 @Injectable({
   providedIn: 'root',

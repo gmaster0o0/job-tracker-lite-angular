@@ -6,7 +6,7 @@ import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
-import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
+import { JobDto } from '@job-tracker-lite-angular/schemas';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';

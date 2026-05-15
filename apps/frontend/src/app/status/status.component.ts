@@ -9,11 +9,10 @@ import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HttpErrorResponse } from '@angular/common/http';
-import { HealthResponseDto } from '@job-tracker-lite-angular/api-interfaces';
+import { HealthResponseDto } from '@job-tracker-lite-angular/schemas';
 import { provideIcons } from '@ng-icons/core';
 import { lucideArrowLeft } from '@ng-icons/lucide';
 import { TranslocoModule } from '@jsverse/transloco';
-
 
 @Component({
   standalone: true,

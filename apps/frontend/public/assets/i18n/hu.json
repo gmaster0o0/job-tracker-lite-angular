@@ -46,7 +46,7 @@
       "createDescription": "Új jegyzet hozzáadása"
     },
     "detail": {
-      "loadFailed": "Nem sikerült betölteni a munkarészleteket",
+      "loadFailed": "Nem sikerült betölteni a részleteket",
       "notFound": "Munka nem található",
       "loading": "Munka betöltése...",
       "selectJob": "Nincs munka kiválasztva",
@@ -64,27 +64,27 @@
     "fields": {
       "position": {
         "label": "Pozíció megnevezése",
-        "placeholder": "pl. Szoftverfejlesztő",
-        "example": "pl. Szoftverfejlesztő",
+        "placeholder": "Írja be a pozíció megnevezését...",
+        "example": "Pl. Szoftverfejlesztő",
         "required": "Kérjük, töltse ki a pozíciót"
       },
       "company": {
         "label": "Cég",
-        "placeholder": "pl. Google",
-        "example": "pl. Google",
+        "placeholder": "Írja be a cég nevét...",
+        "example": "Pl. Google",
         "required": "Kérjük, töltse ki a céget"
       },
       "link": {
         "label": "Job Link",
         "placeholder": "https://...",
         "description": "Link az eredeti álláshirdetéshez",
-        "required": ""
+
+        "example": "jobs.fields.link.example"
       },
       "description": {
         "label": "Munkaköri leírás",
         "placeholder": "Ide másolja a munkaköri leírást...",
-        "example": "",
-        "required": ""
+        "example": "Pl. Az álláshirdetés szövege"
       }
     },
     "create": {

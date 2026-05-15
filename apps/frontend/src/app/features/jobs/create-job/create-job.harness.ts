@@ -1,5 +1,5 @@
 import { ComponentHarness } from '@angular/cdk/testing';
-import { CreateJobDto } from '@job-tracker-lite-angular/api-interfaces';
+import { CreateJobDto } from '@job-tracker-lite-angular/schemas';
 
 export class CreateJobHarness extends ComponentHarness {
   static hostSelector = 'app-create-job';
@@ -42,8 +42,9 @@ export class CreateJobHarness extends ComponentHarness {
     if (values.link !== undefined) {
       const input = await this.getLinkInput();
       await input.clear();
-      if (values.link.length > 0) {
-        await input.sendKeys(values.link);
+      const link = values.link ?? '';
+      if (link.length > 0) {
+        await input.sendKeys(link);
       }
       await input.dispatchEvent('input');
     }
@@ -51,8 +52,9 @@ export class CreateJobHarness extends ComponentHarness {
     if (values.description !== undefined) {
       const input = await this.getDescriptionInput();
       await input.clear();
-      if (values.description.length > 0) {
-        await input.sendKeys(values.description);
+      const description = values.description ?? '';
+      if (description.length > 0) {
+        await input.sendKeys(description);
       }
       await input.dispatchEvent('input');
     }

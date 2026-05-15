@@ -7,7 +7,7 @@ import { createBrnDialogRefMock } from '@job-tracker-lite-angular/testing';
 import { EditNoteComponent } from './edit-note.component';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { EditNoteComponentHarness } from './edit-note.harness';
-import { UpdateNoteDto } from '@job-tracker-lite-angular/api-interfaces';
+import { UpdateNoteDto } from '@job-tracker-lite-angular/schemas';
 import {
   noteFixtures,
   updateNoteFixtures,

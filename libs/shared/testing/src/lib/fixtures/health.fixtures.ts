@@ -1,4 +1,4 @@
-import { HealthResponseDto } from '@job-tracker-lite-angular/api-interfaces';
+import { HealthResponseDto } from '@job-tracker-lite-angular/schemas';
 
 export const healthFixture: HealthResponseDto = {
   status: 'ok',

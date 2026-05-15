@@ -13,8 +13,8 @@
     "prisma": "^7.8.0",
     "tslib": "^2.3.0",
     "@job-tracker-lite-angular/testing": "0.0.1",
-    "@job-tracker-lite-angular/api-interfaces": "0.0.1",
-    "express": "5.2.1"
+    "express": "5.2.1",
+    "@job-tracker-lite-angular/schemas": "0.0.1"
   },
   "devDependencies": {
     "@types/node": "^25.6.0"

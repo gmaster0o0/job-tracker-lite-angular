@@ -1,3 +1,6 @@
+import { PrismaService } from '@job-tracker-lite-angular/prisma';
+import { Injectable } from '@nestjs/common';
+import { mapContactToDto, mapJobToDto, mapNoteToDto } from './jobs.mapper';
 import {
   ContactDto,
   CreateContactDto,
@@ -9,26 +12,7 @@ import {
   UpdateContactDto,
   UpdateJobDto,
   UpdateNoteDto,
-} from '@job-tracker-lite-angular/api-interfaces';
-import { PrismaService } from '@job-tracker-lite-angular/prisma';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Contact, Job, JobStatus, Note } from '@prisma/client';
-
-const prismaToDtoStatus: Record<JobStatus, JobStatusDto> = {
-  SAVED: 'saved',
-  APPLIED: 'applied',
-  INTERVIEW: 'interview',
-  JOB_OFFERED: 'job offered',
-  REJECTED: 'rejected',
-};
-
-const dtoToPrismaStatus: Record<JobStatusDto, JobStatus> = {
-  saved: 'SAVED',
-  applied: 'APPLIED',
-  interview: 'INTERVIEW',
-  'job offered': 'JOB_OFFERED',
-  rejected: 'REJECTED',
-};
+} from '@job-tracker-lite-angular/schemas';
 
 @Injectable()
 export class JobsService {
@@ -61,7 +45,7 @@ export class JobsService {
   async updateStatus(id: string, status: JobStatusDto): Promise<JobDto> {
     const job = await this.prisma.job.update({
       where: { id },
-      data: { status: dtoToPrismaStatus[status] },
+      data: { status: status },
     });
 
     return mapJobToDto(job);
@@ -73,7 +57,7 @@ export class JobsService {
       where: { id },
       data: {
         ...rest,
-        ...(status ? { status: dtoToPrismaStatus[status] } : {}),
+        ...(status ? { status: status } : {}),
       },
     });
 
@@ -196,55 +180,4 @@ export class JobsService {
       where: { id: noteId, jobId },
     });
   }
-}
-/**
- * Mapper function to map a Job entity from Prisma
- * to a JobDto for the API response.
- * @param job - The Job entity from Prisma.
- * @returns The mapped JobDto object.
- */
-function mapJobToDto(job: Job): JobDto {
-  return {
-    id: job.id,
-    position: job.position,
-    link: job.link,
-    description: job.description,
-    company: job.company,
-    status: prismaToDtoStatus[job.status],
-    createdAt: job.createdAt.toISOString(),
-    updatedAt: job.updatedAt.toISOString(),
-  };
-}
-/**
- * Mapper function to map a Contact entity from Prisma
- * to a ContactDto for the API response.
- * @param contact - The Contact entity from Prisma.
- * @returns The mapped ContactDto object.
- */
-function mapContactToDto(contact: Contact): ContactDto {
-  return {
-    id: contact.id,
-    jobId: contact.jobId,
-    name: contact.name,
-    email: contact.email,
-    phoneNumber: contact.phoneNumber,
-    createdAt: contact.createdAt.toISOString(),
-    updatedAt: contact.updatedAt.toISOString(),
-  };
-}
-/**
- * Mapper function to map a Note entity from Prisma
- * to a NoteDto for the API response.
- * @param note - The Note entity from Prisma.
- * @returns The mapped NoteDto object.
- */
-function mapNoteToDto(note: Note): NoteDto {
-  return {
-    id: note.id,
-    jobId: note.jobId,
-    title: note.title,
-    body: note.body,
-    createdAt: note.createdAt.toISOString(),
-    updatedAt: note.updatedAt.toISOString(),
-  };
 }

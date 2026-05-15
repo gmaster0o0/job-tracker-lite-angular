@@ -9,7 +9,7 @@ A modern job tracking application built as an Nx monorepo, featuring a full-stac
 
 - `apps/frontend` — Angular application using standalone components and `httpResource`.
 - `apps/api` — NestJS backend application with a global `/api` prefix.
-- `libs/api-interfaces` — shared TypeScript interfaces and types used by frontend and backend.
+- `libs/shared/schemas` — shared Zod schemas used by frontend and backend (replaces former TypeScript-only interfaces).
 - `libs/frontend` — shared frontend library code, including data access services.
 - `libs/shared/prisma` — database schema and Prisma client for PostgreSQL integration.
 - `libs/shared/testing` — centralized mock and test data utilities.
@@ -154,7 +154,7 @@ apps/
   frontend-e2e/     # Frontend E2E tests
   api-e2e/          # API E2E tests
 libs/
-  api-interfaces/   # Shared API types
+  shared/schemas/    # Shared Zod schemas (replaces previous api-interfaces)
   frontend/         # Shared frontend utilities and services
   shared/
     prisma/         # Database schema and Prisma client

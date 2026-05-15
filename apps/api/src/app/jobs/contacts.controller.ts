@@ -1,51 +1,49 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Delete,
-  Body,
-  Param,
-} from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete } from '@nestjs/common';
 
-import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
-import { JobsService } from './jobs.service';
 import {
-  CreateContactDtoRequest,
-  UpdateContactDtoRequest,
-} from './dto/contacts.dto';
-import { ParseCuidPipe } from '@job-tracker-lite-angular/core-utils';
+  ContactDto,
+  contactIdParamSchema,
+  CreateContactDto,
+  createContactSchema,
+  jobIdParamSchema,
+  UpdateContactDto,
+  updateContactSchema,
+} from '@job-tracker-lite-angular/schemas';
+import { JobsService } from './jobs.service';
+import { ZodBody, ZodParam } from '@job-tracker-lite-angular/core-utils';
 
 @Controller('jobs/:id/contacts')
 export class ContactsController {
   constructor(private readonly jobsService: JobsService) {}
 
   @Get()
-  async findContacts(@Param('id') id: string): Promise<ContactDto[]> {
+  async findContacts(
+    @ZodParam('id', jobIdParamSchema) id: string,
+  ): Promise<ContactDto[]> {
     return this.jobsService.findContacts(id);
   }
 
   @Post()
   async createContact(
-    @Param('id', ParseCuidPipe) id: string,
-    @Body() createContactDto: CreateContactDtoRequest,
+    @ZodParam('id', jobIdParamSchema) id: string,
+    @ZodBody(createContactSchema) createContactDto: CreateContactDto,
   ): Promise<ContactDto> {
     return this.jobsService.createContact(id, createContactDto);
   }
 
   @Patch(':contactId')
   async updateContact(
-    @Param('id', ParseCuidPipe) id: string,
-    @Param('contactId', ParseCuidPipe) contactId: string,
-    @Body() updateContactDto: UpdateContactDtoRequest,
+    @ZodParam('id', jobIdParamSchema) id: string,
+    @ZodParam('contactId', contactIdParamSchema) contactId: string,
+    @ZodBody(updateContactSchema) updateContactDto: UpdateContactDto,
   ): Promise<ContactDto> {
     return this.jobsService.updateContact(id, contactId, updateContactDto);
   }
 
   @Delete(':contactId')
   async deleteContact(
-    @Param('id', ParseCuidPipe) id: string,
-    @Param('contactId', ParseCuidPipe) contactId: string,
+    @ZodParam('id', jobIdParamSchema) id: string,
+    @ZodParam('contactId', contactIdParamSchema) contactId: string,
   ): Promise<void> {
     await this.jobsService.deleteContact(id, contactId);
   }

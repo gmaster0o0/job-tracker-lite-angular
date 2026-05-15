@@ -4,7 +4,7 @@ import { PrismaClient, JobStatus } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
-import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
+import { JobDto } from '@job-tracker-lite-angular/schemas';
 import {
   getSeedContactsForJob,
   seedJobFixtures,
