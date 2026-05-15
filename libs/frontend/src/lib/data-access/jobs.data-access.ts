@@ -8,7 +8,7 @@ import {
   JobStatusDto,
   UpdateJobDto,
   UpdateJobStatusDto,
-} from '@job-tracker-lite-angular/api-interfaces';
+} from '@job-tracker-lite-angular/schemas';
 
 @Injectable({
   providedIn: 'root',

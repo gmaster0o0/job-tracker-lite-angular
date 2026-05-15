@@ -8,7 +8,7 @@ import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
-import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
+import { JobDto } from '@job-tracker-lite-angular/schemas';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { CreateJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
 import { TranslocoModule } from '@jsverse/transloco';

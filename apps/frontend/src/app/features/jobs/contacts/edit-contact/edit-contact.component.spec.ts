@@ -4,7 +4,7 @@ import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-da
 import { vi } from 'vitest';
 import { EditContactComponent } from './edit-contact.component';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
-import { UpdateContactDto } from '@job-tracker-lite-angular/api-interfaces';
+import { UpdateContactDto } from '@job-tracker-lite-angular/schemas';
 import { EditContactHarness } from './edit-contact.harness';
 import {
   contactFixtures,

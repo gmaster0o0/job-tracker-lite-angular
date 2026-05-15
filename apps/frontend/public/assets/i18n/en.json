@@ -78,13 +78,14 @@
         "label": "Job Link",
         "placeholder": "https://...",
         "description": "Link to the original job posting",
-        "required": ""
+        "validation": "jobs.fields.link.validation",
+        "example": "jobs.fields.link.example"
       },
       "description": {
         "label": "Job Description",
         "placeholder": "Paste job description here...",
-        "example": "",
-        "required": ""
+        "example": "e.g. The text of the job posting",
+        "validation": "jobs.fields.description.validation"
       }
     },
     "create": {

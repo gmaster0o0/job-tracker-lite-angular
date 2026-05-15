@@ -2,7 +2,7 @@ import {
   NoteDto,
   CreateNoteDto,
   UpdateNoteDto,
-} from '@job-tracker-lite-angular/api-interfaces';
+} from '@job-tracker-lite-angular/schemas';
 import { noteFixtures, createNoteFixtures } from '../fixtures/notes.fixtures';
 import { ResourceState } from './ResourceState';
 

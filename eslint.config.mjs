@@ -15,6 +15,7 @@ export default [
           allow: [
             '^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$',
             '^@job-tracker-lite-angular/frontend-shared($|/)',
+            '^@job-tracker-lite-angular/schemas($|/)',
           ],
           depConstraints: [
             {

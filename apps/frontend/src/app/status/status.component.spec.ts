@@ -2,7 +2,7 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { HealthResponseDto } from '@job-tracker-lite-angular/api-interfaces';
+import { HealthResponseDto } from '@job-tracker-lite-angular/schemas';
 import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import {
   createDataAccessMock,

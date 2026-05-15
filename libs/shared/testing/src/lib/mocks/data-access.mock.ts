@@ -1,4 +1,4 @@
-import { HealthResponseDto } from '@job-tracker-lite-angular/api-interfaces';
+import { HealthResponseDto } from '@job-tracker-lite-angular/schemas';
 
 type HealthResourceState = {
   value: () => HealthResponseDto | null;

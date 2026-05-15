@@ -68,11 +68,11 @@ When you create a new UI component that also requires a database field, follow t
 
 - Backend (API)
   - Add or update NestJS controllers and services under `apps/api/src/app/...` to expose the new endpoint/field
-  - Update DTOs / validation and mapping logic as needed (DTOs may also live in `libs/api-interfaces`)
+  - Update DTOs / validation and mapping logic as needed (shared schemas now live in `libs/shared/schemas` using Zod)
   - Add or update backend unit tests and integration tests: `npx nx test api`
 
 - Frontend
-  - Update shared interfaces in `libs/api-interfaces`
+  - Update shared schemas in `libs/shared/schemas` (Zod)
   - Update or extend the frontend data-access library (`@job-tracker-lite-angular/frontend-data-access`, in `libs/frontend`)
   - Implement the component and template in `apps/frontend/src/app/features/...` and update styles if needed
   - Add route(s) if required in `apps/frontend/src/app/app.routes.ts`
