@@ -44,6 +44,4 @@ export const updateContactSchema = baseContactSchema.partial();
 export type UpdateContactDto = z.infer<typeof updateContactSchema>;
 
 //contact id param schema
-export const contactIdParamSchema = z.object({
-  id: z.cuid2(),
-});
+export const contactIdParamSchema = z.cuid2();

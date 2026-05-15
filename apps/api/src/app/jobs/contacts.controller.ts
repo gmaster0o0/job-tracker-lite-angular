@@ -18,14 +18,14 @@ export class ContactsController {
 
   @Get()
   async findContacts(
-    @ZodParam(jobIdParamSchema) id: string,
+    @ZodParam('id', jobIdParamSchema) id: string,
   ): Promise<ContactDto[]> {
     return this.jobsService.findContacts(id);
   }
 
   @Post()
   async createContact(
-    @ZodParam(jobIdParamSchema) id: string,
+    @ZodParam('id', jobIdParamSchema) id: string,
     @ZodBody(createContactSchema) createContactDto: CreateContactDto,
   ): Promise<ContactDto> {
     return this.jobsService.createContact(id, createContactDto);
@@ -33,8 +33,8 @@ export class ContactsController {
 
   @Patch(':contactId')
   async updateContact(
-    @ZodParam(jobIdParamSchema) id: string,
-    @ZodParam(contactIdParamSchema) contactId: string,
+    @ZodParam('id', jobIdParamSchema) id: string,
+    @ZodParam('contactId', contactIdParamSchema) contactId: string,
     @ZodBody(updateContactSchema) updateContactDto: UpdateContactDto,
   ): Promise<ContactDto> {
     return this.jobsService.updateContact(id, contactId, updateContactDto);
@@ -42,8 +42,8 @@ export class ContactsController {
 
   @Delete(':contactId')
   async deleteContact(
-    @ZodParam(jobIdParamSchema) id: string,
-    @ZodParam(contactIdParamSchema) contactId: string,
+    @ZodParam('id', jobIdParamSchema) id: string,
+    @ZodParam('contactId', contactIdParamSchema) contactId: string,
   ): Promise<void> {
     await this.jobsService.deleteContact(id, contactId);
   }

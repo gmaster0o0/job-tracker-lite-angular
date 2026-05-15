@@ -46,7 +46,7 @@
       "createDescription": "Új jegyzet hozzáadása"
     },
     "detail": {
-      "loadFailed": "Nem sikerült betölteni a munkarészleteket",
+      "loadFailed": "Nem sikerült betölteni a részleteket",
       "notFound": "Munka nem található",
       "loading": "Munka betöltése...",
       "selectJob": "Nincs munka kiválasztva",

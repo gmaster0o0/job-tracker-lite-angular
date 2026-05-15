@@ -28,7 +28,7 @@ export const createJobSchema = z.object({
   description: z.string().nullable(),
   status: jobStatusSchema.default(JobStatus.SAVED),
 });
-export type CreateJobDto = z.infer<typeof createJobSchema>;
+export type CreateJobDto = z.input<typeof createJobSchema>;
 
 //update job schema with DTO
 export const updateJobSchema = createJobSchema.partial();
@@ -41,6 +41,4 @@ export const updateJobStatusSchema = z.object({
 export type UpdateJobStatusDto = z.infer<typeof updateJobStatusSchema>;
 
 //job id param schema
-export const jobIdParamSchema = z.object({
-  id: z.cuid2(),
-});
+export const jobIdParamSchema = z.cuid2();

@@ -35,12 +35,14 @@ describe('Zod decorators', () => {
     expect(result).toBe('bodyDecorator');
   });
 
-  it('ZodParam calls Param with a ZodValidationPipe built from the schema', () => {
+  it('ZodParam calls Param with the param name and a ZodValidationPipe built from the schema', () => {
     const schema = z.object({ id: z.string() });
-    const result = ZodParam(schema);
+    const result = ZodParam('id', schema);
 
     expect(Param).toHaveBeenCalledTimes(1);
-    const calledArg = (Param as unknown as jest.Mock).mock.calls[0][0];
+    const calledName = (Param as unknown as jest.Mock).mock.calls[0][0];
+    const calledArg = (Param as unknown as jest.Mock).mock.calls[0][1];
+    expect(calledName).toBe('id');
     expect(calledArg).toBeInstanceOf(ZodValidationPipe);
     expect((calledArg as any).schema).toBe(schema);
     expect(result).toBe('paramDecorator');

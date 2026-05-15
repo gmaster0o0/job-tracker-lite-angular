@@ -71,9 +71,9 @@ export class EditContactComponent {
         this.context.jobId,
         this.context.contact.id,
         {
-          name: this.form.controls.name.value.trim(),
-          email: this.form.controls.email.value.trim(),
-          phoneNumber: this.form.controls.phoneNumber.value.trim(),
+          name: (this.form.controls.name.value ?? '').trim(),
+          email: (this.form.controls.email.value ?? '').trim(),
+          phoneNumber: (this.form.controls.phoneNumber.value ?? '').trim(),
         },
       );
 

@@ -9,7 +9,10 @@ import {
   jobIdParamSchema,
   updateJobSchema,
 } from '@job-tracker-lite-angular/schemas';
-import { ZodValidationPipe } from '@job-tracker-lite-angular/core-utils';
+import {
+  ZodParam,
+  ZodValidationPipe,
+} from '@job-tracker-lite-angular/core-utils';
 import { ZodBody } from '@job-tracker-lite-angular/core-utils';
 
 @Controller('jobs')
@@ -22,9 +25,7 @@ export class JobsController {
   }
 
   @Get(':id')
-  async findOne(
-    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
-  ): Promise<JobDto> {
+  async findOne(@ZodParam('id', jobIdParamSchema) id: string): Promise<JobDto> {
     return await this.jobsService.findOne(id);
   }
 
@@ -37,7 +38,7 @@ export class JobsController {
 
   @Patch(':id/status')
   async updateStatus(
-    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+    @ZodParam('id', jobIdParamSchema) id: string,
     @ZodBody(updateJobSchema) updateJobStatusDto: { status: JobStatusDto },
   ): Promise<JobDto> {
     return this.jobsService.updateStatus(id, updateJobStatusDto.status);
@@ -45,16 +46,14 @@ export class JobsController {
 
   @Patch(':id')
   async update(
-    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
+    @ZodParam('id', jobIdParamSchema) id: string,
     @ZodBody(updateJobSchema) updateJobDto: UpdateJobDto,
   ): Promise<JobDto> {
     return await this.jobsService.update(id, updateJobDto);
   }
 
   @Delete(':id')
-  async delete(
-    @Param('id', new ZodValidationPipe(jobIdParamSchema)) id: string,
-  ): Promise<void> {
+  async delete(@ZodParam('id', jobIdParamSchema) id: string): Promise<void> {
     await this.jobsService.delete(id);
   }
 }

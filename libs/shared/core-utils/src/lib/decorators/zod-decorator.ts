@@ -10,8 +10,9 @@ import { ZodType } from 'zod';
 export const ZodBody = (schema: ZodType) => Body(new ZodValidationPipe(schema));
 /**
  * Custom decorator to validate request parameters using Zod schema
+ * @param paramName - The name of the parameter to validate
  * @param schema
  * @returns
  */
-export const ZodParam = (schema: ZodType) =>
-  Param(new ZodValidationPipe(schema));
+export const ZodParam = (paramName: string, schema: ZodType) =>
+  Param(paramName, new ZodValidationPipe(schema));

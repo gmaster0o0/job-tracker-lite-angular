@@ -19,6 +19,7 @@ import {
   jobFixtures,
 } from '@job-tracker-lite-angular/testing';
 import { JobDetailHarness } from './job-detail.harness';
+import { JobStatus } from '@job-tracker-lite-angular/schemas';
 
 type JobDetailTestComponent = {
   activeTab: () => string;
@@ -232,7 +233,7 @@ describe('JobDetailComponent', () => {
     const component =
       fixture.componentInstance as unknown as JobDetailTestComponent;
 
-    expect(component.formatStatus('applied')).toBe('APPLIED');
+    expect(component.formatStatus(JobStatus.APPLIED)).toBe('APPLIED');
   });
 
   it('should identify rejected jobs and return -1 for rejected progress index', async () => {
@@ -259,7 +260,7 @@ describe('JobDetailComponent', () => {
 
     const component =
       fixture.componentInstance as unknown as JobDetailTestComponent;
-    await component.moveToStatus('job offered', baseJob);
+    await component.moveToStatus(JobStatus.JOB_OFFERED, baseJob);
 
     expect(dataAccessServiceMock.__calls.updateJobStatusCalls).toEqual([]);
   });

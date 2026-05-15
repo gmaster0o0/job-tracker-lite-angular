@@ -100,6 +100,8 @@ export class JobDetailComponent {
     this.deleteTitleParams,
   );
 
+  protected readonly JobStatus = JobStatus;
+
   // Resource signals for jobs, contacts, and notes
   protected readonly jobsResource = this.jobsDataAccess.jobsResource;
   protected readonly jobResource = this.jobsDataAccess.jobResource;
