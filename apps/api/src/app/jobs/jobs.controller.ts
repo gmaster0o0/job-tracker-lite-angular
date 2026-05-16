@@ -9,10 +9,7 @@ import {
   jobIdParamSchema,
   updateJobSchema,
 } from '@job-tracker-lite-angular/schemas';
-import {
-  ZodParam,
-  ZodValidationPipe,
-} from '@job-tracker-lite-angular/core-utils';
+import { ZodParam } from '@job-tracker-lite-angular/core-utils';
 import { ZodBody } from '@job-tracker-lite-angular/core-utils';
 
 @Controller('jobs')
