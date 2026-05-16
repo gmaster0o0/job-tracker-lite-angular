@@ -78,19 +78,37 @@
         "label": "Job Link",
         "placeholder": "https://...",
         "description": "Link to the original job posting",
-        "validation": "jobs.fields.link.validation",
-        "example": "jobs.fields.link.example"
+        "example": "jobs.create.link.example",
+        "validation": "jobs.create.link.validation"
       },
       "description": {
         "label": "Job Description",
         "placeholder": "Paste job description here...",
-        "example": "e.g. The text of the job posting",
-        "validation": "jobs.fields.description.validation"
+        "example": "jobs.create.description.example",
+        "validation": "jobs.create.description.validation"
       }
     },
     "create": {
       "title": "Add New Job Opportunity",
-      "description": "Create a new job entry to track your application"
+      "description": "Create a new job entry to track your application",
+      "position": {
+        "label": "jobs.create.position.label",
+        "placeholder": "jobs.create.position.placeholder",
+        "required": "jobs.create.position.required",
+        "example": "jobs.create.position.example"
+      },
+      "company": {
+        "label": "jobs.create.company.label",
+        "placeholder": "jobs.create.company.placeholder",
+        "required": "jobs.create.company.required",
+        "example": "jobs.create.company.example"
+      },
+      "link": {
+        "label": "jobs.create.link.label",
+        "placeholder": "jobs.create.link.placeholder",
+        "invalid_format": "jobs.create.link.invalid_format",
+        "example": "jobs.create.link.example"
+      }
     },
     "contacts": {
       "title": "Contacts"
