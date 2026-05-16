@@ -78,8 +78,8 @@
         "label": "Job Link",
         "placeholder": "https://...",
         "description": "Link az eredeti álláshirdetéshez",
-
-        "example": "jobs.fields.link.example"
+        "invalid_format": "Érvénytelen link formátum",
+        "example": "Pl. https://www.example.com/job"
       },
       "description": {
         "label": "Munkaköri leírás",
@@ -88,8 +88,12 @@
       }
     },
     "create": {
-      "title": "Új munkalehetőség hozzáadása",
-      "description": "Hozzon létre egy új munkát a követéshez"
+      "title": "Új munka létrehozása",
+      "description": "Hozz létre egy új munkát a jelentkezéseid követéséhez",
+      "error": {
+        "title": "Hiba történt a munka létrehozása során",
+        "not_unique": "Egy ugyanazzal a linkkel rendelkező munka már létezik. Kérjük, ellenőrizze a munkalistáját."
+      }
     },
     "contacts": {
       "title": "Kapcsolatok"
@@ -100,6 +104,9 @@
       "applied": "Jelentkezve",
       "interview": "Interjú",
       "offer": "Ajánlat"
+    },
+    "overview": {
+      "noDescription": "Nincs leírás megadva."
     },
     "deleteDialog": {
       "description": "Biztosan törölni szeretné ezt a munkát?",

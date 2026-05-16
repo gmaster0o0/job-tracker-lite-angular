@@ -27,8 +27,14 @@ export class JobsService {
   }
 
   async create(createJobDto: CreateJobDto): Promise<JobDto> {
+    const dataForPrisma = {
+      ...createJobDto,
+      link: this.cleanOptionalField(createJobDto.link),
+      description: this.cleanOptionalField(createJobDto.description),
+    };
+
     const job = await this.prisma.job.create({
-      data: createJobDto,
+      data: dataForPrisma,
     });
 
     return mapJobToDto(job);
@@ -51,6 +57,9 @@ export class JobsService {
     return mapJobToDto(job);
   }
 
+  // Update job details, allowing partial updates. If status is included, it will be updated;
+  //  otherwise, it remains unchanged.
+  // TODO : consider checking link and description for empty strings and converting them to null before updating, similar to the create method.
   async update(id: string, updateJobDto: UpdateJobDto): Promise<JobDto> {
     const { status, ...rest } = updateJobDto;
     const job = await this.prisma.job.update({
@@ -179,5 +188,12 @@ export class JobsService {
     await this.prisma.note.delete({
       where: { id: noteId, jobId },
     });
+  }
+
+  private cleanOptionalField(value: string | undefined | null): string | null {
+    if (!value || value.trim() === '') {
+      return null;
+    }
+    return value.trim();
   }
 }

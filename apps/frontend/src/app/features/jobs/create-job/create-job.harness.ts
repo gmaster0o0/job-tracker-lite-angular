@@ -43,7 +43,7 @@ export class CreateJobHarness extends ComponentHarness {
       const input = await this.getLinkInput();
       await input.clear();
       const link = values.link ?? '';
-      if (link.length > 0) {
+      if (typeof link === 'string' && link) {
         await input.sendKeys(link);
       }
       await input.dispatchEvent('input');
@@ -53,7 +53,7 @@ export class CreateJobHarness extends ComponentHarness {
       const input = await this.getDescriptionInput();
       await input.clear();
       const description = values.description ?? '';
-      if (description.length > 0) {
+      if (typeof description === 'string' && description) {
         await input.sendKeys(description);
       }
       await input.dispatchEvent('input');
