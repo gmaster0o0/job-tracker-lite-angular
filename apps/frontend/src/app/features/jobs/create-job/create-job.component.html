@@ -7,92 +7,93 @@
   <hlm-field-group>
     <hlm-field>
       <label hlmLabel for="position">{{
-        'jobs.create.position.label' | transloco
+        'jobs.fields.position.label' | transloco
       }}</label>
       <input
         hlmInput
         id="position"
         [formField]="jobForm.position"
-        placeholder="{{ 'jobs.create.position.placeholder' | transloco }}"
+        placeholder="{{ 'jobs.fields.position.placeholder' | transloco }}"
         class="w-full"
       />
       @if (jobForm.position().errors()) {
         <hlm-field-error validator="required">{{
-          'jobs.create.position.required' | transloco
+          'jobs.fields.position.required' | transloco
         }}</hlm-field-error>
       } @else {
         <p hlmDialogDescription>
-          {{ 'jobs.create.position.example' | transloco }}
+          {{ 'jobs.fields.position.example' | transloco }}
         </p>
       }
     </hlm-field>
     <hlm-field>
       <label hlmLabel for="company">{{
-        'jobs.create.company.label' | transloco
+        'jobs.fields.company.label' | transloco
       }}</label>
       <input
         hlmInput
         id="company"
         [formField]="jobForm.company"
-        placeholder="{{ 'jobs.create.company.placeholder' | transloco }}"
+        placeholder="{{ 'jobs.fields.company.placeholder' | transloco }}"
         class="w-full"
       />
       @if (jobForm.company().errors()) {
         <hlm-field-error validator="required">{{
-          'jobs.create.company.required' | transloco
+          'jobs.fields.company.required' | transloco
         }}</hlm-field-error>
       } @else {
         <p hlmDialogDescription>
-          {{ 'jobs.create.company.example' | transloco }}
+          {{ 'jobs.fields.company.example' | transloco }}
         </p>
       }
     </hlm-field>
     <hlm-field>
       <label hlmLabel for="link">{{
-        'jobs.create.link.label' | transloco
+        'jobs.fields.link.label' | transloco
       }}</label>
       <input
         hlmInput
         id="link"
         [formField]="jobForm.link"
-        placeholder="{{ 'jobs.create.link.placeholder' | transloco }}"
+        placeholder="{{ 'jobs.fields.link.placeholder' | transloco }}"
         class="w-full"
       />
       @if (jobForm.link().errors()) {
         <hlm-field-error validator="invalid_format">{{
-          'jobs.create.link.invalid_format' | transloco
+          'jobs.fields.link.invalid_format' | transloco
         }}</hlm-field-error>
       } @else {
         <p hlmDialogDescription>
-          {{ 'jobs.create.link.example' | transloco }}
+          {{ 'jobs.fields.link.example' | transloco }}
         </p>
       }
     </hlm-field>
 
     <hlm-field>
       <label hlmLabel for="description">{{
-        'jobs.create.description.label' | transloco
+        'jobs.fields.description.label' | transloco
       }}</label>
       <textarea
         hlmTextarea
         id="description"
         [formField]="jobForm.description"
-        placeholder="{{ 'jobs.create.description.placeholder' | transloco }}"
+        placeholder="{{ 'jobs.fields.description.placeholder' | transloco }}"
         rows="4"
         class="min-h-[120px] h-[120px] [field-sizing:fixed] overflow-y-auto"
       ></textarea>
 
       <p hlmDialogDescription>
-        {{ 'jobs.create.description.example' | transloco }}
+        {{ 'jobs.fields.description.example' | transloco }}
       </p>
     </hlm-field>
 
     @if (jobResource.status() === 'error') {
       <div class="text-sm font-medium text-destructive">
-        <h4 hlmAlertTitle>{{ 'login.error.title' | transloco }}</h4>
+        <h4 hlmAlertTitle>{{ 'jobs.create.error.title' | transloco }}</h4>
         <p hlmAlertDescription>
           {{
-            jobResource.error()?.message || ('login.error.message' | transloco)
+            jobResource.error()?.message ||
+              ('jobs.create.error.message' | transloco)
           }}
         </p>
       </div>

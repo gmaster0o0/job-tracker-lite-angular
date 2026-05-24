@@ -86,28 +86,6 @@
         "example": "Pl. Az álláshirdetés szövege"
       }
     },
-    "create": {
-      "title": "Új munkalehetőség hozzáadása",
-      "description": "Hozzon létre egy új munkát a követéshez",
-      "position": {
-        "label": "jobs.create.position.label",
-        "placeholder": "jobs.create.position.placeholder",
-        "required": "jobs.create.position.required",
-        "example": "jobs.create.position.example"
-      },
-      "company": {
-        "label": "jobs.create.company.label",
-        "placeholder": "jobs.create.company.placeholder",
-        "required": "jobs.create.company.required",
-        "example": "jobs.create.company.example"
-      },
-      "link": {
-        "label": "jobs.create.link.label",
-        "placeholder": "jobs.create.link.placeholder",
-        "invalid_format": "jobs.create.link.invalid_format",
-        "example": "jobs.create.link.example"
-      }
-    },
     "contacts": {
       "title": "Kapcsolatok"
     },

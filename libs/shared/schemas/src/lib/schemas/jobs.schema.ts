@@ -25,8 +25,8 @@ export type JobDto = z.infer<typeof jobSchema>;
 export const createJobSchema = z.object({
   position: z.string().pipe(required),
   company: z.string().pipe(required),
-  link: z.url().nullish(),
-  description: z.string().nullish(),
+  link: z.preprocess((val) => (val === '' ? null : val), z.url().nullable()),
+  description: z.string().nullable(),
 
   status: jobStatusSchema.default(JobStatus.SAVED),
 });
