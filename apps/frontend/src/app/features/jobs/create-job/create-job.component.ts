@@ -15,7 +15,7 @@ import {
 } from '@job-tracker-lite-angular/schemas';
 import {
   JobsDataAccessService,
-  ZodTransformPipeAll,
+  ZodNgControlBridgeDirective,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import { CreateJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -45,7 +45,7 @@ type CreateJobDialogContext = {
     TranslocoModule,
     FormRoot,
     FormField,
-    ZodTransformPipeAll,
+    ZodNgControlBridgeDirective,
   ],
   templateUrl: './create-job.component.html',
 })
