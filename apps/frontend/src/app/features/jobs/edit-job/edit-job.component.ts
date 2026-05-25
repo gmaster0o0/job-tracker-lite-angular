@@ -12,7 +12,11 @@ import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
-import { JobDto, updateJobSchema } from '@job-tracker-lite-angular/schemas';
+import {
+  JobDto,
+  JobStatus,
+  updateJobSchema,
+} from '@job-tracker-lite-angular/schemas';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
@@ -25,8 +29,10 @@ import {
   validateStandardSchema,
 } from '@angular/forms/signals';
 import { HlmAlert } from '@spartan-ng/helm/alert';
-import { NgIcon, provideIcons } from '@ng-icons/core';
+import { provideIcons } from '@ng-icons/core';
 import { lucideAlertCircle } from '@ng-icons/lucide';
+import { HlmIconImports } from '@spartan-ng/helm/icon';
+import { ZodNgControlBridgeDirective } from '@job-tracker-lite-angular/frontend-data-access';
 
 type EditJobDialogContext = {
   job: JobDto;
@@ -48,7 +54,8 @@ type EditJobDialogContext = {
     EditJobDialogFooterComponent,
     TranslocoModule,
     HlmAlert,
-    NgIcon,
+    HlmIconImports,
+    ZodNgControlBridgeDirective,
   ],
   providers: [provideIcons({ lucideAlertCircle })],
   templateUrl: './edit-job.component.html',
@@ -67,6 +74,7 @@ export class EditJobComponent {
     company: this.job?.company ?? '',
     link: this.job?.link ?? '',
     description: this.job?.description ?? '',
+    status: this.job?.status ?? JobStatus.SAVED,
   });
 
   protected readonly backendResponse = computed(() => {
@@ -99,6 +107,11 @@ export class EditJobComponent {
           this.dialogRef?.close(updatedJob);
 
           this.jobsDataAccess.jobsResource.reload();
+          this.jobsDataAccess.jobResource.reload();
+
+          untracked(() => {
+            this.jobsDataAccess.resetUpdateJob();
+          });
         }
       }
     });

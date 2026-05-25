@@ -39,9 +39,8 @@ export class JobsDataAccessService {
 
   updateJobResource = httpResource<JobDto>(() => {
     const job = this.updateJobTrigger();
-
-    console.log('updateJobResource - job:', job); // Debug log
     if (!job) return undefined;
+
     return {
       url: `/api/jobs/${job.id}`,
       method: 'PATCH',
