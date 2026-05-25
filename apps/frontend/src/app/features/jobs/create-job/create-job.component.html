@@ -16,7 +16,10 @@
         placeholder="{{ 'jobs.fields.position.placeholder' | transloco }}"
         class="w-full"
       />
-      @if (jobForm.position().errors()) {
+      @if (
+        jobForm.position().invalid() &&
+        (jobForm.position().touched() || jobForm.position().dirty())
+      ) {
         <hlm-field-error validator="required">{{
           'jobs.fields.position.required' | transloco
         }}</hlm-field-error>
@@ -37,7 +40,10 @@
         placeholder="{{ 'jobs.fields.company.placeholder' | transloco }}"
         class="w-full"
       />
-      @if (jobForm.company().errors()) {
+      @if (
+        jobForm.company().invalid() &&
+        (jobForm.company().touched() || jobForm.company().dirty())
+      ) {
         <hlm-field-error validator="required">{{
           'jobs.fields.company.required' | transloco
         }}</hlm-field-error>
@@ -58,7 +64,10 @@
         placeholder="{{ 'jobs.fields.link.placeholder' | transloco }}"
         class="w-full"
       />
-      @if (jobForm.link().errors()) {
+      @if (
+        jobForm.link().invalid() &&
+        (jobForm.link().touched() || jobForm.link().dirty())
+      ) {
         <hlm-field-error validator="invalid_format">{{
           'jobs.fields.link.invalid_format' | transloco
         }}</hlm-field-error>
@@ -86,22 +95,22 @@
         {{ 'jobs.fields.description.example' | transloco }}
       </p>
     </hlm-field>
-
-    @if (jobResource.status() === 'error') {
-      <div class="text-sm font-medium text-destructive">
+    @if (createJobStatus.status() === 'error') {
+      <hlm-alert variant="destructive" class="max-w-md">
+        <ng-icon name="lucideAlertCircle" />
         <h4 hlmAlertTitle>{{ 'jobs.create.error.title' | transloco }}</h4>
         <p hlmAlertDescription>
           {{
-            jobResource.error()?.message ||
-              ('jobs.create.error.message' | transloco)
+            'jobs.create.error.' + (backendResponse()?.errorCode || 'message')
+              | transloco
           }}
         </p>
-      </div>
+      </hlm-alert>
     }
   </hlm-field-group>
 </form>
 <app-create-job-dialog-footer
   formId="createJobForm"
   [disableSubmit]="jobForm().invalid()"
-  [isSubmitting]="jobResource.status() === 'loading'"
+  [isSubmitting]="createJobStatus.status() === 'loading'"
 />

@@ -23,8 +23,8 @@ export type JobDto = z.infer<typeof jobSchema>;
 
 //create job schema with DTO
 export const createJobSchema = z.object({
-  position: z.string().pipe(required),
-  company: z.string().pipe(required),
+  position: required,
+  company: required,
   link: z.preprocess((val) => (val === '' ? null : val), z.url().nullable()),
   description: z.string().nullable(),
 

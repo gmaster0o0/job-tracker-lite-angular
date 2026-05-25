@@ -17,6 +17,8 @@ export class JobsDataAccessService {
   private readonly http = inject(HttpClient);
   private readonly selectedJobId = signal<string | null>(null);
 
+  createJobTrigger = signal<CreateJobDto | null>(null);
+
   jobsResource = httpResource<JobDto[]>(() => `/api/jobs`);
 
   jobResource = httpResource<JobDto>(() => {
@@ -24,17 +26,26 @@ export class JobsDataAccessService {
     return id === null ? undefined : `/api/jobs/${id}`;
   });
 
+  createJobResource = httpResource<JobDto>(() => {
+    const dto = this.createJobTrigger();
+    if (!dto) return undefined;
+    return {
+      url: `/api/jobs`,
+      method: 'POST',
+      body: dto,
+    };
+  });
+
   selectJob(id: string | null): void {
     this.selectedJobId.set(id);
   }
 
-  async createJob(dto: CreateJobDto): Promise<JobDto> {
-    const created = await firstValueFrom(
-      this.http.post<JobDto>('/api/jobs', dto),
-    );
-    this.jobsResource.reload();
-    this.jobResource.reload();
-    return created;
+  createJob(dto: CreateJobDto): void {
+    this.createJobTrigger.set(dto);
+  }
+
+  resetCreateJob(): void {
+    this.createJobTrigger.set(null);
   }
 
   async updateJobStatus(id: string, status: JobStatusDto): Promise<JobDto> {

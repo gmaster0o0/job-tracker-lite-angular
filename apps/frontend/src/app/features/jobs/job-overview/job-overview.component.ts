@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmScrollAreaImports } from '@spartan-ng/helm/scroll-area';
 import { marked } from 'marked';
+import { translateSignal } from '@jsverse/transloco';
 
 @Component({
   standalone: true,
@@ -15,10 +16,15 @@ export class JobOverviewComponent {
 
   description = input<string | null | undefined>('');
 
+  noDescription = translateSignal('jobs.overview.noDescription');
   protected readonly renderedDescription = computed(() => {
     const content = this.description();
     if (!content || !content.trim()) {
-      return '<p class="text-sm text-muted-foreground">No description provided.</p>';
+      return (
+        '<p class="text-sm text-muted-foreground">' +
+        this.noDescription() +
+        '</p>'
+      );
     }
 
     const parsed = marked.parse(content.trim(), {

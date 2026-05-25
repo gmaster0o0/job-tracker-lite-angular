@@ -19,6 +19,7 @@ export class PrismaClientExceptionFilter implements ExceptionFilter {
         response.status(status).json({
           statusCode: status,
           message: 'Unique constraint failed',
+          errorCode: 'not_unique',
         });
         break;
       }
@@ -27,6 +28,7 @@ export class PrismaClientExceptionFilter implements ExceptionFilter {
         response.status(status).json({
           statusCode: status,
           message: 'Record not found',
+          errorCode: 'not_found',
         });
         break;
       }
@@ -34,6 +36,7 @@ export class PrismaClientExceptionFilter implements ExceptionFilter {
         response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
           message: 'Internal server error',
+          errorCode: 'internal_server_error',
         });
         break;
     }

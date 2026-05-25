@@ -78,14 +78,23 @@
         "label": "Job Link",
         "placeholder": "https://...",
         "description": "Link to the original job posting",
-        "example": "jobs.create.link.example",
-        "validation": "jobs.create.link.validation"
+        "invalid_format": "Invalid link format",
+        "example": "e.g. https://www.example.com/job",
+        "validation": "Please provide a valid link"
       },
       "description": {
         "label": "Job Description",
         "placeholder": "Paste job description here...",
         "example": "jobs.create.description.example",
         "validation": "jobs.create.description.validation"
+      }
+    },
+    "create": {
+      "title": "Create New Job",
+      "description": "Create a new job entry to track your application process.",
+      "error": {
+        "title": "Job Creation Failed",
+        "not_unique": "A job with a same link already exists. Please check your job list."
       }
     },
     "contacts": {
@@ -97,6 +106,9 @@
       "applied": "Applied",
       "interview": "Interview",
       "offer": "Offer"
+    },
+    "overview": {
+      "noDescription": "jobs.overview.noDescription"
     },
     "deleteDialog": {
       "description": "Are you sure you want to delete this job?",
