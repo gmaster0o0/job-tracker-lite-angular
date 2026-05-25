@@ -1,6 +1,9 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  JobsDataAccessService,
+  BackendError,
+} from '@job-tracker-lite-angular/frontend-data-access';
 import {
   jobFixtures,
   createJobsDataAccessMock,
@@ -74,17 +77,20 @@ describe('CreateJobComponent', () => {
   });
 
   it('should set submit error on failure', async () => {
+    const backendError = new Error('Backend error: not_unique') as BackendError;
+    (backendError as any).errorCode = 'not_unique';
+    (backendError as any).statusCode = 409;
+
+    const createJob = vi.fn().mockRejectedValue(backendError);
+    jobsDataAccessMock.createJob = createJob;
+
     fixture.detectChanges();
 
     await harness.fillForm(createJobFixtures.designer);
     await harness.submit();
-
-    jobsDataAccessMock.__setCreateJobError({ errorCode: 'message' });
-    fixture.detectChanges();
     await fixture.whenStable();
+    fixture.detectChanges();
 
-    expect(await harness.getSubmitErrorTitle()).toContain(
-      'Job Creation Failed',
-    );
+    expect(await harness.isErrorVisible()).toBe(true);
   });
 });

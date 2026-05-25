@@ -1,4 +1,3 @@
-import { signal } from '@angular/core';
 import {
   ContactDto,
   CreateJobDto,
@@ -107,38 +106,11 @@ export function createJobsDataAccessMock(
     error: () => null,
   };
 
-  // Mutable resource state for create/update operations to support test scenarios
-  const createJobResourceStatus = signal<
-    'idle' | 'loading' | 'resolved' | 'error'
-  >('idle');
-  const createJobResourceError = signal<any>(null);
-  const createJobResourceValue = signal<JobDto | null>(null);
-
-  const createJobResource = {
-    value: () => createJobResourceValue(),
-    status: () => createJobResourceStatus(),
-    error: () => createJobResourceError(),
-  };
-
-  const updateJobResourceStatus = signal<
-    'idle' | 'loading' | 'resolved' | 'error'
-  >('idle');
-  const updateJobResourceError = signal<any>(null);
-  const updateJobResourceValue = signal<JobDto | null>(null);
-
-  const updateJobResource = {
-    value: () => updateJobResourceValue(),
-    status: () => updateJobResourceStatus(),
-    error: () => updateJobResourceError(),
-  };
-
   return {
     jobsResource,
     jobResource,
     jobContactsResource,
     jobNotesResource,
-    createJobResource,
-    updateJobResource,
     selectJob: (id: string | null) => {
       selectJobCalls.push(id);
     },
@@ -153,66 +125,25 @@ export function createJobsDataAccessMock(
     },
     createJob: async (dto: CreateJobDto) => {
       createJobCalls.push(dto);
-      createJobResourceStatus.set('loading');
-      createJobResourceError.set(null);
-      try {
-        const result: JobDto = {
-          ...jobFixtures.frontendEngineer,
-          ...dto,
-          id: 'ck1234567890',
-        } as JobDto;
-        createJobResourceValue.set(result);
-        createJobResourceStatus.set('resolved');
-        return result;
-      } catch (error) {
-        createJobResourceError.set(error);
-        createJobResourceStatus.set('error');
-        throw error;
-      }
+      return {
+        ...jobFixtures.frontendEngineer,
+        ...dto,
+        id: 'ck1234567890',
+      };
     },
     updateJob: async (id: string, dto: UpdateJobDto) => {
       updateJobCalls.push([id, dto]);
-      updateJobResourceStatus.set('loading');
-      updateJobResourceError.set(null);
-      try {
-        const result = {
-          ...job,
-          id,
-          ...dto,
-        } as JobDto;
-        updateJobResourceValue.set(result);
-        updateJobResourceStatus.set('resolved');
-        return result;
-      } catch (error) {
-        updateJobResourceError.set(error);
-        updateJobResourceStatus.set('error');
-        throw error;
-      }
-    },
-    resetCreateJob: () => {
-      createJobResourceStatus.set('idle');
-      createJobResourceError.set(null);
-      createJobResourceValue.set(null);
-    },
-    resetUpdateJob: () => {
-      updateJobResourceStatus.set('idle');
-      updateJobResourceError.set(null);
-      updateJobResourceValue.set(null);
+      return {
+        ...job,
+        id,
+        ...dto,
+      };
     },
     __calls: {
       selectJobCalls,
       updateJobStatusCalls,
       createJobCalls,
       updateJobCalls,
-    },
-    // Expose resource state signals for tests to manually trigger errors
-    __setCreateJobError: (error: any) => {
-      createJobResourceStatus.set('error');
-      createJobResourceError.set(error);
-    },
-    __setUpdateJobError: (error: any) => {
-      updateJobResourceStatus.set('error');
-      updateJobResourceError.set(error);
     },
   };
 }

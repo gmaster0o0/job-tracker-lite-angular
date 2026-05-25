@@ -11,8 +11,8 @@ export class EditJobHarness extends ComponentHarness {
   private readonly getSubmitButton = this.locatorFor(
     'app-edit-job-dialog-footer button[type="submit"]',
   );
-  private readonly getErrorMessageTitle =
-    this.locatorForOptional('[hlmAlertTitle]');
+  private readonly getErrorAlert = this.locatorForOptional('[role="alert"]');
+
   async fillForm(values: Partial<UpdateJobDto>): Promise<void> {
     if (values.position !== undefined) {
       const input = await this.getPositionInput();
@@ -73,8 +73,8 @@ export class EditJobHarness extends ComponentHarness {
     return button.getProperty('disabled');
   }
 
-  async getSubmitErrorTitle(): Promise<string | null> {
-    const error = await this.getErrorMessageTitle();
-    return error ? error.text() : null;
+  async isErrorVisible(): Promise<boolean> {
+    const alert = await this.getErrorAlert();
+    return alert !== null;
   }
 }

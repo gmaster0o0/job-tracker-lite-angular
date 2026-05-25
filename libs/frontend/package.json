@@ -4,6 +4,7 @@
   "peerDependencies": {
     "@angular/common": "^21.2.0",
     "@angular/core": "^21.2.0",
+    "@angular/forms": "^21.2.0",
     "rxjs": "~7.8.0",
     "@jsverse/transloco": "^8.3.0",
     "@job-tracker-lite-angular/schemas": "0.0.1"
