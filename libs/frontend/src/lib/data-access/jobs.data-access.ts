@@ -18,6 +18,7 @@ export class JobsDataAccessService {
   private readonly selectedJobId = signal<string | null>(null);
 
   createJobTrigger = signal<CreateJobDto | null>(null);
+  updateJobTrigger = signal<{ id: string; dto: UpdateJobDto } | null>(null);
 
   jobsResource = httpResource<JobDto[]>(() => `/api/jobs`);
 
@@ -36,6 +37,17 @@ export class JobsDataAccessService {
     };
   });
 
+  updateJobResource = httpResource<JobDto>(() => {
+    const job = this.updateJobTrigger();
+    if (!job) return undefined;
+
+    return {
+      url: `/api/jobs/${job.id}`,
+      method: 'PATCH',
+      body: job.dto,
+    };
+  });
+
   selectJob(id: string | null): void {
     this.selectedJobId.set(id);
   }
@@ -44,23 +56,22 @@ export class JobsDataAccessService {
     this.createJobTrigger.set(dto);
   }
 
+  updateJob(id: string, dto: UpdateJobDto): void {
+    this.updateJobTrigger.set({ id, dto });
+  }
+
   resetCreateJob(): void {
     this.createJobTrigger.set(null);
+  }
+
+  resetUpdateJob(): void {
+    this.updateJobTrigger.set(null);
   }
 
   async updateJobStatus(id: string, status: JobStatusDto): Promise<JobDto> {
     const dto: UpdateJobStatusDto = { status };
     const updated = await firstValueFrom(
       this.http.patch<JobDto>(`/api/jobs/${id}/status`, dto),
-    );
-    this.jobsResource.reload();
-    this.jobResource.reload();
-    return updated;
-  }
-
-  async updateJob(id: string, dto: UpdateJobDto): Promise<JobDto> {
-    const updated = await firstValueFrom(
-      this.http.patch<JobDto>(`/api/jobs/${id}`, dto),
     );
     this.jobsResource.reload();
     this.jobResource.reload();

@@ -39,7 +39,6 @@ describe('EditJobComponent', () => {
       fixture,
       EditJobHarness,
     );
-    // do NOT call fixture.detectChanges() here so tests can set spies first
   });
 
   it('should create', async () => {
@@ -61,6 +60,7 @@ describe('EditJobComponent', () => {
     const updateJob = vi.fn().mockResolvedValue({
       ...jobFixtures.frontendEngineer,
       company: 'Updated Company',
+      status: jobFixtures.frontendEngineer.status,
     });
     jobsDataAccessMock.updateJob = updateJob;
 
@@ -69,10 +69,10 @@ describe('EditJobComponent', () => {
     await harness.fillForm(updateJobFixtures['updatedFrontendEngineer']);
     await harness.submit();
 
-    expect(updateJob).toHaveBeenCalledWith(
-      jobFixtures.frontendEngineer.id,
-      updateJobFixtures['updatedFrontendEngineer'],
-    );
+    expect(updateJob).toHaveBeenCalledWith(jobFixtures.frontendEngineer.id, {
+      ...updateJobFixtures['updatedFrontendEngineer'],
+      status: 'SAVED',
+    });
   });
 
   it('should not submit if form invalid', async () => {
@@ -88,16 +88,15 @@ describe('EditJobComponent', () => {
   });
 
   it('should set submit error on failure', async () => {
-    const updateJob = vi.fn().mockRejectedValue(new Error('API error'));
-    jobsDataAccessMock.updateJob = updateJob;
-
     fixture.detectChanges();
 
     await harness.fillForm(updateJobFixtures['updatedFrontendEngineer']);
     await harness.submit();
 
-    expect(await harness.getSubmitErrorText()).toContain(
-      'Failed to update job. Please try again.',
-    );
+    jobsDataAccessMock.__setUpdateJobError({ errorCode: 'message' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(await harness.getSubmitErrorTitle()).toContain('Job Update Failed');
   });
 });
