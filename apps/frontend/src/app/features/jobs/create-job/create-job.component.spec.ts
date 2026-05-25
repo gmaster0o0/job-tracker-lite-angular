@@ -55,7 +55,10 @@ describe('CreateJobComponent', () => {
     await harness.fillForm(createJobFixtures.designer);
     await harness.submit();
 
-    expect(createJob).toHaveBeenCalledWith(createJobFixtures.designer);
+    expect(createJob).toHaveBeenCalledWith({
+      ...createJobFixtures.designer,
+      status: 'SAVED',
+    });
   });
 
   it('should not submit if form invalid', async () => {
@@ -71,22 +74,17 @@ describe('CreateJobComponent', () => {
   });
 
   it('should set submit error on failure', async () => {
-    const createJob = vi.fn().mockRejectedValue(new Error('API error'));
-    jobsDataAccessMock.createJob = createJob;
-
     fixture.detectChanges();
 
-    await harness.fillForm({
-      position: 'Frontend Engineer',
-      company: 'Acme Labs',
-      link: 'https://example.com',
-      description: 'Great job',
-    });
-
+    await harness.fillForm(createJobFixtures.designer);
     await harness.submit();
 
-    expect(await harness.getSubmitErrorText()).toContain(
-      'Failed to create job. Please try again.',
+    jobsDataAccessMock.__setCreateJobError({ errorCode: 'message' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(await harness.getSubmitErrorTitle()).toContain(
+      'Job Creation Failed',
     );
   });
 });

@@ -65,21 +65,21 @@
       "position": {
         "label": "Job Title",
         "placeholder": "e.g. Software Engineer",
-        "example": "e.g. Software Engineer",
-        "required": "Please fill in the title"
+        "required": "Please fill in the title",
+        "example": "e.g. Software Engineer"
       },
       "company": {
         "label": "Company",
         "placeholder": "e.g. Google",
-        "example": "e.g. Google",
-        "required": "Please fill in the company"
+        "required": "Please fill in the company",
+        "example": "e.g. Google"
       },
       "link": {
         "label": "Job Link",
         "placeholder": "https://...",
-        "description": "Link to the original job posting",
         "invalid_format": "Invalid link format",
         "example": "e.g. https://www.example.com/job",
+        "description": "Link to the original job posting",
         "validation": "Please provide a valid link"
       },
       "description": {
@@ -87,6 +87,12 @@
         "placeholder": "Paste job description here...",
         "example": "jobs.create.description.example",
         "validation": "jobs.create.description.validation"
+      }
+    },
+    "update": {
+      "error": {
+        "title": "Job Update Failed",
+        "not_unique": "A job with a same link already exists. Please check your job list."
       }
     },
     "create": {
@@ -108,7 +114,7 @@
       "offer": "Offer"
     },
     "overview": {
-      "noDescription": "jobs.overview.noDescription"
+      "noDescription": "No description provided."
     },
     "deleteDialog": {
       "description": "Are you sure you want to delete this job?",

@@ -32,7 +32,7 @@ export class ZodTransformPipeAll implements PipeTransform {
     if (!errors || errors.length === 0) return null;
 
     const issues = errors.map((e) => e.issue);
-    console.log('ZodTransformPipe received errors:', issues);
+
     return transformZodIssues(issues, namespace);
   }
 }

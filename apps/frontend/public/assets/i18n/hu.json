@@ -65,26 +65,32 @@
       "position": {
         "label": "Pozíció megnevezése",
         "placeholder": "Írja be a pozíció megnevezését...",
-        "example": "Pl. Szoftverfejlesztő",
-        "required": "Kérjük, töltse ki a pozíciót"
+        "required": "Kérjük, töltse ki a pozíciót",
+        "example": "Pl. Szoftverfejlesztő"
       },
       "company": {
         "label": "Cég",
         "placeholder": "Írja be a cég nevét...",
-        "example": "Pl. Google",
-        "required": "Kérjük, töltse ki a céget"
+        "required": "Kérjük, töltse ki a céget",
+        "example": "Pl. Google"
       },
       "link": {
         "label": "Job Link",
         "placeholder": "https://...",
-        "description": "Link az eredeti álláshirdetéshez",
         "invalid_format": "Érvénytelen link formátum",
-        "example": "Pl. https://www.example.com/job"
+        "example": "Pl. https://www.example.com/job",
+        "description": "Link az eredeti álláshirdetéshez"
       },
       "description": {
         "label": "Munkaköri leírás",
         "placeholder": "Ide másolja a munkaköri leírást...",
         "example": "Pl. Az álláshirdetés szövege"
+      }
+    },
+    "update": {
+      "error": {
+        "title": "Hiba történt a munka frissítése során",
+        "not_unique": "Egy ugyanazzal a linkkel rendelkező munka már létezik. Kérjük, ellenőrizze a munkalistáját."
       }
     },
     "create": {
