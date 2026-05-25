@@ -3,11 +3,12 @@ import { TestBed } from '@angular/core/testing';
 import { JobOverviewComponent } from './job-overview.component';
 import { jobOverviewMarkdown } from '@job-tracker-lite-angular/testing';
 import { JobOverviewHarness } from './job-overview.harness';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('JobOverviewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [JobOverviewComponent],
+      imports: [JobOverviewComponent, getTranslocoModule()],
     }).compileComponents();
   });
 

@@ -1,17 +1,38 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
-import { JobDto } from '@job-tracker-lite-angular/schemas';
+import {
+  JobDto,
+  JobStatus,
+  updateJobSchema,
+} from '@job-tracker-lite-angular/schemas';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { EditJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
 import { TranslocoModule } from '@jsverse/transloco';
+import {
+  form,
+  FormRoot,
+  FormField,
+  validateStandardSchema,
+} from '@angular/forms/signals';
+import { HlmAlert } from '@spartan-ng/helm/alert';
+import { provideIcons } from '@ng-icons/core';
+import { lucideAlertCircle } from '@ng-icons/lucide';
+import { HlmIconImports } from '@spartan-ng/helm/icon';
+import { ZodNgControlBridgeDirective } from '@job-tracker-lite-angular/frontend-data-access';
 
 type EditJobDialogContext = {
   job: JobDto;
@@ -22,7 +43,8 @@ type EditJobDialogContext = {
   selector: 'app-edit-job',
   imports: [
     CommonModule,
-    ReactiveFormsModule,
+    FormRoot,
+    FormField,
     HlmInputImports,
     HlmCardImports,
     HlmFieldImports,
@@ -31,52 +53,78 @@ type EditJobDialogContext = {
     HlmDialogImports,
     EditJobDialogFooterComponent,
     TranslocoModule,
+    HlmAlert,
+    HlmIconImports,
+    ZodNgControlBridgeDirective,
   ],
+  providers: [provideIcons({ lucideAlertCircle })],
   templateUrl: './edit-job.component.html',
 })
 export class EditJobComponent {
-  private readonly fb = inject(FormBuilder);
   private readonly jobsDataAccess = inject(JobsDataAccessService);
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
   private readonly dialogContext = injectBrnDialogContext<EditJobDialogContext>(
     { optional: true },
   );
-
   protected readonly job = this.dialogContext?.job as JobDto;
-  protected readonly isSubmitting = signal(false);
-  protected readonly submitError = signal<string | null>(null);
 
-  protected readonly form = this.fb.nonNullable.group({
-    company: [this.job?.company || '', Validators.required],
-    position: [this.job?.position || '', Validators.required],
-    link: [this.job?.link || '', Validators.required],
-    description: [this.job?.description || '', Validators.required],
+  protected readonly updateJobStatus = this.jobsDataAccess.updateJobResource;
+  protected readonly jobModel = signal({
+    position: this.job?.position ?? '',
+    company: this.job?.company ?? '',
+    link: this.job?.link ?? '',
+    description: this.job?.description ?? '',
+    status: this.job?.status ?? JobStatus.SAVED,
   });
 
-  protected async submit(): Promise<void> {
-    if (this.form.invalid || this.isSubmitting() || !this.job) {
-      this.form.markAllAsTouched();
-      return;
+  protected readonly backendResponse = computed(() => {
+    if (this.updateJobStatus.status() === 'error') {
+      return (
+        (this.updateJobStatus.error() as any)?.error ??
+        this.updateJobStatus.error()
+      );
     }
+    return null;
+  });
 
-    this.submitError.set(null);
-    this.isSubmitting.set(true);
+  protected readonly jobForm = form(
+    this.jobModel,
+    (path) => validateStandardSchema(path, updateJobSchema),
+    {
+      submission: {
+        action: async (data) => {
+          this.jobsDataAccess.updateJob(this.job.id, data().value());
+        },
+      },
+    },
+  );
+  constructor() {
+    // Effect to close the dialog and reset the form when a job is successfully updated
+    effect(() => {
+      if (this.updateJobStatus.status() === 'resolved') {
+        const updatedJob = this.updateJobStatus.value();
+        if (updatedJob) {
+          this.dialogRef?.close(updatedJob);
 
-    const value = this.form.getRawValue();
+          this.jobsDataAccess.jobsResource.reload();
+          this.jobsDataAccess.jobResource.reload();
 
-    try {
-      const updated = await this.jobsDataAccess.updateJob(this.job.id, {
-        company: value.company.trim(),
-        link: value.link.trim(),
-        description: value.description.trim(),
-        position: value.position.trim(),
+          untracked(() => {
+            this.jobsDataAccess.resetUpdateJob();
+          });
+        }
+      }
+    });
+    // Effect to reset the update job trigger if there's an error during update
+    effect(() => {
+      this.jobForm().value();
+
+      untracked(() => {
+        const curentStatus = this.jobsDataAccess.updateJobResource.status();
+        if (curentStatus === 'error') {
+          this.jobsDataAccess.resetUpdateJob();
+        }
       });
-
-      this.dialogRef?.close(updated);
-    } catch {
-      this.submitError.set('Failed to update job. Please try again.');
-    } finally {
-      this.isSubmitting.set(false);
-    }
+    });
   }
 }

@@ -4,21 +4,15 @@ import { CreateJobDto } from '@job-tracker-lite-angular/schemas';
 export class CreateJobHarness extends ComponentHarness {
   static hostSelector = 'app-create-job';
 
-  private readonly getPositionInput = this.locatorFor(
-    '[formControlName="position"]',
-  );
-  private readonly getCompanyInput = this.locatorFor(
-    '[formControlName="company"]',
-  );
-  private readonly getLinkInput = this.locatorFor('[formControlName="link"]');
-  private readonly getDescriptionInput = this.locatorFor(
-    '[formControlName="description"]',
-  );
+  private readonly getPositionInput = this.locatorFor('#position');
+  private readonly getCompanyInput = this.locatorFor('#company');
+  private readonly getLinkInput = this.locatorFor('#link');
+  private readonly getDescriptionInput = this.locatorFor('#description');
   private readonly getSubmitButton = this.locatorFor(
-    'app-save-button button[type="submit"]',
+    'app-create-job-dialog-footer button[type="submit"]',
   );
-  private readonly getErrorMessage =
-    this.locatorForOptional('.text-destructive');
+  private readonly getErrorMessageTitle =
+    this.locatorForOptional('[hlmAlertTitle]');
 
   async fillForm(values: Partial<CreateJobDto>): Promise<void> {
     if (values.position !== undefined) {
@@ -70,8 +64,8 @@ export class CreateJobHarness extends ComponentHarness {
     return button.getProperty('disabled');
   }
 
-  async getSubmitErrorText(): Promise<string | null> {
-    const error = await this.getErrorMessage();
+  async getSubmitErrorTitle(): Promise<string | null> {
+    const error = await this.getErrorMessageTitle();
     return error ? error.text() : null;
   }
 }

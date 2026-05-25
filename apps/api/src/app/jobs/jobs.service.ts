@@ -20,7 +20,7 @@ export class JobsService {
 
   async findAll(): Promise<JobDto[]> {
     const jobs = await this.prisma.job.findMany({
-      orderBy: { createdAt: 'desc' },
+      orderBy: { updatedAt: 'desc' },
     });
 
     return jobs.map(mapJobToDto);

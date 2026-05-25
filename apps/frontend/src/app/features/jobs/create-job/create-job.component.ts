@@ -114,7 +114,7 @@ export class CreateJobComponent {
         }
       }
     });
-
+    // Effect to reset the create job trigger if there's an error during creation
     effect(() => {
       this.jobForm().value();
 
