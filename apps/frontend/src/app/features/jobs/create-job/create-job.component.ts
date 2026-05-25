@@ -1,5 +1,3 @@
-import { provideIcons } from '@ng-icons/core';
-import { lucideAlertCircle } from '@ng-icons/lucide';
 import { CommonModule } from '@angular/common';
 import {
   Component,
@@ -17,7 +15,6 @@ import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
-import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import {
   createJobSchema,
   JobDto,
@@ -27,7 +24,10 @@ import {
   JobsDataAccessService,
   ZodNgControlBridgeDirective,
 } from '@job-tracker-lite-angular/frontend-data-access';
-import { CreateJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
+import {
+  CreateJobDialogFooterComponent,
+  ServerErrorAlertComponent,
+} from '@job-tracker-lite-angular/frontend-shared';
 import { TranslocoModule } from '@jsverse/transloco';
 import {
   form,
@@ -35,7 +35,6 @@ import {
   FormRoot,
   FormField,
 } from '@angular/forms/signals';
-import { HlmIconImports } from '@spartan-ng/helm/icon';
 type CreateJobDialogContext = {
   onCreated?: (job: JobDto) => void;
 };
@@ -53,14 +52,12 @@ type CreateJobDialogContext = {
     HlmTextarea,
     HlmDialogImports,
     CreateJobDialogFooterComponent,
+    ServerErrorAlertComponent,
     TranslocoModule,
     FormRoot,
     FormField,
     ZodNgControlBridgeDirective,
-    HlmIconImports,
-    HlmAlertImports,
   ],
-  providers: [provideIcons({ lucideAlertCircle })],
   templateUrl: './create-job.component.html',
 })
 export class CreateJobComponent {

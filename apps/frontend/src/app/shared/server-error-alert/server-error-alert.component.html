@@ -1,0 +1,11 @@
+@if (statusValue() === 'error') {
+  <hlm-alert variant="destructive" [class]="cssClass()">
+    <ng-icon name="lucideAlertCircle" />
+    <h4 hlmAlertTitle>
+      {{ translationPrefix() + '.error.title' | transloco }}
+    </h4>
+    <p hlmAlertDescription>
+      {{ translationPrefix() + '.error.' + errorCode() | transloco }}
+    </p>
+  </hlm-alert>
+}

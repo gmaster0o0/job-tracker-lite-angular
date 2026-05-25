@@ -95,18 +95,11 @@
         {{ 'jobs.fields.description.example' | transloco }}
       </p>
     </hlm-field>
-    @if (createJobStatus.status() === 'error') {
-      <hlm-alert variant="destructive" class="max-w-md">
-        <ng-icon name="lucideAlertCircle" />
-        <h4 hlmAlertTitle>{{ 'jobs.create.error.title' | transloco }}</h4>
-        <p hlmAlertDescription>
-          {{
-            'jobs.create.error.' + (backendResponse()?.errorCode || 'message')
-              | transloco
-          }}
-        </p>
-      </hlm-alert>
-    }
+    <app-server-error-alert
+      [status]="createJobStatus.status"
+      [backendResponse]="backendResponse"
+      translationPrefix="jobs.create"
+    />
   </hlm-field-group>
 </form>
 <app-create-job-dialog-footer

@@ -1,0 +1,107 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { Component, signal } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { ServerErrorAlertComponent } from './server-error-alert.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
+import { ServerErrorAlertHarness } from './server-error-alert.harness';
+
+@Component({
+  standalone: true,
+  imports: [ServerErrorAlertComponent],
+  template: `
+    <app-server-error-alert
+      [status]="status"
+      [backendResponse]="backendResponse"
+      [translationPrefix]="translationPrefix"
+      [cssClass]="cssClass"
+    />
+  `,
+})
+class HostComponent {
+  status = signal('idle');
+  backendResponse = signal<{ errorCode?: string } | null>(null);
+  translationPrefix = 'jobs.create';
+  cssClass = 'max-w-md';
+}
+
+describe('ServerErrorAlertComponent', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [HostComponent, getTranslocoModule()],
+    }).compileComponents();
+  });
+
+  it('should not render when status is not error', async () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.componentInstance.status.set('idle');
+    fixture.detectChanges();
+
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      ServerErrorAlertHarness,
+    );
+
+    expect(await harness.isVisible()).toBe(false);
+  });
+
+  it('should render when status is error', async () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.componentInstance.status.set('error');
+    fixture.componentInstance.backendResponse.set({ errorCode: 'CONFLICT' });
+    fixture.detectChanges();
+
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      ServerErrorAlertHarness,
+    );
+
+    expect(await harness.isVisible()).toBe(true);
+  });
+
+  it('should display error title and message', async () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.componentInstance.status.set('error');
+    fixture.componentInstance.backendResponse.set({ errorCode: 'CONFLICT' });
+    fixture.detectChanges();
+
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      ServerErrorAlertHarness,
+    );
+
+    const title = await harness.getTitle();
+    const description = await harness.getDescription();
+
+    expect(title).toBeTruthy();
+    expect(description).toBeTruthy();
+  });
+
+  it('should display fallback message when no errorCode provided', async () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.componentInstance.status.set('error');
+    fixture.componentInstance.backendResponse.set({});
+    fixture.detectChanges();
+
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      ServerErrorAlertHarness,
+    );
+
+    expect(await harness.isVisible()).toBe(true);
+    const description = await harness.getDescription();
+    expect(description).toBeTruthy();
+  });
+
+  it('should apply custom css class', () => {
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.componentInstance.cssClass = 'custom-class';
+    fixture.componentInstance.status.set('error');
+    fixture.componentInstance.backendResponse.set({});
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement.querySelector(
+      '[class*="custom-class"]',
+    );
+    expect(element).toBeTruthy();
+  });
+});

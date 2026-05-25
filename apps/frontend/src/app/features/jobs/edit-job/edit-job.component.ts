@@ -20,7 +20,10 @@ import {
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
-import { EditJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
+import {
+  EditJobDialogFooterComponent,
+  ServerErrorAlertComponent,
+} from '@job-tracker-lite-angular/frontend-shared';
 import { TranslocoModule } from '@jsverse/transloco';
 import {
   form,
@@ -28,10 +31,6 @@ import {
   FormField,
   validateStandardSchema,
 } from '@angular/forms/signals';
-import { HlmAlert } from '@spartan-ng/helm/alert';
-import { provideIcons } from '@ng-icons/core';
-import { lucideAlertCircle } from '@ng-icons/lucide';
-import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { ZodNgControlBridgeDirective } from '@job-tracker-lite-angular/frontend-data-access';
 
 type EditJobDialogContext = {
@@ -52,12 +51,10 @@ type EditJobDialogContext = {
     HlmTextarea,
     HlmDialogImports,
     EditJobDialogFooterComponent,
+    ServerErrorAlertComponent,
     TranslocoModule,
-    HlmAlert,
-    HlmIconImports,
     ZodNgControlBridgeDirective,
   ],
-  providers: [provideIcons({ lucideAlertCircle })],
   templateUrl: './edit-job.component.html',
 })
 export class EditJobComponent {
