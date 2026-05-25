@@ -17,9 +17,6 @@ export class JobsDataAccessService {
   private readonly http = inject(HttpClient);
   private readonly selectedJobId = signal<string | null>(null);
 
-  createJobTrigger = signal<CreateJobDto | null>(null);
-  updateJobTrigger = signal<{ id: string; dto: UpdateJobDto } | null>(null);
-
   jobsResource = httpResource<JobDto[]>(() => `/api/jobs`);
 
   jobResource = httpResource<JobDto>(() => {
@@ -27,51 +24,32 @@ export class JobsDataAccessService {
     return id === null ? undefined : `/api/jobs/${id}`;
   });
 
-  createJobResource = httpResource<JobDto>(() => {
-    const dto = this.createJobTrigger();
-    if (!dto) return undefined;
-    return {
-      url: `/api/jobs`,
-      method: 'POST',
-      body: dto,
-    };
-  });
-
-  updateJobResource = httpResource<JobDto>(() => {
-    const job = this.updateJobTrigger();
-    if (!job) return undefined;
-
-    return {
-      url: `/api/jobs/${job.id}`,
-      method: 'PATCH',
-      body: job.dto,
-    };
-  });
-
   selectJob(id: string | null): void {
     this.selectedJobId.set(id);
   }
 
-  createJob(dto: CreateJobDto): void {
-    this.createJobTrigger.set(dto);
-  }
-
-  updateJob(id: string, dto: UpdateJobDto): void {
-    this.updateJobTrigger.set({ id, dto });
-  }
-
-  resetCreateJob(): void {
-    this.createJobTrigger.set(null);
-  }
-
-  resetUpdateJob(): void {
-    this.updateJobTrigger.set(null);
+  async createJob(dto: CreateJobDto): Promise<JobDto> {
+    const created = await firstValueFrom(
+      this.http.post<JobDto>('/api/jobs', dto),
+    );
+    this.jobsResource.reload();
+    this.jobResource.reload();
+    return created;
   }
 
   async updateJobStatus(id: string, status: JobStatusDto): Promise<JobDto> {
     const dto: UpdateJobStatusDto = { status };
     const updated = await firstValueFrom(
       this.http.patch<JobDto>(`/api/jobs/${id}/status`, dto),
+    );
+    this.jobsResource.reload();
+    this.jobResource.reload();
+    return updated;
+  }
+
+  async updateJob(id: string, dto: UpdateJobDto): Promise<JobDto> {
+    const updated = await firstValueFrom(
+      this.http.patch<JobDto>(`/api/jobs/${id}`, dto),
     );
     this.jobsResource.reload();
     this.jobResource.reload();

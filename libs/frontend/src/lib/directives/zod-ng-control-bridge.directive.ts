@@ -8,19 +8,19 @@ import { NgControl, ValidationErrors } from '@angular/forms';
  * when using @angular/forms/signals with validateStandardSchema — no changes to
  * hlm-field-error or any other spartan-ng component required.
  *
- * Apply by adding this directive to your component's imports array. It auto-activates
- * on every `<input [formField]="...">` and `<textarea [formField]="...">` in that template.
+ * Apply by adding this directive to your component's imports array. It activates
+ * on every `<input libFormField [formField]="...">` and `<textarea libFormField [formField]="...">` in that template.
  *
  * @example
  * // component.ts
  * imports: [ZodNgControlBridgeDirective]
  *
  * // component.html
- * <input hlmInput [formField]="form.position" />
+ * <input hlmInput libFormField [formField]="form.position" />
  * <hlm-field-error validator="required">Position is required</hlm-field-error>
  */
 @Directive({
-  selector: 'input[formField],textarea[formField]',
+  selector: 'input[libFormField],textarea[libFormField]',
   standalone: true,
 })
 export class ZodNgControlBridgeDirective {
@@ -36,13 +36,14 @@ export class ZodNgControlBridgeDirective {
     } | null;
 
     // Only patch when this is a signal-forms InteropNgControl (has .field signal)
-    if (!ngControl?.field) return;
+    const field = ngControl?.field;
+    if (!field) return;
 
     Object.defineProperty(ngControl, 'errors', {
       get(): ValidationErrors | null {
         // ngControl.field is the FieldState signal — reading it here inside a
         // computed() (SignalStateTracker.errors) keeps reactive tracking intact.
-        const errors = ngControl!.field!().errors();
+        const errors = field().errors();
         if (!errors.length) return null;
         const result: ValidationErrors = {};
         for (const error of errors) {

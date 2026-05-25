@@ -5,17 +5,24 @@ import {
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptors,
+} from '@angular/common/http';
 import { appRoutes } from './app.routes';
 import { provideTransloco } from '@jsverse/transloco';
-import { SharedTranslocoLoader } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  SharedTranslocoLoader,
+  backendErrorInterceptor,
+} from '@job-tracker-lite-angular/frontend-data-access';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
     provideBrowserGlobalErrorListeners(),
     provideRouter(appRoutes),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptors([backendErrorInterceptor])),
     { provide: 'I18N_PATH', useValue: '/assets/i18n/' },
     provideTransloco({
       config: {

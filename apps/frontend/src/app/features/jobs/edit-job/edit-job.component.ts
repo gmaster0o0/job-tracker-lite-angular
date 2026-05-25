@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  signal,
-  untracked,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
@@ -17,10 +10,16 @@ import {
   JobStatus,
   updateJobSchema,
 } from '@job-tracker-lite-angular/schemas';
-import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  JobsDataAccessService,
+  isBackendError,
+} from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
-import { EditJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
+import {
+  EditJobDialogFooterComponent,
+  ServerErrorAlertComponent,
+} from '@job-tracker-lite-angular/frontend-shared';
 import { TranslocoModule } from '@jsverse/transloco';
 import {
   form,
@@ -28,10 +27,6 @@ import {
   FormField,
   validateStandardSchema,
 } from '@angular/forms/signals';
-import { HlmAlert } from '@spartan-ng/helm/alert';
-import { provideIcons } from '@ng-icons/core';
-import { lucideAlertCircle } from '@ng-icons/lucide';
-import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { ZodNgControlBridgeDirective } from '@job-tracker-lite-angular/frontend-data-access';
 
 type EditJobDialogContext = {
@@ -52,12 +47,12 @@ type EditJobDialogContext = {
     HlmTextarea,
     HlmDialogImports,
     EditJobDialogFooterComponent,
+    ServerErrorAlertComponent,
     TranslocoModule,
-    HlmAlert,
-    HlmIconImports,
+    FormRoot,
+    FormField,
     ZodNgControlBridgeDirective,
   ],
-  providers: [provideIcons({ lucideAlertCircle })],
   templateUrl: './edit-job.component.html',
 })
 export class EditJobComponent {
@@ -68,7 +63,9 @@ export class EditJobComponent {
   );
   protected readonly job = this.dialogContext?.job as JobDto;
 
-  protected readonly updateJobStatus = this.jobsDataAccess.updateJobResource;
+  protected readonly isSubmitting = signal(false);
+  protected readonly submitError = signal<string | null>(null);
+
   protected readonly jobModel = signal({
     position: this.job?.position ?? '',
     company: this.job?.company ?? '',
@@ -77,54 +74,29 @@ export class EditJobComponent {
     status: this.job?.status ?? JobStatus.SAVED,
   });
 
-  protected readonly backendResponse = computed(() => {
-    if (this.updateJobStatus.status() === 'error') {
-      return (
-        (this.updateJobStatus.error() as any)?.error ??
-        this.updateJobStatus.error()
-      );
-    }
-    return null;
-  });
-
   protected readonly jobForm = form(
     this.jobModel,
     (path) => validateStandardSchema(path, updateJobSchema),
     {
       submission: {
         action: async (data) => {
-          this.jobsDataAccess.updateJob(this.job.id, data().value());
+          this.isSubmitting.set(true);
+          this.submitError.set(null);
+          try {
+            const job = await this.jobsDataAccess.updateJob(
+              this.job.id,
+              data().value(),
+            );
+            this.dialogRef?.close(job);
+          } catch (error) {
+            this.submitError.set(
+              isBackendError(error) ? error.errorCode : 'unknown',
+            );
+          } finally {
+            this.isSubmitting.set(false);
+          }
         },
       },
     },
   );
-  constructor() {
-    // Effect to close the dialog and reset the form when a job is successfully updated
-    effect(() => {
-      if (this.updateJobStatus.status() === 'resolved') {
-        const updatedJob = this.updateJobStatus.value();
-        if (updatedJob) {
-          this.dialogRef?.close(updatedJob);
-
-          this.jobsDataAccess.jobsResource.reload();
-          this.jobsDataAccess.jobResource.reload();
-
-          untracked(() => {
-            this.jobsDataAccess.resetUpdateJob();
-          });
-        }
-      }
-    });
-    // Effect to reset the update job trigger if there's an error during update
-    effect(() => {
-      this.jobForm().value();
-
-      untracked(() => {
-        const curentStatus = this.jobsDataAccess.updateJobResource.status();
-        if (curentStatus === 'error') {
-          this.jobsDataAccess.resetUpdateJob();
-        }
-      });
-    });
-  }
 }

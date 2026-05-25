@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import type { Response } from 'express';
+import { PRISMA_ERROR_CODE_MESSAGES, PRISMA_ERROR_CODES } from '../error-codes';
 
 @Catch(Prisma.PrismaClientKnownRequestError)
 export class PrismaClientExceptionFilter implements ExceptionFilter {
@@ -18,8 +19,10 @@ export class PrismaClientExceptionFilter implements ExceptionFilter {
         const status = HttpStatus.CONFLICT;
         response.status(status).json({
           statusCode: status,
-          message: 'Unique constraint failed',
-          errorCode: 'not_unique',
+          message:
+            PRISMA_ERROR_CODE_MESSAGES[exception.code] ||
+            'Unique constraint failed',
+          errorCode: PRISMA_ERROR_CODES.UNIQUE_CONSTRAINT_VIOLATION,
         });
         break;
       }
@@ -27,16 +30,20 @@ export class PrismaClientExceptionFilter implements ExceptionFilter {
         const status = HttpStatus.NOT_FOUND;
         response.status(status).json({
           statusCode: status,
-          message: 'Record not found',
-          errorCode: 'not_found',
+          message:
+            PRISMA_ERROR_CODE_MESSAGES[exception.code] || 'Record not found',
+          errorCode: PRISMA_ERROR_CODES.RECORD_NOT_FOUND,
         });
         break;
       }
       default:
         response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Internal server error',
-          errorCode: 'internal_server_error',
+          message:
+            PRISMA_ERROR_CODE_MESSAGES[
+              PRISMA_ERROR_CODES.INTERNAL_SERVER_ERROR
+            ],
+          errorCode: PRISMA_ERROR_CODES.INTERNAL_SERVER_ERROR,
         });
         break;
     }

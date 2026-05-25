@@ -11,6 +11,7 @@
       }}</label>
       <input
         hlmInput
+        libFormField
         id="position"
         [formField]="jobForm.position"
         placeholder="{{ 'jobs.fields.position.placeholder' | transloco }}"
@@ -35,6 +36,7 @@
       }}</label>
       <input
         hlmInput
+        libFormField
         id="company"
         [formField]="jobForm.company"
         placeholder="{{ 'jobs.fields.company.placeholder' | transloco }}"
@@ -59,6 +61,7 @@
       }}</label>
       <input
         hlmInput
+        libFormField
         id="link"
         [formField]="jobForm.link"
         placeholder="{{ 'jobs.fields.link.placeholder' | transloco }}"
@@ -84,6 +87,7 @@
       }}</label>
       <textarea
         hlmTextarea
+        libFormField
         id="description"
         [formField]="jobForm.description"
         placeholder="{{ 'jobs.fields.description.placeholder' | transloco }}"
@@ -95,22 +99,14 @@
         {{ 'jobs.fields.description.example' | transloco }}
       </p>
     </hlm-field>
-    @if (createJobStatus.status() === 'error') {
-      <hlm-alert variant="destructive" class="max-w-md">
-        <ng-icon name="lucideAlertCircle" />
-        <h4 hlmAlertTitle>{{ 'jobs.create.error.title' | transloco }}</h4>
-        <p hlmAlertDescription>
-          {{
-            'jobs.create.error.' + (backendResponse()?.errorCode || 'message')
-              | transloco
-          }}
-        </p>
-      </hlm-alert>
-    }
+    <app-server-error-alert
+      [errorMessage]="submitError()"
+      translationPrefix="jobs.create"
+    />
   </hlm-field-group>
 </form>
 <app-create-job-dialog-footer
   formId="createJobForm"
   [disableSubmit]="jobForm().invalid()"
-  [isSubmitting]="createJobStatus.status() === 'loading'"
+  [isSubmitting]="isSubmitting()"
 />
