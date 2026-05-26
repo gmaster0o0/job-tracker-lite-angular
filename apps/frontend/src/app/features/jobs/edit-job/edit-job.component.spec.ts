@@ -1,7 +1,10 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
-import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  JobsDataAccessService,
+  BackendError,
+} from '@job-tracker-lite-angular/frontend-data-access';
 import {
   jobFixtures,
   createJobsDataAccessMock,
@@ -88,9 +91,11 @@ describe('EditJobComponent', () => {
   });
 
   it('should set submit error on failure', async () => {
-    const updateJob = vi.fn().mockRejectedValue({
-      errorCode: 'CONFLICT',
-    });
+    const backendError = new Error('Backend error: not_unique') as BackendError;
+    (backendError as any).errorCode = 'not_unique';
+    (backendError as any).statusCode = 409;
+
+    const updateJob = vi.fn().mockRejectedValue(backendError);
     jobsDataAccessMock.updateJob = updateJob;
 
     fixture.detectChanges();

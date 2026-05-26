@@ -16,6 +16,7 @@ import {
 import {
   JobsDataAccessService,
   ZodNgControlBridgeDirective,
+  isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import {
   CreateJobDialogFooterComponent,
@@ -83,7 +84,9 @@ export class CreateJobComponent {
             this.dialogContext?.onCreated?.(job);
             this.dialogRef?.close(job);
           } catch (error) {
-            this.submitError.set(this.getErrorCode(error));
+            this.submitError.set(
+              isBackendError(error) ? error.errorCode : 'unknown',
+            );
           } finally {
             this.isSubmitting.set(false);
           }
@@ -91,13 +94,4 @@ export class CreateJobComponent {
       },
     },
   );
-
-  private getErrorCode(error: unknown): string {
-    if (error && typeof error === 'object' && 'errorCode' in error) {
-      return String(
-        (error as Record<string, unknown>)['errorCode'] ?? 'unknown',
-      );
-    }
-    return 'unknown';
-  }
 }

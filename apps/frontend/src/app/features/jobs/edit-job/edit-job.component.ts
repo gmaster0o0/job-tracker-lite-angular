@@ -10,7 +10,10 @@ import {
   JobStatus,
   updateJobSchema,
 } from '@job-tracker-lite-angular/schemas';
-import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  JobsDataAccessService,
+  isBackendError,
+} from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import {
@@ -86,7 +89,9 @@ export class EditJobComponent {
             );
             this.dialogRef?.close(job);
           } catch (error) {
-            this.submitError.set(this.getErrorCode(error));
+            this.submitError.set(
+              isBackendError(error) ? error.errorCode : 'unknown',
+            );
           } finally {
             this.isSubmitting.set(false);
           }
@@ -94,13 +99,4 @@ export class EditJobComponent {
       },
     },
   );
-
-  private getErrorCode(error: unknown): string {
-    if (error && typeof error === 'object' && 'errorCode' in error) {
-      return String(
-        (error as Record<string, unknown>)['errorCode'] ?? 'unknown',
-      );
-    }
-    return 'unknown';
-  }
 }
