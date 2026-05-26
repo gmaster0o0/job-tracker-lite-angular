@@ -27,6 +27,9 @@
       "@job-tracker-lite-angular/prisma": [
         "./libs/shared/prisma/src/index.ts"
       ],
+      "@job-tracker-lite-angular/prisma/error-codes": [
+        "./libs/shared/prisma/src/lib/error-codes.ts"
+      ],
       "spartan/ui/helm": [
         "./libs/shared-ui/card/src/index.ts"
       ],

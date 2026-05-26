@@ -1,31 +1,106 @@
-<div class="space-y-4">
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <div>
-      <label for="create-contact-name">{{
-        'contacts.create.name' | transloco
-      }}</label>
-      <input id="create-contact-name" hlmInput formControlName="name" />
-    </div>
+<hlm-dialog-header>
+  <h2 hlmDialogTitle>{{ 'contacts.create.title' | transloco }}</h2>
+  <p hlmDialogDescription>{{ 'contacts.create.description' | transloco }}</p>
+</hlm-dialog-header>
 
-    <div>
-      <label for="create-contact-email">{{
-        'contacts.create.email' | transloco
+<form [formRoot]="contactForm" id="createContactForm" class="space-y-4 py-4">
+  <hlm-field-group>
+    <hlm-field>
+      <label hlmLabel for="name">{{
+        'contacts.fields.name.label' | transloco
       }}</label>
-      <input id="create-contact-email" hlmInput formControlName="email" />
-    </div>
+      <input
+        hlmInput
+        libFormField
+        id="name"
+        [formField]="contactForm.name"
+        placeholder="{{ 'contacts.fields.name.placeholder' | transloco }}"
+        class="w-full"
+      />
+      @if (
+        contactForm.name().invalid() &&
+        (contactForm.name().touched() || contactForm.name().dirty())
+      ) {
+        <hlm-field-error validator="required">{{
+          'contacts.fields.name.required' | transloco
+        }}</hlm-field-error>
+      } @else {
+        <p hlmDialogDescription>
+          {{ 'contacts.fields.name.example' | transloco }}
+        </p>
+      }
+    </hlm-field>
 
-    <div>
-      <label for="create-contact-phone">{{
-        'contacts.create.phone' | transloco
+    <hlm-field>
+      <label hlmLabel for="email">{{
+        'contacts.fields.email.label' | transloco
       }}</label>
-      <input id="create-contact-phone" hlmInput formControlName="phoneNumber" />
-    </div>
+      <input
+        hlmInput
+        libFormField
+        id="email"
+        type="email"
+        [formField]="emailField"
+        placeholder="{{ 'contacts.fields.email.placeholder' | transloco }}"
+        class="w-full"
+      />
+      @if (
+        contactForm.email().invalid() &&
+        (contactForm.email().touched() || contactForm.email().dirty())
+      ) {
+        <hlm-field-error validator="invalid_format">{{
+          'contacts.fields.email.invalid_format' | transloco
+        }}</hlm-field-error>
+        <hlm-field-error validator="required_one_of">{{
+          'contacts.fields.email.required_one_of' | transloco
+        }}</hlm-field-error>
+      } @else {
+        <p hlmDialogDescription>
+          {{ 'contacts.fields.email.example' | transloco }}
+        </p>
+      }
+    </hlm-field>
 
-    <div class="flex items-center gap-2">
-      <button hlmBtn type="submit">{{ 'common.create' | transloco }}</button>
-      <button hlmBtn type="button" (click)="cancel()">
-        {{ 'common.cancel' | transloco }}
-      </button>
-    </div>
-  </form>
-</div>
+    <hlm-field>
+      <label hlmLabel for="phoneNumber">{{
+        'contacts.fields.phoneNumber.label' | transloco
+      }}</label>
+      <input
+        hlmInput
+        libFormField
+        id="phoneNumber"
+        [formField]="phoneNumberField"
+        placeholder="{{
+          'contacts.fields.phoneNumber.placeholder' | transloco
+        }}"
+        class="w-full"
+      />
+      @if (
+        contactForm.phoneNumber().invalid() &&
+        (contactForm.phoneNumber().touched() ||
+          contactForm.phoneNumber().dirty())
+      ) {
+        <hlm-field-error validator="invalid_format">{{
+          'contacts.fields.phoneNumber.invalid_format' | transloco
+        }}</hlm-field-error>
+        <hlm-field-error validator="required_one_of">{{
+          'contacts.fields.phoneNumber.required_one_of' | transloco
+        }}</hlm-field-error>
+      } @else {
+        <p hlmDialogDescription>
+          {{ 'contacts.fields.phoneNumber.example' | transloco }}
+        </p>
+      }
+    </hlm-field>
+
+    <app-server-error-alert
+      [errorMessage]="submitError()"
+      translationPrefix="contacts.create"
+    />
+  </hlm-field-group>
+</form>
+<app-create-job-dialog-footer
+  formId="createContactForm"
+  [disableSubmit]="contactForm().invalid()"
+  [isSubmitting]="isSubmitting()"
+/>

@@ -9,7 +9,7 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { firstValueFrom } from 'rxjs';
-import { PRISMA_ERROR_CODES } from '@job-tracker-lite-angular/prisma';
+import { PRISMA_ERROR_CODES } from '@job-tracker-lite-angular/prisma/error-codes';
 import { backendErrorInterceptor } from './backend-error.interceptor';
 
 describe('backendErrorInterceptor', () => {

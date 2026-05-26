@@ -8,4 +8,5 @@ export const errorCodes = {
   need_letter: 'need_letter',
   need_special: 'need_special',
   required: 'required',
+  required_one_of: 'required_one_of',
 };

@@ -1,4 +1,7 @@
 import { z } from 'zod';
+import { emptyStringToNull } from '../validators/empty-string-to-null';
+import { errorCodes } from '../error-codes';
+import { required } from '../validators/required';
 
 //Contact schema with DTO
 export const contactSchema = z.object({
@@ -14,9 +17,9 @@ export const contactSchema = z.object({
 export type ContactDto = z.infer<typeof contactSchema>;
 
 const baseContactSchema = z.object({
-  name: z.string(),
-  email: z.email().nullable(),
-  phoneNumber: z.string().nullable(),
+  name: required,
+  email: emptyStringToNull(z.email().nullable()),
+  phoneNumber: emptyStringToNull(z.e164().nullable()),
 });
 
 //create contact schema with DTO
@@ -27,12 +30,14 @@ export const createContactSchema = baseContactSchema.superRefine(
         code: 'custom',
         message: 'Email or phone number must be provided',
         path: ['email'],
+        errorCode: errorCodes.required_one_of,
       });
 
       ctx.addIssue({
         code: 'custom',
         message: 'Email or phone number must be provided',
         path: ['phoneNumber'],
+        errorCode: errorCodes.required_one_of,
       });
     }
   },

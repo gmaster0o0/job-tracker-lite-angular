@@ -1,7 +1,7 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
 import { BackendError } from './backend-error.types';
-import { PRISMA_ERROR_CODES } from '@job-tracker-lite-angular/prisma';
+import { PRISMA_ERROR_CODES } from '@job-tracker-lite-angular/prisma/error-codes';
 
 /**
  * HTTP interceptor that normalizes backend errors into a consistent BackendError shape.

@@ -49,12 +49,12 @@ export const createContactFixtures: CreateContactFixturesMap = {
   janeDoe: {
     name: 'Jane Doe',
     email: 'jane@example.com',
-    phoneNumber: '12345',
+    phoneNumber: '+3612345678',
   },
   johnDoe: {
     name: 'John Doe',
     email: 'john@example.com',
-    phoneNumber: '555-111',
+    phoneNumber: '+3612345679',
   },
 };
 
