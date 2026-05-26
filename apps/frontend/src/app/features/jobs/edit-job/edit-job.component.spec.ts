@@ -88,15 +88,18 @@ describe('EditJobComponent', () => {
   });
 
   it('should set submit error on failure', async () => {
+    const updateJob = vi.fn().mockRejectedValue({
+      errorCode: 'CONFLICT',
+    });
+    jobsDataAccessMock.updateJob = updateJob;
+
     fixture.detectChanges();
 
     await harness.fillForm(updateJobFixtures['updatedFrontendEngineer']);
     await harness.submit();
-
-    jobsDataAccessMock.__setUpdateJobError({ errorCode: 'message' });
-    fixture.detectChanges();
     await fixture.whenStable();
+    fixture.detectChanges();
 
-    expect(await harness.getSubmitErrorTitle()).toContain('Job Update Failed');
+    expect(await harness.isErrorVisible()).toBe(true);
   });
 });

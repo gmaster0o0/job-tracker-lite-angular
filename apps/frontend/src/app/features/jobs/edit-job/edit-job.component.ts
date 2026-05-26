@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  signal,
-  untracked,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
@@ -53,6 +46,8 @@ type EditJobDialogContext = {
     EditJobDialogFooterComponent,
     ServerErrorAlertComponent,
     TranslocoModule,
+    FormRoot,
+    FormField,
     ZodNgControlBridgeDirective,
   ],
   templateUrl: './edit-job.component.html',
@@ -65,7 +60,9 @@ export class EditJobComponent {
   );
   protected readonly job = this.dialogContext?.job as JobDto;
 
-  protected readonly updateJobStatus = this.jobsDataAccess.updateJobResource;
+  protected readonly isSubmitting = signal(false);
+  protected readonly submitError = signal<string | null>(null);
+
   protected readonly jobModel = signal({
     position: this.job?.position ?? '',
     company: this.job?.company ?? '',
@@ -74,54 +71,36 @@ export class EditJobComponent {
     status: this.job?.status ?? JobStatus.SAVED,
   });
 
-  protected readonly backendResponse = computed(() => {
-    if (this.updateJobStatus.status() === 'error') {
-      return (
-        (this.updateJobStatus.error() as any)?.error ??
-        this.updateJobStatus.error()
-      );
-    }
-    return null;
-  });
-
   protected readonly jobForm = form(
     this.jobModel,
     (path) => validateStandardSchema(path, updateJobSchema),
     {
       submission: {
         action: async (data) => {
-          this.jobsDataAccess.updateJob(this.job.id, data().value());
+          this.isSubmitting.set(true);
+          this.submitError.set(null);
+          try {
+            const job = await this.jobsDataAccess.updateJob(
+              this.job.id,
+              data().value(),
+            );
+            this.dialogRef?.close(job);
+          } catch (error) {
+            this.submitError.set(this.getErrorCode(error));
+          } finally {
+            this.isSubmitting.set(false);
+          }
         },
       },
     },
   );
-  constructor() {
-    // Effect to close the dialog and reset the form when a job is successfully updated
-    effect(() => {
-      if (this.updateJobStatus.status() === 'resolved') {
-        const updatedJob = this.updateJobStatus.value();
-        if (updatedJob) {
-          this.dialogRef?.close(updatedJob);
 
-          this.jobsDataAccess.jobsResource.reload();
-          this.jobsDataAccess.jobResource.reload();
-
-          untracked(() => {
-            this.jobsDataAccess.resetUpdateJob();
-          });
-        }
-      }
-    });
-    // Effect to reset the update job trigger if there's an error during update
-    effect(() => {
-      this.jobForm().value();
-
-      untracked(() => {
-        const curentStatus = this.jobsDataAccess.updateJobResource.status();
-        if (curentStatus === 'error') {
-          this.jobsDataAccess.resetUpdateJob();
-        }
-      });
-    });
+  private getErrorCode(error: unknown): string {
+    if (error && typeof error === 'object' && 'errorCode' in error) {
+      return String(
+        (error as Record<string, unknown>)['errorCode'] ?? 'unknown',
+      );
+    }
+    return 'unknown';
   }
 }

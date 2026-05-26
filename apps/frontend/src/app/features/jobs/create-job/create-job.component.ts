@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  signal,
-  untracked,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmInputImports } from '@spartan-ng/helm/input';
@@ -52,11 +45,11 @@ type CreateJobDialogContext = {
     HlmTextarea,
     HlmDialogImports,
     CreateJobDialogFooterComponent,
-    ServerErrorAlertComponent,
     TranslocoModule,
     FormRoot,
     FormField,
     ZodNgControlBridgeDirective,
+    ServerErrorAlertComponent,
   ],
   templateUrl: './create-job.component.html',
 })
@@ -66,7 +59,8 @@ export class CreateJobComponent {
   private readonly dialogContext =
     injectBrnDialogContext<CreateJobDialogContext>({ optional: true });
 
-  protected readonly createJobStatus = this.jobsDataAccess.createJobResource;
+  protected readonly isSubmitting = signal(false);
+  protected readonly submitError = signal<string | null>(null);
 
   protected readonly jobModel = signal({
     position: '',
@@ -76,51 +70,34 @@ export class CreateJobComponent {
     status: JobStatus.SAVED,
   });
 
-  protected readonly backendResponse = computed(() => {
-    if (this.createJobStatus.status() === 'error') {
-      return (
-        (this.createJobStatus.error() as any)?.error ??
-        this.createJobStatus.error()
-      );
-    }
-    return null;
-  });
-
   protected readonly jobForm = form(
     this.jobModel,
     (path) => validateStandardSchema(path, createJobSchema),
     {
       submission: {
         action: async (data) => {
-          this.jobsDataAccess.createJob(data().value());
+          this.isSubmitting.set(true);
+          this.submitError.set(null);
+          try {
+            const job = await this.jobsDataAccess.createJob(data().value());
+            this.dialogContext?.onCreated?.(job);
+            this.dialogRef?.close(job);
+          } catch (error) {
+            this.submitError.set(this.getErrorCode(error));
+          } finally {
+            this.isSubmitting.set(false);
+          }
         },
       },
     },
   );
 
-  constructor() {
-    // Effect to close the dialog and reset the form when a job is successfully created
-    effect(() => {
-      if (this.createJobStatus.status() === 'resolved') {
-        const createdJob = this.createJobStatus.value();
-        if (createdJob) {
-          this.dialogContext?.onCreated?.(createdJob);
-          this.dialogRef?.close(createdJob);
-
-          this.jobsDataAccess.jobsResource.reload();
-        }
-      }
-    });
-    // Effect to reset the create job trigger if there's an error during creation
-    effect(() => {
-      this.jobForm().value();
-
-      untracked(() => {
-        const curentStatus = this.jobsDataAccess.createJobResource.status();
-        if (curentStatus === 'error') {
-          this.jobsDataAccess.resetCreateJob();
-        }
-      });
-    });
+  private getErrorCode(error: unknown): string {
+    if (error && typeof error === 'object' && 'errorCode' in error) {
+      return String(
+        (error as Record<string, unknown>)['errorCode'] ?? 'unknown',
+      );
+    }
+    return 'unknown';
   }
 }

@@ -74,17 +74,18 @@ describe('CreateJobComponent', () => {
   });
 
   it('should set submit error on failure', async () => {
+    const createJob = vi.fn().mockRejectedValue({
+      errorCode: 'CONFLICT',
+    });
+    jobsDataAccessMock.createJob = createJob;
+
     fixture.detectChanges();
 
     await harness.fillForm(createJobFixtures.designer);
     await harness.submit();
-
-    jobsDataAccessMock.__setCreateJobError({ errorCode: 'message' });
-    fixture.detectChanges();
     await fixture.whenStable();
+    fixture.detectChanges();
 
-    expect(await harness.getSubmitErrorTitle()).toContain(
-      'Job Creation Failed',
-    );
+    expect(await harness.isErrorVisible()).toBe(true);
   });
 });

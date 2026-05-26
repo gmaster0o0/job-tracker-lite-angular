@@ -13,6 +13,7 @@
       }}</label>
       <input
         hlmInput
+        libFormField
         id="position"
         [formField]="jobForm.position"
         placeholder="{{ 'jobs.fields.position.placeholder' | transloco }}"
@@ -37,6 +38,7 @@
       }}</label>
       <input
         hlmInput
+        libFormField
         id="company"
         [formField]="jobForm.company"
         placeholder="{{ 'jobs.fields.company.placeholder' | transloco }}"
@@ -61,6 +63,7 @@
       }}</label>
       <input
         hlmInput
+        libFormField
         id="link"
         [formField]="jobForm.link"
         placeholder="{{ 'jobs.fields.link.placeholder' | transloco }}"
@@ -86,6 +89,7 @@
       }}</label>
       <textarea
         hlmTextarea
+        libFormField
         id="description"
         [formField]="jobForm.description"
         placeholder="{{ 'jobs.fields.description.placeholder' | transloco }}"
@@ -98,8 +102,7 @@
       </p>
     </hlm-field>
     <app-server-error-alert
-      [status]="updateJobStatus.status"
-      [backendResponse]="backendResponse"
+      [errorMessage]="submitError()"
       translationPrefix="jobs.update"
     />
   </hlm-field-group>
@@ -107,5 +110,5 @@
 <app-edit-job-dialog-footer
   formId="editJobForm"
   [disableSubmit]="jobForm().invalid()"
-  [isSubmitting]="updateJobStatus.status() === 'loading'"
+  [isSubmitting]="isSubmitting()"
 />

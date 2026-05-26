@@ -10,16 +10,14 @@ import { ServerErrorAlertHarness } from './server-error-alert.harness';
   imports: [ServerErrorAlertComponent],
   template: `
     <app-server-error-alert
-      [status]="status"
-      [backendResponse]="backendResponse"
+      [errorMessage]="errorMessage()"
       [translationPrefix]="translationPrefix"
       [cssClass]="cssClass"
     />
   `,
 })
 class HostComponent {
-  status = signal('idle');
-  backendResponse = signal<{ errorCode?: string } | null>(null);
+  errorMessage = signal<string | null>(null);
   translationPrefix = 'jobs.create';
   cssClass = 'max-w-md';
 }
@@ -31,9 +29,9 @@ describe('ServerErrorAlertComponent', () => {
     }).compileComponents();
   });
 
-  it('should not render when status is not error', async () => {
+  it('should not render when errorMessage is null', async () => {
     const fixture = TestBed.createComponent(HostComponent);
-    fixture.componentInstance.status.set('idle');
+    fixture.componentInstance.errorMessage.set(null);
     fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
@@ -44,10 +42,9 @@ describe('ServerErrorAlertComponent', () => {
     expect(await harness.isVisible()).toBe(false);
   });
 
-  it('should render when status is error', async () => {
+  it('should render when errorMessage has a value', async () => {
     const fixture = TestBed.createComponent(HostComponent);
-    fixture.componentInstance.status.set('error');
-    fixture.componentInstance.backendResponse.set({ errorCode: 'CONFLICT' });
+    fixture.componentInstance.errorMessage.set('CONFLICT');
     fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
@@ -60,8 +57,7 @@ describe('ServerErrorAlertComponent', () => {
 
   it('should display error title and message', async () => {
     const fixture = TestBed.createComponent(HostComponent);
-    fixture.componentInstance.status.set('error');
-    fixture.componentInstance.backendResponse.set({ errorCode: 'CONFLICT' });
+    fixture.componentInstance.errorMessage.set('CONFLICT');
     fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
@@ -76,27 +72,10 @@ describe('ServerErrorAlertComponent', () => {
     expect(description).toBeTruthy();
   });
 
-  it('should display fallback message when no errorCode provided', async () => {
-    const fixture = TestBed.createComponent(HostComponent);
-    fixture.componentInstance.status.set('error');
-    fixture.componentInstance.backendResponse.set({});
-    fixture.detectChanges();
-
-    const harness = await TestbedHarnessEnvironment.harnessForFixture(
-      fixture,
-      ServerErrorAlertHarness,
-    );
-
-    expect(await harness.isVisible()).toBe(true);
-    const description = await harness.getDescription();
-    expect(description).toBeTruthy();
-  });
-
   it('should apply custom css class', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.cssClass = 'custom-class';
-    fixture.componentInstance.status.set('error');
-    fixture.componentInstance.backendResponse.set({});
+    fixture.componentInstance.errorMessage.set('ERROR');
     fixture.detectChanges();
 
     const element = fixture.nativeElement.querySelector(
