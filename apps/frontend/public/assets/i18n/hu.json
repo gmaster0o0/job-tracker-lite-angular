@@ -87,12 +87,6 @@
         "example": "Pl. Az álláshirdetés szövege"
       }
     },
-    "update": {
-      "error": {
-        "title": "Hiba történt a munka frissítése során",
-        "not_unique": "Egy ugyanazzal a linkkel rendelkező munka már létezik. Kérjük, ellenőrizze a munkalistáját."
-      }
-    },
     "create": {
       "title": "Új munka létrehozása",
       "description": "Hozz létre egy új munkát a jelentkezéseid követéséhez",
@@ -130,6 +124,12 @@
       "applied": "Jelentkezve",
       "interview": "Interjú",
       "offer": "Ajánlat"
+    },
+    "update": {
+      "error": {
+        "title": "Hiba történt a munka frissítése során",
+        "not_unique": "Egy ugyanazzal a linkkel rendelkező munka már létezik. Kérjük, ellenőrizze a munkalistáját."
+      }
     }
   },
   "preferences": {
@@ -163,14 +163,30 @@
       "description": "Frissítse a kapcsolattartó adatait"
     },
     "fields": {
-      "name": "Név",
-      "email": "E-mail",
-      "phone": "Telefonszám"
+      "name": {
+        "label": "Név",
+        "placeholder": "Írja be a nevet...",
+        "required": "Kérjük, töltse ki a nevet",
+        "example": "Pl. John Doe"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Írja be az email címet...",
+        "invalid_format": "Érvénytelen email formátum",
+        "required_one_of": "Adjon meg e-mailt vagy telefonszámot.",
+        "example": "Pl. john.doe@example.com"
+      },
+      "phoneNumber": {
+        "label": "Telefonszám",
+        "placeholder": "Írja be a telefonszámot...",
+        "invalid_format": "Érvénytelen telefonszám formátum",
+        "required_one_of": "Adjon meg e-mailt vagy telefonszámot.",
+        "example": "Pl. +36 30 123 4567"
+      }
     },
     "create": {
-      "name": "Név",
-      "email": "E-mail",
-      "phone": "Telefonszám"
+      "title": "Új kapcsolat hozzáadása",
+      "description": "Adjon hozzá egy új kapcsolatot a listájához."
     },
     "list": {
       "loading": "Betöltés...",
