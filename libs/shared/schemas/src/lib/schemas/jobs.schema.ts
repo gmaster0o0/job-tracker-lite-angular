@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { JobStatus as PrismaJobStatus } from '@prisma/client';
-import { required } from '../validators';
+import { required, emptyStringToNull } from '../validators';
+
 //Job status can be one of the following: applied, interviewing, offer, rejected
 export const jobStatusSchema = z.enum(PrismaJobStatus);
 export type JobStatusDto = z.infer<typeof jobStatusSchema>;
@@ -25,7 +26,7 @@ export type JobDto = z.infer<typeof jobSchema>;
 export const createJobSchema = z.object({
   position: required,
   company: required,
-  link: z.preprocess((val) => (val === '' ? null : val), z.url().nullable()),
+  link: emptyStringToNull(z.url().nullable()),
   description: z.string().nullable(),
 
   status: jobStatusSchema.default(JobStatus.SAVED),

@@ -89,12 +89,6 @@
         "validation": "jobs.create.description.validation"
       }
     },
-    "update": {
-      "error": {
-        "title": "Job Update Failed",
-        "not_unique": "A job with a same link already exists. Please check your job list."
-      }
-    },
     "create": {
       "title": "Create New Job",
       "description": "Create a new job entry to track your application process.",
@@ -132,6 +126,12 @@
       "applied": "Applied",
       "interview": "Interview",
       "offer": "Offer"
+    },
+    "update": {
+      "error": {
+        "title": "Job Update Failed",
+        "not_unique": "A job with a same link already exists. Please check your job list."
+      }
     }
   },
   "preferences": {
@@ -165,14 +165,33 @@
       "description": "Update contact information"
     },
     "fields": {
-      "name": "Name",
-      "email": "Email",
-      "phone": "Phone"
+      "name": {
+        "label": "contacts.fields.name.label",
+        "placeholder": "contacts.fields.name.placeholder",
+        "required": "contacts.fields.name.required",
+        "example": "contacts.fields.name.example"
+      },
+      "email": {
+        "label": "contacts.fields.email.label",
+        "placeholder": "contacts.fields.email.placeholder",
+        "invalid_format": "contacts.fields.email.invalid_format",
+        "required_one_of": "Please provide an email or phone number.",
+        "example": "contacts.fields.email.example"
+      },
+      "phone": {
+        "label": "contacts.fields.phone.label"
+      },
+      "phoneNumber": {
+        "label": "Name",
+        "placeholder": "contacts.fields.phoneNumber.placeholder",
+        "invalid_format": "Invalid phone number format",
+        "required_one_of": "Please provide an email or phone number.",
+        "example": "contacts.fields.phoneNumber.example"
+      }
     },
     "create": {
-      "name": "Name",
-      "email": "Email",
-      "phone": "Phone"
+      "title": "Add New Contact",
+      "description": "Add a new contact to your list."
     },
     "list": {
       "loading": "Loading...",
