@@ -13,7 +13,6 @@ describe('LanguageComponent', () => {
 
     fixture = TestBed.createComponent(LanguageComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
   });
 
   it('should create', () => {

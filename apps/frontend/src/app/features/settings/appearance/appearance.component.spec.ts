@@ -21,7 +21,6 @@ describe('AppearanceComponent', () => {
     fixture = TestBed.createComponent(AppearanceComponent);
     component = fixture.componentInstance;
     themeService = TestBed.inject(ThemeService);
-    fixture.detectChanges();
 
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -45,43 +44,32 @@ describe('AppearanceComponent', () => {
     themeService.theme.set('dark');
     const newFixture = TestBed.createComponent(AppearanceComponent);
     const newComponent = newFixture.componentInstance;
-    newFixture.detectChanges();
 
     expect(newComponent.appearance()).toBe('dark');
   });
 
   it('should update theme service when appearance changes', async () => {
     await harness.selectAppearanceOption('dark');
-    fixture.detectChanges();
-
     expect(themeService.theme()).toBe('dark');
   });
 
   it('should update appearance signal when selecting light mode', async () => {
     await harness.selectAppearanceOption('light');
-    fixture.detectChanges();
-
     expect(component.appearance()).toBe('light');
   });
 
   it('should update appearance signal when selecting dark mode', async () => {
     await harness.selectAppearanceOption('dark');
-    fixture.detectChanges();
-
     expect(component.appearance()).toBe('dark');
   });
 
   it('should update appearance signal when selecting system mode', async () => {
     await harness.selectAppearanceOption('system');
-    fixture.detectChanges();
-
     expect(component.appearance()).toBe('system');
   });
 
   it('should apply correct styling to selected option', async () => {
     await harness.selectAppearanceOption('dark');
-    fixture.detectChanges();
-
     expect(component.appearance()).toBe('dark');
   });
 });

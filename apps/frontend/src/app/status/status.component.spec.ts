@@ -32,10 +32,6 @@ describe('StatusComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(StatusComponent);
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
-
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       StatusHarness,

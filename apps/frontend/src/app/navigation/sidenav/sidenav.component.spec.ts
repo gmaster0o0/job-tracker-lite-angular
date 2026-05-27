@@ -15,7 +15,6 @@ describe('SidenavComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(SidenavComponent);
-    await fixture.whenStable();
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       SidenavHarness,

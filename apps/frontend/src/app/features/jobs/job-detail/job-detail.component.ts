@@ -10,7 +10,11 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
-import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/schemas';
+import {
+  JobDto,
+  JobStatusDto,
+  JobStatus,
+} from '@job-tracker-lite-angular/schemas';
 import {
   JobsDataAccessService,
   ContactsDataAccessService,
@@ -43,7 +47,6 @@ import {
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { NotesTabComponent } from '../notes/notes-tab/notes-tab.component';
 import { translateSignal, TranslocoModule } from '@jsverse/transloco';
-import { JobStatus } from '@job-tracker-lite-angular/schemas';
 
 type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
 

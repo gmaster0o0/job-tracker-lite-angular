@@ -60,6 +60,13 @@
           "unknown": "A jegyzetet most nem sikerült létrehozni. Próbálja újra.",
           "not_unique": "Már létezik ilyen című jegyzet."
         }
+      },
+      "edit": {
+        "error": {
+          "title": "A jegyzet frissítése sikertelen",
+          "unknown": "A jegyzetet most nem sikerült frissíteni. Próbálja újra.",
+          "not_unique": "Már létezik ilyen című jegyzet."
+        }
       }
     },
     "detail": {

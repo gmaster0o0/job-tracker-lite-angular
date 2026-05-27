@@ -61,9 +61,6 @@ describe('AppComponent', () => {
 
   it('should render with router outlet', async () => {
     const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    await fixture.whenStable();
-
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       AppHarness,

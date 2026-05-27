@@ -52,15 +52,16 @@ describe('CreateContactComponent', () => {
   });
 
   it('should keep submit disabled while form is invalid', async () => {
-    fixture.detectChanges();
     expect(await harness.isSubmitDisabled()).toBe(true);
+    expect(await harness.getNameErrorText()).toBeNull();
+    expect(await harness.getEmailErrorText()).toBeNull();
+    expect(await harness.getPhoneErrorText()).toBeNull();
+    expect(await harness.isErrorVisible()).toBe(false);
   });
 
   it('should submit and create contact', async () => {
     const createContact = vi.fn().mockResolvedValue(contactFixtures.janeDoe);
     contactsDataAccessMock.createContact = createContact;
-
-    fixture.detectChanges();
 
     await harness.fillForm(createContactFixtures.janeDoe);
     await harness.submit();
@@ -75,11 +76,8 @@ describe('CreateContactComponent', () => {
     const createContact = vi.fn();
     contactsDataAccessMock.createContact = createContact;
 
-    fixture.detectChanges();
-
     await harness.fillForm(createContactFixtures.allEmpty);
     await harness.submit();
-    fixture.detectChanges();
 
     expect(await harness.getNameErrorText()).toBeTruthy();
     expect(await harness.getEmailErrorText()).toBeTruthy();
@@ -91,11 +89,8 @@ describe('CreateContactComponent', () => {
     const createContact = vi.fn();
     contactsDataAccessMock.createContact = createContact;
 
-    fixture.detectChanges();
-
     await harness.fillForm(createContactFixtures.missingName);
     await harness.submit();
-    fixture.detectChanges();
 
     expect(await harness.getNameErrorText()).toBeTruthy();
     expect(createContact).not.toHaveBeenCalled();
@@ -105,11 +100,8 @@ describe('CreateContactComponent', () => {
     const createContact = vi.fn();
     contactsDataAccessMock.createContact = createContact;
 
-    fixture.detectChanges();
-
     await harness.fillForm(createContactFixtures.invalidEmail);
     await harness.submit();
-    fixture.detectChanges();
 
     expect(await harness.getEmailErrorText()).toBeTruthy();
     expect(createContact).not.toHaveBeenCalled();
@@ -119,11 +111,8 @@ describe('CreateContactComponent', () => {
     const createContact = vi.fn();
     contactsDataAccessMock.createContact = createContact;
 
-    fixture.detectChanges();
-
     await harness.fillForm(createContactFixtures.invalidPhone);
     await harness.submit();
-    fixture.detectChanges();
 
     expect(await harness.getPhoneErrorText()).toBeTruthy();
     expect(createContact).not.toHaveBeenCalled();
@@ -133,11 +122,8 @@ describe('CreateContactComponent', () => {
     const createContact = vi.fn();
     contactsDataAccessMock.createContact = createContact;
 
-    fixture.detectChanges();
-
     await harness.fillForm(createContactFixtures.missingEmailAndPhone);
     await harness.submit();
-    fixture.detectChanges();
 
     expect(await harness.getEmailErrorText()).toContain('Please provide');
     expect(await harness.getPhoneErrorText()).toContain('Please provide');
@@ -152,12 +138,8 @@ describe('CreateContactComponent', () => {
     const createContact = vi.fn().mockRejectedValue(backendError);
     contactsDataAccessMock.createContact = createContact;
 
-    fixture.detectChanges();
-
     await harness.fillForm(createContactFixtures.janeDoe);
     await harness.submit();
-    await fixture.whenStable();
-    fixture.detectChanges();
 
     expect(await harness.isErrorVisible()).toBe(true);
     expect(await harness.getErrorText()).toBeTruthy();

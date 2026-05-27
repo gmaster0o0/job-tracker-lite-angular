@@ -21,8 +21,6 @@ describe('ContactListComponent', () => {
 
     const fixture = TestBed.createComponent(ContactListComponent);
     fixture.componentRef.setInput('jobId', '10');
-    fixture.detectChanges();
-
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       ContactListHarness,

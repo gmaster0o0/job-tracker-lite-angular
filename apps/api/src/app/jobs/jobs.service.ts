@@ -1,6 +1,5 @@
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import { Injectable } from '@nestjs/common';
-import { mapContactToDto, mapJobToDto, mapNoteToDto } from './jobs.mapper';
 import {
   ContactDto,
   CreateContactDto,
@@ -23,7 +22,7 @@ export class JobsService {
       orderBy: { updatedAt: 'desc' },
     });
 
-    return jobs.map(mapJobToDto);
+    return jobs.map(this.mapDates);
   }
 
   async create(createJobDto: CreateJobDto): Promise<JobDto> {
@@ -37,7 +36,7 @@ export class JobsService {
       data: dataForPrisma,
     });
 
-    return mapJobToDto(job);
+    return this.mapDates(job);
   }
 
   async findOne(id: string): Promise<JobDto> {
@@ -45,7 +44,7 @@ export class JobsService {
       where: { id },
     });
 
-    return mapJobToDto(job);
+    return this.mapDates(job);
   }
 
   async updateStatus(id: string, status: JobStatusDto): Promise<JobDto> {
@@ -54,12 +53,11 @@ export class JobsService {
       data: { status: status },
     });
 
-    return mapJobToDto(job);
+    return this.mapDates(job);
   }
 
   // Update job details, allowing partial updates. If status is included, it will be updated;
   //  otherwise, it remains unchanged.
-  // TODO : consider checking link and description for empty strings and converting them to null before updating, similar to the create method.
   async update(id: string, updateJobDto: UpdateJobDto): Promise<JobDto> {
     const { status, ...rest } = updateJobDto;
     const job = await this.prisma.job.update({
@@ -70,7 +68,7 @@ export class JobsService {
       },
     });
 
-    return mapJobToDto(job);
+    return this.mapDates(job);
   }
 
   async delete(id: string): Promise<void> {
@@ -87,7 +85,7 @@ export class JobsService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return contacts.map(mapContactToDto);
+    return contacts.map(this.mapDates);
   }
 
   async createContact(
@@ -101,7 +99,7 @@ export class JobsService {
       },
     });
 
-    return mapContactToDto(contact);
+    return this.mapDates(contact);
   }
 
   async updateContact(
@@ -117,7 +115,7 @@ export class JobsService {
       data: updateContactDto,
     });
 
-    return mapContactToDto(contact);
+    return this.mapDates(contact);
   }
 
   async deleteContact(jobId: string, contactId: string): Promise<void> {
@@ -139,7 +137,7 @@ export class JobsService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return notes.map(mapNoteToDto);
+    return notes.map(this.mapDates);
   }
   /**
    * Creates a new note for a given job.
@@ -158,7 +156,7 @@ export class JobsService {
       },
     });
 
-    return mapNoteToDto(note);
+    return this.mapDates(note);
   }
   /**
    * Updates an existing note for a given job.
@@ -177,7 +175,7 @@ export class JobsService {
       data: updateContent,
     });
 
-    return mapNoteToDto(note);
+    return this.mapDates(note);
   }
   /**
    * Deletes a note for a given job.
@@ -189,11 +187,26 @@ export class JobsService {
       where: { id: noteId, jobId },
     });
   }
-
+  /**
+   * Cleans an optional string field by trimming whitespace and converting empty strings to null.
+   * @param value - The string value to clean.
+   * @returns The cleaned string or null if the input was empty or undefined.
+   */
   private cleanOptionalField(value: string | undefined | null): string | null {
     if (!value || value.trim() === '') {
       return null;
     }
     return value.trim();
   }
+
+  private mapDates = <T extends { createdAt: Date; updatedAt: Date }>(
+    entity: T,
+  ): Omit<T, 'createdAt' | 'updatedAt'> & {
+    createdAt: string;
+    updatedAt: string;
+  } => ({
+    ...entity,
+    createdAt: entity.createdAt.toISOString(),
+    updatedAt: entity.updatedAt.toISOString(),
+  });
 }

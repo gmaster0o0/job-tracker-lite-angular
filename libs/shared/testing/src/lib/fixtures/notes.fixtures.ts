@@ -70,11 +70,26 @@ export const createNoteFixtures: CreateNoteFixturesMap = {
 
 export interface UpdateNoteFixturesMap {
   updatedNote: UpdateNoteDto;
+  allEmpty: UpdateNoteDto;
+  missingTitle: UpdateNoteDto;
+  missingBody: UpdateNoteDto;
 }
 
 export const updateNoteFixtures: UpdateNoteFixturesMap = {
   updatedNote: {
     title: 'Updated note title',
     body: 'Updated note body',
+  },
+  allEmpty: {
+    title: '',
+    body: '',
+  },
+  missingTitle: {
+    title: '',
+    body: 'Updated note body',
+  },
+  missingBody: {
+    title: 'Updated note title',
+    body: '',
   },
 };

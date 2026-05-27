@@ -32,7 +32,6 @@ describe('ServerErrorAlertComponent', () => {
   it('should not render when errorMessage is null', async () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.errorMessage.set(null);
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -45,8 +44,6 @@ describe('ServerErrorAlertComponent', () => {
   it('should render when errorMessage has a value', async () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.errorMessage.set('CONFLICT');
-    fixture.detectChanges();
-
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       ServerErrorAlertHarness,
@@ -58,8 +55,6 @@ describe('ServerErrorAlertComponent', () => {
   it('should display error title and message', async () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.errorMessage.set('CONFLICT');
-    fixture.detectChanges();
-
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       ServerErrorAlertHarness,

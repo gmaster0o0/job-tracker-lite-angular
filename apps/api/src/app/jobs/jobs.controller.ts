@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Patch, Delete, Post } from '@nestjs/common';
+import { Controller, Get, Patch, Delete, Post } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import {
   CreateJobDto,
@@ -9,8 +9,7 @@ import {
   jobIdParamSchema,
   updateJobSchema,
 } from '@job-tracker-lite-angular/schemas';
-import { ZodParam } from '@job-tracker-lite-angular/core-utils';
-import { ZodBody } from '@job-tracker-lite-angular/core-utils';
+import { ZodParam, ZodBody } from '@job-tracker-lite-angular/core-utils';
 
 @Controller('jobs')
 export class JobsController {

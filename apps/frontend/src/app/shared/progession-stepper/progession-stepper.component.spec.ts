@@ -17,7 +17,6 @@ describe('ProgessionStepperComponent', () => {
     const fixture = TestBed.createComponent(ProgessionStepperComponent);
     fixture.componentRef.setInput('labels', labels);
     fixture.componentRef.setInput('activeIndex', 2);
-    fixture.detectChanges();
 
     return TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -31,7 +30,6 @@ describe('ProgessionStepperComponent', () => {
     const fixture = TestBed.createComponent(ProgessionStepperComponent);
     fixture.componentRef.setInput('labels', labels);
     fixture.componentRef.setInput('activeIndex', 0);
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -44,7 +42,6 @@ describe('ProgessionStepperComponent', () => {
     );
 
     await harness.clickStep(1);
-    fixture.detectChanges();
 
     expect(emitted).toEqual([1]);
   });
@@ -54,7 +51,6 @@ describe('ProgessionStepperComponent', () => {
     fixture.componentRef.setInput('labels', labels);
     fixture.componentRef.setInput('activeIndex', -1);
     fixture.componentRef.setInput('errorState', true);
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
