@@ -60,6 +60,13 @@
           "unknown": "Unable to create note right now. Please try again.",
           "not_unique": "A note with the same title already exists."
         }
+      },
+      "edit": {
+        "error": {
+          "title": "Note Update Failed",
+          "unknown": "Unable to update note right now. Please try again.",
+          "not_unique": "A note with the same title already exists."
+        }
       }
     },
     "detail": {
