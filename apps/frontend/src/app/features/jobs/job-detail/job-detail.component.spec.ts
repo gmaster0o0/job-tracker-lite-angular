@@ -2,7 +2,11 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { convertToParamMap, ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
-import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/schemas';
+import {
+  JobDto,
+  JobStatusDto,
+  JobStatus,
+} from '@job-tracker-lite-angular/schemas';
 import {
   JobsDataAccessService,
   ContactsDataAccessService,
@@ -19,7 +23,6 @@ import {
   jobFixtures,
 } from '@job-tracker-lite-angular/testing';
 import { JobDetailHarness } from './job-detail.harness';
-import { JobStatus } from '@job-tracker-lite-angular/schemas';
 
 type JobDetailTestComponent = {
   activeTab: () => string;

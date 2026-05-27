@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Patch } from '@nestjs/common';
 import {
   CreateNoteDto,
   NoteDto,

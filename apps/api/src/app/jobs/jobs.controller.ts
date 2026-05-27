@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Patch, Delete, Post } from '@nestjs/common';
+import { Controller, Get, Patch, Delete, Post } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import {
   CreateJobDto,
