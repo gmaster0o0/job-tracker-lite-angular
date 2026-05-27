@@ -5,11 +5,18 @@ import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { BrnTooltip } from '@spartan-ng/brain/tooltip';
 import { provideIcons } from '@ng-icons/core';
 import { lucideCheck } from '@ng-icons/lucide';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   standalone: true,
   selector: 'app-progession-stepper',
-  imports: [CommonModule, HlmIconImports, HlmTooltipImports, BrnTooltip],
+  imports: [
+    CommonModule,
+    HlmIconImports,
+    HlmTooltipImports,
+    BrnTooltip,
+    TranslocoModule,
+  ],
   providers: [provideIcons({ lucideCheck })],
   templateUrl: './progession-stepper.component.html',
 })

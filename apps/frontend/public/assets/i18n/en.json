@@ -24,12 +24,20 @@
     "saving": "Saving..."
   },
   "jobs": {
+    "progression": {
+      "setStatusTooltip": "Set status to {{label}}",
+      "saved": "Saved",
+      "applied": "Applied",
+      "interview": "Interview",
+      "offer": "Offer"
+    },
     "menu": {
       "searchPlaceholder": "Search jobs or companies...",
       "loadFailed": "Failed to load jobs",
       "loading": "Loading jobs...",
       "empty": "No jobs yet",
-      "noResults": "No results found"
+      "noResults": "No results found",
+      "toggleRejectedTooltip": "Toggle showing rejected jobs"
     },
     "notes": {
       "title": "Notes",
@@ -80,8 +88,9 @@
       "delete": "Delete",
       "coverLetter": "Cover Letter",
       "coverLetterComingSoon": "Coming Soon",
-      "moreOptionsTooltip": "jobs.detail.moreOptionsTooltip",
-      "viewOriginalPostingTooltip": "jobs.detail.viewOriginalPostingTooltip"
+      "moreOptionsTooltip": "More options",
+      "viewOriginalPostingTooltip": "View original posting",
+      "changeStatusTooltip": "Click to the progress stepper and change the status"
     },
     "edit": {
       "title": "Edit Job Details",
@@ -146,12 +155,6 @@
       "contacts": "Contacts",
       "notes": "Notes",
       "coverLetter": "Cover Letter"
-    },
-    "progression": {
-      "saved": "Saved",
-      "applied": "Applied",
-      "interview": "Interview",
-      "offer": "Offer"
     },
     "update": {
       "error": {
@@ -236,6 +239,12 @@
     "settings": {
       "description": "Configure your preferences and account settings."
     }
+  },
+  "navigation": {
+    "backTooltip": "Go back to the previous page",
+    "notImplementedTooltip": "This function not implemented yet",
+    "statusTooltip": "View application health status",
+    "appTitleTooltip": "Open the Job Tracker Lite GitHub page"
   },
   "settings": {
     "preferences": "Preferences",

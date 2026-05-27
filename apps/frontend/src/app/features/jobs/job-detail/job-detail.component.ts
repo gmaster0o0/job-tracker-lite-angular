@@ -96,6 +96,9 @@ export class JobDetailComponent {
   protected readonly viewOriginalPostingTooltip = translateSignal(
     'jobs.detail.viewOriginalPostingTooltip',
   );
+  protected readonly changeStatusTooltip = translateSignal(
+    'jobs.detail.changeStatusTooltip',
+  );
   private readonly deleteDescription = translateSignal(
     'jobs.deleteDialog.description',
   );
