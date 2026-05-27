@@ -34,7 +34,7 @@ export const contactFixtures: ContactFixturesMap = {
     jobId: 'ck1234567899',
     name: 'Updated',
     email: 'updated@example.com',
-    phoneNumber: '999',
+    phoneNumber: '+3699999999',
     createdAt: '2026-04-29T09:00:00.000Z',
     updatedAt: '2026-04-29T09:00:00.000Z',
   },
@@ -43,6 +43,11 @@ export const contactFixtures: ContactFixturesMap = {
 export interface CreateContactFixturesMap {
   janeDoe: CreateContactDto;
   johnDoe: CreateContactDto;
+  allEmpty: CreateContactDto;
+  missingName: CreateContactDto;
+  missingEmailAndPhone: CreateContactDto;
+  invalidEmail: CreateContactDto;
+  invalidPhone: CreateContactDto;
 }
 
 export const createContactFixtures: CreateContactFixturesMap = {
@@ -56,16 +61,65 @@ export const createContactFixtures: CreateContactFixturesMap = {
     email: 'john@example.com',
     phoneNumber: '+3612345679',
   },
+  allEmpty: {
+    name: '',
+    email: '',
+    phoneNumber: '',
+  },
+  missingName: {
+    name: '',
+    email: 'john.doe@example.com',
+    phoneNumber: '',
+  },
+  missingEmailAndPhone: {
+    name: 'John Doe',
+    email: '',
+    phoneNumber: '',
+  },
+  invalidEmail: {
+    name: 'John Doe',
+    email: 'not-an-email',
+    phoneNumber: '+3612345678',
+  },
+  invalidPhone: {
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    phoneNumber: '12345',
+  },
 };
 
 export interface UpdateContactFixturesMap {
   updatedContact: UpdateContactDto;
+  missingName: UpdateContactDto;
+  invalidEmail: UpdateContactDto;
+  invalidPhone: UpdateContactDto;
+  missingEmailAndPhone: UpdateContactDto;
 }
 
 export const updateContactFixtures: UpdateContactFixturesMap = {
   updatedContact: {
     name: 'Updated',
     email: 'updated@example.com',
-    phoneNumber: '999',
+    phoneNumber: '+3699999999',
+  },
+  missingName: {
+    name: '',
+    email: 'john.doe@example.com',
+    phoneNumber: '+3612345678',
+  },
+  invalidEmail: {
+    name: 'John Doe',
+    email: 'not-an-email',
+    phoneNumber: '+3612345678',
+  },
+  invalidPhone: {
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    phoneNumber: '12345',
+  },
+  missingEmailAndPhone: {
+    name: 'John Doe',
+    email: '',
+    phoneNumber: '',
   },
 };
