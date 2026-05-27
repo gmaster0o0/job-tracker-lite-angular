@@ -3,18 +3,18 @@ import { TestBed } from '@angular/core/testing';
 import { JobOverviewComponent } from './job-overview.component';
 import { jobOverviewMarkdown } from '@job-tracker-lite-angular/testing';
 import { JobOverviewHarness } from './job-overview.harness';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('JobOverviewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [JobOverviewComponent],
+      imports: [JobOverviewComponent, getTranslocoModule()],
     }).compileComponents();
   });
 
   it('should render markdown into formatted HTML', async () => {
     const fixture = TestBed.createComponent(JobOverviewComponent);
     fixture.componentRef.setInput('description', jobOverviewMarkdown);
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -29,7 +29,6 @@ describe('JobOverviewComponent', () => {
   it('should show fallback text when description is empty', async () => {
     const fixture = TestBed.createComponent(JobOverviewComponent);
     fixture.componentRef.setInput('description', '   ');
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,

@@ -1,6 +1,6 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
-import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
+import { ContactDto } from '@job-tracker-lite-angular/schemas';
 import {
   JobsDataAccessService,
   ContactsDataAccessService,
@@ -35,7 +35,6 @@ describe('ContactsTabComponent', () => {
 
     const fixture = TestBed.createComponent(ContactsTabComponent);
     fixture.componentRef.setInput('jobId', '10');
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,

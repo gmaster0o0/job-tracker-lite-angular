@@ -1,15 +1,36 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
-import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
-import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { HlmFieldImports } from '@spartan-ng/helm/field';
+import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
+import { HlmDialogImports } from '@spartan-ng/helm/dialog';
+import {
+  createContactSchema,
+  ContactDto,
+} from '@job-tracker-lite-angular/schemas';
+import {
+  ContactsDataAccessService,
+  ZodNgControlBridgeDirective,
+  isBackendError,
+} from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  CreateJobDialogFooterComponent,
+  ServerErrorAlertComponent,
+} from '@job-tracker-lite-angular/frontend-shared';
 import { TranslocoModule } from '@jsverse/transloco';
+import {
+  form,
+  validateStandardSchema,
+  FormRoot,
+  FormField,
+} from '@angular/forms/signals';
 
 type CreateContactDialogContext = {
   jobId: string;
-  onCreated?: () => void;
+  onCreated?: (contact: ContactDto) => void;
 };
 
 @Component({
@@ -18,55 +39,61 @@ type CreateContactDialogContext = {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    HlmButtonImports,
     HlmInputImports,
+    HlmCardImports,
+    HlmFieldImports,
+    HlmInputGroupImports,
+    HlmDialogImports,
+    CreateJobDialogFooterComponent,
     TranslocoModule,
+    FormRoot,
+    FormField,
+    ZodNgControlBridgeDirective,
+    ServerErrorAlertComponent,
   ],
   templateUrl: './create-contact.component.html',
 })
 export class CreateContactComponent {
-  private readonly fb = inject(FormBuilder);
   private readonly dataAccess = inject(ContactsDataAccessService);
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
-  private readonly context = injectBrnDialogContext<CreateContactDialogContext>(
-    { optional: true },
-  ) ?? { jobId: 0 };
+  private readonly dialogContext =
+    injectBrnDialogContext<CreateContactDialogContext>({
+      optional: true,
+    }) ?? { jobId: '' };
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
 
-  protected readonly form = this.fb.nonNullable.group({
-    name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    phoneNumber: ['', Validators.required],
+  protected readonly contactModel = signal({
+    name: '',
+    email: '',
+    phoneNumber: '',
   });
 
-  protected async submit(): Promise<void> {
-    if (this.form.invalid || this.isSubmitting()) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    this.submitError.set(null);
-    this.isSubmitting.set(true);
-
-    try {
-      const created = await this.dataAccess.createContact(this.context.jobId, {
-        name: this.form.controls.name.value.trim(),
-        email: this.form.controls.email.value.trim(),
-        phoneNumber: this.form.controls.phoneNumber.value.trim(),
-      });
-
-      this.context.onCreated?.();
-      this.dialogRef?.close(created);
-    } catch {
-      this.submitError.set('Failed to create contact. Please try again.');
-    } finally {
-      this.isSubmitting.set(false);
-    }
-  }
-
-  protected cancel(): void {
-    this.dialogRef?.close();
-  }
+  protected readonly contactForm = form(
+    this.contactModel,
+    (path) => validateStandardSchema(path, createContactSchema),
+    {
+      submission: {
+        action: async (data) => {
+          this.isSubmitting.set(true);
+          this.submitError.set(null);
+          try {
+            const contact = await this.dataAccess.createContact(
+              this.dialogContext.jobId,
+              data().value(),
+            );
+            this.dialogContext.onCreated?.(contact);
+            this.dialogRef?.close(contact);
+          } catch (error) {
+            this.submitError.set(
+              isBackendError(error) ? error.errorCode : 'unknown',
+            );
+          } finally {
+            this.isSubmitting.set(false);
+          }
+        },
+      },
+    },
+  );
 }

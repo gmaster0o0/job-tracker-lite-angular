@@ -13,6 +13,7 @@ permissions:
 jobs:
   main:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,9 +24,9 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
+
       - run: npm ci
       - uses: nrwl/nx-set-shas@v4
-
       - name: Run affected targets with automatic Nx Cloud fallback
         shell: bash
         run: |

@@ -1,16 +1,15 @@
-import { NoteDto } from '@job-tracker-lite-angular/api-interfaces';
+import { Controller, Get, Post, Delete, Patch } from '@nestjs/common';
 import {
-  Controller,
-  Get,
-  Post,
-  Delete,
-  Param,
-  Body,
-  Patch,
-} from '@nestjs/common';
+  CreateNoteDto,
+  NoteDto,
+  UpdateNoteDto,
+  createNoteSchema,
+  jobIdParamSchema,
+  noteIdParamSchema,
+  updateNoteSchema,
+} from '@job-tracker-lite-angular/schemas';
 import { JobsService } from './jobs.service';
-import { ParseCuidPipe } from '@job-tracker-lite-angular/core-utils';
-import { CreateNoteDtoRequest, UpdateNoteDtoRequest } from './dto/notes.dto';
+import { ZodBody, ZodParam } from '@job-tracker-lite-angular/core-utils';
 
 @Controller('jobs/:id/notes')
 export class NotesController {
@@ -18,31 +17,33 @@ export class NotesController {
 
   @Delete(':noteId')
   async deleteNote(
-    @Param('id', ParseCuidPipe) id: string,
-    @Param('noteId', ParseCuidPipe) noteId: string,
+    @ZodParam('id', jobIdParamSchema) id: string,
+    @ZodParam('noteId', noteIdParamSchema) noteId: string,
   ): Promise<void> {
     return await this.jobsService.deleteNote(id, noteId);
   }
 
   @Patch(':noteId')
   async updateNote(
-    @Param('id', ParseCuidPipe) id: string,
-    @Param('noteId', ParseCuidPipe) noteId: string,
-    @Body() updatedNote: UpdateNoteDtoRequest,
+    @ZodParam('id', jobIdParamSchema) id: string,
+    @ZodParam('noteId', noteIdParamSchema) noteId: string,
+    @ZodBody(updateNoteSchema) updatedNote: UpdateNoteDto,
   ): Promise<NoteDto> {
     return await this.jobsService.updateNote(id, noteId, updatedNote);
   }
 
   @Post()
   async createNote(
-    @Param('id', ParseCuidPipe) id: string,
-    @Body() createNoteDto: CreateNoteDtoRequest,
+    @ZodParam('id', jobIdParamSchema) id: string,
+    @ZodBody(createNoteSchema) createNoteDto: CreateNoteDto,
   ): Promise<NoteDto> {
     return await this.jobsService.createNote(id, createNoteDto);
   }
 
   @Get()
-  async findNotes(@Param('id', ParseCuidPipe) id: string): Promise<NoteDto[]> {
+  async findNotes(
+    @ZodParam('id', jobIdParamSchema) id: string,
+  ): Promise<NoteDto[]> {
     return await this.jobsService.findNotes(id);
   }
 }

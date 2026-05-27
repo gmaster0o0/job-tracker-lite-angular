@@ -17,11 +17,11 @@
     "overview": "Áttekintés",
     "contacts": "Kapcsolatok",
     "notes": "Jegyzetek",
-    "saving": "Mentés...",
     "jobs": "Munkák",
     "profile": "Profil",
     "settings": "Beállítások",
-    "about": "Az alkalmazásról"
+    "about": "Az alkalmazásról",
+    "saving": "Mentés..."
   },
   "jobs": {
     "menu": {
@@ -39,14 +39,38 @@
       "editTitle": "Jegyzet szerkesztése",
       "editDescription": "Jegyzet szerkesztése",
       "fields": {
-        "title": "Cím",
-        "body": "Tartalom"
+        "title": {
+          "label": "Cím",
+          "placeholder": "Adjon meg egy rövid címet",
+          "required": "A cím megadása kötelező.",
+          "example": "Példa: Interjú utáni teendők"
+        },
+        "body": {
+          "label": "Tartalom",
+          "placeholder": "Írja le a jegyzetet",
+          "required": "A tartalom megadása kötelező.",
+          "example": "Írja le az utolsó egyeztetés fontos részleteit."
+        }
       },
       "createTitle": "Jegyzet létrehozása",
-      "createDescription": "Új jegyzet hozzáadása"
+      "createDescription": "Új jegyzet hozzáadása",
+      "create": {
+        "error": {
+          "title": "A jegyzet létrehozása sikertelen",
+          "unknown": "A jegyzetet most nem sikerült létrehozni. Próbálja újra.",
+          "not_unique": "Már létezik ilyen című jegyzet."
+        }
+      },
+      "edit": {
+        "error": {
+          "title": "A jegyzet frissítése sikertelen",
+          "unknown": "A jegyzetet most nem sikerült frissíteni. Próbálja újra.",
+          "not_unique": "Már létezik ilyen című jegyzet."
+        }
+      }
     },
     "detail": {
-      "loadFailed": "Nem sikerült betölteni a munkarészleteket",
+      "loadFailed": "Nem sikerült betölteni a részleteket",
       "notFound": "Munka nem található",
       "loading": "Munka betöltése...",
       "selectJob": "Nincs munka kiválasztva",
@@ -55,7 +79,9 @@
       "edit": "Szerkesztés",
       "delete": "Törlés",
       "coverLetter": "Kísérőlevél",
-      "coverLetterComingSoon": "Hamarosan érkezik"
+      "coverLetterComingSoon": "Hamarosan érkezik",
+      "moreOptionsTooltip": "jobs.detail.moreOptionsTooltip",
+      "viewOriginalPostingTooltip": "jobs.detail.viewOriginalPostingTooltip"
     },
     "edit": {
       "title": "Munka részleteinek szerkesztése",
@@ -64,32 +90,36 @@
     "fields": {
       "position": {
         "label": "Pozíció megnevezése",
-        "placeholder": "pl. Szoftverfejlesztő",
-        "example": "pl. Szoftverfejlesztő",
-        "required": "Kérjük, töltse ki a pozíciót"
+        "placeholder": "Írja be a pozíció megnevezését...",
+        "required": "Kérjük, töltse ki a pozíciót",
+        "example": "Pl. Szoftverfejlesztő"
       },
       "company": {
         "label": "Cég",
-        "placeholder": "pl. Google",
-        "example": "pl. Google",
-        "required": "Kérjük, töltse ki a céget"
+        "placeholder": "Írja be a cég nevét...",
+        "required": "Kérjük, töltse ki a céget",
+        "example": "Pl. Google"
       },
       "link": {
         "label": "Job Link",
         "placeholder": "https://...",
-        "description": "Link az eredeti álláshirdetéshez",
-        "required": ""
+        "invalid_format": "Érvénytelen link formátum",
+        "example": "Pl. https://www.example.com/job",
+        "description": "Link az eredeti álláshirdetéshez"
       },
       "description": {
         "label": "Munkaköri leírás",
         "placeholder": "Ide másolja a munkaköri leírást...",
-        "example": "",
-        "required": ""
+        "example": "Pl. Az álláshirdetés szövege"
       }
     },
     "create": {
-      "title": "Új munkalehetőség hozzáadása",
-      "description": "Hozzon létre egy új munkát a követéshez"
+      "title": "Új munka létrehozása",
+      "description": "Hozz létre egy új munkát a jelentkezéseid követéséhez",
+      "error": {
+        "title": "Hiba történt a munka létrehozása során",
+        "not_unique": "Egy ugyanazzal a linkkel rendelkező munka már létezik. Kérjük, ellenőrizze a munkalistáját."
+      }
     },
     "contacts": {
       "title": "Kapcsolatok"
@@ -100,6 +130,9 @@
       "applied": "Jelentkezve",
       "interview": "Interjú",
       "offer": "Ajánlat"
+    },
+    "overview": {
+      "noDescription": "Nincs leírás megadva."
     },
     "deleteDialog": {
       "description": "Biztosan törölni szeretné ezt a munkát?",
@@ -117,6 +150,12 @@
       "applied": "Jelentkezve",
       "interview": "Interjú",
       "offer": "Ajánlat"
+    },
+    "update": {
+      "error": {
+        "title": "Hiba történt a munka frissítése során",
+        "not_unique": "Egy ugyanazzal a linkkel rendelkező munka már létezik. Kérjük, ellenőrizze a munkalistáját."
+      }
     }
   },
   "preferences": {
@@ -150,14 +189,30 @@
       "description": "Frissítse a kapcsolattartó adatait"
     },
     "fields": {
-      "name": "Név",
-      "email": "E-mail",
-      "phone": "Telefonszám"
+      "name": {
+        "label": "Név",
+        "placeholder": "Írja be a nevet...",
+        "required": "Kérjük, töltse ki a nevet",
+        "example": "Pl. John Doe"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Írja be az email címet...",
+        "invalid_format": "Érvénytelen email formátum",
+        "required_one_of": "Adjon meg e-mailt vagy telefonszámot.",
+        "example": "Pl. john.doe@example.com"
+      },
+      "phoneNumber": {
+        "label": "Telefonszám",
+        "placeholder": "Írja be a telefonszámot...",
+        "invalid_format": "Érvénytelen telefonszám formátum",
+        "required_one_of": "Adjon meg e-mailt vagy telefonszámot.",
+        "example": "Pl. +36 30 123 4567"
+      }
     },
     "create": {
-      "name": "Név",
-      "email": "E-mail",
-      "phone": "Telefonszám"
+      "title": "Új kapcsolat hozzáadása",
+      "description": "Adjon hozzá egy új kapcsolatot a listájához."
     },
     "list": {
       "loading": "Betöltés...",

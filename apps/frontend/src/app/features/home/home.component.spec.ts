@@ -14,9 +14,6 @@ describe('HomeComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(HomeComponent);
-
-    fixture.detectChanges();
-    await fixture.whenStable();
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       HomeHarness,

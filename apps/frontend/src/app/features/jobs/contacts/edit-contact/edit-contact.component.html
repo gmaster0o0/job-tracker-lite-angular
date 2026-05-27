@@ -1,67 +1,106 @@
-<div class="space-y-4">
-  <header class="space-y-1">
-    <h2 class="text-lg font-semibold text-slate-900">
-      {{ 'contacts.edit.title' | transloco }}
-    </h2>
-    <p class="text-sm text-muted-foreground">
-      {{ 'contacts.edit.description' | transloco }}
-    </p>
-  </header>
+<hlm-dialog-header>
+  <h2 hlmDialogTitle>{{ 'contacts.edit.title' | transloco }}</h2>
+  <p hlmDialogDescription>{{ 'contacts.edit.description' | transloco }}</p>
+</hlm-dialog-header>
 
-  <form class="space-y-4" [formGroup]="form" (ngSubmit)="submit()">
-    <div class="space-y-1">
-      <label
-        class="text-sm font-medium text-slate-700"
-        for="edit-contact-name"
-        >{{ 'contacts.fields.name' | transloco }}</label
-      >
-      <input id="edit-contact-name" hlmInput formControlName="name" />
-    </div>
-
-    <div class="space-y-1">
-      <label
-        class="text-sm font-medium text-slate-700"
-        for="edit-contact-email"
-        >{{ 'contacts.fields.email' | transloco }}</label
-      >
+<form [formRoot]="contactForm" id="editContactForm" class="space-y-4 py-4">
+  <hlm-field-group>
+    <hlm-field>
+      <label hlmLabel for="name">{{
+        'contacts.fields.name.label' | transloco
+      }}</label>
       <input
-        id="edit-contact-email"
         hlmInput
-        type="email"
-        formControlName="email"
+        libFormField
+        id="name"
+        [formField]="contactForm.name"
+        placeholder="{{ 'contacts.fields.name.placeholder' | transloco }}"
+        class="w-full"
       />
-    </div>
+      @if (
+        contactForm.name().invalid() &&
+        (contactForm.name().touched() || contactForm.name().dirty())
+      ) {
+        <hlm-field-error validator="required">{{
+          'contacts.fields.name.required' | transloco
+        }}</hlm-field-error>
+      } @else {
+        <p hlmDialogDescription>
+          {{ 'contacts.fields.name.example' | transloco }}
+        </p>
+      }
+    </hlm-field>
 
-    <div class="space-y-1">
-      <label
-        class="text-sm font-medium text-slate-700"
-        for="edit-contact-phone"
-        >{{ 'contacts.fields.phone' | transloco }}</label
-      >
-      <input id="edit-contact-phone" hlmInput formControlName="phoneNumber" />
-    </div>
+    <hlm-field>
+      <label hlmLabel for="email">{{
+        'contacts.fields.email.label' | transloco
+      }}</label>
+      <input
+        hlmInput
+        libFormField
+        id="email"
+        type="email"
+        [formField]="contactForm.email"
+        placeholder="{{ 'contacts.fields.email.placeholder' | transloco }}"
+        class="w-full"
+      />
+      @if (
+        contactForm.email().invalid() &&
+        (contactForm.email().touched() || contactForm.email().dirty())
+      ) {
+        <hlm-field-error validator="invalid_format">{{
+          'contacts.fields.email.invalid_format' | transloco
+        }}</hlm-field-error>
+        <hlm-field-error validator="required_one_of">{{
+          'contacts.fields.email.required_one_of' | transloco
+        }}</hlm-field-error>
+      } @else {
+        <p hlmDialogDescription>
+          {{ 'contacts.fields.email.example' | transloco }}
+        </p>
+      }
+    </hlm-field>
 
-    @if (submitError()) {
-      <p class="text-sm text-red-600">{{ submitError() }}</p>
-    }
+    <hlm-field>
+      <label hlmLabel for="phoneNumber">{{
+        'contacts.fields.phoneNumber.label' | transloco
+      }}</label>
+      <input
+        hlmInput
+        libFormField
+        id="phoneNumber"
+        [formField]="contactForm.phoneNumber"
+        placeholder="{{
+          'contacts.fields.phoneNumber.placeholder' | transloco
+        }}"
+        class="w-full"
+      />
+      @if (
+        contactForm.phoneNumber().invalid() &&
+        (contactForm.phoneNumber().touched() ||
+          contactForm.phoneNumber().dirty())
+      ) {
+        <hlm-field-error validator="invalid_format">{{
+          'contacts.fields.phoneNumber.invalid_format' | transloco
+        }}</hlm-field-error>
+        <hlm-field-error validator="required_one_of">{{
+          'contacts.fields.phoneNumber.required_one_of' | transloco
+        }}</hlm-field-error>
+      } @else {
+        <p hlmDialogDescription>
+          {{ 'contacts.fields.phoneNumber.example' | transloco }}
+        </p>
+      }
+    </hlm-field>
 
-    <div class="flex justify-end gap-2 pt-2">
-      <button
-        hlmBtn
-        variant="outline"
-        type="button"
-        [disabled]="isSubmitting()"
-        (click)="cancel()"
-      >
-        {{ 'common.cancel' | transloco }}
-      </button>
-      <button hlmBtn type="submit" [disabled]="isSubmitting() || form.invalid">
-        {{
-          isSubmitting()
-            ? ('common.saving' | transloco)
-            : ('common.saveChanges' | transloco)
-        }}
-      </button>
-    </div>
-  </form>
-</div>
+    <app-server-error-alert
+      [errorMessage]="submitError()"
+      translationPrefix="contacts.edit"
+    />
+  </hlm-field-group>
+</form>
+<app-edit-job-dialog-footer
+  formId="editContactForm"
+  [disableSubmit]="contactForm().invalid()"
+  [isSubmitting]="isSubmitting()"
+/>

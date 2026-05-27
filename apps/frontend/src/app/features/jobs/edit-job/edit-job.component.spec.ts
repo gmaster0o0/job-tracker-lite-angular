@@ -1,7 +1,10 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
-import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  JobsDataAccessService,
+  BackendError,
+} from '@job-tracker-lite-angular/frontend-data-access';
 import {
   jobFixtures,
   createJobsDataAccessMock,
@@ -39,7 +42,6 @@ describe('EditJobComponent', () => {
       fixture,
       EditJobHarness,
     );
-    // do NOT call fixture.detectChanges() here so tests can set spies first
   });
 
   it('should create', async () => {
@@ -47,8 +49,6 @@ describe('EditJobComponent', () => {
   });
 
   it('should initialize form with job data', async () => {
-    fixture.detectChanges();
-
     expect(await harness.getCompanyValue()).toBe(
       jobFixtures.frontendEngineer.company,
     );
@@ -61,25 +61,22 @@ describe('EditJobComponent', () => {
     const updateJob = vi.fn().mockResolvedValue({
       ...jobFixtures.frontendEngineer,
       company: 'Updated Company',
+      status: jobFixtures.frontendEngineer.status,
     });
     jobsDataAccessMock.updateJob = updateJob;
-
-    fixture.detectChanges();
 
     await harness.fillForm(updateJobFixtures['updatedFrontendEngineer']);
     await harness.submit();
 
-    expect(updateJob).toHaveBeenCalledWith(
-      jobFixtures.frontendEngineer.id,
-      updateJobFixtures['updatedFrontendEngineer'],
-    );
+    expect(updateJob).toHaveBeenCalledWith(jobFixtures.frontendEngineer.id, {
+      ...updateJobFixtures['updatedFrontendEngineer'],
+      status: 'SAVED',
+    });
   });
 
   it('should not submit if form invalid', async () => {
     const updateJob = vi.fn();
     jobsDataAccessMock.updateJob = updateJob;
-
-    fixture.detectChanges();
 
     await harness.fillForm({ company: '' });
     await harness.submit();
@@ -88,16 +85,16 @@ describe('EditJobComponent', () => {
   });
 
   it('should set submit error on failure', async () => {
-    const updateJob = vi.fn().mockRejectedValue(new Error('API error'));
-    jobsDataAccessMock.updateJob = updateJob;
+    const backendError = new Error('Backend error: not_unique') as BackendError;
+    (backendError as any).errorCode = 'not_unique';
+    (backendError as any).statusCode = 409;
 
-    fixture.detectChanges();
+    const updateJob = vi.fn().mockRejectedValue(backendError);
+    jobsDataAccessMock.updateJob = updateJob;
 
     await harness.fillForm(updateJobFixtures['updatedFrontendEngineer']);
     await harness.submit();
 
-    expect(await harness.getSubmitErrorText()).toContain(
-      'Failed to update job. Please try again.',
-    );
+    expect(await harness.isErrorVisible()).toBe(true);
   });
 });

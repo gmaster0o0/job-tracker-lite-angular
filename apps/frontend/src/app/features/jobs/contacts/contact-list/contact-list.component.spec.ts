@@ -1,11 +1,11 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
-import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { createJobsDataAccessMock } from '@job-tracker-lite-angular/testing';
 import { ContactListComponent } from './contact-list.component';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { ContactListHarness } from './contact-list.harness';
+import { ContactDto } from '@job-tracker-lite-angular/schemas';
 
 describe('ContactListComponent', () => {
   async function setup(contacts: ContactDto[]) {
@@ -21,8 +21,6 @@ describe('ContactListComponent', () => {
 
     const fixture = TestBed.createComponent(ContactListComponent);
     fixture.componentRef.setInput('jobId', '10');
-    fixture.detectChanges();
-
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       ContactListHarness,

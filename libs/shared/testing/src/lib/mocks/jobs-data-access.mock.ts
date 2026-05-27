@@ -4,7 +4,7 @@ import {
   JobDto,
   JobStatusDto,
   UpdateJobDto,
-} from '@job-tracker-lite-angular/api-interfaces';
+} from '@job-tracker-lite-angular/schemas';
 import { jobFixtures } from '../fixtures/jobs.fixtures';
 import { ResourceState } from './ResourceState';
 import { JobsScenario } from '../scenarios/jobs.scnearios';

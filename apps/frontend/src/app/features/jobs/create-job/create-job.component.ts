@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmCardImports } from '@spartan-ng/helm/card';
@@ -8,11 +8,27 @@ import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
 import { HlmTextarea } from '@spartan-ng/helm/textarea';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
-import { JobDto } from '@job-tracker-lite-angular/api-interfaces';
-import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
-import { CreateJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
+import {
+  createJobSchema,
+  JobDto,
+  JobStatus,
+} from '@job-tracker-lite-angular/schemas';
+import {
+  JobsDataAccessService,
+  ZodNgControlBridgeDirective,
+  isBackendError,
+} from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  CreateJobDialogFooterComponent,
+  ServerErrorAlertComponent,
+} from '@job-tracker-lite-angular/frontend-shared';
 import { TranslocoModule } from '@jsverse/transloco';
-
+import {
+  form,
+  validateStandardSchema,
+  FormRoot,
+  FormField,
+} from '@angular/forms/signals';
 type CreateJobDialogContext = {
   onCreated?: (job: JobDto) => void;
 };
@@ -31,11 +47,14 @@ type CreateJobDialogContext = {
     HlmDialogImports,
     CreateJobDialogFooterComponent,
     TranslocoModule,
+    FormRoot,
+    FormField,
+    ZodNgControlBridgeDirective,
+    ServerErrorAlertComponent,
   ],
   templateUrl: './create-job.component.html',
 })
 export class CreateJobComponent {
-  private readonly fb = inject(FormBuilder);
   private readonly jobsDataAccess = inject(JobsDataAccessService);
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
   private readonly dialogContext =
@@ -44,38 +63,35 @@ export class CreateJobComponent {
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
 
-  protected readonly form = this.fb.nonNullable.group({
-    position: ['', Validators.required],
-    company: ['', Validators.required],
-    link: ['', Validators.required],
-    description: ['', Validators.required],
+  protected readonly jobModel = signal({
+    position: '',
+    company: '',
+    link: '',
+    description: '',
+    status: JobStatus.SAVED,
   });
 
-  protected async submit(): Promise<void> {
-    if (this.form.invalid || this.isSubmitting()) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    this.submitError.set(null);
-    this.isSubmitting.set(true);
-
-    const value = this.form.getRawValue();
-
-    try {
-      const created = await this.jobsDataAccess.createJob({
-        company: value.company.trim(),
-        link: value.link.trim(),
-        description: value.description.trim(),
-        position: value.position.trim(),
-      });
-
-      this.dialogContext?.onCreated?.(created);
-      this.dialogRef?.close(created);
-    } catch {
-      this.submitError.set('Failed to create job. Please try again.');
-    } finally {
-      this.isSubmitting.set(false);
-    }
-  }
+  protected readonly jobForm = form(
+    this.jobModel,
+    (path) => validateStandardSchema(path, createJobSchema),
+    {
+      submission: {
+        action: async (data) => {
+          this.isSubmitting.set(true);
+          this.submitError.set(null);
+          try {
+            const job = await this.jobsDataAccess.createJob(data().value());
+            this.dialogContext?.onCreated?.(job);
+            this.dialogRef?.close(job);
+          } catch (error) {
+            this.submitError.set(
+              isBackendError(error) ? error.errorCode : 'unknown',
+            );
+          } finally {
+            this.isSubmitting.set(false);
+          }
+        },
+      },
+    },
+  );
 }

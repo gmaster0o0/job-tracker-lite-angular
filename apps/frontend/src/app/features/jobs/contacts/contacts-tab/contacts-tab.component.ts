@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
-import { ContactDto } from '@job-tracker-lite-angular/api-interfaces';
+import { ContactDto } from '@job-tracker-lite-angular/schemas';
 import {
   JobsDataAccessService,
   ContactsDataAccessService,
@@ -40,7 +40,7 @@ export class ContactsTabComponent {
 
   protected openCreateDialog(): void {
     this.dialog.open(CreateContactComponent, {
-      contentClass: 'sm:max-w-lg !sm:mx-auto',
+      contentClass: 'sm:max-w-2xl w-[95vw]',
       context: {
         jobId: this.jobId(),
         onCreated: async () => {
@@ -52,7 +52,7 @@ export class ContactsTabComponent {
 
   protected openEditDialog(contact: ContactDto): void {
     this.dialog.open(EditContactComponent, {
-      contentClass: 'sm:max-w-lg !sm:mx-auto',
+      contentClass: 'sm:max-w-2xl w-[95vw]',
       context: {
         jobId: this.jobId(),
         contact,

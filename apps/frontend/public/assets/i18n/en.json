@@ -17,11 +17,11 @@
     "overview": "Overview",
     "contacts": "Contacts",
     "notes": "Notes",
-    "saving": "Saving...",
     "jobs": "Jobs",
     "profile": "Profile",
     "settings": "Settings",
-    "about": "About"
+    "about": "About",
+    "saving": "Saving..."
   },
   "jobs": {
     "menu": {
@@ -39,11 +39,35 @@
       "editTitle": "Edit Note",
       "editDescription": "Edit your note",
       "fields": {
-        "title": "Title",
-        "body": "Body"
+        "title": {
+          "label": "Title",
+          "placeholder": "Add a short title",
+          "required": "Title is required.",
+          "example": "Example: Interview follow-up"
+        },
+        "body": {
+          "label": "Body",
+          "placeholder": "Write your note",
+          "required": "Body is required.",
+          "example": "Add relevant details from your latest interaction."
+        }
       },
       "createTitle": "Create Note",
-      "createDescription": "Add a new note"
+      "createDescription": "Add a new note",
+      "create": {
+        "error": {
+          "title": "Note Creation Failed",
+          "unknown": "Unable to create note right now. Please try again.",
+          "not_unique": "A note with the same title already exists."
+        }
+      },
+      "edit": {
+        "error": {
+          "title": "Note Update Failed",
+          "unknown": "Unable to update note right now. Please try again.",
+          "not_unique": "A note with the same title already exists."
+        }
+      }
     },
     "detail": {
       "loadFailed": "Failed to load job details. Please try again later.",
@@ -55,7 +79,9 @@
       "edit": "Edit",
       "delete": "Delete",
       "coverLetter": "Cover Letter",
-      "coverLetterComingSoon": "Coming Soon"
+      "coverLetterComingSoon": "Coming Soon",
+      "moreOptionsTooltip": "jobs.detail.moreOptionsTooltip",
+      "viewOriginalPostingTooltip": "jobs.detail.viewOriginalPostingTooltip"
     },
     "edit": {
       "title": "Edit Job Details",
@@ -65,31 +91,37 @@
       "position": {
         "label": "Job Title",
         "placeholder": "e.g. Software Engineer",
-        "example": "e.g. Software Engineer",
-        "required": "Please fill in the title"
+        "required": "Please fill in the title",
+        "example": "e.g. Software Engineer"
       },
       "company": {
         "label": "Company",
         "placeholder": "e.g. Google",
-        "example": "e.g. Google",
-        "required": "Please fill in the company"
+        "required": "Please fill in the company",
+        "example": "e.g. Google"
       },
       "link": {
         "label": "Job Link",
         "placeholder": "https://...",
+        "invalid_format": "Invalid link format",
+        "example": "e.g. https://www.example.com/job",
         "description": "Link to the original job posting",
-        "required": ""
+        "validation": "Please provide a valid link"
       },
       "description": {
         "label": "Job Description",
         "placeholder": "Paste job description here...",
-        "example": "",
-        "required": ""
+        "example": "jobs.create.description.example",
+        "validation": "jobs.create.description.validation"
       }
     },
     "create": {
-      "title": "Add New Job Opportunity",
-      "description": "Create a new job entry to track your application"
+      "title": "Create New Job",
+      "description": "Create a new job entry to track your application process.",
+      "error": {
+        "title": "Job Creation Failed",
+        "not_unique": "A job with a same link already exists. Please check your job list."
+      }
     },
     "contacts": {
       "title": "Contacts"
@@ -100,6 +132,9 @@
       "applied": "Applied",
       "interview": "Interview",
       "offer": "Offer"
+    },
+    "overview": {
+      "noDescription": "No description provided."
     },
     "deleteDialog": {
       "description": "Are you sure you want to delete this job?",
@@ -117,6 +152,12 @@
       "applied": "Applied",
       "interview": "Interview",
       "offer": "Offer"
+    },
+    "update": {
+      "error": {
+        "title": "Job Update Failed",
+        "not_unique": "A job with a same link already exists. Please check your job list."
+      }
     }
   },
   "preferences": {
@@ -150,14 +191,33 @@
       "description": "Update contact information"
     },
     "fields": {
-      "name": "Name",
-      "email": "Email",
-      "phone": "Phone"
+      "name": {
+        "label": "contacts.fields.name.label",
+        "placeholder": "contacts.fields.name.placeholder",
+        "required": "contacts.fields.name.required",
+        "example": "contacts.fields.name.example"
+      },
+      "email": {
+        "label": "contacts.fields.email.label",
+        "placeholder": "contacts.fields.email.placeholder",
+        "invalid_format": "contacts.fields.email.invalid_format",
+        "required_one_of": "Please provide an email or phone number.",
+        "example": "contacts.fields.email.example"
+      },
+      "phoneNumber": {
+        "label": "Name",
+        "placeholder": "contacts.fields.phoneNumber.placeholder",
+        "invalid_format": "Invalid phone number format",
+        "required_one_of": "Please provide an email or phone number.",
+        "example": "contacts.fields.phoneNumber.example"
+      },
+      "phone": {
+        "label": "contacts.fields.phone.label"
+      }
     },
     "create": {
-      "name": "Name",
-      "email": "Email",
-      "phone": "Phone"
+      "title": "Add New Contact",
+      "description": "Add a new contact to your list."
     },
     "list": {
       "loading": "Loading...",

@@ -1,17 +1,34 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
-import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
-import { NoteDto } from '@job-tracker-lite-angular/api-interfaces';
-import { NotesDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
-import { EditJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { HlmFieldImports } from '@spartan-ng/helm/field';
+import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
+import { HlmDialogImports } from '@spartan-ng/helm/dialog';
+import { HlmTextarea } from '@spartan-ng/helm/textarea';
+import { NoteDto, updateNoteSchema } from '@job-tracker-lite-angular/schemas';
+import {
+  NotesDataAccessService,
+  ZodNgControlBridgeDirective,
+  isBackendError,
+} from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  EditJobDialogFooterComponent,
+  ServerErrorAlertComponent,
+} from '@job-tracker-lite-angular/frontend-shared';
 import { TranslocoModule } from '@jsverse/transloco';
+import {
+  form,
+  validateStandardSchema,
+  FormRoot,
+  FormField,
+} from '@angular/forms/signals';
 
 type EditNoteDialogContext = {
   jobId: string;
-  note: NoteDto;
+  note: Pick<NoteDto, 'id' | 'title' | 'body'>;
   onUpdated?: () => void;
 };
 
@@ -21,68 +38,63 @@ type EditNoteDialogContext = {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    HlmButtonImports,
     HlmInputImports,
+    HlmCardImports,
+    HlmFieldImports,
+    HlmInputGroupImports,
+    HlmDialogImports,
+    HlmTextarea,
     EditJobDialogFooterComponent,
     TranslocoModule,
+    FormRoot,
+    FormField,
+    ZodNgControlBridgeDirective,
+    ServerErrorAlertComponent,
   ],
   templateUrl: './edit-note.component.html',
 })
 export class EditNoteComponent {
-  private readonly fb = inject(FormBuilder);
-  private readonly notesDataAccess = inject(NotesDataAccessService);
+  private readonly dataAccess = inject(NotesDataAccessService);
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
-  private readonly context = injectBrnDialogContext<EditNoteDialogContext>({
-    optional: true,
-  }) ?? {
-    jobId: 0,
-    note: {
-      id: 0,
-      jobId: 0,
-      title: '',
-      body: '',
-      createdAt: '',
-      updatedAt: '',
-    },
-  };
+  private readonly dialogContext =
+    injectBrnDialogContext<EditNoteDialogContext>({ optional: true }) ?? {
+      jobId: '',
+      note: { id: '', title: '', body: '' },
+    };
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
 
-  protected readonly form = this.fb.nonNullable.group({
-    title: [this.context.note.title, Validators.required],
-    body: [this.context.note.body, Validators.required],
+  protected readonly noteModel = signal({
+    title: this.dialogContext.note.title ?? '',
+    body: this.dialogContext.note.body ?? '',
   });
 
-  protected async submit(): Promise<void> {
-    if (this.form.invalid || this.isSubmitting()) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    this.submitError.set(null);
-    this.isSubmitting.set(true);
-
-    try {
-      const updated = await this.notesDataAccess.updateNote(
-        this.context.jobId,
-        this.context.note.id,
-        {
-          title: this.form.controls.title.value.trim(),
-          body: this.form.controls.body.value.trim(),
+  protected readonly noteForm = form(
+    this.noteModel,
+    (path) => validateStandardSchema(path, updateNoteSchema),
+    {
+      submission: {
+        action: async (data) => {
+          this.isSubmitting.set(true);
+          this.submitError.set(null);
+          try {
+            const note = await this.dataAccess.updateNote(
+              this.dialogContext.jobId,
+              this.dialogContext.note.id,
+              data().value(),
+            );
+            this.dialogContext.onUpdated?.();
+            this.dialogRef?.close(note);
+          } catch (error) {
+            this.submitError.set(
+              isBackendError(error) ? error.errorCode : 'unknown',
+            );
+          } finally {
+            this.isSubmitting.set(false);
+          }
         },
-      );
-
-      this.context.onUpdated?.();
-      this.dialogRef?.close(updated);
-    } catch {
-      this.submitError.set('Failed to update note. Please try again.');
-    } finally {
-      this.isSubmitting.set(false);
-    }
-  }
-
-  protected cancel(): void {
-    this.dialogRef?.close();
-  }
+      },
+    },
+  );
 }

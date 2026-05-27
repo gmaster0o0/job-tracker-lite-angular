@@ -3,7 +3,7 @@
   <p hlmDialogDescription>{{ 'jobs.notes.createDescription' | transloco }}</p>
 </hlm-dialog-header>
 
-<form [formGroup]="form" id="createNoteForm" (ngSubmit)="submit()">
+<form [formRoot]="noteForm" id="createNoteForm" class="space-y-4 py-4">
   <hlm-field-group>
     <hlm-field>
       <label hlmLabel for="title">{{
@@ -11,12 +11,16 @@
       }}</label>
       <input
         hlmInput
+        libFormField
         id="title"
-        formControlName="title"
+        [formField]="noteForm.title"
         placeholder="{{ 'jobs.notes.fields.title.placeholder' | transloco }}"
         class="w-full"
       />
-      @if (form.get('title')?.invalid && form.get('title')?.touched) {
+      @if (
+        noteForm.title().invalid() &&
+        (noteForm.title().touched() || noteForm.title().dirty())
+      ) {
         <hlm-field-error validator="required">{{
           'jobs.notes.fields.title.required' | transloco
         }}</hlm-field-error>
@@ -32,27 +36,35 @@
       }}</label>
       <textarea
         hlmTextarea
+        libFormField
         id="body"
-        formControlName="body"
+        [formField]="noteForm.body"
         placeholder="{{ 'jobs.notes.fields.body.placeholder' | transloco }}"
         rows="4"
+        class="min-h-[120px] h-[120px] [field-sizing:fixed] overflow-y-auto"
       ></textarea>
-      @if (form.get('body')?.invalid && form.get('body')?.touched) {
-        <hlm-field-error validator="required"
-          >Body is a required field.</hlm-field-error
-        >
+      @if (
+        noteForm.body().invalid() &&
+        (noteForm.body().touched() || noteForm.body().dirty())
+      ) {
+        <hlm-field-error validator="required">{{
+          'jobs.notes.fields.body.required' | transloco
+        }}</hlm-field-error>
+      } @else {
+        <p hlmDialogDescription>
+          {{ 'jobs.notes.fields.body.example' | transloco }}
+        </p>
       }
     </hlm-field>
 
-    @if (submitError()) {
-      <div class="text-sm font-medium text-destructive">
-        {{ submitError() }}
-      </div>
-    }
+    <app-server-error-alert
+      [errorMessage]="submitError()"
+      translationPrefix="jobs.notes.create"
+    />
   </hlm-field-group>
 </form>
 <app-create-job-dialog-footer
   formId="createNoteForm"
-  [disableSubmit]="form.invalid"
+  [disableSubmit]="noteForm().invalid()"
   [isSubmitting]="isSubmitting()"
 />

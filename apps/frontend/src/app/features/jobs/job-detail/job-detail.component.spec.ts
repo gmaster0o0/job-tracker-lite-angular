@@ -2,7 +2,11 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { convertToParamMap, ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
-import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
+import {
+  JobDto,
+  JobStatusDto,
+  JobStatus,
+} from '@job-tracker-lite-angular/schemas';
 import {
   JobsDataAccessService,
   ContactsDataAccessService,
@@ -107,9 +111,6 @@ describe('JobDetailComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(JobDetailComponent);
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -184,16 +185,15 @@ describe('JobDetailComponent', () => {
   });
 
   it('should update status when stepper emits stepSelected', async () => {
-    const { fixture, harness, dataAccessServiceMock } = await setup({
+    const { harness, dataAccessServiceMock } = await setup({
       id: baseJob.id,
       jobs: [baseJob],
     });
 
     await harness.clickProgressStep(1);
-    await fixture.whenStable();
 
     expect(dataAccessServiceMock.__calls.updateJobStatusCalls).toEqual([
-      [baseJob.id, 'applied'],
+      [baseJob.id, JobStatus.APPLIED],
     ]);
   });
 
@@ -232,7 +232,7 @@ describe('JobDetailComponent', () => {
     const component =
       fixture.componentInstance as unknown as JobDetailTestComponent;
 
-    expect(component.formatStatus('applied')).toBe('APPLIED');
+    expect(component.formatStatus(JobStatus.APPLIED)).toBe('APPLIED');
   });
 
   it('should identify rejected jobs and return -1 for rejected progress index', async () => {
@@ -259,7 +259,7 @@ describe('JobDetailComponent', () => {
 
     const component =
       fixture.componentInstance as unknown as JobDetailTestComponent;
-    await component.moveToStatus('job offered', baseJob);
+    await component.moveToStatus(JobStatus.JOB_OFFERED, baseJob);
 
     expect(dataAccessServiceMock.__calls.updateJobStatusCalls).toEqual([]);
   });

@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { jobFixtures } from '@job-tracker-lite-angular/testing';
 import { JobCardComponent } from './job-card.component';
 import { JobCardHarness } from './job-card.harness';
+import { JobStatus } from '@job-tracker-lite-angular/schemas';
 
 describe('JobCardComponent', () => {
   beforeEach(async () => {
@@ -14,7 +15,6 @@ describe('JobCardComponent', () => {
   it('should render the position, company, and status', () => {
     const fixture = TestBed.createComponent(JobCardComponent);
     fixture.componentRef.setInput('job', jobFixtures.frontendEngineer);
-    fixture.detectChanges();
 
     return TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -24,7 +24,7 @@ describe('JobCardComponent', () => {
 
       expect(text).toContain('Frontend Engineer');
       expect(text).toContain('Acme Labs');
-      expect(text).toContain('saved');
+      expect(text).toContain(JobStatus.SAVED);
     });
   });
 });

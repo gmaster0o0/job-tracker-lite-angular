@@ -2,7 +2,7 @@ import {
   NoteDto,
   CreateNoteDto,
   UpdateNoteDto,
-} from '@job-tracker-lite-angular/api-interfaces';
+} from '@job-tracker-lite-angular/schemas';
 
 export interface NoteFixturesMap {
   janeDoe: NoteDto;
@@ -40,6 +40,9 @@ export const noteFixtures: NoteFixturesMap = {
 export interface CreateNoteFixturesMap {
   janeDoe: CreateNoteDto;
   johnDoe: CreateNoteDto;
+  allEmpty: CreateNoteDto;
+  missingTitle: CreateNoteDto;
+  missingBody: CreateNoteDto;
 }
 
 export const createNoteFixtures: CreateNoteFixturesMap = {
@@ -51,15 +54,42 @@ export const createNoteFixtures: CreateNoteFixturesMap = {
     title: 'John Doe note title',
     body: 'John Doe note body',
   },
+  allEmpty: {
+    title: '',
+    body: '',
+  },
+  missingTitle: {
+    title: '',
+    body: 'Body content',
+  },
+  missingBody: {
+    title: 'Title content',
+    body: '',
+  },
 };
 
 export interface UpdateNoteFixturesMap {
   updatedNote: UpdateNoteDto;
+  allEmpty: UpdateNoteDto;
+  missingTitle: UpdateNoteDto;
+  missingBody: UpdateNoteDto;
 }
 
 export const updateNoteFixtures: UpdateNoteFixturesMap = {
   updatedNote: {
     title: 'Updated note title',
     body: 'Updated note body',
+  },
+  allEmpty: {
+    title: '',
+    body: '',
+  },
+  missingTitle: {
+    title: '',
+    body: 'Updated note body',
+  },
+  missingBody: {
+    title: 'Updated note title',
+    body: '',
   },
 };

@@ -1,1 +1,1 @@
-export * from './parse-cuid.pipe';
+export * from './zod-validation.pipe';

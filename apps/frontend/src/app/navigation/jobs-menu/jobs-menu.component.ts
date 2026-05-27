@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal, effect } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { JobStatusDto } from '@job-tracker-lite-angular/api-interfaces';
+import { JobStatusDto, JobStatus } from '@job-tracker-lite-angular/schemas';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { JobCardComponent } from '../../features/jobs/job-card/job-card.component';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -55,18 +55,18 @@ export class JobsMenuComponent {
 
   protected readonly chips: readonly FilterChip[] = [
     { label: translateSignal('jobs.filters.all'), value: null },
-    { label: translateSignal('jobs.filters.saved'), value: 'saved' },
+    { label: translateSignal('jobs.filters.saved'), value: JobStatus.SAVED },
     {
       label: translateSignal('jobs.filters.applied'),
-      value: 'applied',
+      value: JobStatus.APPLIED,
     },
     {
       label: translateSignal('jobs.filters.interview'),
-      value: 'interview',
+      value: JobStatus.INTERVIEW,
     },
     {
       label: translateSignal('jobs.filters.offer'),
-      value: 'job offered',
+      value: JobStatus.JOB_OFFERED,
     },
   ];
 
@@ -77,7 +77,7 @@ export class JobsMenuComponent {
     const showRejected = this.showRejected();
 
     return data.filter((job) => {
-      if (!showRejected && job.status === 'rejected') {
+      if (!showRejected && job.status === JobStatus.REJECTED) {
         return false;
       }
 

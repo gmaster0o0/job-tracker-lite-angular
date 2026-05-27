@@ -1,24 +1,17 @@
 import { ComponentHarness } from '@angular/cdk/testing';
-import { CreateJobDto } from '@job-tracker-lite-angular/api-interfaces';
+import { CreateJobDto } from '@job-tracker-lite-angular/schemas';
 
 export class CreateJobHarness extends ComponentHarness {
   static hostSelector = 'app-create-job';
 
-  private readonly getPositionInput = this.locatorFor(
-    '[formControlName="position"]',
-  );
-  private readonly getCompanyInput = this.locatorFor(
-    '[formControlName="company"]',
-  );
-  private readonly getLinkInput = this.locatorFor('[formControlName="link"]');
-  private readonly getDescriptionInput = this.locatorFor(
-    '[formControlName="description"]',
-  );
+  private readonly getPositionInput = this.locatorFor('#position');
+  private readonly getCompanyInput = this.locatorFor('#company');
+  private readonly getLinkInput = this.locatorFor('#link');
+  private readonly getDescriptionInput = this.locatorFor('#description');
   private readonly getSubmitButton = this.locatorFor(
-    'app-save-button button[type="submit"]',
+    'app-create-job-dialog-footer button[type="submit"]',
   );
-  private readonly getErrorMessage =
-    this.locatorForOptional('.text-destructive');
+  private readonly getErrorAlert = this.locatorForOptional('[role="alert"]');
 
   async fillForm(values: Partial<CreateJobDto>): Promise<void> {
     if (values.position !== undefined) {
@@ -42,8 +35,9 @@ export class CreateJobHarness extends ComponentHarness {
     if (values.link !== undefined) {
       const input = await this.getLinkInput();
       await input.clear();
-      if (values.link.length > 0) {
-        await input.sendKeys(values.link);
+      const link = values.link ?? '';
+      if (typeof link === 'string' && link) {
+        await input.sendKeys(link);
       }
       await input.dispatchEvent('input');
     }
@@ -51,8 +45,9 @@ export class CreateJobHarness extends ComponentHarness {
     if (values.description !== undefined) {
       const input = await this.getDescriptionInput();
       await input.clear();
-      if (values.description.length > 0) {
-        await input.sendKeys(values.description);
+      const description = values.description ?? '';
+      if (typeof description === 'string' && description) {
+        await input.sendKeys(description);
       }
       await input.dispatchEvent('input');
     }
@@ -68,8 +63,8 @@ export class CreateJobHarness extends ComponentHarness {
     return button.getProperty('disabled');
   }
 
-  async getSubmitErrorText(): Promise<string | null> {
-    const error = await this.getErrorMessage();
-    return error ? error.text() : null;
+  async isErrorVisible(): Promise<boolean> {
+    const alert = await this.getErrorAlert();
+    return alert !== null;
   }
 }

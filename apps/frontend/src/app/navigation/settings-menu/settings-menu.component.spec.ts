@@ -19,7 +19,6 @@ describe('SettingsMenuComponent', () => {
 
     fixture = TestBed.createComponent(SettingsMenuComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
 
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,

@@ -7,4 +7,7 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/api',
+  transformIgnorePatterns: [
+    'node_modules/(?!(@angular|@job-tracker-lite-angular)/)',
+  ],
 };

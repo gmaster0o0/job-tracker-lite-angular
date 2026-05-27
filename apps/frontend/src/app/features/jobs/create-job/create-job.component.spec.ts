@@ -1,6 +1,9 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  JobsDataAccessService,
+  BackendError,
+} from '@job-tracker-lite-angular/frontend-data-access';
 import {
   jobFixtures,
   createJobsDataAccessMock,
@@ -42,27 +45,26 @@ describe('CreateJobComponent', () => {
   });
 
   it('should keep submit disabled while form is invalid', async () => {
-    fixture.detectChanges();
     expect(await harness.isSubmitDisabled()).toBe(true);
+    expect(await harness.isErrorVisible()).toBe(false);
   });
 
   it('should submit and create job', async () => {
     const createJob = vi.fn().mockResolvedValue(jobFixtures.frontendEngineer);
     jobsDataAccessMock.createJob = createJob;
 
-    fixture.detectChanges();
-
     await harness.fillForm(createJobFixtures.designer);
     await harness.submit();
 
-    expect(createJob).toHaveBeenCalledWith(createJobFixtures.designer);
+    expect(createJob).toHaveBeenCalledWith({
+      ...createJobFixtures.designer,
+      status: 'SAVED',
+    });
   });
 
   it('should not submit if form invalid', async () => {
     const createJob = vi.fn();
     jobsDataAccessMock.createJob = createJob;
-
-    fixture.detectChanges();
 
     await harness.fillForm(createJobFixtures.empty);
     await harness.submit();
@@ -71,22 +73,16 @@ describe('CreateJobComponent', () => {
   });
 
   it('should set submit error on failure', async () => {
-    const createJob = vi.fn().mockRejectedValue(new Error('API error'));
+    const backendError = new Error('Backend error: not_unique') as BackendError;
+    (backendError as any).errorCode = 'not_unique';
+    (backendError as any).statusCode = 409;
+
+    const createJob = vi.fn().mockRejectedValue(backendError);
     jobsDataAccessMock.createJob = createJob;
 
-    fixture.detectChanges();
-
-    await harness.fillForm({
-      position: 'Frontend Engineer',
-      company: 'Acme Labs',
-      link: 'https://example.com',
-      description: 'Great job',
-    });
-
+    await harness.fillForm(createJobFixtures.designer);
     await harness.submit();
 
-    expect(await harness.getSubmitErrorText()).toContain(
-      'Failed to create job. Please try again.',
-    );
+    expect(await harness.isErrorVisible()).toBe(true);
   });
 });
