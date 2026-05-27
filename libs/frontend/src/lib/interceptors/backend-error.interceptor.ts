@@ -32,9 +32,9 @@ function normalizeHttpError(httpError: HttpErrorResponse): BackendError {
   const backendError = new Error(`Backend error: ${errorCode}`) as BackendError;
 
   // Attach normalized properties
-  (backendError as any).errorCode = errorCode;
-  (backendError as any).statusCode = httpError.status;
-  (backendError as any).originalMessage = originalMessage;
+  backendError.errorCode = errorCode;
+  backendError.statusCode = httpError.status;
+  backendError.originalMessage = originalMessage;
 
   return backendError;
 }

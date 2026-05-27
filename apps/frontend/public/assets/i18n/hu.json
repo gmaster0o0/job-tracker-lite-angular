@@ -17,11 +17,11 @@
     "overview": "Áttekintés",
     "contacts": "Kapcsolatok",
     "notes": "Jegyzetek",
-    "saving": "Mentés...",
     "jobs": "Munkák",
     "profile": "Profil",
     "settings": "Beállítások",
-    "about": "Az alkalmazásról"
+    "about": "Az alkalmazásról",
+    "saving": "Mentés..."
   },
   "jobs": {
     "menu": {
@@ -39,11 +39,28 @@
       "editTitle": "Jegyzet szerkesztése",
       "editDescription": "Jegyzet szerkesztése",
       "fields": {
-        "title": "Cím",
-        "body": "Tartalom"
+        "title": {
+          "label": "Cím",
+          "placeholder": "Adjon meg egy rövid címet",
+          "required": "A cím megadása kötelező.",
+          "example": "Példa: Interjú utáni teendők"
+        },
+        "body": {
+          "label": "Tartalom",
+          "placeholder": "Írja le a jegyzetet",
+          "required": "A tartalom megadása kötelező.",
+          "example": "Írja le az utolsó egyeztetés fontos részleteit."
+        }
       },
       "createTitle": "Jegyzet létrehozása",
-      "createDescription": "Új jegyzet hozzáadása"
+      "createDescription": "Új jegyzet hozzáadása",
+      "create": {
+        "error": {
+          "title": "A jegyzet létrehozása sikertelen",
+          "unknown": "A jegyzetet most nem sikerült létrehozni. Próbálja újra.",
+          "not_unique": "Már létezik ilyen című jegyzet."
+        }
+      }
     },
     "detail": {
       "loadFailed": "Nem sikerült betölteni a részleteket",
@@ -55,7 +72,9 @@
       "edit": "Szerkesztés",
       "delete": "Törlés",
       "coverLetter": "Kísérőlevél",
-      "coverLetterComingSoon": "Hamarosan érkezik"
+      "coverLetterComingSoon": "Hamarosan érkezik",
+      "moreOptionsTooltip": "jobs.detail.moreOptionsTooltip",
+      "viewOriginalPostingTooltip": "jobs.detail.viewOriginalPostingTooltip"
     },
     "edit": {
       "title": "Munka részleteinek szerkesztése",

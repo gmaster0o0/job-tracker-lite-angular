@@ -1,18 +1,34 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmInputImports } from '@spartan-ng/helm/input';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { HlmFieldImports } from '@spartan-ng/helm/field';
+import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
-import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
-import { NotesDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
-import { HlmFieldGroup, HlmField, HlmFieldError } from '@spartan-ng/helm/field';
-import { CreateJobDialogFooterComponent } from '@job-tracker-lite-angular/frontend-shared';
+import { HlmTextarea } from '@spartan-ng/helm/textarea';
+import { createNoteSchema, NoteDto } from '@job-tracker-lite-angular/schemas';
+import {
+  NotesDataAccessService,
+  ZodNgControlBridgeDirective,
+  isBackendError,
+} from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  CreateJobDialogFooterComponent,
+  ServerErrorAlertComponent,
+} from '@job-tracker-lite-angular/frontend-shared';
 import { TranslocoModule } from '@jsverse/transloco';
+import {
+  form,
+  validateStandardSchema,
+  FormRoot,
+  FormField,
+} from '@angular/forms/signals';
 
 type CreateNoteDialogContext = {
   jobId: string;
-  onCreated?: () => void;
+  onCreated?: (note: NoteDto) => void;
 };
 
 @Component({
@@ -22,53 +38,60 @@ type CreateNoteDialogContext = {
     CommonModule,
     ReactiveFormsModule,
     HlmInputImports,
+    HlmCardImports,
+    HlmFieldImports,
+    HlmInputGroupImports,
     HlmDialogImports,
-    HlmTextareaImports,
-    HlmFieldGroup,
-    HlmField,
-    HlmFieldError,
+    HlmTextarea,
     CreateJobDialogFooterComponent,
     TranslocoModule,
+    FormRoot,
+    FormField,
+    ZodNgControlBridgeDirective,
+    ServerErrorAlertComponent,
   ],
   templateUrl: './create-note.component.html',
 })
 export class CreateNoteComponent {
-  private readonly fb = inject(FormBuilder);
   private readonly dataAccess = inject(NotesDataAccessService);
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
   private readonly context = injectBrnDialogContext<CreateNoteDialogContext>({
     optional: true,
-  }) ?? { jobId: 0 };
+  }) ?? { jobId: '' };
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
 
-  protected readonly form = this.fb.nonNullable.group({
-    title: ['', Validators.required],
-    body: ['', Validators.required],
+  protected readonly noteModel = signal({
+    title: '',
+    body: '',
   });
 
-  protected async submit(): Promise<void> {
-    if (this.form.invalid || this.isSubmitting()) {
-      this.form.markAllAsTouched();
-      return;
-    }
+  protected readonly noteForm = form(
+    this.noteModel,
+    (path) => validateStandardSchema(path, createNoteSchema),
+    {
+      submission: {
+        action: async (data) => {
+          this.isSubmitting.set(true);
+          this.submitError.set(null);
+          try {
+            const note = await this.dataAccess.createNote(
+              this.context.jobId,
+              data().value(),
+            );
 
-    this.submitError.set(null);
-    this.isSubmitting.set(true);
-
-    try {
-      const created = await this.dataAccess.createNote(this.context.jobId, {
-        title: this.form.controls.title.value.trim(),
-        body: this.form.controls.body.value.trim(),
-      });
-
-      this.context.onCreated?.();
-      this.dialogRef?.close(created);
-    } catch {
-      this.submitError.set('Failed to create note. Please try again.');
-    } finally {
-      this.isSubmitting.set(false);
-    }
-  }
+            this.context.onCreated?.(note);
+            this.dialogRef?.close(note);
+          } catch (error) {
+            this.submitError.set(
+              isBackendError(error) ? error.errorCode : 'unknown',
+            );
+          } finally {
+            this.isSubmitting.set(false);
+          }
+        },
+      },
+    },
+  );
 }

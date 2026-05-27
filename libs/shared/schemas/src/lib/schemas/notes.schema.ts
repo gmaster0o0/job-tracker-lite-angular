@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { required } from '../validators/required';
 
 // Note schema with DTO
 export const noteSchema = z.object({
@@ -13,8 +14,8 @@ export type NoteDto = z.infer<typeof noteSchema>;
 
 // create note schema with DTO
 export const createNoteSchema = z.object({
-  title: z.string(),
-  body: z.string(),
+  title: required,
+  body: required,
 });
 export type CreateNoteDto = z.infer<typeof createNoteSchema>;
 

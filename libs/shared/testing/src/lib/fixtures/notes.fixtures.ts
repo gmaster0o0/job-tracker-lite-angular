@@ -40,6 +40,9 @@ export const noteFixtures: NoteFixturesMap = {
 export interface CreateNoteFixturesMap {
   janeDoe: CreateNoteDto;
   johnDoe: CreateNoteDto;
+  allEmpty: CreateNoteDto;
+  missingTitle: CreateNoteDto;
+  missingBody: CreateNoteDto;
 }
 
 export const createNoteFixtures: CreateNoteFixturesMap = {
@@ -50,6 +53,18 @@ export const createNoteFixtures: CreateNoteFixturesMap = {
   johnDoe: {
     title: 'John Doe note title',
     body: 'John Doe note body',
+  },
+  allEmpty: {
+    title: '',
+    body: '',
+  },
+  missingTitle: {
+    title: '',
+    body: 'Body content',
+  },
+  missingBody: {
+    title: 'Title content',
+    body: '',
   },
 };
 

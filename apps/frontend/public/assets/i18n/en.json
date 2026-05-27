@@ -17,11 +17,11 @@
     "overview": "Overview",
     "contacts": "Contacts",
     "notes": "Notes",
-    "saving": "Saving...",
     "jobs": "Jobs",
     "profile": "Profile",
     "settings": "Settings",
-    "about": "About"
+    "about": "About",
+    "saving": "Saving..."
   },
   "jobs": {
     "menu": {
@@ -39,11 +39,28 @@
       "editTitle": "Edit Note",
       "editDescription": "Edit your note",
       "fields": {
-        "title": "Title",
-        "body": "Body"
+        "title": {
+          "label": "Title",
+          "placeholder": "Add a short title",
+          "required": "Title is required.",
+          "example": "Example: Interview follow-up"
+        },
+        "body": {
+          "label": "Body",
+          "placeholder": "Write your note",
+          "required": "Body is required.",
+          "example": "Add relevant details from your latest interaction."
+        }
       },
       "createTitle": "Create Note",
-      "createDescription": "Add a new note"
+      "createDescription": "Add a new note",
+      "create": {
+        "error": {
+          "title": "Note Creation Failed",
+          "unknown": "Unable to create note right now. Please try again.",
+          "not_unique": "A note with the same title already exists."
+        }
+      }
     },
     "detail": {
       "loadFailed": "Failed to load job details. Please try again later.",
@@ -55,7 +72,9 @@
       "edit": "Edit",
       "delete": "Delete",
       "coverLetter": "Cover Letter",
-      "coverLetterComingSoon": "Coming Soon"
+      "coverLetterComingSoon": "Coming Soon",
+      "moreOptionsTooltip": "jobs.detail.moreOptionsTooltip",
+      "viewOriginalPostingTooltip": "jobs.detail.viewOriginalPostingTooltip"
     },
     "edit": {
       "title": "Edit Job Details",
@@ -178,15 +197,15 @@
         "required_one_of": "Please provide an email or phone number.",
         "example": "contacts.fields.email.example"
       },
-      "phone": {
-        "label": "contacts.fields.phone.label"
-      },
       "phoneNumber": {
         "label": "Name",
         "placeholder": "contacts.fields.phoneNumber.placeholder",
         "invalid_format": "Invalid phone number format",
         "required_one_of": "Please provide an email or phone number.",
         "example": "contacts.fields.phoneNumber.example"
+      },
+      "phone": {
+        "label": "contacts.fields.phone.label"
       }
     },
     "create": {
