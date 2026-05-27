@@ -3,9 +3,9 @@
  * Components can rely on this consistent shape instead of inspecting HttpErrorResponse.
  */
 export interface BackendError extends Error {
-  readonly errorCode: string;
-  readonly statusCode: number;
-  readonly originalMessage?: string;
+  errorCode: string;
+  statusCode: number;
+  originalMessage?: string;
 }
 
 /**
