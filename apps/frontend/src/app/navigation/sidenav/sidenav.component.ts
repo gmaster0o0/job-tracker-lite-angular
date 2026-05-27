@@ -9,7 +9,7 @@ import { lucideLogOut, lucideArrowLeft } from '@ng-icons/lucide';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
 import { version as appVersion } from '../../../environments/version';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 @Component({
   standalone: true,
   selector: 'app-sidenav',
@@ -41,4 +41,15 @@ export class SidenavComponent {
     },
   );
   protected readonly version = appVersion;
+
+  protected readonly backTooltip = translateSignal('navigation.backTooltip');
+  protected readonly notImplementedTooltip = translateSignal(
+    'navigation.notImplementedTooltip',
+  );
+  protected readonly statusTooltip = translateSignal(
+    'navigation.statusTooltip',
+  );
+  protected readonly appTitleTooltip = translateSignal(
+    'navigation.appTitleTooltip',
+  );
 }

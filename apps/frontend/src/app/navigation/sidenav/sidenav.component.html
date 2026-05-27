@@ -13,7 +13,7 @@
         @if (!isRoot()) {
           <button
             hlmBtn
-            [hlmTooltip]="'Go back to the previous page'"
+            [hlmTooltip]="backTooltip()"
             variant="ghost"
             size="lg"
             routerLink="/"
@@ -34,7 +34,7 @@
       <div class="space-y-3">
         <button
           hlmBtn
-          [hlmTooltip]="'This function not implemented yet'"
+          [hlmTooltip]="notImplementedTooltip()"
           variant="outline"
           size="sm"
           class="w-full gap-2 bg-background justify-center text-muted-foreground hover:bg-background/80"
@@ -46,9 +46,20 @@
         <div class="space-y-1 text-[11px] text-muted-foreground">
           <div class="flex items-center justify-between">
             <span>Version {{ version }}</span>
-            <a routerLink="/status">Status</a>
+            <a routerLink="/status" [hlmTooltip]="statusTooltip()">Status</a>
           </div>
-          <p class="text-center font-medium">© 2026 Job Tracker Lite</p>
+          <p class="text-center font-medium">
+            <a
+              href="https://github.com/gmaster0o0/job-tracker-lite-angular"
+              target="_blank"
+              rel="noreferrer noopener"
+              [hlmTooltip]="appTitleTooltip()"
+              class="text-inherit hover:underline"
+              aria-label="Job Tracker Lite GitHub"
+            >
+              © 2026 Job Tracker Lite
+            </a>
+          </p>
         </div>
       </div>
     </div>

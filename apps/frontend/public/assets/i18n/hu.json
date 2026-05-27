@@ -24,12 +24,20 @@
     "saving": "Mentés..."
   },
   "jobs": {
+    "progression": {
+      "setStatusTooltip": "Státusz módosítása erre: {{label}}",
+      "saved": "Mentve",
+      "applied": "Jelentkezve",
+      "interview": "Interjú",
+      "offer": "Ajánlat"
+    },
     "menu": {
       "searchPlaceholder": "Munkák vagy cégek keresése...",
       "loadFailed": "Nem sikerült betölteni a munkákat",
       "loading": "Munkák betöltése...",
       "empty": "Még nincs munka",
-      "noResults": "Nincs találat"
+      "noResults": "Nincs találat",
+      "toggleRejectedTooltip": "Elutasított munkák megjelenítése/elfedése"
     },
     "notes": {
       "title": "Jegyzetek",
@@ -80,8 +88,9 @@
       "delete": "Törlés",
       "coverLetter": "Kísérőlevél",
       "coverLetterComingSoon": "Hamarosan érkezik",
-      "moreOptionsTooltip": "jobs.detail.moreOptionsTooltip",
-      "viewOriginalPostingTooltip": "jobs.detail.viewOriginalPostingTooltip"
+      "moreOptionsTooltip": "Katintson a további lehetőségekért",
+      "viewOriginalPostingTooltip": "Ugrás az eredeti álláshirdetésre",
+      "changeStatusTooltip": "Kattintson a státusz gombokra a státusz módosításához"
     },
     "edit": {
       "title": "Munka részleteinek szerkesztése",
@@ -101,7 +110,7 @@
         "example": "Pl. Google"
       },
       "link": {
-        "label": "Job Link",
+        "label": "Álláshirdetés linkje",
         "placeholder": "https://...",
         "invalid_format": "Érvénytelen link formátum",
         "example": "Pl. https://www.example.com/job",
@@ -122,7 +131,8 @@
       }
     },
     "contacts": {
-      "title": "Kapcsolatok"
+      "title": "Kapcsolatok",
+      "add": "Kapcsolat hozzáadása"
     },
     "filters": {
       "all": "Mind",
@@ -144,12 +154,6 @@
       "contacts": "Kapcsolatok",
       "notes": "Jegyzetek",
       "coverLetter": "Kísérőlevél"
-    },
-    "progression": {
-      "saved": "Mentve",
-      "applied": "Jelentkezve",
-      "interview": "Interjú",
-      "offer": "Ajánlat"
     },
     "update": {
       "error": {
@@ -231,6 +235,12 @@
     "settings": {
       "description": "Konfigurálja preferenciáit és fiókbeállításait."
     }
+  },
+  "navigation": {
+    "backTooltip": "Vissza az előző oldalra",
+    "notImplementedTooltip": "Ez a funkció még nincs megvalósítva",
+    "statusTooltip": "Az alkalmazás állapotának megtekintése",
+    "appTitleTooltip": "Nyissa meg a Job Tracker Lite GitHub oldalát"
   },
   "settings": {
     "preferences": "Beállítások",

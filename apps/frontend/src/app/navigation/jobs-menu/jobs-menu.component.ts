@@ -70,6 +70,10 @@ export class JobsMenuComponent {
     },
   ];
 
+  protected readonly toggleRejectedTooltip = translateSignal(
+    'jobs.menu.toggleRejectedTooltip',
+  );
+
   protected readonly filteredJobs = computed(() => {
     const data = this.jobsResource.value() ?? [];
     const query = this.searchQuery().toLowerCase().trim();

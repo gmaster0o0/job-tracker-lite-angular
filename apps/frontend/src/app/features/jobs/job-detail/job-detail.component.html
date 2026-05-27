@@ -44,7 +44,7 @@
                 {{ formatStatus(job()!.status) }}
               </span>
               <div
-                hlmTooltip="Click to the progress stepper and change the status"
+                [hlmTooltip]="changeStatusTooltip()"
                 [tooltipDisabled]="job()!.status !== JobStatus.REJECTED"
               >
                 <button
@@ -75,7 +75,7 @@
                 size="sm"
                 [href]="job()!.link"
                 target="_blank"
-                hlmTooltip="viewOriginalPostingTooltip()"
+                [hlmTooltip]="viewOriginalPostingTooltip()"
               >
                 <ng-icon hlm size="sm" name="lucideExternalLink" class="mr-2" />
               </a>
@@ -93,7 +93,7 @@
 
             <button
               hlmBtn
-              hlmTooltip="moreOptionsTooltip()"
+              [hlmTooltip]="moreOptionsTooltip()"
               variant="outline"
               size="icon-sm"
               type="button"

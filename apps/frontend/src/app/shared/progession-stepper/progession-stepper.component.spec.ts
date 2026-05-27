@@ -3,13 +3,14 @@ import { TestBed } from '@angular/core/testing';
 import { ProgessionStepperComponent } from './progession-stepper.component';
 import { jobStepperLabels } from '@job-tracker-lite-angular/testing';
 import { ProgessionStepperHarness } from './progession-stepper.harness';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('ProgessionStepperComponent', () => {
   const labels = jobStepperLabels;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProgessionStepperComponent],
+      imports: [ProgessionStepperComponent, getTranslocoModule()],
     }).compileComponents();
   });
 
