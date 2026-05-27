@@ -2,7 +2,11 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { convertToParamMap, ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
-import { JobDto, JobStatusDto } from '@job-tracker-lite-angular/schemas';
+import {
+  JobDto,
+  JobStatusDto,
+  JobStatus,
+} from '@job-tracker-lite-angular/schemas';
 import {
   JobsDataAccessService,
   ContactsDataAccessService,
@@ -19,7 +23,6 @@ import {
   jobFixtures,
 } from '@job-tracker-lite-angular/testing';
 import { JobDetailHarness } from './job-detail.harness';
-import { JobStatus } from '@job-tracker-lite-angular/schemas';
 
 type JobDetailTestComponent = {
   activeTab: () => string;
@@ -108,9 +111,6 @@ describe('JobDetailComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(JobDetailComponent);
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -185,13 +185,12 @@ describe('JobDetailComponent', () => {
   });
 
   it('should update status when stepper emits stepSelected', async () => {
-    const { fixture, harness, dataAccessServiceMock } = await setup({
+    const { harness, dataAccessServiceMock } = await setup({
       id: baseJob.id,
       jobs: [baseJob],
     });
 
     await harness.clickProgressStep(1);
-    await fixture.whenStable();
 
     expect(dataAccessServiceMock.__calls.updateJobStatusCalls).toEqual([
       [baseJob.id, JobStatus.APPLIED],

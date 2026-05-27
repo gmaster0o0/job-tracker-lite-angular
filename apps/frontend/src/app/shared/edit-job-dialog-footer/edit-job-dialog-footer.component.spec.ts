@@ -41,8 +41,6 @@ describe('EditJobDialogFooterComponent', () => {
 
   it('should render cancel and save actions', () => {
     const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-
     return TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       EditJobDialogFooterHarness,
@@ -56,7 +54,6 @@ describe('EditJobDialogFooterComponent', () => {
   it('should disable submit button when disabled by input', async () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.disableSubmit = true;
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,

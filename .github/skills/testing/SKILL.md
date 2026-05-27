@@ -122,13 +122,9 @@ import { contactFixtures, createContactFixtures, updateContactFixtures, createCo
 it('should show validation error if email is invalid', async () => {
   const createContact = vi.fn();
   contactsDataAccessMock.createContact = createContact;
-
-  fixture.detectChanges();
-
   // ✅ Use fixture instead of hardcoded data
   await harness.fillForm(createContactFixtures.invalidEmail);
   await harness.submit();
-  fixture.detectChanges();
 
   expect(await harness.getEmailErrorText()).toBeTruthy();
   expect(createContact).not.toHaveBeenCalled();
@@ -241,6 +237,11 @@ const invalidEmailData = { email: 'bad-email' };
 await harness.fillForm(invalidEmailData);
 ```
 
+❌ **ChangeDetection manually:**
+```typescript
+fixture.detectChanges(); // Don't do this in tests using TestbedHarnessEnvironment
+```
+
 ❌ **Mixing fixture usage:**
 
 ```typescript
@@ -312,13 +313,9 @@ describe('CreateContactComponent', () => {
   it('should show validation error if email is invalid', async () => {
     const createContact = vi.fn();
     contactsDataAccessMock.createContact = createContact;
-
-    fixture.detectChanges();
-
     // ✅ Use fixture instead of hardcoding
     await harness.fillForm(createContactFixtures.invalidEmail);
     await harness.submit();
-    fixture.detectChanges();
 
     expect(await harness.getEmailErrorText()).toBeTruthy();
     expect(createContact).not.toHaveBeenCalled();
@@ -327,9 +324,6 @@ describe('CreateContactComponent', () => {
   it('should submit and create contact', async () => {
     const createContact = vi.fn().mockResolvedValue(contactFixtures.janeDoe);
     contactsDataAccessMock.createContact = createContact;
-
-    fixture.detectChanges();
-
     // ✅ Use fixture for valid data
     await harness.fillForm(createContactFixtures.janeDoe);
     await harness.submit();

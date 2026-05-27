@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal, effect } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { JobStatusDto } from '@job-tracker-lite-angular/schemas';
+import { JobStatusDto, JobStatus } from '@job-tracker-lite-angular/schemas';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { JobCardComponent } from '../../features/jobs/job-card/job-card.component';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -10,7 +10,6 @@ import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { provideIcons } from '@ng-icons/core';
 import { lucideSearch, lucideGhost } from '@ng-icons/lucide';
 import { translateSignal, TranslocoModule } from '@jsverse/transloco';
-import { JobStatus } from '@job-tracker-lite-angular/schemas';
 
 type FilterValue = JobStatusDto | null;
 

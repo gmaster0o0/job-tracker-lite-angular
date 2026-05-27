@@ -43,7 +43,6 @@ describe('DeleteConfirmationDialogComponent', () => {
 
   it('should render the provided title, description and labels', async () => {
     const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -60,7 +59,6 @@ describe('DeleteConfirmationDialogComponent', () => {
 
   it('should emit confirm action', async () => {
     const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -68,8 +66,6 @@ describe('DeleteConfirmationDialogComponent', () => {
     );
 
     await harness.clickConfirm();
-    fixture.detectChanges();
-
     const host = fixture.componentInstance;
     expect(host.confirmCalls).toBe(1);
   });
@@ -87,8 +83,6 @@ describe('DeleteConfirmationDialogComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       DeleteConfirmationDialogHarness,

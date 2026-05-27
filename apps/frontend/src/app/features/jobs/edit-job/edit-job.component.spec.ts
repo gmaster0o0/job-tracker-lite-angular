@@ -49,8 +49,6 @@ describe('EditJobComponent', () => {
   });
 
   it('should initialize form with job data', async () => {
-    fixture.detectChanges();
-
     expect(await harness.getCompanyValue()).toBe(
       jobFixtures.frontendEngineer.company,
     );
@@ -67,8 +65,6 @@ describe('EditJobComponent', () => {
     });
     jobsDataAccessMock.updateJob = updateJob;
 
-    fixture.detectChanges();
-
     await harness.fillForm(updateJobFixtures['updatedFrontendEngineer']);
     await harness.submit();
 
@@ -81,8 +77,6 @@ describe('EditJobComponent', () => {
   it('should not submit if form invalid', async () => {
     const updateJob = vi.fn();
     jobsDataAccessMock.updateJob = updateJob;
-
-    fixture.detectChanges();
 
     await harness.fillForm({ company: '' });
     await harness.submit();
@@ -98,12 +92,8 @@ describe('EditJobComponent', () => {
     const updateJob = vi.fn().mockRejectedValue(backendError);
     jobsDataAccessMock.updateJob = updateJob;
 
-    fixture.detectChanges();
-
     await harness.fillForm(updateJobFixtures['updatedFrontendEngineer']);
     await harness.submit();
-    await fixture.whenStable();
-    fixture.detectChanges();
 
     expect(await harness.isErrorVisible()).toBe(true);
   });

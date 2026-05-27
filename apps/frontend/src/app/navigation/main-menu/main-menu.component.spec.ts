@@ -38,10 +38,6 @@ describe('MainMenuComponent', () => {
 
   it('should render the main menu items', async () => {
     const fixture = TestBed.createComponent(MainMenuComponent);
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
-
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       MainMenuHarness,
@@ -58,9 +54,6 @@ describe('MainMenuComponent', () => {
 
   it('should include a link to /jobs', async () => {
     const fixture = TestBed.createComponent(MainMenuComponent);
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,

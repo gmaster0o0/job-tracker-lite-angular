@@ -41,7 +41,6 @@ describe('CreateJobDialogFooterComponent', () => {
 
   it('should render cancel and create actions', () => {
     const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
 
     return TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -56,7 +55,6 @@ describe('CreateJobDialogFooterComponent', () => {
   it('should show saving label while submitting', async () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.isSubmitting = true;
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
