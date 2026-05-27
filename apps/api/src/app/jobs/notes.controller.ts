@@ -3,11 +3,13 @@ import {
   CreateNoteDto,
   NoteDto,
   UpdateNoteDto,
+  createNoteSchema,
   jobIdParamSchema,
   noteIdParamSchema,
+  updateNoteSchema,
 } from '@job-tracker-lite-angular/schemas';
 import { JobsService } from './jobs.service';
-import { ZodParam } from '@job-tracker-lite-angular/core-utils';
+import { ZodBody, ZodParam } from '@job-tracker-lite-angular/core-utils';
 
 @Controller('jobs/:id/notes')
 export class NotesController {
@@ -25,7 +27,7 @@ export class NotesController {
   async updateNote(
     @ZodParam('id', jobIdParamSchema) id: string,
     @ZodParam('noteId', noteIdParamSchema) noteId: string,
-    @Body() updatedNote: UpdateNoteDto,
+    @ZodBody(updateNoteSchema) updatedNote: UpdateNoteDto,
   ): Promise<NoteDto> {
     return await this.jobsService.updateNote(id, noteId, updatedNote);
   }
@@ -33,7 +35,7 @@ export class NotesController {
   @Post()
   async createNote(
     @ZodParam('id', jobIdParamSchema) id: string,
-    @Body() createNoteDto: CreateNoteDto,
+    @ZodBody(createNoteSchema) createNoteDto: CreateNoteDto,
   ): Promise<NoteDto> {
     return await this.jobsService.createNote(id, createNoteDto);
   }
