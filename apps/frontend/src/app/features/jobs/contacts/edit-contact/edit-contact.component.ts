@@ -1,16 +1,36 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
-import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
-import { ContactDto } from '@job-tracker-lite-angular/schemas';
-import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { HlmFieldImports } from '@spartan-ng/helm/field';
+import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
+import { HlmDialogImports } from '@spartan-ng/helm/dialog';
+import {
+  updateContactSchema,
+  ContactDto,
+} from '@job-tracker-lite-angular/schemas';
+import {
+  ContactsDataAccessService,
+  ZodNgControlBridgeDirective,
+  isBackendError,
+} from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  EditJobDialogFooterComponent,
+  ServerErrorAlertComponent,
+} from '@job-tracker-lite-angular/frontend-shared';
 import { TranslocoModule } from '@jsverse/transloco';
+import {
+  form,
+  validateStandardSchema,
+  FormRoot,
+  FormField,
+} from '@angular/forms/signals';
 
 type EditContactDialogContext = {
   jobId: string;
-  contact: ContactDto;
+  contact: Pick<ContactDto, 'id' | 'name' | 'email' | 'phoneNumber'>;
   onUpdated?: () => void;
 };
 
@@ -20,73 +40,63 @@ type EditContactDialogContext = {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    HlmButtonImports,
     HlmInputImports,
+    HlmCardImports,
+    HlmFieldImports,
+    HlmInputGroupImports,
+    HlmDialogImports,
+    EditJobDialogFooterComponent,
     TranslocoModule,
+    FormRoot,
+    FormField,
+    ZodNgControlBridgeDirective,
+    ServerErrorAlertComponent,
   ],
   templateUrl: './edit-contact.component.html',
 })
 export class EditContactComponent {
-  private readonly fb = inject(FormBuilder);
-  private readonly contactsDataAccess = inject(ContactsDataAccessService);
+  private readonly dataAccess = inject(ContactsDataAccessService);
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
-  private readonly context = injectBrnDialogContext<EditContactDialogContext>({
-    optional: true,
-  }) ?? {
-    jobId: 0,
-    contact: {
-      id: 0,
-      jobId: 0,
-      name: '',
-      email: '',
-      phoneNumber: '',
-      createdAt: '',
-      updatedAt: '',
-    },
-  };
+  private readonly dialogContext =
+    injectBrnDialogContext<EditContactDialogContext>({ optional: true }) ?? {
+      jobId: '',
+      contact: { id: '', name: '', email: '', phoneNumber: '' },
+    };
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
 
-  protected readonly form = this.fb.nonNullable.group({
-    name: [this.context.contact.name, Validators.required],
-    email: [
-      this.context.contact.email,
-      [Validators.required, Validators.email],
-    ],
-    phoneNumber: [this.context.contact.phoneNumber, Validators.required],
+  protected readonly contactModel = signal({
+    name: this.dialogContext.contact.name ?? '',
+    email: this.dialogContext.contact.email ?? '',
+    phoneNumber: this.dialogContext.contact.phoneNumber ?? '',
   });
 
-  protected async submit(): Promise<void> {
-    if (this.form.invalid || this.isSubmitting()) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    this.submitError.set(null);
-    this.isSubmitting.set(true);
-
-    try {
-      const updated = await this.contactsDataAccess.updateContact(
-        this.context.jobId,
-        this.context.contact.id,
-        {
-          name: (this.form.controls.name.value ?? '').trim(),
-          email: (this.form.controls.email.value ?? '').trim(),
-          phoneNumber: (this.form.controls.phoneNumber.value ?? '').trim(),
+  protected readonly contactForm = form(
+    this.contactModel,
+    (path) => validateStandardSchema(path, updateContactSchema),
+    {
+      submission: {
+        action: async (data) => {
+          this.isSubmitting.set(true);
+          this.submitError.set(null);
+          try {
+            const contact = await this.dataAccess.updateContact(
+              this.dialogContext.jobId,
+              this.dialogContext.contact.id,
+              data().value(),
+            );
+            this.dialogContext.onUpdated?.();
+            this.dialogRef?.close(contact);
+          } catch (error) {
+            this.submitError.set(
+              isBackendError(error) ? error.errorCode : 'unknown',
+            );
+          } finally {
+            this.isSubmitting.set(false);
+          }
         },
-      );
-
-      this.context.onUpdated?.();
-      this.dialogRef?.close(updated);
-    } catch {
-      this.submitError.set('Failed to update contact. Please try again.');
-    } finally {
-      this.isSubmitting.set(false);
-    }
-  }
-
-  protected cancel(): void {
-    this.dialogRef?.close();
-  }
+      },
+    },
+  );
 }

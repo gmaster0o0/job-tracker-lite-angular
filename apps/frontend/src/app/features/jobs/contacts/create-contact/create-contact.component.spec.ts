@@ -77,11 +77,7 @@ describe('CreateContactComponent', () => {
 
     fixture.detectChanges();
 
-    await harness.fillForm({
-      name: '',
-      email: '',
-      phoneNumber: '',
-    });
+    await harness.fillForm(createContactFixtures.allEmpty);
     await harness.submit();
     fixture.detectChanges();
 
@@ -97,11 +93,7 @@ describe('CreateContactComponent', () => {
 
     fixture.detectChanges();
 
-    await harness.fillForm({
-      name: '',
-      email: 'john.doe@example.com',
-      phoneNumber: '',
-    });
+    await harness.fillForm(createContactFixtures.missingName);
     await harness.submit();
     fixture.detectChanges();
 
@@ -115,11 +107,7 @@ describe('CreateContactComponent', () => {
 
     fixture.detectChanges();
 
-    await harness.fillForm({
-      name: 'John Doe',
-      email: 'not-an-email',
-      phoneNumber: '+3612345678',
-    });
+    await harness.fillForm(createContactFixtures.invalidEmail);
     await harness.submit();
     fixture.detectChanges();
 
@@ -133,11 +121,7 @@ describe('CreateContactComponent', () => {
 
     fixture.detectChanges();
 
-    await harness.fillForm({
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      phoneNumber: '12345',
-    });
+    await harness.fillForm(createContactFixtures.invalidPhone);
     await harness.submit();
     fixture.detectChanges();
 
@@ -151,11 +135,7 @@ describe('CreateContactComponent', () => {
 
     fixture.detectChanges();
 
-    await harness.fillForm({
-      name: 'John Doe',
-      email: '',
-      phoneNumber: '',
-    });
+    await harness.fillForm(createContactFixtures.missingEmailAndPhone);
     await harness.submit();
     fixture.detectChanges();
 
