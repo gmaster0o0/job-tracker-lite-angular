@@ -26,7 +26,6 @@ import {
   validateStandardSchema,
   FormRoot,
   FormField,
-  Field,
 } from '@angular/forms/signals';
 
 type CreateContactDialogContext = {
@@ -97,11 +96,4 @@ export class CreateContactComponent {
       },
     },
   );
-
-  protected readonly emailField = this.contactForm.email as unknown as Field<
-    any,
-    string | number
-  >;
-  protected readonly phoneNumberField = this.contactForm
-    .phoneNumber as unknown as Field<any, string | number>;
 }

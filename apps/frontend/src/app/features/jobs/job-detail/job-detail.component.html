@@ -68,6 +68,18 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-2">
+            @if (job()!.link) {
+              <a
+                hlmBtn
+                variant="outline"
+                size="sm"
+                [href]="job()!.link"
+                target="_blank"
+                hlmTooltip="viewOriginalPostingTooltip()"
+              >
+                <ng-icon hlm size="sm" name="lucideExternalLink" class="mr-2" />
+              </a>
+            }
             <button
               hlmBtn
               variant="outline"
@@ -81,7 +93,7 @@
 
             <button
               hlmBtn
-              hlmTooltip="'Click here for more options'"
+              hlmTooltip="moreOptionsTooltip()"
               variant="outline"
               size="icon-sm"
               type="button"

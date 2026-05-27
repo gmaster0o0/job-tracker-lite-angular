@@ -38,6 +38,7 @@ import {
   lucidePlus,
   lucideTrash,
   lucidePencil,
+  lucideExternalLink,
 } from '@ng-icons/lucide';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { NotesTabComponent } from '../notes/notes-tab/notes-tab.component';
@@ -72,6 +73,7 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
       lucideEllipsisVertical,
       lucideTrash,
       lucidePencil,
+      lucideExternalLink,
     }),
   ],
   templateUrl: './job-detail.component.html',
@@ -85,6 +87,12 @@ export class JobDetailComponent {
   private readonly notesDataAccess = inject(NotesDataAccessService);
   private readonly dialog = inject(HlmDialogService);
 
+  protected readonly moreOptionsTooltip = translateSignal(
+    'jobs.detail.moreOptionsTooltip',
+  );
+  protected readonly viewOriginalPostingTooltip = translateSignal(
+    'jobs.detail.viewOriginalPostingTooltip',
+  );
   private readonly deleteDescription = translateSignal(
     'jobs.deleteDialog.description',
   );
