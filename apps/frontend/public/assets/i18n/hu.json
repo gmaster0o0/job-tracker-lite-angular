@@ -131,7 +131,8 @@
       }
     },
     "contacts": {
-      "title": "Kapcsolatok"
+      "title": "Kapcsolatok",
+      "add": "Kapcsolat hozzáadása"
     },
     "filters": {
       "all": "Mind",

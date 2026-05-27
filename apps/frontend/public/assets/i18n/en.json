@@ -133,7 +133,8 @@
       }
     },
     "contacts": {
-      "title": "Contacts"
+      "title": "Contacts",
+      "add": "Add Contact"
     },
     "filters": {
       "all": "All",
