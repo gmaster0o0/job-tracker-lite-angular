@@ -27,24 +27,4 @@ jobs:
 
       - run: npm ci
       - uses: nrwl/nx-set-shas@v4
-      - name: Run affected targets with automatic Nx Cloud fallback
-        shell: bash
-        run: |
-          set -o pipefail
-          log_file="$(mktemp)"
-          trap 'rm -f "$log_file"' EXIT
-
-          if npx nx affected -t lint test build typecheck 2>&1 | tee "$log_file"; then
-            exit 0
-          fi
-
-          if grep -Eq 'Nx Cloud organization has been disabled|exceeding the FREE plan' "$log_file"; then
-            echo "Nx Cloud free-plan failure detected. Retrying without Nx Cloud..."
-            npx nx affected -t lint test build typecheck --no-cloud
-            exit $?
-          fi
-
-          echo "Nx failed for a reason other than Nx Cloud availability."
-          exit 1
-      - run: npx nx fix-ci
-        if: always()
+      - run: npx nx affected -t lint test-ci build typecheck --no-cloud
