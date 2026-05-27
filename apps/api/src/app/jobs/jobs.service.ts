@@ -22,11 +22,7 @@ export class JobsService {
       orderBy: { updatedAt: 'desc' },
     });
 
-    return jobs.map((job) => ({
-      ...job,
-      createdAt: job.createdAt.toISOString(),
-      updatedAt: job.updatedAt.toISOString(),
-    }));
+    return jobs.map(this.mapDates);
   }
 
   async create(createJobDto: CreateJobDto): Promise<JobDto> {
@@ -40,11 +36,7 @@ export class JobsService {
       data: dataForPrisma,
     });
 
-    return {
-      ...job,
-      createdAt: job.createdAt.toISOString(),
-      updatedAt: job.updatedAt.toISOString(),
-    };
+    return this.mapDates(job);
   }
 
   async findOne(id: string): Promise<JobDto> {
@@ -52,11 +44,7 @@ export class JobsService {
       where: { id },
     });
 
-    return {
-      ...job,
-      createdAt: job.createdAt.toISOString(),
-      updatedAt: job.updatedAt.toISOString(),
-    };
+    return this.mapDates(job);
   }
 
   async updateStatus(id: string, status: JobStatusDto): Promise<JobDto> {
@@ -65,11 +53,7 @@ export class JobsService {
       data: { status: status },
     });
 
-    return {
-      ...job,
-      createdAt: job.createdAt.toISOString(),
-      updatedAt: job.updatedAt.toISOString(),
-    };
+    return this.mapDates(job);
   }
 
   // Update job details, allowing partial updates. If status is included, it will be updated;
@@ -84,11 +68,7 @@ export class JobsService {
       },
     });
 
-    return {
-      ...job,
-      createdAt: job.createdAt.toISOString(),
-      updatedAt: job.updatedAt.toISOString(),
-    };
+    return this.mapDates(job);
   }
 
   async delete(id: string): Promise<void> {
@@ -105,11 +85,7 @@ export class JobsService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return contacts.map((contact) => ({
-      ...contact,
-      createdAt: contact.createdAt.toISOString(),
-      updatedAt: contact.updatedAt.toISOString(),
-    }));
+    return contacts.map(this.mapDates);
   }
 
   async createContact(
@@ -123,11 +99,7 @@ export class JobsService {
       },
     });
 
-    return {
-      ...contact,
-      createdAt: contact.createdAt.toISOString(),
-      updatedAt: contact.updatedAt.toISOString(),
-    };
+    return this.mapDates(contact);
   }
 
   async updateContact(
@@ -143,11 +115,7 @@ export class JobsService {
       data: updateContactDto,
     });
 
-    return {
-      ...contact,
-      createdAt: contact.createdAt.toISOString(),
-      updatedAt: contact.updatedAt.toISOString(),
-    };
+    return this.mapDates(contact);
   }
 
   async deleteContact(jobId: string, contactId: string): Promise<void> {
@@ -169,11 +137,7 @@ export class JobsService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return notes.map((note) => ({
-      ...note,
-      createdAt: note.createdAt.toISOString(),
-      updatedAt: note.updatedAt.toISOString(),
-    }));
+    return notes.map(this.mapDates);
   }
   /**
    * Creates a new note for a given job.
@@ -192,11 +156,7 @@ export class JobsService {
       },
     });
 
-    return {
-      ...note,
-      createdAt: note.createdAt.toISOString(),
-      updatedAt: note.updatedAt.toISOString(),
-    };
+    return this.mapDates(note);
   }
   /**
    * Updates an existing note for a given job.
@@ -215,11 +175,7 @@ export class JobsService {
       data: updateContent,
     });
 
-    return {
-      ...note,
-      createdAt: note.createdAt.toISOString(),
-      updatedAt: note.updatedAt.toISOString(),
-    };
+    return this.mapDates(note);
   }
   /**
    * Deletes a note for a given job.
@@ -242,4 +198,15 @@ export class JobsService {
     }
     return value.trim();
   }
+
+  private mapDates = <T extends { createdAt: Date; updatedAt: Date }>(
+    entity: T,
+  ): Omit<T, 'createdAt' | 'updatedAt'> & {
+    createdAt: string;
+    updatedAt: string;
+  } => ({
+    ...entity,
+    createdAt: entity.createdAt.toISOString(),
+    updatedAt: entity.updatedAt.toISOString(),
+  });
 }
