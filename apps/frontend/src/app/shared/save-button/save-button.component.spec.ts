@@ -31,7 +31,6 @@ describe('SaveButtonComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       SaveButtonHarness,
@@ -47,7 +46,6 @@ describe('SaveButtonComponent', () => {
   it('should render submitting label and disable button while submitting', async () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.isSubmitting = true;
-    fixture.detectChanges();
     const localHarness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       SaveButtonHarness,

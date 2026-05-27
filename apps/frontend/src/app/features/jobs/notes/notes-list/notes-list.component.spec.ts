@@ -43,8 +43,6 @@ describe('NotesListComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
-    await fixture.whenStable();
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       NotesListHarness,

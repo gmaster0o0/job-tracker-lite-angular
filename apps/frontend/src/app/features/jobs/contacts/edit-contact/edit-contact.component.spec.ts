@@ -55,14 +55,11 @@ describe('EditContactComponent', () => {
   });
 
   it('should keep submit disabled while form is invalid', async () => {
-    fixture.detectChanges();
     // form starts invalid: janeDoe.phoneNumber ('12345') fails E.164 validation
     expect(await harness.isSubmitDisabled()).toBe(true);
   });
 
   it('should initialize form with contact data', async () => {
-    fixture.detectChanges();
-
     expect(await harness.getNameValue()).toBe(contactFixtures.janeDoe.name);
     expect(await harness.getEmailValue()).toBe(
       contactFixtures.janeDoe.email ?? '',
@@ -78,8 +75,6 @@ describe('EditContactComponent', () => {
       .mockResolvedValue(contactFixtures.updatedContact);
     contactsDataAccessMock.updateContact = updateContact;
 
-    fixture.detectChanges();
-
     await harness.fillForm(updateContactFixtures.updatedContact);
     await harness.submit();
 
@@ -94,13 +89,10 @@ describe('EditContactComponent', () => {
     const updateContact = vi.fn();
     contactsDataAccessMock.updateContact = updateContact;
 
-    fixture.detectChanges();
-
     // For update schema, only name is required; email/phone are optional
     // So fill with missing name to make form invalid
     await harness.fillForm(updateContactFixtures.missingName);
     await harness.submit();
-    fixture.detectChanges();
 
     expect(await harness.getNameErrorText()).toBeTruthy();
     expect(updateContact).not.toHaveBeenCalled();
@@ -158,8 +150,6 @@ describe('EditContactComponent', () => {
 
     await harness.fillForm(updateContactFixtures.missingEmailAndPhone);
     await harness.submit();
-    await fixture.whenStable();
-    fixture.detectChanges();
 
     // unlike create, update schema does not require at least one of email/phone
     expect(updateContact).toHaveBeenCalled();
@@ -179,8 +169,6 @@ describe('EditContactComponent', () => {
 
     await harness.fillForm(updateContactFixtures.updatedContact);
     await harness.submit();
-    await fixture.whenStable();
-    fixture.detectChanges();
 
     expect(await harness.isErrorVisible()).toBe(true);
     expect(await harness.getErrorText()).toBeTruthy();

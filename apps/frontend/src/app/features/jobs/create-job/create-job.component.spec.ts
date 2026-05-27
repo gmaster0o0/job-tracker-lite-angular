@@ -45,15 +45,13 @@ describe('CreateJobComponent', () => {
   });
 
   it('should keep submit disabled while form is invalid', async () => {
-    fixture.detectChanges();
     expect(await harness.isSubmitDisabled()).toBe(true);
+    expect(await harness.isErrorVisible()).toBe(false);
   });
 
   it('should submit and create job', async () => {
     const createJob = vi.fn().mockResolvedValue(jobFixtures.frontendEngineer);
     jobsDataAccessMock.createJob = createJob;
-
-    fixture.detectChanges();
 
     await harness.fillForm(createJobFixtures.designer);
     await harness.submit();
@@ -67,8 +65,6 @@ describe('CreateJobComponent', () => {
   it('should not submit if form invalid', async () => {
     const createJob = vi.fn();
     jobsDataAccessMock.createJob = createJob;
-
-    fixture.detectChanges();
 
     await harness.fillForm(createJobFixtures.empty);
     await harness.submit();
@@ -84,12 +80,8 @@ describe('CreateJobComponent', () => {
     const createJob = vi.fn().mockRejectedValue(backendError);
     jobsDataAccessMock.createJob = createJob;
 
-    fixture.detectChanges();
-
     await harness.fillForm(createJobFixtures.designer);
     await harness.submit();
-    await fixture.whenStable();
-    fixture.detectChanges();
 
     expect(await harness.isErrorVisible()).toBe(true);
   });

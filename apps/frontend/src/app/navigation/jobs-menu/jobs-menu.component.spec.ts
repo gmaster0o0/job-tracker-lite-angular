@@ -23,7 +23,6 @@ describe('JobsMenuComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(JobsMenuComponent);
-    await fixture.whenStable();
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       JobsMenuHarness,

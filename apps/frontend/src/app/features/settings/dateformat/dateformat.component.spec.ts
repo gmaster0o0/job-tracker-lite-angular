@@ -13,7 +13,6 @@ describe('DateformatComponent', () => {
 
     fixture = TestBed.createComponent(DateformatComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
   });
 
   it('should create', () => {

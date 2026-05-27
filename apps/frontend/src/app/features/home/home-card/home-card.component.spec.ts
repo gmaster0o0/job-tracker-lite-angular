@@ -33,9 +33,6 @@ describe('HomeCardComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestHostComponent);
-
-    fixture.detectChanges();
-    await fixture.whenStable();
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       HomeCardHarness,

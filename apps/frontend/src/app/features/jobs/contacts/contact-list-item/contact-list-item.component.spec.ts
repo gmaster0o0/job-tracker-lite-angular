@@ -13,8 +13,6 @@ describe('ContactListItemComponent', () => {
 
     const fixture = TestBed.createComponent(ContactListItemComponent);
     fixture.componentRef.setInput('contact', contact);
-    fixture.detectChanges();
-
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       ContactListItemHarness,

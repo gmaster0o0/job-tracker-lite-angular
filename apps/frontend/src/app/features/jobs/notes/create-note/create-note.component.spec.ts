@@ -38,7 +38,6 @@ describe('CreateNoteComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(CreateNoteComponent);
-    fixture.detectChanges();
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       CreateNoteHarness,
@@ -72,7 +71,6 @@ describe('CreateNoteComponent', () => {
 
     await harness.fillForm(createNoteFixtures.allEmpty);
     await harness.submit();
-    fixture.detectChanges();
 
     expect(await harness.getTitleErrorText()).toBeTruthy();
     expect(await harness.getBodyErrorText()).toBeTruthy();
@@ -85,7 +83,6 @@ describe('CreateNoteComponent', () => {
 
     await harness.fillForm(createNoteFixtures.missingTitle);
     await harness.submit();
-    fixture.detectChanges();
 
     expect(await harness.getTitleErrorText()).toContain('Title is required.');
     expect(createNote).not.toHaveBeenCalled();
@@ -97,7 +94,6 @@ describe('CreateNoteComponent', () => {
 
     await harness.fillForm(createNoteFixtures.missingBody);
     await harness.submit();
-    fixture.detectChanges();
 
     expect(await harness.getBodyErrorText()).toContain('Body is required.');
     expect(createNote).not.toHaveBeenCalled();
@@ -114,8 +110,6 @@ describe('CreateNoteComponent', () => {
 
     await harness.fillForm(createNoteFixtures.janeDoe);
     await harness.submit();
-    await fixture.whenStable();
-    fixture.detectChanges();
 
     expect(await harness.isErrorVisible()).toBe(true);
     expect(await harness.getErrorText()).toBeTruthy();

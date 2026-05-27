@@ -15,7 +15,6 @@ describe('JobCardComponent', () => {
   it('should render the position, company, and status', () => {
     const fixture = TestBed.createComponent(JobCardComponent);
     fixture.componentRef.setInput('job', jobFixtures.frontendEngineer);
-    fixture.detectChanges();
 
     return TestbedHarnessEnvironment.harnessForFixture(
       fixture,

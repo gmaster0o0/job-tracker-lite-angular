@@ -15,7 +15,6 @@ describe('JobOverviewComponent', () => {
   it('should render markdown into formatted HTML', async () => {
     const fixture = TestBed.createComponent(JobOverviewComponent);
     fixture.componentRef.setInput('description', jobOverviewMarkdown);
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -30,7 +29,6 @@ describe('JobOverviewComponent', () => {
   it('should show fallback text when description is empty', async () => {
     const fixture = TestBed.createComponent(JobOverviewComponent);
     fixture.componentRef.setInput('description', '   ');
-    fixture.detectChanges();
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,

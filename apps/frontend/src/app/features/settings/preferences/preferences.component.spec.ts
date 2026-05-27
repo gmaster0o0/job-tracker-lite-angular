@@ -20,8 +20,6 @@ describe('PreferencesComponent', () => {
     fixture = TestBed.createComponent(PreferencesComponent);
     component = fixture.componentInstance;
     themeService = TestBed.inject(ThemeService);
-    fixture.detectChanges();
-
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       PreferencesHarness,
@@ -51,7 +49,6 @@ describe('PreferencesComponent', () => {
   it('should update theme when appearance option is selected', async () => {
     const appearanceHarness = await harness.getAppearanceHarness();
     await appearanceHarness.selectAppearanceOption('dark');
-    fixture.detectChanges();
 
     expect(themeService.theme()).toBe('dark');
   });
@@ -59,7 +56,6 @@ describe('PreferencesComponent', () => {
   it('should persist theme selection', async () => {
     const appearanceHarness = await harness.getAppearanceHarness();
     await appearanceHarness.selectAppearanceOption('system');
-    fixture.detectChanges();
 
     expect(themeService.theme()).toBe('system');
     expect(localStorage.getItem('theme')).toBe('system');
