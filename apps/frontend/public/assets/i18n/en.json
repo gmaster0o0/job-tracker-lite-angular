@@ -266,7 +266,7 @@
         "label": "Password",
         "placeholder": "Enter your password",
         "required": "Password is required.",
-        "min_length_8": "Password must be at least 8 characters.",
+        "min_length": "Password must be at least {{min}} characters.",
         "need_uppercase": "Password must contain at least one uppercase letter.",
         "need_lowercase": "Password must contain at least one lowercase letter.",
         "need_number": "Password must contain at least one number."

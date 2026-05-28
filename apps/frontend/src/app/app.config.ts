@@ -1,5 +1,4 @@
 import {
-  APP_INITIALIZER,
   ApplicationConfig,
   isDevMode,
   provideBrowserGlobalErrorListeners,
@@ -17,7 +16,6 @@ import {
   SharedTranslocoLoader,
   backendErrorInterceptor,
 } from '@job-tracker-lite-angular/frontend-data-access';
-import { AuthStore } from './features/auth/auth.store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,11 +33,5 @@ export const appConfig: ApplicationConfig = {
       },
       loader: SharedTranslocoLoader,
     }),
-    {
-      provide: APP_INITIALIZER,
-      multi: true,
-      deps: [AuthStore],
-      useFactory: (authStore: AuthStore) => () => authStore.loadSession(),
-    },
   ],
 };

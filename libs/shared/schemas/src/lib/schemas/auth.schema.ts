@@ -5,13 +5,14 @@ import { required } from '../validators/required';
 const hasNumber = (value: string): boolean => /\d/.test(value);
 const hasUppercase = (value: string): boolean => /[A-Z]/.test(value);
 const hasLowercase = (value: string): boolean => /[a-z]/.test(value);
+export const MIN_PASSWORD_LENGTH = 8;
 
 export const basicPasswordSchema = z.string().superRefine((value, ctx) => {
-  if (value.length < 8) {
+  if (value.length < MIN_PASSWORD_LENGTH) {
     ctx.addIssue({
       code: 'custom',
-      message: 'Password must be at least 8 characters long',
-      errorCode: errorCodes.min_length_8,
+      message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long`,
+      errorCode: errorCodes.min_length,
     });
   }
 

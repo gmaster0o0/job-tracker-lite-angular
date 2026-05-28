@@ -39,14 +39,9 @@
           variant="outline"
           size="sm"
           class="w-full gap-2 bg-background justify-center text-muted-foreground hover:bg-background/80"
-          [disabled]="!isAuthenticated()"
         >
           <ng-icon name="lucideLogOut" />
-          @if (isAuthenticated()) {
-            {{ 'common.logout' | transloco }}
-          } @else {
-            {{ 'common.login' | transloco }}
-          }
+          {{ 'common.logout' | transloco }}
         </button>
 
         <div class="space-y-1 text-[11px] text-muted-foreground">

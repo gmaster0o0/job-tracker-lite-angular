@@ -14,12 +14,15 @@ import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import {
+  AuthDataAccessService,
   ZodNgControlBridgeDirective,
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import { ServerErrorAlertComponent } from '@job-tracker-lite-angular/frontend-shared';
-import { registerSchema } from '@job-tracker-lite-angular/schemas';
-import { AuthStore } from '../auth.store';
+import {
+  MIN_PASSWORD_LENGTH,
+  registerSchema,
+} from '@job-tracker-lite-angular/schemas';
 
 @Component({
   standalone: true,
@@ -41,11 +44,12 @@ import { AuthStore } from '../auth.store';
   templateUrl: './register.component.html',
 })
 export class RegisterComponent {
-  private readonly authStore = inject(AuthStore);
+  private readonly authDataAccess = inject(AuthDataAccessService);
   private readonly router = inject(Router);
 
   protected readonly title = translateSignal('auth.register.title');
   protected readonly subtitle = translateSignal('auth.register.subtitle');
+  protected readonly passwordMinLength = MIN_PASSWORD_LENGTH;
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
@@ -67,7 +71,7 @@ export class RegisterComponent {
           this.submitError.set(null);
 
           try {
-            await this.authStore.signUp(data().value());
+            await this.authDataAccess.signUp(data().value());
             await this.router.navigateByUrl('/jobs');
           } catch (error) {
             this.submitError.set(

@@ -1,6 +1,4 @@
 import { Route } from '@angular/router';
-import { authGuard } from './features/auth/guards/auth.guard';
-import { guestGuard } from './features/auth/guards/guest.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -28,7 +26,6 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'jobs',
-        canActivate: [authGuard],
         children: [
           {
             path: '',
@@ -64,7 +61,6 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'settings',
-        canActivate: [authGuard],
         children: [
           {
             path: '',
@@ -88,18 +84,10 @@ export const appRoutes: Route[] = [
                 './features/settings/preferences/preferences.component'
               ).then((m) => m.PreferencesComponent),
           },
-          {
-            path: 'account',
-            loadComponent: () =>
-              import('./features/settings/account/account.component').then(
-                (m) => m.AccountComponent,
-              ),
-          },
         ],
       },
       {
         path: 'profile',
-        canActivate: [authGuard],
         children: [
           {
             path: '',
@@ -152,7 +140,6 @@ export const appRoutes: Route[] = [
           },
           {
             path: 'login',
-            canActivate: [guestGuard],
             loadComponent: () =>
               import('./features/auth/login/login.component').then(
                 (m) => m.LoginComponent,
@@ -160,7 +147,6 @@ export const appRoutes: Route[] = [
           },
           {
             path: 'register',
-            canActivate: [guestGuard],
             loadComponent: () =>
               import('./features/auth/register/register.component').then(
                 (m) => m.RegisterComponent,

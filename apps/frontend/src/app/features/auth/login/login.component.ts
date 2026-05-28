@@ -14,12 +14,12 @@ import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import {
+  AuthDataAccessService,
   ZodNgControlBridgeDirective,
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import { ServerErrorAlertComponent } from '@job-tracker-lite-angular/frontend-shared';
 import { loginSchema } from '@job-tracker-lite-angular/schemas';
-import { AuthStore } from '../auth.store';
 
 @Component({
   standalone: true,
@@ -41,7 +41,7 @@ import { AuthStore } from '../auth.store';
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
-  private readonly authStore = inject(AuthStore);
+  private readonly authDataAccess = inject(AuthDataAccessService);
   private readonly router = inject(Router);
 
   protected readonly title = translateSignal('auth.login.title');
@@ -65,7 +65,7 @@ export class LoginComponent {
           this.submitError.set(null);
 
           try {
-            await this.authStore.signIn(data().value());
+            await this.authDataAccess.signIn(data().value());
             await this.router.navigateByUrl('/jobs');
           } catch (error) {
             this.submitError.set(

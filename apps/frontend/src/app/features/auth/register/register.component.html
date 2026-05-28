@@ -74,8 +74,12 @@
               (registerForm.password().touched() ||
                 registerForm.password().dirty())
             ) {
-              <hlm-field-error validator="min_length_8">{{
-                'auth.fields.password.min_length_8' | transloco
+              <hlm-field-error validator="min_length">{{
+                'auth.fields.password.min_length'
+                  | transloco
+                    : {
+                        min: passwordMinLength,
+                      }
               }}</hlm-field-error>
               <hlm-field-error validator="need_uppercase">{{
                 'auth.fields.password.need_uppercase' | transloco

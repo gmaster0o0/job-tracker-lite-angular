@@ -261,7 +261,7 @@
         "label": "Jelszó",
         "placeholder": "Adja meg a jelszót",
         "required": "A jelszó megadása kötelező.",
-        "min_length_8": "A jelszó legalább 8 karakter legyen.",
+        "min_length": "A jelszó legalább {{min}} karakter legyen.",
         "need_uppercase": "A jelszó tartalmazzon legalább egy nagybetűt.",
         "need_lowercase": "A jelszó tartalmazzon legalább egy kisbetűt.",
         "need_number": "A jelszó tartalmazzon legalább egy számot."
