@@ -7,12 +7,13 @@ export * from './lib/fixtures/prisma.fixtures';
 export * from './lib/fixtures/dialog.fixtures';
 export * from './lib/fixtures/notes.fixtures';
 export * from './lib/fixtures/basic-login.fixture';
+export * from './lib/fixtures/auth.fixtures';
 export * from './lib/mocks/jobs-data-access.mock';
 export * from './lib/mocks/contacts-data-access.mock';
 export * from './lib/mocks/notes-data-access.mock';
+export * from './lib/mocks/auth-data-access.mock';
 export * from './lib/mocks/prisma-service.mock';
 export * from './lib/mocks/brn-dialog-ref.mock';
 export * from './lib/mocks/jobs-service.mock';
 export * from './lib/mocks/data-access.mock';
 export * from './lib/mocks/browser.mocks';
-

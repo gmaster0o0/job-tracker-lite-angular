@@ -13,6 +13,8 @@
     "cancel": "Cancel",
     "saveChanges": "Save Changes",
     "create": "Create",
+    "login": "Login",
+    "register": "Register",
     "logout": "Logout",
     "overview": "Overview",
     "contacts": "Contacts",
@@ -246,6 +248,100 @@
     "notImplementedTooltip": "This function not implemented yet",
     "statusTooltip": "View application health status",
     "appTitleTooltip": "Open the Job Tracker Lite GitHub page"
+  },
+  "auth": {
+    "fields": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter your full name",
+        "required": "Name is required."
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "you@example.com",
+        "required": "Email is required.",
+        "invalid_format": "Please enter a valid email address."
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password",
+        "required": "Password is required.",
+        "min_length_8": "Password must be at least 8 characters.",
+        "need_uppercase": "Password must contain at least one uppercase letter.",
+        "need_lowercase": "Password must contain at least one lowercase letter.",
+        "need_number": "Password must contain at least one number."
+      },
+      "confirmPassword": {
+        "label": "Confirm password",
+        "placeholder": "Confirm your password",
+        "required": "Please confirm your password.",
+        "password_mismatch": "Passwords do not match."
+      }
+    },
+    "errors": {
+      "unknown": "Authentication failed. Please try again."
+    },
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to continue managing your jobs.",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "noAccount": "No account yet?",
+      "registerLink": "Create one",
+      "error": {
+        "title": "Sign In Failed",
+        "unknown": "Unable to sign in right now. Please try again.",
+        "invalid_email_or_password": "Invalid email or password.",
+        "user_not_found": "No user found with this email."
+      }
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Register to track your applications.",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "error": {
+        "title": "Registration Failed",
+        "unknown": "Unable to register right now. Please try again.",
+        "user_already_exists": "An account with this email already exists.",
+        "invalid_password": "Password does not meet security requirements."
+      }
+    },
+    "account": {
+      "title": "Account Settings",
+      "description": "Manage your authentication settings.",
+      "changePassword": {
+        "title": "Change Password",
+        "submit": "Update password",
+        "successTitle": "Password updated",
+        "successDescription": "Your password was changed successfully.",
+        "fields": {
+          "currentPassword": {
+            "label": "Current password",
+            "placeholder": "Enter current password",
+            "required": "Current password is required."
+          },
+          "newPassword": {
+            "label": "New password",
+            "placeholder": "Enter new password"
+          },
+          "confirmNewPassword": {
+            "label": "Confirm new password",
+            "placeholder": "Re-enter new password",
+            "required": "Please confirm the new password.",
+            "password_mismatch": "New passwords do not match."
+          }
+        },
+        "error": {
+          "title": "Password Update Failed",
+          "unknown": "Unable to update password right now. Please try again.",
+          "invalid_password": "Current password is incorrect.",
+          "unauthorized": "You need to sign in again to change password."
+        }
+      }
+    }
   },
   "settings": {
     "preferences": "Preferences",
