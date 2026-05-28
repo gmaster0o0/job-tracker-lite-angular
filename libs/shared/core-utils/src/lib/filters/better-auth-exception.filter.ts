@@ -28,6 +28,7 @@ export class BetterAuthExceptionFilter implements ExceptionFilter {
     if (!isBetterAuthError(exception)) {
       throw exception;
     }
+
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
@@ -38,16 +39,18 @@ export class BetterAuthExceptionFilter implements ExceptionFilter {
         ? exception.status
         : errorCode && BETTER_AUTH_STATUS_CODES[errorCode]
           ? BETTER_AUTH_STATUS_CODES[errorCode]
-          : BETTER_AUTH_HTTP_STATUS_MAP[exception.status] ||
-            HttpStatus.INTERNAL_SERVER_ERROR;
+          : typeof exception.status === 'string' &&
+              BETTER_AUTH_HTTP_STATUS_MAP[exception.status]
+            ? BETTER_AUTH_HTTP_STATUS_MAP[exception.status]
+            : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    response.status(statusCode).json({
+    return response.status(statusCode).json({
       statusCode,
+      errorCode: errorCode || BETTER_AUTH_ERROR_CODES.INTERNAL_SERVER_ERROR,
       message:
         exception.body?.message ||
         (errorCode ? BETTER_AUTH_ERROR_CODE_MESSAGES[errorCode] : null) ||
         exception.message,
-      errorCode: errorCode || BETTER_AUTH_ERROR_CODES.INTERNAL_SERVER_ERROR,
     });
   }
 }
