@@ -2,8 +2,6 @@ import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from '@better-auth/prisma-adapter';
 
-export const BETTER_AUTH = Symbol('BETTER_AUTH');
-
 const DEFAULT_BASE_URL = 'http://localhost:3000/api/auth';
 const DEFAULT_TRUSTED_ORIGIN = 'http://localhost:4200';
 
@@ -30,5 +28,3 @@ export function createBetterAuth(prisma: PrismaService) {
     },
   });
 }
-
-export type BetterAuthInstance = ReturnType<typeof createBetterAuth>;

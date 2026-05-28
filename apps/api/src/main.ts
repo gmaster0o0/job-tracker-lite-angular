@@ -9,7 +9,7 @@ const envPath = path.join(process.cwd(), '.env');
 dotenv.config({ path: envPath });
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bodyParser: false });
   const allowedOrigins = (process.env['CORS_ORIGIN'] ?? 'http://localhost:4200')
     .split(',')
     .map((origin) => origin.trim())
