@@ -4,17 +4,30 @@ import {
   ExceptionFilter,
   HttpStatus,
 } from '@nestjs/common';
-import { APIError } from 'better-auth/api';
+import type { APIError } from 'better-auth/api';
 import type { Response } from 'express';
 import {
   BETTER_AUTH_ERROR_CODE_MESSAGES,
   BETTER_AUTH_ERROR_CODES,
   BETTER_AUTH_HTTP_STATUS_MAP,
+  BETTER_AUTH_STATUS_CODES,
 } from './better-auth-error.constants';
 
-@Catch(APIError)
+function isBetterAuthError(exception: unknown): exception is APIError {
+  return (
+    typeof exception === 'object' &&
+    exception !== null &&
+    'status' in exception &&
+    'body' in exception
+  );
+}
+
+@Catch()
 export class BetterAuthExceptionFilter implements ExceptionFilter {
-  catch(exception: APIError, host: ArgumentsHost) {
+  catch(exception: unknown, host: ArgumentsHost) {
+    if (!isBetterAuthError(exception)) {
+      throw exception;
+    }
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
@@ -23,8 +36,10 @@ export class BetterAuthExceptionFilter implements ExceptionFilter {
     const statusCode =
       typeof exception.status === 'number'
         ? exception.status
-        : BETTER_AUTH_HTTP_STATUS_MAP[exception.status] ||
-          HttpStatus.INTERNAL_SERVER_ERROR;
+        : errorCode && BETTER_AUTH_STATUS_CODES[errorCode]
+          ? BETTER_AUTH_STATUS_CODES[errorCode]
+          : BETTER_AUTH_HTTP_STATUS_MAP[exception.status] ||
+            HttpStatus.INTERNAL_SERVER_ERROR;
 
     response.status(statusCode).json({
       statusCode,
