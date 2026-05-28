@@ -7,39 +7,34 @@ const hasUppercase = (value: string): boolean => /[A-Z]/.test(value);
 const hasLowercase = (value: string): boolean => /[a-z]/.test(value);
 export const MIN_PASSWORD_LENGTH = 8;
 
-export const basicPasswordSchema = z.string().superRefine((value, ctx) => {
-  if (value.length < MIN_PASSWORD_LENGTH) {
-    ctx.addIssue({
-      code: 'custom',
-      message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long`,
-      errorCode: errorCodes.min_length,
-    });
-  }
+export const basicPasswordSchema = z
+  .string()
+  .min(MIN_PASSWORD_LENGTH)
+  .superRefine((value, ctx) => {
+    if (!hasNumber(value)) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Password must contain at least one number',
+        errorCode: errorCodes.need_number,
+      });
+    }
 
-  if (!hasNumber(value)) {
-    ctx.addIssue({
-      code: 'custom',
-      message: 'Password must contain at least one number',
-      errorCode: errorCodes.need_number,
-    });
-  }
+    if (!hasUppercase(value)) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Password must contain at least one uppercase letter',
+        errorCode: errorCodes.need_uppercase,
+      });
+    }
 
-  if (!hasUppercase(value)) {
-    ctx.addIssue({
-      code: 'custom',
-      message: 'Password must contain at least one uppercase letter',
-      errorCode: errorCodes.need_uppercase,
-    });
-  }
-
-  if (!hasLowercase(value)) {
-    ctx.addIssue({
-      code: 'custom',
-      message: 'Password must contain at least one lowercase letter',
-      errorCode: errorCodes.need_lowercase,
-    });
-  }
-});
+    if (!hasLowercase(value)) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Password must contain at least one lowercase letter',
+        errorCode: errorCodes.need_lowercase,
+      });
+    }
+  });
 
 export type BasicPasswordDto = z.infer<typeof basicPasswordSchema>;
 
@@ -69,25 +64,6 @@ export const registerSchema = z
   });
 
 export type RegisterDto = z.infer<typeof registerSchema>;
-
-export const changePasswordSchema = z
-  .object({
-    currentPassword: required,
-    newPassword: basicPasswordSchema,
-    confirmNewPassword: required,
-  })
-  .superRefine((value, ctx) => {
-    if (value.newPassword !== value.confirmNewPassword) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'Password confirmation must match password',
-        path: ['confirmNewPassword'],
-        errorCode: errorCodes.password_mismatch,
-      });
-    }
-  });
-
-export type ChangePasswordDto = z.infer<typeof changePasswordSchema>;
 
 export const authUserSchema = z.object({
   id: z.string(),

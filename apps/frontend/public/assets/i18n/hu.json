@@ -261,7 +261,7 @@
         "label": "Jelszó",
         "placeholder": "Adja meg a jelszót",
         "required": "A jelszó megadása kötelező.",
-        "min_length": "A jelszó legalább {{min}} karakter legyen.",
+        "too_small": "A jelszó legalább 8 karakter legyen.",
         "need_uppercase": "A jelszó tartalmazzon legalább egy nagybetűt.",
         "need_lowercase": "A jelszó tartalmazzon legalább egy kisbetűt.",
         "need_number": "A jelszó tartalmazzon legalább egy számot."
@@ -302,39 +302,6 @@
         "unknown": "Most nem sikerült regisztrálni. Próbálja újra.",
         "user_already_exists": "Ezzel az email címmel már létezik fiók.",
         "invalid_password": "A jelszó nem felel meg a követelményeknek."
-      }
-    },
-    "account": {
-      "title": "Fiók beállítások",
-      "description": "Hitelesítési beállítások kezelése.",
-      "changePassword": {
-        "title": "Jelszó módosítása",
-        "submit": "Jelszó frissítése",
-        "successTitle": "Jelszó frissítve",
-        "successDescription": "A jelszó módosítása sikeres volt.",
-        "fields": {
-          "currentPassword": {
-            "label": "Jelenlegi jelszó",
-            "placeholder": "Adja meg a jelenlegi jelszót",
-            "required": "A jelenlegi jelszó kötelező."
-          },
-          "newPassword": {
-            "label": "Új jelszó",
-            "placeholder": "Adja meg az új jelszót"
-          },
-          "confirmNewPassword": {
-            "label": "Új jelszó megerősítése",
-            "placeholder": "Írja be újra az új jelszót",
-            "required": "Erősítse meg az új jelszót.",
-            "password_mismatch": "Az új jelszavak nem egyeznek."
-          }
-        },
-        "error": {
-          "title": "Jelszó frissítése sikertelen",
-          "unknown": "Most nem sikerült a jelszót módosítani. Próbálja újra.",
-          "invalid_password": "A jelenlegi jelszó hibás.",
-          "unauthorized": "A jelszó módosításához újra be kell jelentkezni."
-        }
       }
     }
   },

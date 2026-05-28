@@ -19,10 +19,7 @@ import {
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import { ServerErrorAlertComponent } from '@job-tracker-lite-angular/frontend-shared';
-import {
-  MIN_PASSWORD_LENGTH,
-  registerSchema,
-} from '@job-tracker-lite-angular/schemas';
+import { registerSchema } from '@job-tracker-lite-angular/schemas';
 
 @Component({
   standalone: true,
@@ -49,7 +46,6 @@ export class RegisterComponent {
 
   protected readonly title = translateSignal('auth.register.title');
   protected readonly subtitle = translateSignal('auth.register.subtitle');
-  protected readonly passwordMinLength = MIN_PASSWORD_LENGTH;
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);

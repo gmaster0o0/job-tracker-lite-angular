@@ -266,7 +266,7 @@
         "label": "Password",
         "placeholder": "Enter your password",
         "required": "Password is required.",
-        "min_length": "Password must be at least {{min}} characters.",
+        "too_small": "Password must be at least 8 characters.",
         "need_uppercase": "Password must contain at least one uppercase letter.",
         "need_lowercase": "Password must contain at least one lowercase letter.",
         "need_number": "Password must contain at least one number."
@@ -307,39 +307,6 @@
         "unknown": "Unable to register right now. Please try again.",
         "user_already_exists": "An account with this email already exists.",
         "invalid_password": "Password does not meet security requirements."
-      }
-    },
-    "account": {
-      "title": "Account Settings",
-      "description": "Manage your authentication settings.",
-      "changePassword": {
-        "title": "Change Password",
-        "submit": "Update password",
-        "successTitle": "Password updated",
-        "successDescription": "Your password was changed successfully.",
-        "fields": {
-          "currentPassword": {
-            "label": "Current password",
-            "placeholder": "Enter current password",
-            "required": "Current password is required."
-          },
-          "newPassword": {
-            "label": "New password",
-            "placeholder": "Enter new password"
-          },
-          "confirmNewPassword": {
-            "label": "Confirm new password",
-            "placeholder": "Re-enter new password",
-            "required": "Please confirm the new password.",
-            "password_mismatch": "New passwords do not match."
-          }
-        },
-        "error": {
-          "title": "Password Update Failed",
-          "unknown": "Unable to update password right now. Please try again.",
-          "invalid_password": "Current password is incorrect.",
-          "unauthorized": "You need to sign in again to change password."
-        }
       }
     }
   },

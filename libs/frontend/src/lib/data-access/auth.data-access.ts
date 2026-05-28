@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
   AuthSessionDto,
-  ChangePasswordDto,
   LoginDto,
   RegisterDto,
   authSessionResponseSchema,
@@ -66,22 +65,6 @@ export class AuthDataAccessService {
       this.http.post(
         '/api/auth/sign-out',
         {},
-        {
-          withCredentials: true,
-        },
-      ),
-    );
-  }
-
-  async changePassword(dto: ChangePasswordDto): Promise<void> {
-    await firstValueFrom(
-      this.http.post(
-        '/api/auth/change-password',
-        {
-          currentPassword: dto.currentPassword,
-          newPassword: dto.newPassword,
-          revokeOtherSessions: false,
-        },
         {
           withCredentials: true,
         },
