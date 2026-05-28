@@ -249,13 +249,15 @@
       "name": {
         "label": "Név",
         "placeholder": "Adja meg a teljes nevét",
-        "required": "A név megadása kötelező."
+        "required": "A név megadása kötelező.",
+        "example": "Példa: Kovács Anna"
       },
       "email": {
         "label": "Email",
         "placeholder": "pelda@pelda.hu",
         "required": "Az email megadása kötelező.",
-        "invalid_format": "Adjon meg érvényes email címet."
+        "invalid_format": "Adjon meg érvényes email címet.",
+        "example": "Példa: pelda@pelda.hu"
       },
       "password": {
         "label": "Jelszó",
@@ -264,13 +266,15 @@
         "too_small": "A jelszó legalább 8 karakter legyen.",
         "need_uppercase": "A jelszó tartalmazzon legalább egy nagybetűt.",
         "need_lowercase": "A jelszó tartalmazzon legalább egy kisbetűt.",
-        "need_number": "A jelszó tartalmazzon legalább egy számot."
+        "need_number": "A jelszó tartalmazzon legalább egy számot.",
+        "example": "Használjon legalább 8 karaktert, köztük nagybetűt, kisbetűt és számot."
       },
       "confirmPassword": {
         "label": "Jelszó megerősítése",
         "placeholder": "Erősítse meg a jelszót",
         "required": "Erősítse meg a jelszót.",
-        "password_mismatch": "A jelszavak nem egyeznek."
+        "password_mismatch": "A jelszavak nem egyeznek.",
+        "example": "Írja be újra a jelszavát a megerősítéshez."
       }
     },
     "errors": {

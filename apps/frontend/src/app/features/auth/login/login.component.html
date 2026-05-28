@@ -31,6 +31,10 @@
               <hlm-field-error validator="invalid_format">{{
                 'auth.fields.email.invalid_format' | transloco
               }}</hlm-field-error>
+            } @else {
+              <p hlmDialogDescription>
+                {{ 'auth.fields.email.example' | transloco }}
+              </p>
             }
           </hlm-field>
 
@@ -54,6 +58,10 @@
               <hlm-field-error validator="required">{{
                 'auth.fields.password.required' | transloco
               }}</hlm-field-error>
+            } @else {
+              <p hlmDialogDescription>
+                {{ 'auth.fields.password.example' | transloco }}
+              </p>
             }
           </hlm-field>
 

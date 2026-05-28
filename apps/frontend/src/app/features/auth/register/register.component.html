@@ -27,6 +27,10 @@
               <hlm-field-error validator="required">{{
                 'auth.fields.name.required' | transloco
               }}</hlm-field-error>
+            } @else {
+              <p hlmDialogDescription>
+                {{ 'auth.fields.name.example' | transloco }}
+              </p>
             }
           </hlm-field>
 
@@ -53,6 +57,10 @@
               <hlm-field-error validator="invalid_format">{{
                 'auth.fields.email.invalid_format' | transloco
               }}</hlm-field-error>
+            } @else {
+              <p hlmDialogDescription>
+                {{ 'auth.fields.email.example' | transloco }}
+              </p>
             }
           </hlm-field>
 
@@ -86,6 +94,10 @@
               <hlm-field-error validator="need_number">{{
                 'auth.fields.password.need_number' | transloco
               }}</hlm-field-error>
+            } @else {
+              <p hlmDialogDescription>
+                {{ 'auth.fields.password.example' | transloco }}
+              </p>
             }
           </hlm-field>
 
@@ -115,6 +127,10 @@
               <hlm-field-error validator="password_mismatch">{{
                 'auth.fields.confirmPassword.password_mismatch' | transloco
               }}</hlm-field-error>
+            } @else {
+              <p hlmDialogDescription>
+                {{ 'auth.fields.confirmPassword.example' | transloco }}
+              </p>
             }
           </hlm-field>
 

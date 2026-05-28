@@ -254,13 +254,15 @@
       "name": {
         "label": "Name",
         "placeholder": "Enter your full name",
-        "required": "Name is required."
+        "required": "Name is required.",
+        "example": "Example: Jane Doe"
       },
       "email": {
         "label": "Email",
         "placeholder": "you@example.com",
         "required": "Email is required.",
-        "invalid_format": "Please enter a valid email address."
+        "invalid_format": "Please enter a valid email address.",
+        "example": "Example: you@example.com"
       },
       "password": {
         "label": "Password",
@@ -269,13 +271,15 @@
         "too_small": "Password must be at least 8 characters.",
         "need_uppercase": "Password must contain at least one uppercase letter.",
         "need_lowercase": "Password must contain at least one lowercase letter.",
-        "need_number": "Password must contain at least one number."
+        "need_number": "Password must contain at least one number.",
+        "example": "Use at least 8 characters, including uppercase, lowercase, and a number."
       },
       "confirmPassword": {
         "label": "Confirm password",
         "placeholder": "Confirm your password",
         "required": "Please confirm your password.",
-        "password_mismatch": "Passwords do not match."
+        "password_mismatch": "Passwords do not match.",
+        "example": "Re-enter your password to confirm."
       }
     },
     "errors": {
