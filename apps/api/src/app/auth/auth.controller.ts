@@ -1,5 +1,5 @@
 import { All, Controller, Inject, Req, Res } from '@nestjs/common';
-// eslint-disable-next-line @nx/enforce-module-boundaries
+
 import { toNodeHandler } from 'better-auth/node';
 import { Request, Response } from 'express';
 import { BETTER_AUTH, BetterAuthInstance } from './auth.config';
@@ -12,7 +12,7 @@ export class AuthController {
     this.authHandler = toNodeHandler(this.auth);
   }
 
-  @All('*')
+  @All('*path')
   async handleAuth(@Req() request: Request, @Res() response: Response) {
     await this.authHandler(request, response);
   }
