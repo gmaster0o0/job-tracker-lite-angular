@@ -1,7 +1,5 @@
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { betterAuth } from 'better-auth';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { prismaAdapter } from '@better-auth/prisma-adapter';
 
 export const BETTER_AUTH = Symbol('BETTER_AUTH');
