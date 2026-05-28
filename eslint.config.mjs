@@ -21,6 +21,7 @@ export default [
             '^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$',
             '^@job-tracker-lite-angular/frontend-shared($|/)',
             '^@job-tracker-lite-angular/schemas($|/)',
+            '^@job-tracker-lite-angular/api($|/)',
           ],
           depConstraints: [
             {
@@ -45,5 +46,11 @@ export default [
     ],
     // Override or add rules here
     rules: {},
+  },
+  {
+    files: ['apps/api-e2e/**/*.ts'],
+    rules: {
+      '@nx/enforce-module-boundaries': 'off',
+    },
   },
 ];

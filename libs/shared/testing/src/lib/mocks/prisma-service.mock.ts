@@ -25,3 +25,46 @@ export function createPrismaServiceMock(mockFactory: () => any) {
     },
   };
 }
+
+export function createPrismaHealthIndicatorMock(result?: any) {
+  return {
+    pingCheck: async () => result ?? { database: { status: 'down' } },
+  };
+}
+
+export function createUptimeHealthIndicatorMock(result?: any) {
+  return {
+    isHealthy: async () =>
+      result ?? {
+        server: {
+          status: 'up',
+          uptime: process.uptime(),
+          timestamp: Date.now(),
+        },
+      },
+  };
+}
+
+export function createHealthCheckServiceMock(serverOnly = true) {
+  return {
+    check: async () => {
+      if (serverOnly) {
+        return {
+          server: {
+            status: 'up',
+            uptime: process.uptime(),
+            timestamp: Date.now(),
+          },
+        };
+      }
+      return {
+        server: {
+          status: 'up',
+          uptime: process.uptime(),
+          timestamp: Date.now(),
+        },
+        database: { status: 'down' },
+      };
+    },
+  };
+}

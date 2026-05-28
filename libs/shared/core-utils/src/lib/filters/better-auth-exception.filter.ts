@@ -4,7 +4,6 @@ import {
   ExceptionFilter,
   HttpStatus,
 } from '@nestjs/common';
-import type { APIError } from 'better-auth/api';
 import type { Response } from 'express';
 import {
   BETTER_AUTH_ERROR_CODE_MESSAGES,
@@ -13,7 +12,15 @@ import {
   BETTER_AUTH_STATUS_CODES,
 } from './better-auth-error.constants';
 
-function isBetterAuthError(exception: unknown): exception is APIError {
+// Runtime shape of the better-auth APIError (the published TS type is incomplete)
+interface BetterAuthError {
+  status: number | string;
+  statusCode?: number;
+  body?: { code?: string; message?: string };
+  message?: string;
+}
+
+function isBetterAuthError(exception: unknown): exception is BetterAuthError {
   return (
     typeof exception === 'object' &&
     exception !== null &&
