@@ -296,7 +296,8 @@
         "title": "Sign In Failed",
         "unknown": "Unable to sign in right now. Please try again.",
         "invalid_email_or_password": "Invalid email or password.",
-        "user_not_found": "No user found with this email."
+        "user_not_found": "No user found with this email.",
+        "email_not_verified": "Email address has not been verified. Check your inbox."
       }
     },
     "register": {
@@ -310,6 +311,7 @@
         "title": "Registration Failed",
         "unknown": "Unable to register right now. Please try again.",
         "user_already_exists": "An account with this email already exists.",
+        "user_already_exists_use_another_email": "An account with this email already exists. Use another email.",
         "invalid_password": "Password does not meet security requirements."
       }
     }

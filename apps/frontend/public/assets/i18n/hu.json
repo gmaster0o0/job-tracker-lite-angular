@@ -291,7 +291,8 @@
         "title": "Bejelentkezés sikertelen",
         "unknown": "Most nem sikerült bejelentkezni. Próbálja újra.",
         "invalid_email_or_password": "Hibás email vagy jelszó.",
-        "user_not_found": "Nincs ilyen email címhez tartozó felhasználó."
+        "user_not_found": "Nincs ilyen email címhez tartozó felhasználó.",
+        "email_not_verified": "Az email cím még nincs megerősítve. Ellenőrizze postafiókját."
       }
     },
     "register": {
@@ -305,6 +306,7 @@
         "title": "Regisztráció sikertelen",
         "unknown": "Most nem sikerült regisztrálni. Próbálja újra.",
         "user_already_exists": "Ezzel az email címmel már létezik fiók.",
+        "user_already_exists_use_another_email": "Ezzel az email címmel már létezik fiók. Használjon másik email címet.",
         "invalid_password": "A jelszó nem felel meg a követelményeknek."
       }
     }

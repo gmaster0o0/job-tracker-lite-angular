@@ -46,14 +46,21 @@ function normalizeHttpError(httpError: HttpErrorResponse): BackendError {
  */
 function extractErrorCode(payload: unknown): string {
   if (!payload || typeof payload !== 'object') {
-    return PRISMA_ERROR_CODES.INTERNAL_SERVER_ERROR;
+    return normalizeErrorCode(PRISMA_ERROR_CODES.INTERNAL_SERVER_ERROR);
   }
 
   const data = payload as Record<string, unknown>;
   const errorCode = data['errorCode'] ?? data['code'];
   return typeof errorCode === 'string' && errorCode.length > 0
-    ? errorCode
-    : PRISMA_ERROR_CODES.INTERNAL_SERVER_ERROR;
+    ? normalizeErrorCode(errorCode)
+    : normalizeErrorCode(PRISMA_ERROR_CODES.INTERNAL_SERVER_ERROR);
+}
+
+function normalizeErrorCode(errorCode: string): string {
+  return errorCode
+    .replace(/\s+/g, '_')
+    .replace(/[^a-zA-Z0-9_]/g, '_')
+    .toLowerCase();
 }
 
 /**
