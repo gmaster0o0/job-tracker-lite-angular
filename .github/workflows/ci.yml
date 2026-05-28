@@ -34,13 +34,13 @@ jobs:
           log_file="$(mktemp)"
           trap 'rm -f "$log_file"' EXIT
 
-          if npx nx affected -t lint test build typecheck 2>&1 | tee "$log_file"; then
+          if npx nx affected -t lint test build typecheck e2e 2>&1 | tee "$log_file"; then
             exit 0
           fi
 
           if grep -Eq 'Nx Cloud organization has been disabled|exceeding the FREE plan|unable to be authorized' "$log_file"; then
             echo "Nx Cloud failure detected. Retrying with Nx Cloud disabled..."
-            NX_NO_CLOUD=true npx nx affected -t lint test build typecheck --skipRemoteCache --skipNxCache
+            NX_NO_CLOUD=true npx nx affected -t lint test build typecheck e2e --skipRemoteCache --skipNxCache
             exit $?
           fi
 
