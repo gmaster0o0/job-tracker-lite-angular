@@ -19,6 +19,7 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     authDataAccessMock = createAuthDataAccessMock();
+    vi.spyOn(authDataAccessMock, 'signIn');
 
     await TestBed.configureTestingModule({
       imports: [LoginComponent, getTranslocoModule()],
@@ -61,7 +62,7 @@ describe('LoginComponent', () => {
   });
 
   it('should show error message on failure', async () => {
-    authDataAccessMock.signIn.mockRejectedValue(
+    vi.mocked(authDataAccessMock.signIn).mockRejectedValue(
       createBackendError('invalid_email_or_password', 401),
     );
 

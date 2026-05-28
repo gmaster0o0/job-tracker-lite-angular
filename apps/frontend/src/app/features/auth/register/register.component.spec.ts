@@ -19,6 +19,7 @@ describe('RegisterComponent', () => {
 
   beforeEach(async () => {
     authDataAccessMock = createAuthDataAccessMock();
+    vi.spyOn(authDataAccessMock, 'signUp');
 
     await TestBed.configureTestingModule({
       imports: [RegisterComponent, getTranslocoModule()],
@@ -68,7 +69,7 @@ describe('RegisterComponent', () => {
   });
 
   it('should show error message on failure', async () => {
-    authDataAccessMock.signUp.mockRejectedValue(
+    vi.mocked(authDataAccessMock.signUp).mockRejectedValue(
       createBackendError('user_already_exists', 409),
     );
 

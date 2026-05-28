@@ -4,7 +4,6 @@ import {
   RegisterDto,
 } from '@job-tracker-lite-angular/schemas';
 import { validUserResponse } from '../fixtures/basic-login.fixture';
-import { vi } from 'vitest';
 
 export type AuthDataAccessMockOptions = {
   session?: AuthSessionDto | null;
@@ -19,9 +18,9 @@ export function createAuthDataAccessMock(
   const session = options.session ?? validUserResponse;
 
   return {
-    getSession: vi.fn(async () => session),
-    signIn: vi.fn(options.signIn ?? (async () => session)),
-    signUp: vi.fn(options.signUp ?? (async () => session)),
-    signOut: vi.fn(options.signOut ?? (async () => undefined)),
+    getSession: async () => session,
+    signIn: options.signIn ?? (async () => session),
+    signUp: options.signUp ?? (async () => session),
+    signOut: options.signOut ?? (async () => undefined),
   };
 }
