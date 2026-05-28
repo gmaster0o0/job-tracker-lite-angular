@@ -38,11 +38,12 @@ describe('AuthDataAccessService', () => {
       password: 'Password1',
     });
     signInReq.flush({ ok: true });
+    await Promise.resolve();
 
-    const sessionReq = httpMock.expectOne(
-      (req) =>
-        req.url.endsWith('/api/auth/get-session') && req.method === 'GET',
-    );
+    const sessionReq = httpMock.expectOne({
+      method: 'GET',
+      url: '/api/auth/get-session',
+    });
     expect(sessionReq.request.withCredentials).toBe(true);
     sessionReq.flush(null);
 
