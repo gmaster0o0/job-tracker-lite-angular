@@ -1,9 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { AuthDataAccessService } from './auth.data-access';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('AuthDataAccessService', () => {
   let service: AuthDataAccessService;
@@ -11,8 +9,7 @@ describe('AuthDataAccessService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [AuthDataAccessService],
+      providers: [provideHttpClientTesting(), AuthDataAccessService],
     });
 
     service = TestBed.inject(AuthDataAccessService);
@@ -42,8 +39,10 @@ describe('AuthDataAccessService', () => {
     });
     signInReq.flush({ ok: true });
 
-    const sessionReq = httpMock.expectOne('/api/auth/get-session');
-    expect(sessionReq.request.method).toBe('GET');
+    const sessionReq = httpMock.expectOne(
+      (req) =>
+        req.url.endsWith('/api/auth/get-session') && req.method === 'GET',
+    );
     expect(sessionReq.request.withCredentials).toBe(true);
     sessionReq.flush(null);
 
