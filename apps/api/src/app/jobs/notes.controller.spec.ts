@@ -1,10 +1,5 @@
 import { Test } from '@nestjs/testing';
 
-jest.mock('@thallesp/nestjs-better-auth', () => ({
-  AuthGuard: class AuthGuard {},
-  Session: () => () => undefined,
-}));
-
 import { NotesController } from './notes.controller';
 import { JobsService } from './jobs.service';
 import {

@@ -5,3 +5,5 @@ export const userSchema = z.object({
   email: z.email(),
   name: z.string(),
 });
+
+export type UserDto = z.infer<typeof userSchema>;

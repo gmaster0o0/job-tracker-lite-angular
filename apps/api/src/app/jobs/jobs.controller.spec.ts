@@ -1,9 +1,4 @@
 import { Test } from '@nestjs/testing';
-// TODO : Extract the jest.mock to a separate file to avoid repetition across controller tests
-jest.mock('@thallesp/nestjs-better-auth', () => ({
-  AuthGuard: class AuthGuard {},
-  Session: () => () => undefined,
-}));
 
 import { JobsController } from './jobs.controller';
 import { JobsService } from './jobs.service';

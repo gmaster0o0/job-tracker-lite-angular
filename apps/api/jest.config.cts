@@ -7,6 +7,10 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/api',
+  moduleNameMapper: {
+    '^@thallesp/nestjs-better-auth$':
+      '<rootDir>/../../libs/shared/testing/src/lib/mocks/thallesp-nestjs-better-auth.mock.ts',
+  },
   transformIgnorePatterns: [
     'node_modules/(?!(@angular|@job-tracker-lite-angular|better-auth)/)',
   ],
