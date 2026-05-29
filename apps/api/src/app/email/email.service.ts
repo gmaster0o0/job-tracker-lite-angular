@@ -1,34 +1,25 @@
-import { Injectable } from '@nestjs/common';
-import { MailerService } from '@nestjs-modules/mailer';
+import { Inject, Injectable } from '@nestjs/common';
 import { SupportLang } from '@job-tracker-lite-angular/schemas';
-import { resetPasswordEmailTemplates } from './reset-password-email.templates';
-
-interface SendMailOptions {
-  to: string | string[];
-  subject: string;
-  html: string;
-  text: string;
-  cc?: string | string[];
-  bcc?: string | string[];
-  attachments?: Array<{
-    filename: string;
-    path?: string;
-    content?: Buffer | string;
-    contentType?: string;
-  }>;
-}
+import { EmailSendException } from './email.errors';
+import {
+  EMAIL_PROVIDER,
+  type EmailProvider,
+  type SendEmailOptions,
+} from './email-provider.interface';
+import { getResetPasswordEmailTemplate } from './reset-password-email-template';
 
 @Injectable()
 export class EmailService {
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(
+    @Inject(EMAIL_PROVIDER)
+    private readonly emailProvider: EmailProvider,
+  ) {}
 
-  async sendEmail(options: SendMailOptions): Promise<void> {
+  async send(options: SendEmailOptions): Promise<void> {
     try {
-      await this.mailerService.sendMail({
-        ...options,
-      });
+      await this.emailProvider.send(options);
     } catch (error) {
-      throw error
+      throw new EmailSendException(error);
     }
   }
 
@@ -37,13 +28,13 @@ export class EmailService {
     resetUrl: string,
     lang: SupportLang = 'en',
   ): Promise<void> {
-    const template = resetPasswordEmailTemplates[lang];
+    const template = getResetPasswordEmailTemplate(resetUrl, lang);
 
-    await this.mailerService.sendMail({
+    await this.send({
       to,
       subject: template.subject,
-      text: template.text(resetUrl),
-      html: template.html(resetUrl),
+      text: template.text,
+      html: template.html,
     });
   }
 }

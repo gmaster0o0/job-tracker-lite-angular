@@ -9,7 +9,13 @@ import {
   validResetPasswordCredentials,
 } from '@job-tracker-lite-angular/testing';
 import { ResetPasswordHarness } from './reset-password.harness';
-import { ActivatedRoute } from '@angular/router';
+import {
+  ActivatedRoute,
+  convertToParamMap,
+  provideRouter,
+  Router,
+} from '@angular/router';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 
 describe('ResetPasswordComponent', () => {
   let harness: ResetPasswordHarness;

@@ -1,82 +1,82 @@
+import { HttpStatus } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { SupportLang } from '@job-tracker-lite-angular/schemas';
+import { EMAIL_PROVIDER, SendEmailOptions } from './email-provider.interface';
+import { EMAIL_ERROR_CODES } from './email.errors';
 import { EmailService } from './email.service';
-import { EmailConfig } from './email.constants';
-import * as nodemailer from 'nodemailer';
-
-const createTransportMock = jest.fn();
-const sendMailMock = jest.fn();
-
-jest.mock('nodemailer', () => ({
-  createTransport: createTransportMock,
-}));
 
 describe('EmailService', () => {
   let service: EmailService;
-  let emailConfig: EmailConfig;
+  let emailProvider: { send: jest.Mock<Promise<void>, [SendEmailOptions]> };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-    emailConfig = {
-      host: 'smtp.example.com',
-      port: 587,
-      secure: false,
-      user: 'user',
-      pass: 'pass',
-      from: 'no-reply@example.com',
+  beforeEach(async () => {
+    emailProvider = {
+      send: jest.fn().mockResolvedValue(undefined),
     };
-    service = new EmailService(emailConfig);
 
-    createTransportMock.mockReturnValue({
-      sendMail: sendMailMock,
-    });
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        EmailService,
+        {
+          provide: EMAIL_PROVIDER,
+          useValue: emailProvider,
+        },
+      ],
+    }).compile();
+
+    service = module.get<EmailService>(EmailService);
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  it('should delegate send calls to the configured provider', async () => {
+    //TODO  use testing lib, and use centralized test data
+    const options: SendEmailOptions = {
+      to: 'john@example.com',
+      subject: 'Test subject',
+      text: 'Plain text body',
+      html: '<p>Plain text body</p>',
+    };
 
-  it('should send reset password email when SMTP config is present', async () => {
+    await service.send(options);
+
+    expect(emailProvider.send).toHaveBeenCalledWith(options);
+  });
+  //TODO  use testing lib, and use centralized test data
+  it.each<[SupportLang, string]>([
+    ['en', 'Reset your password - Job Tracker Lite'],
+    ['hu', 'Jelszo visszaallitasa - Job Tracker Lite'],
+  ])('should send the reset password email in %s', async (lang, subject) => {
     await service.sendResetPasswordEmail(
-      'user@example.com',
-      'https://example.com/reset',
+      'john@example.com',
+      'http://localhost/reset?token=123',
+      lang,
     );
 
-    expect(createTransportMock).toHaveBeenCalledWith({
-      host: 'smtp.example.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: 'user',
-        pass: 'pass',
-      },
-    });
-
-    expect(sendMailMock).toHaveBeenCalledWith({
-      from: 'no-reply@example.com',
-      to: 'user@example.com',
-      subject: 'Reset your password – Job Tracker Lite',
-      text: 'You requested to reset your password for your Job Tracker Lite account. Use this link: https://example.com/reset',
-      html: expect.stringContaining(
-        '<a href="https://example.com/reset">Reset Password</a>',
-      ),
-    });
+    expect(emailProvider.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'john@example.com',
+        subject,
+      }),
+    );
   });
 
-  it('should do nothing when SMTP config is missing', async () => {
-    service = new EmailService({
-      host: '',
-      port: 0,
-      secure: false,
-      from: '',
-    });
+  it('should wrap provider errors in a backend-style exception', async () => {
+    emailProvider.send.mockRejectedValueOnce(new Error('smtp failed'));
 
     await expect(
-      service.sendResetPasswordEmail(
-        'user@example.com',
-        'https://example.com/reset',
-      ),
-    ).resolves.toBeUndefined();
-
-    expect(createTransportMock).not.toHaveBeenCalled();
-    expect(sendMailMock).not.toHaveBeenCalled();
+      service.send({
+        //TODO  use testing lib, and use centralized test data
+        to: 'john@example.com',
+        subject: 'Test subject',
+        text: 'Plain text body',
+        html: '<p>Plain text body</p>',
+      }),
+    ).rejects.toMatchObject({
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      response: {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Failed to send email',
+        errorCode: EMAIL_ERROR_CODES.SEND_FAILED,
+      },
+    });
   });
 });

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AuthModule as BetterAuthModule } from '@thallesp/nestjs-better-auth';
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import { EmailModule } from '../email/email.module';
@@ -9,9 +10,13 @@ import { createBetterAuth } from './auth.config';
   imports: [
     EmailModule,
     BetterAuthModule.forRootAsync({
-      inject: [PrismaService, EmailService],
-      useFactory: (prisma: PrismaService, emailService: EmailService) => ({
-        auth: createBetterAuth(prisma, emailService),
+      inject: [PrismaService, EmailService, ConfigService],
+      useFactory: (
+        prisma: PrismaService,
+        emailService: EmailService,
+        configService: ConfigService,
+      ) => ({
+        auth: createBetterAuth(prisma, emailService, configService),
         disableBodyParser: true,
         disableGlobalAuthGuard: true,
       }),
