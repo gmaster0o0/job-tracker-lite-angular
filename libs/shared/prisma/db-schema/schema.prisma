@@ -4,6 +4,7 @@ generator client {
 }
 
 datasource db {
+  //DONT ADD THE URL HERE. ITS DEPRACTED IN v7
   provider = "postgresql"
 }
 

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { JobsDataAccessService } from './jobs.data-access';
 
 describe('JobsDataAccessService', () => {
@@ -7,8 +7,7 @@ describe('JobsDataAccessService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [JobsDataAccessService],
+      providers: [provideHttpClientTesting(), JobsDataAccessService],
     });
     service = TestBed.inject(JobsDataAccessService);
   });

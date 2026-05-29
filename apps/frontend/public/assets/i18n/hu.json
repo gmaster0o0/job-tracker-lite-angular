@@ -13,6 +13,8 @@
     "cancel": "Mégse",
     "saveChanges": "Mentés",
     "create": "Létrehozás",
+    "login": "Bejelentkezés",
+    "register": "Regisztráció",
     "logout": "Kijelentkezés",
     "overview": "Áttekintés",
     "contacts": "Kapcsolatok",
@@ -241,6 +243,73 @@
     "notImplementedTooltip": "Ez a funkció még nincs megvalósítva",
     "statusTooltip": "Az alkalmazás állapotának megtekintése",
     "appTitleTooltip": "Nyissa meg a Job Tracker Lite GitHub oldalát"
+  },
+  "auth": {
+    "fields": {
+      "name": {
+        "label": "Név",
+        "placeholder": "Adja meg a teljes nevét",
+        "required": "A név megadása kötelező.",
+        "example": "Példa: Kovács Anna"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "pelda@pelda.hu",
+        "required": "Az email megadása kötelező.",
+        "invalid_format": "Adjon meg érvényes email címet.",
+        "example": "Példa: pelda@pelda.hu"
+      },
+      "password": {
+        "label": "Jelszó",
+        "placeholder": "Adja meg a jelszót",
+        "required": "A jelszó megadása kötelező.",
+        "too_small": "A jelszó legalább 8 karakter legyen.",
+        "need_uppercase": "A jelszó tartalmazzon legalább egy nagybetűt.",
+        "need_lowercase": "A jelszó tartalmazzon legalább egy kisbetűt.",
+        "need_number": "A jelszó tartalmazzon legalább egy számot.",
+        "example": "Használjon legalább 8 karaktert, köztük nagybetűt, kisbetűt és számot."
+      },
+      "confirmPassword": {
+        "label": "Jelszó megerősítése",
+        "placeholder": "Erősítse meg a jelszót",
+        "required": "Erősítse meg a jelszót.",
+        "password_mismatch": "A jelszavak nem egyeznek.",
+        "example": "Írja be újra a jelszavát a megerősítéshez."
+      }
+    },
+    "errors": {
+      "unknown": "Sikertelen hitelesítés. Próbálja újra."
+    },
+    "login": {
+      "title": "Üdv újra",
+      "subtitle": "Jelentkezz be a folytatáshoz.",
+      "submit": "Bejelentkezés",
+      "submitting": "Bejelentkezés...",
+      "noAccount": "Nincs még fiókod?",
+      "registerLink": "Regisztrálj",
+      "error": {
+        "title": "Bejelentkezés sikertelen",
+        "unknown": "Most nem sikerült bejelentkezni. Próbálja újra.",
+        "invalid_email_or_password": "Hibás email vagy jelszó.",
+        "user_not_found": "Nincs ilyen email címhez tartozó felhasználó.",
+        "email_not_verified": "Az email cím még nincs megerősítve. Ellenőrizze postafiókját."
+      }
+    },
+    "register": {
+      "title": "Fiók létrehozása",
+      "subtitle": "Regisztrálj a jelentkezéseid követéséhez.",
+      "submit": "Fiók létrehozása",
+      "submitting": "Fiók létrehozása...",
+      "hasAccount": "Van már fiókod?",
+      "loginLink": "Jelentkezz be",
+      "error": {
+        "title": "Regisztráció sikertelen",
+        "unknown": "Most nem sikerült regisztrálni. Próbálja újra.",
+        "user_already_exists": "Ezzel az email címmel már létezik fiók.",
+        "user_already_exists_use_another_email": "Ezzel az email címmel már létezik fiók. Használjon másik email címet.",
+        "invalid_password": "A jelszó nem felel meg a követelményeknek."
+      }
+    }
   },
   "settings": {
     "preferences": "Beállítások",

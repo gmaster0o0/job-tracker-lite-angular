@@ -126,6 +126,34 @@ export const appRoutes: Route[] = [
           },
         ],
       },
+      {
+        path: 'auth',
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            outlet: 'sidenav',
+            loadComponent: () =>
+              import('./navigation/main-menu/main-menu.component').then(
+                (m) => m.MainMenuComponent,
+              ),
+          },
+          {
+            path: 'login',
+            loadComponent: () =>
+              import('./features/auth/login/login.component').then(
+                (m) => m.LoginComponent,
+              ),
+          },
+          {
+            path: 'register',
+            loadComponent: () =>
+              import('./features/auth/register/register.component').then(
+                (m) => m.RegisterComponent,
+              ),
+          },
+        ],
+      },
     ],
   },
   {

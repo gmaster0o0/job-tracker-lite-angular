@@ -32,3 +32,10 @@ export function createDataAccessMock(options: DataAccessMockOptions = {}) {
     healthResource,
   };
 }
+
+export function createBackendError(errorCode: string, statusCode = 500) {
+  const error = new Error(`Backend error: ${errorCode}`);
+  (error as any).errorCode = errorCode;
+  (error as any).statusCode = statusCode;
+  return error;
+}

@@ -43,12 +43,14 @@ describe('MainMenuComponent', () => {
       MainMenuHarness,
     );
 
-    expect(await harness.getLinkCount()).toBe(4);
+    expect(await harness.getLinkCount()).toBe(6);
     expect(await harness.getLinkLabels()).toEqual([
       'Jobs',
       'Profile',
       'Settings',
       'About',
+      'Login',
+      'Register',
     ]);
   });
 

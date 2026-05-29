@@ -14,6 +14,21 @@ jobs:
   main:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        # Wait for postgres to be ready
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,21 +41,36 @@ jobs:
           cache: 'npm'
 
       - run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Deploy Prisma Migrations
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/test_db?schema=public
+        run: npm run db:migrate:deploy
+      - name: Generate Prisma Client
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/test_db?schema=public
+        run: npm run prisma:generate
       - uses: nrwl/nx-set-shas@v4
       - name: Run affected targets with automatic Nx Cloud fallback
         shell: bash
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/test_db?schema=public
+          DB_USER: user
+          DB_PASSWORD: password
+          DB_NAME: test_db
         run: |
           set -o pipefail
           log_file="$(mktemp)"
           trap 'rm -f "$log_file"' EXIT
 
-          if npx nx affected -t lint test build typecheck 2>&1 | tee "$log_file"; then
+          if npx nx affected -t lint test build typecheck e2e 2>&1 | tee "$log_file"; then
             exit 0
           fi
 
           if grep -Eq 'Nx Cloud organization has been disabled|exceeding the FREE plan|unable to be authorized' "$log_file"; then
             echo "Nx Cloud failure detected. Retrying with Nx Cloud disabled..."
-            NX_NO_CLOUD=true npx nx affected -t lint test build typecheck --skipRemoteCache --skipNxCache
+            NX_NO_CLOUD=true npx nx affected -t lint test build typecheck e2e --skipRemoteCache --skipNxCache
             exit $?
           fi
 

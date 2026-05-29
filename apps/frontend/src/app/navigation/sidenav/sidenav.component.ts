@@ -10,6 +10,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
 import { version as appVersion } from '../../../environments/version';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
+import { AuthDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 @Component({
   standalone: true,
   selector: 'app-sidenav',
@@ -31,6 +32,7 @@ import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 })
 export class SidenavComponent {
   private readonly router = inject(Router);
+  private readonly authDataAccess = inject(AuthDataAccessService);
   protected readonly isRoot = toSignal(
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
@@ -43,13 +45,16 @@ export class SidenavComponent {
   protected readonly version = appVersion;
 
   protected readonly backTooltip = translateSignal('navigation.backTooltip');
-  protected readonly notImplementedTooltip = translateSignal(
-    'navigation.notImplementedTooltip',
-  );
+  protected readonly logoutTooltip = translateSignal('common.logout');
   protected readonly statusTooltip = translateSignal(
     'navigation.statusTooltip',
   );
   protected readonly appTitleTooltip = translateSignal(
     'navigation.appTitleTooltip',
   );
+
+  protected async handleLogout(): Promise<void> {
+    await this.authDataAccess.signOut();
+    await this.router.navigateByUrl('/auth/login');
+  }
 }
