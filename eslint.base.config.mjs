@@ -26,6 +26,13 @@ export default [
     },
   },
   {
+    files: ['**/*.ts', '**/*.tsx', '**/*.cts', '**/*.mts'],
+    rules: {
+      'global-require': 'error',
+      '@typescript-eslint/no-require-imports': 'error',
+    },
+  },
+  {
     files: [
       '**/*.ts',
       '**/*.tsx',
@@ -37,6 +44,5 @@ export default [
       '**/*.mjs',
     ],
     // Override or add rules here
-    rules: {},
   },
 ];

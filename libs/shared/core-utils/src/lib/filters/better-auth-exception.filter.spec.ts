@@ -1,39 +1,27 @@
 import { ArgumentsHost, HttpStatus } from '@nestjs/common';
+import { BaseExceptionFilter } from '@nestjs/core';
 import { BetterAuthExceptionFilter } from './better-auth-exception.filter';
-
-type MockBody = { message: string; code?: string };
-
-jest.mock('better-auth/api', () => {
-  class MockAPIError {
-    status: string | number;
-    body: MockBody;
-    message: string;
-
-    constructor(status: string | number, body: MockBody) {
-      this.status = status;
-      this.body = body;
-      this.message = body.message;
-    }
-  }
-
-  return {
-    APIError: MockAPIError,
-    isAPIError: (error: unknown): error is MockAPIError =>
-      error instanceof MockAPIError,
-  };
-});
 
 describe('BetterAuthExceptionFilter', () => {
   let filter: BetterAuthExceptionFilter;
   let mockResponse: { status: jest.Mock; json: jest.Mock };
   let mockArgumentsHost: Partial<ArgumentsHost>;
+  let superCatchSpy: jest.SpyInstance;
 
   beforeEach(() => {
     filter = new BetterAuthExceptionFilter();
+
+    superCatchSpy = jest
+      .spyOn(BaseExceptionFilter.prototype, 'catch')
+      .mockImplementation(() => {
+        // No-op for super catch
+      });
+
     mockResponse = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn().mockReturnThis(),
     };
+
     mockArgumentsHost = {
       switchToHttp: jest.fn().mockReturnValue({
         getResponse: jest.fn().mockReturnValue(mockResponse),
@@ -41,14 +29,20 @@ describe('BetterAuthExceptionFilter', () => {
     };
   });
 
-  it('should serialize USER_ALREADY_EXISTS with conflict status', () => {
-    const { APIError } = require('better-auth/api');
-    const error = new APIError('BAD_REQUEST', {
-      message: 'User already exists',
-      code: 'USER_ALREADY_EXISTS',
-    });
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
 
-    filter.catch(error as any, mockArgumentsHost as ArgumentsHost);
+  it('should serialize USER_ALREADY_EXISTS with conflict status', () => {
+    const error = {
+      status: 'BAD_REQUEST',
+      body: {
+        message: 'User already exists',
+        code: 'USER_ALREADY_EXISTS',
+      },
+    };
+
+    filter.catch(error, mockArgumentsHost as ArgumentsHost);
 
     expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.CONFLICT);
     expect(mockResponse.json).toHaveBeenCalledWith({
@@ -59,12 +53,14 @@ describe('BetterAuthExceptionFilter', () => {
   });
 
   it('should serialize UNAUTHORIZED status when code is missing', () => {
-    const { APIError } = require('better-auth/api');
-    const error = new APIError('UNAUTHORIZED', {
-      message: 'Session not found',
-    });
+    const error = {
+      status: 'UNAUTHORIZED',
+      body: {
+        message: 'Session not found',
+      },
+    };
 
-    filter.catch(error as any, mockArgumentsHost as ArgumentsHost);
+    filter.catch(error, mockArgumentsHost as ArgumentsHost);
 
     expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.UNAUTHORIZED);
     expect(mockResponse.json).toHaveBeenCalledWith({
@@ -75,12 +71,14 @@ describe('BetterAuthExceptionFilter', () => {
   });
 
   it('should fallback to INTERNAL_SERVER_ERROR for unknown status strings', () => {
-    const { APIError } = require('better-auth/api');
-    const error = new APIError('UNKNOWN_ERROR' as any, {
-      message: 'Panic',
-    });
+    const error = {
+      status: 'UNKNOWN_ERROR',
+      body: {
+        message: 'Panic',
+      },
+    };
 
-    filter.catch(error as any, mockArgumentsHost as ArgumentsHost);
+    filter.catch(error, mockArgumentsHost as ArgumentsHost);
 
     expect(mockResponse.status).toHaveBeenCalledWith(
       HttpStatus.INTERNAL_SERVER_ERROR,
@@ -92,11 +90,11 @@ describe('BetterAuthExceptionFilter', () => {
     });
   });
 
-  it('should re-throw non-BetterAuth exceptions', () => {
+  it('should forward non-BetterAuth exceptions to the super filter', () => {
     const nonAuthError = new Error('Not a Better Auth error');
 
-    expect(() =>
-      filter.catch(nonAuthError, mockArgumentsHost as ArgumentsHost),
-    ).toThrow('Not a Better Auth error');
+    filter.catch(nonAuthError, mockArgumentsHost as ArgumentsHost);
+
+    expect(superCatchSpy).toHaveBeenCalledWith(nonAuthError, mockArgumentsHost);
   });
 });
