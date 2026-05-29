@@ -1,6 +1,8 @@
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from '@better-auth/prisma-adapter';
+import { EmailService } from '../email/email.service';
+import { getLanguageFromResetUrl } from '../email/email.utils';
 
 const DEFAULT_BASE_URL = 'http://localhost:3000/api/auth';
 const DEFAULT_TRUSTED_ORIGIN = 'http://localhost:4200';
@@ -15,7 +17,10 @@ function getTrustedOrigins(): string[] {
     .filter((origin) => origin.length > 0);
 }
 
-export function createBetterAuth(prisma: PrismaService) {
+export function createBetterAuth(
+  prisma: PrismaService,
+  emailService: EmailService,
+) {
   return betterAuth({
     database: prismaAdapter(prisma, {
       provider: 'postgresql',
@@ -25,6 +30,10 @@ export function createBetterAuth(prisma: PrismaService) {
     emailAndPassword: {
       enabled: true,
       autoSignIn: true,
+      sendResetPassword: async ({ user, url }) => {
+        const language = getLanguageFromResetUrl(url);
+        await emailService.sendResetPasswordEmail(user.email, url, language);
+      },
     },
   });
 }

@@ -2,6 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { AuthDataAccessService } from './auth.data-access';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  validLoginCredentials,
+  validForgotPasswordCredentials,
+  validResetPasswordCredentials,
+} from '@job-tracker-lite-angular/testing';
 
 describe('AuthDataAccessService', () => {
   let service: AuthDataAccessService;
@@ -25,18 +30,12 @@ describe('AuthDataAccessService', () => {
   });
 
   it('should call sign-in endpoint with credentials and then fetch session', async () => {
-    const signInPromise = service.signIn({
-      email: 'user@example.com',
-      password: 'Password1',
-    });
+    const signInPromise = service.signIn(validLoginCredentials);
 
     const signInReq = httpMock.expectOne('/api/auth/sign-in/email');
     expect(signInReq.request.method).toBe('POST');
     expect(signInReq.request.withCredentials).toBe(true);
-    expect(signInReq.request.body).toEqual({
-      email: 'user@example.com',
-      password: 'Password1',
-    });
+    expect(signInReq.request.body).toEqual(validLoginCredentials);
     signInReq.flush({ ok: true });
     await Promise.resolve();
 
@@ -48,5 +47,40 @@ describe('AuthDataAccessService', () => {
     sessionReq.flush(null);
 
     await expect(signInPromise).resolves.toBeNull();
+  });
+
+  it('should call request-password-reset endpoint with redirect URL', async () => {
+    const requestResetPromise = service.requestPasswordReset(
+      validForgotPasswordCredentials,
+    );
+
+    const resetReq = httpMock.expectOne('/api/auth/request-password-reset');
+    expect(resetReq.request.method).toBe('POST');
+    expect(resetReq.request.withCredentials).toBe(true);
+    expect(resetReq.request.body).toEqual({
+      email: validForgotPasswordCredentials.email,
+      language: validForgotPasswordCredentials.language,
+      redirectTo: `${window.location.origin}/auth/reset-password`,
+    });
+    resetReq.flush({ status: true });
+
+    await expect(requestResetPromise).resolves.toBeUndefined();
+  });
+
+  it('should call reset-password endpoint with token and new password', async () => {
+    const resetPasswordPromise = service.resetPassword(
+      validResetPasswordCredentials,
+    );
+
+    const resetReq = httpMock.expectOne('/api/auth/reset-password');
+    expect(resetReq.request.method).toBe('POST');
+    expect(resetReq.request.withCredentials).toBe(true);
+    expect(resetReq.request.body).toEqual({
+      token: validResetPasswordCredentials.token,
+      newPassword: validResetPasswordCredentials.newPassword,
+    });
+    resetReq.flush({ status: true });
+
+    await expect(resetPasswordPromise).resolves.toBeUndefined();
   });
 });

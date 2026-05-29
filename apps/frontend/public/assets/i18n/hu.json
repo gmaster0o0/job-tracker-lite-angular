@@ -285,6 +285,7 @@
       "subtitle": "Jelentkezz be a folytatáshoz.",
       "submit": "Bejelentkezés",
       "submitting": "Bejelentkezés...",
+      "forgotPasswordLink": "Elfelejtett jelszó?",
       "noAccount": "Nincs még fiókod?",
       "registerLink": "Regisztrálj",
       "error": {
@@ -308,6 +309,32 @@
         "user_already_exists": "Ezzel az email címmel már létezik fiók.",
         "user_already_exists_use_another_email": "Ezzel az email címmel már létezik fiók. Használjon másik email címet.",
         "invalid_password": "A jelszó nem felel meg a követelményeknek."
+      }
+    },
+    "forgotPassword": {
+      "title": "Elfelejtett jelszó",
+      "subtitle": "Add meg az email címedet, és küldünk egy visszaállító linket.",
+      "submit": "Visszaállító link küldése",
+      "submitting": "Visszaállító link küldése...",
+      "backToLogin": "Vissza a bejelentkezéshez",
+      "success": "Ha létezik fiók ehhez az email címhez, elküldtük a visszaállító linket.",
+      "error": {
+        "title": "Visszaállító link küldése sikertelen",
+        "unknown": "Most nem sikerült visszaállító linket küldeni. Próbáld újra."
+      }
+    },
+    "resetPassword": {
+      "title": "Jelszó visszaállítása",
+      "subtitle": "Állítsd be az új jelszavadat a folytatáshoz.",
+      "submit": "Jelszó visszaállítása",
+      "submitting": "Jelszó visszaállítása...",
+      "backToLogin": "Vissza a bejelentkezéshez",
+      "missingToken": "A visszaállító token hiányzik vagy érvénytelen.",
+      "success": "A jelszó visszaállítása sikeres. Átirányítás bejelentkezésre...",
+      "error": {
+        "title": "A jelszó visszaállítása sikertelen",
+        "unknown": "Most nem sikerült visszaállítani a jelszót. Próbáld újra.",
+        "invalid_token": "A visszaállító link érvénytelen vagy lejárt. Kérj új linket."
       }
     }
   },

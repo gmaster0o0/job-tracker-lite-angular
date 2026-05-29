@@ -65,6 +65,35 @@ export const registerSchema = z
 
 export type RegisterDto = z.infer<typeof registerSchema>;
 
+export const supportLangSchema = z.enum(['en', 'hu']);
+export type SupportLang = z.infer<typeof supportLangSchema>;
+
+export const forgotPasswordSchema = z.object({
+  email: required.pipe(z.email()),
+  language: supportLangSchema,
+});
+
+export type ForgotPasswordDto = z.infer<typeof forgotPasswordSchema>;
+
+export const resetPasswordSchema = z
+  .object({
+    token: z.string(),
+    newPassword: basicPasswordSchema,
+    confirmPassword: required,
+  })
+  .superRefine((value, ctx) => {
+    if (value.newPassword !== value.confirmPassword) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Password confirmation must match password',
+        path: ['confirmPassword'],
+        errorCode: errorCodes.password_mismatch,
+      });
+    }
+  });
+  
+export type ResetPasswordDto = z.infer<typeof resetPasswordSchema>;
+
 export const authUserSchema = z.object({
   id: z.string(),
   name: z.string(),
