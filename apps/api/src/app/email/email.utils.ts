@@ -1,6 +1,5 @@
 import { SupportLang } from '@job-tracker-lite-angular/schemas';
 
-//TODO  we need test for this
 export function getLanguageFromResetUrl(url: string): SupportLang {
   try {
     const resetUrl = new URL(url);

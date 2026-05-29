@@ -10,6 +10,7 @@ import { createBetterAuth } from './auth.config';
   imports: [
     EmailModule,
     BetterAuthModule.forRootAsync({
+      imports: [EmailModule],
       inject: [PrismaService, EmailService, ConfigService],
       useFactory: (
         prisma: PrismaService,
