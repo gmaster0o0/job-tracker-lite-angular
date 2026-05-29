@@ -225,6 +225,8 @@ npx nx g @nx/nest:controller apps/api/src/app/health/health
 
 # View project graph
 npx nx graph
+# running test wihtout nx terminal ui
+NXTUI=false npm run test
 ```
 ### Using Transloco Key Manager
 

@@ -3,7 +3,7 @@ import {
   LoginDto,
   RegisterDto,
 } from '@job-tracker-lite-angular/schemas';
-import { validUserResponse } from '../fixtures/basic-login.fixture';
+import { authSessionFixtures } from '../fixtures/auth.fixtures';
 
 export type AuthDataAccessMockOptions = {
   session?: AuthSessionDto | null;
@@ -15,7 +15,7 @@ export type AuthDataAccessMockOptions = {
 export function createAuthDataAccessMock(
   options: AuthDataAccessMockOptions = {},
 ) {
-  const session = options.session ?? validUserResponse;
+  const session = options.session ?? authSessionFixtures.authenticated;
 
   return {
     getSession: async () => session,

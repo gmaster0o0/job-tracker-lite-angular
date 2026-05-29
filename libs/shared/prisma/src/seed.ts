@@ -24,13 +24,22 @@ const statusMap: Record<string, JobStatus> = {
   rejected: JobStatus.REJECTED,
 };
 
-const seedJobs = seedJobFixtures.map((job: JobDto) => ({
-  position: job.position,
-  link: job.link,
-  description: job.description,
-  company: job.company,
-  status: statusMap[job.status] ?? JobStatus.REJECTED,
-}));
+const seedUserEmail = 'seed-user@example.com';
+const systemUserId = 'seed-user';
+
+const seedJobs = seedJobFixtures.map((job: JobDto) => {
+  if (job.link == null) {
+    throw new Error(`Seed job missing link for job ${job.position}`);
+  }
+
+  return {
+    position: job.position,
+    link: job.link,
+    description: job.description,
+    company: job.company,
+    status: statusMap[job.status] ?? JobStatus.REJECTED,
+  };
+});
 
 async function main() {
   console.log('Starting seed...');
@@ -46,6 +55,20 @@ async function main() {
   await prisma.$connect();
   console.log('Connected to database');
 
+  const seedUser = await prisma.user.upsert({
+    where: { email: seedUserEmail },
+    update: {
+      name: 'Seed User',
+      emailVerified: true,
+    },
+    create: {
+      id: systemUserId,
+      name: 'Seed User',
+      email: seedUserEmail,
+      emailVerified: true,
+    },
+  });
+
   for (const [jobIndex, job] of seedJobs.entries()) {
     const seededJob = await prisma.job.upsert({
       where: { link: job.link },
@@ -55,7 +78,10 @@ async function main() {
         company: job.company,
         status: job.status,
       },
-      create: job,
+      create: {
+        ...job,
+        userId: seedUser.id,
+      },
     });
 
     const contacts = getSeedContactsForJob(jobIndex, job.company);
@@ -65,6 +91,7 @@ async function main() {
       await prisma.contact.createMany({
         data: contacts.map((contact: SeedContactTemplate) => ({
           jobId: seededJob.id,
+          userId: seedUser.id,
           name: contact.name,
           email: contact.email,
           phoneNumber: contact.phoneNumber,
@@ -79,6 +106,7 @@ async function main() {
       await prisma.note.createMany({
         data: notes.map((note: SeedNoteTemplate) => ({
           jobId: seededJob.id,
+          userId: seedUser.id,
           title: note.title,
           body: note.body,
         })),

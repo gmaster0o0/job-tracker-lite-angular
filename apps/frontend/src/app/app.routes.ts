@@ -1,4 +1,6 @@
 import { Route } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
+import { guestGuard } from './guards/guest.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -12,6 +14,7 @@ export const appRoutes: Route[] = [
       {
         path: '',
         pathMatch: 'full',
+        canActivate: [guestGuard],
         loadComponent: () =>
           import('./features/home/home.component').then((m) => m.HomeComponent),
       },
@@ -19,6 +22,7 @@ export const appRoutes: Route[] = [
         path: '',
         pathMatch: 'full',
         outlet: 'sidenav',
+        canActivate: [guestGuard],
         loadComponent: () =>
           import('./navigation/main-menu/main-menu.component').then(
             (m) => m.MainMenuComponent,
@@ -26,6 +30,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'jobs',
+        canActivate: [authGuard],
         children: [
           {
             path: '',
@@ -61,6 +66,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'settings',
+        canActivate: [authGuard],
         children: [
           {
             path: '',
@@ -88,6 +94,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'profile',
+        canActivate: [authGuard],
         children: [
           {
             path: '',
@@ -108,6 +115,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'about',
+        canActivate: [authGuard],
         children: [
           {
             path: '',
@@ -140,6 +148,7 @@ export const appRoutes: Route[] = [
           },
           {
             path: 'login',
+            canActivate: [guestGuard],
             loadComponent: () =>
               import('./features/auth/login/login.component').then(
                 (m) => m.LoginComponent,
@@ -147,10 +156,27 @@ export const appRoutes: Route[] = [
           },
           {
             path: 'register',
+            canActivate: [guestGuard],
             loadComponent: () =>
               import('./features/auth/register/register.component').then(
                 (m) => m.RegisterComponent,
               ),
+          },
+          {
+            path: 'forgot-password',
+            canActivate: [guestGuard],
+            loadComponent: () =>
+              import(
+                './features/auth/forgot-password/forgot-password.component'
+              ).then((m) => m.ForgotPasswordComponent),
+          },
+          {
+            path: 'reset-password',
+            canActivate: [guestGuard],
+            loadComponent: () =>
+              import(
+                './features/auth/reset-password/reset-password.component'
+              ).then((m) => m.ResetPasswordComponent),
           },
         ],
       },

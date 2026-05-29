@@ -3,6 +3,7 @@ import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import { JobStatus } from '@prisma/client';
 import { JobsService } from './jobs.service';
 import {
+  authUserIdFixture,
   contactFixtures,
   createContactFixtures,
   createJobFixtures,
@@ -38,7 +39,7 @@ describe('JobsService', () => {
       prismaJobFixtures.frontendEngineer,
     ]);
 
-    await expect(service.findAll()).resolves.toEqual([
+    await expect(service.findAll(authUserIdFixture)).resolves.toEqual([
       jobFixtures.frontendEngineer,
     ]);
   });
@@ -48,44 +49,76 @@ describe('JobsService', () => {
       prismaJobResultFixtures.createdProductDesigner,
     );
 
-    const job = await service.create(createJobFixtures.productDesigner);
+    const job = await service.create(
+      authUserIdFixture,
+      createJobFixtures.productDesigner,
+    );
 
     expect(prismaMock.job.create).toHaveBeenCalledWith({
-      data: createJobFixtures.productDesigner,
+      data: {
+        ...createJobFixtures.productDesigner,
+        userId: authUserIdFixture,
+      },
+      select: {
+        id: true,
+        position: true,
+        link: true,
+        description: true,
+        company: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
     expect(job.status).toBe(JobStatus.SAVED);
   });
 
   it('should update job status', async () => {
+    prismaMock.job.findFirstOrThrow.mockResolvedValue({ id: 'ck1234567891' });
     prismaMock.job.update.mockResolvedValue(
       prismaJobResultFixtures.updatedBackendEngineerInterview,
     );
 
-    const job = await service.updateStatus('ck1234567891', 'INTERVIEW');
+    const job = await service.updateStatus(
+      authUserIdFixture,
+      'ck1234567891',
+      'INTERVIEW',
+    );
 
     expect(prismaMock.job.update).toHaveBeenCalledWith({
       where: { id: 'ck1234567891' },
       data: { status: JobStatus.INTERVIEW },
+      select: {
+        id: true,
+        position: true,
+        link: true,
+        description: true,
+        company: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
     expect(job.status).toBe(JobStatus.INTERVIEW);
   });
 
   it('should return contacts for a job', async () => {
-    prismaMock.job.findUniqueOrThrow.mockResolvedValue({ id: 'ck1234567899' });
+    prismaMock.job.findFirstOrThrow.mockResolvedValue({ id: 'ck1234567899' });
     prismaMock.contact.findMany.mockResolvedValue([
       prismaContactFixtures.janeDoe,
     ]);
 
-    await expect(service.findContacts('ck1234567899')).resolves.toEqual([
-      contactFixtures.janeDoe,
-    ]);
+    await expect(
+      service.findContacts(authUserIdFixture, 'ck1234567899'),
+    ).resolves.toEqual([contactFixtures.janeDoe]);
   });
 
   it('should create a contact for a job', async () => {
-    prismaMock.job.findUniqueOrThrow.mockResolvedValue({ id: 'ck1234567899' });
+    prismaMock.job.findFirstOrThrow.mockResolvedValue({ id: 'ck1234567899' });
     prismaMock.contact.create.mockResolvedValue(prismaContactFixtures.johnDoe);
 
     const created = await service.createContact(
+      authUserIdFixture,
       'ck1234567899',
       createContactFixtures.johnDoe,
     );
@@ -93,7 +126,17 @@ describe('JobsService', () => {
     expect(prismaMock.contact.create).toHaveBeenCalledWith({
       data: {
         jobId: 'ck1234567899',
+        userId: authUserIdFixture,
         ...createContactFixtures.johnDoe,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phoneNumber: true,
+        jobId: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
     expect(created.id).toBe('ck1234567902');
