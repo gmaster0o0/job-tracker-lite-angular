@@ -4,9 +4,11 @@ import {
   HealthCheck,
   PrismaHealthIndicator,
 } from '@nestjs/terminus';
+import { Public } from '@thallesp/nestjs-better-auth';
 import { UptimeHealthIndicator } from './uptime.health';
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
 
+@Public()
 @Controller('health')
 export class HealthController {
   constructor(

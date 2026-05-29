@@ -12,6 +12,6 @@ module.exports = {
       '<rootDir>/../../libs/shared/testing/src/lib/mocks/thallesp-nestjs-better-auth.mock.ts',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(@angular|@job-tracker-lite-angular|better-auth)/)',
+    'node_modules/(?!(better-auth|@angular|@job-tracker-lite-angular)/)',
   ],
 };
