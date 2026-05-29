@@ -14,5 +14,9 @@ export default {
     ],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
+  moduleNameMapper: {
+    '^@thallesp/nestjs-better-auth$':
+      '<rootDir>/../../libs/shared/testing/src/lib/mocks/thallesp-nestjs-better-auth.mock.ts',
+  },
   coverageDirectory: '../../coverage/api-e2e',
 };

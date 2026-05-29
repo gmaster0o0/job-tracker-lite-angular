@@ -7,7 +7,7 @@ test.describe('smoke', () => {
     const firstH1 = page.locator('h1').first();
     await expect(firstH1).toBeVisible();
     // Accept either a welcome message or the app title used in this repo
-    await expect(firstH1).toContainText(/Welcome|Job Tracker Lite/i);
+    await expect(firstH1).toContainText(/Job Tracker Lite/i);
 
     // navigate to login page and assert login form exists
     await page.goto('/auth/login');
