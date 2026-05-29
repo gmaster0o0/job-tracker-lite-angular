@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
-    "postinstall": "npm run prisma:generate",
+    "prepare:dev": "npm run prisma:generate",
     "prisma:generate": "npx prisma generate --schema=libs/shared/prisma/db-schema/schema.prisma",
     "db:migrate": "cd libs/shared/prisma && npx prisma migrate dev",
     "db:migrate:deploy": "cd libs/shared/prisma && npx prisma migrate deploy",
