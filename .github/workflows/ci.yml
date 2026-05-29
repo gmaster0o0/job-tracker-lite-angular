@@ -43,10 +43,10 @@ jobs:
       - run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Push Prisma Schema
+      - name: Deploy Prisma Migrations
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/test_db?schema=public
-        run: npx prisma db push --schema=libs/shared/prisma/db-schema/schema.prisma --accept-data-loss
+        run: npm run db:migrate:deploy
       - uses: nrwl/nx-set-shas@v4
       - name: Run affected targets with automatic Nx Cloud fallback
         shell: bash

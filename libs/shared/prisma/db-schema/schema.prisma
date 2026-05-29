@@ -1,9 +1,10 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
   output   = "../../../../node_modules/.prisma/client"
 }
 
 datasource db {
+  //DONT ADD THE URL HERE. ITS DEPRACTED IN v7
   provider = "postgresql"
 }
 
