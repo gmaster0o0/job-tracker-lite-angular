@@ -1,9 +1,5 @@
-import {
-  ArgumentsHost,
-  BaseExceptionFilter,
-  Catch,
-  HttpStatus,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, HttpStatus } from '@nestjs/common';
+import { BaseExceptionFilter } from '@nestjs/core';
 import type { Response } from 'express';
 import {
   BETTER_AUTH_ERROR_CODE_MESSAGES,
@@ -31,7 +27,7 @@ function isBetterAuthError(exception: unknown): exception is BetterAuthError {
 
 @Catch()
 export class BetterAuthExceptionFilter extends BaseExceptionFilter {
-  catch(exception: unknown, host: ArgumentsHost) {
+  override catch(exception: unknown, host: ArgumentsHost) {
     if (!isBetterAuthError(exception)) {
       return super.catch(exception, host);
     }
