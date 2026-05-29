@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../../../../node_modules/.prisma/client"
 }
 
@@ -26,9 +26,6 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
-  jobs          Job[]
-  contacts      Contact[]
-  notes         Note[]
 
   @@map("user")
 }
@@ -77,8 +74,6 @@ model Job {
   status      JobStatus @default(SAVED)
   contacts    Contact[]
   notes       Note[]
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
@@ -90,8 +85,6 @@ model Contact {
   phoneNumber String?
   jobId       String
   job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -102,8 +95,6 @@ model Note {
   body        String
   jobId       String
   job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
