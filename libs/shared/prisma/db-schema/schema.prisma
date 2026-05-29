@@ -26,6 +26,9 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  jobs          Job[]
+  contacts      Contact[]
+  notes         Note[]
 
   @@map("user")
 }
@@ -68,14 +71,18 @@ model Account {
 model Job {
   id          String    @id @default(cuid())
   position    String
-  link        String?    @unique
+  link        String?   @unique
   description String?
   company     String
   status      JobStatus @default(SAVED)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   contacts    Contact[]
   notes       Note[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
 }
 
 model Contact {
@@ -84,9 +91,13 @@ model Contact {
   email       String?
   phoneNumber String?
   jobId       String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Note {
@@ -94,7 +105,11 @@ model Note {
   title       String
   body        String
   jobId       String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }

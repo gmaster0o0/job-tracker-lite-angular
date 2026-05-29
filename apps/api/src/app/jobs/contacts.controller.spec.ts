@@ -1,7 +1,16 @@
 import { Test } from '@nestjs/testing';
+// TODO : Extract the jest.mock to a separate file to avoid repetition across controller tests
+// MOCKS SHOULD BE IN THE TESTING LIBRARY, NOT IN THE TEST FILES THEMSELVES
+
+jest.mock('@thallesp/nestjs-better-auth', () => ({
+  AuthGuard: class AuthGuard {},
+  Session: () => () => undefined,
+}));
+
 import { ContactsController } from './contacts.controller';
 import { JobsService } from './jobs.service';
 import {
+  authSessionFixtures,
   contactFixtures,
   createContactFixtures,
   updateContactFixtures,
@@ -30,16 +39,23 @@ describe('ContactsController', () => {
   it('should delegate contact listing to the service', async () => {
     jobsService.findContacts.mockResolvedValue([contactFixtures.janeDoe]);
 
-    await expect(contactsController.findContacts('10')).resolves.toEqual([
-      contactFixtures.janeDoe,
-    ]);
+    await expect(
+      contactsController.findContacts(
+        authSessionFixtures.authenticated as never,
+        '10',
+      ),
+    ).resolves.toEqual([contactFixtures.janeDoe]);
   });
 
   it('should delegate contact creation to the service', async () => {
     jobsService.createContact.mockResolvedValue(contactFixtures.johnDoe);
 
     await expect(
-      contactsController.createContact('10', createContactFixtures.johnDoe),
+      contactsController.createContact(
+        authSessionFixtures.authenticated as never,
+        '10',
+        createContactFixtures.johnDoe,
+      ),
     ).resolves.toEqual(contactFixtures.johnDoe);
   });
 
@@ -48,6 +64,7 @@ describe('ContactsController', () => {
 
     await expect(
       contactsController.updateContact(
+        authSessionFixtures.authenticated as never,
         '10',
         '2',
         updateContactFixtures.updatedContact,
@@ -59,7 +76,11 @@ describe('ContactsController', () => {
     jobsService.deleteContact.mockResolvedValue(undefined);
 
     await expect(
-      contactsController.deleteContact('10', '2'),
+      contactsController.deleteContact(
+        authSessionFixtures.authenticated as never,
+        '10',
+        '2',
+      ),
     ).resolves.toBeUndefined();
   });
 });

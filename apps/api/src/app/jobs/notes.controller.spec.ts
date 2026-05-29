@@ -1,7 +1,14 @@
 import { Test } from '@nestjs/testing';
+
+jest.mock('@thallesp/nestjs-better-auth', () => ({
+  AuthGuard: class AuthGuard {},
+  Session: () => () => undefined,
+}));
+
 import { NotesController } from './notes.controller';
 import { JobsService } from './jobs.service';
 import {
+  authSessionFixtures,
   noteFixtures,
   createNoteFixtures,
   updateNoteFixtures,
@@ -31,16 +38,23 @@ describe('NotesController', () => {
   it('should delegate note operations to the service', async () => {
     jobsService.findNotes.mockResolvedValue([noteFixtures.johnDoe]);
 
-    await expect(notesController.findNotes('10')).resolves.toEqual([
-      noteFixtures.johnDoe,
-    ]);
+    await expect(
+      notesController.findNotes(
+        authSessionFixtures.authenticated as never,
+        '10',
+      ),
+    ).resolves.toEqual([noteFixtures.johnDoe]);
   });
 
   it('should delegate note creation to the service', async () => {
     jobsService.createNote.mockResolvedValue(noteFixtures.johnDoe);
 
     await expect(
-      notesController.createNote('10', createNoteFixtures.johnDoe),
+      notesController.createNote(
+        authSessionFixtures.authenticated as never,
+        '10',
+        createNoteFixtures.johnDoe,
+      ),
     ).resolves.toEqual(noteFixtures.johnDoe);
   });
 
@@ -48,14 +62,23 @@ describe('NotesController', () => {
     jobsService.updateNote.mockResolvedValue(noteFixtures.updatedNote);
 
     await expect(
-      notesController.updateNote('10', '2', updateNoteFixtures.updatedNote),
+      notesController.updateNote(
+        authSessionFixtures.authenticated as never,
+        '10',
+        '2',
+        updateNoteFixtures.updatedNote,
+      ),
     ).resolves.toEqual(noteFixtures.updatedNote);
   });
 
   it('should delegate note deletion to the service', async () => {
     jobsService.deleteNote.mockResolvedValue(undefined);
     await expect(
-      notesController.deleteNote('10', '2'),
+      notesController.deleteNote(
+        authSessionFixtures.authenticated as never,
+        '10',
+        '2',
+      ),
     ).resolves.toBeUndefined();
   });
 });
