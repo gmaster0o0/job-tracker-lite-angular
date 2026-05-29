@@ -21,6 +21,9 @@
     "i18n:find": "npx transloco-keys-manager find --config tools/config/transloco.config.ts --project frontend --input \"apps/frontend/src\" --translations-path \"./apps/frontend/public/assets/i18n/\""
   },
   "private": true,
+  "engines": {
+    "node": ">=22.22.1"
+  },
   "devDependencies": {
     "@angular-devkit/core": "~21.2.0",
     "@angular-devkit/schematics": "~21.2.0",

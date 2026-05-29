@@ -174,6 +174,30 @@ tmp/
 - Contact management allows associating multiple contacts with each job application.
 - Status progression uses an interactive stepper component for easy status updates.
 
+## db migration workflow
+
+need to run the migration inside the `libs/shared/prisma` directory since that's where the `schema.prisma` file is located. The command to run the migration is:
+```
+$  cd libs/shared/prisma && npx prisma migrate deploy
+◇ injected env (7) from ..\..\..\.env // tip: ◈ encrypted .env [www.dotenvx.com]
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from db-schema\schema.prisma.
+Datasource "db": PostgreSQL database "jobtracker", schema "public" at "localhost:5432"
+
+11 migrations found in prisma/migrations
+
+Applying migration `20260529120000_add_user_id_safety`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20260529120000_add_user_id_safety/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+```
+
 ## Useful commands
 
 ```sh

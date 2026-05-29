@@ -1,7 +1,7 @@
 import {
   ArgumentsHost,
+  BaseExceptionFilter,
   Catch,
-  ExceptionFilter,
   HttpStatus,
 } from '@nestjs/common';
 import type { Response } from 'express';
@@ -30,10 +30,10 @@ function isBetterAuthError(exception: unknown): exception is BetterAuthError {
 }
 
 @Catch()
-export class BetterAuthExceptionFilter implements ExceptionFilter {
+export class BetterAuthExceptionFilter extends BaseExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     if (!isBetterAuthError(exception)) {
-      throw exception;
+      return super.catch(exception, host);
     }
 
     const ctx = host.switchToHttp();
