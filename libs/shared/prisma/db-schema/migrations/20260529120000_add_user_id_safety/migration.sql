@@ -1,19 +1,4 @@
--- Create a default user for backfilling existing records
-INSERT INTO
-    "user" (
-        "id",
-        "name",
-        "email",
-        "updatedAt"
-    )
-VALUES (
-        'system-user',
-        'System',
-        'system@example.com',
-        now()
-    )
-ON CONFLICT ("email") DO NOTHING;
-
+-- Backfill existing records with the system user (INSERT moved to next migration to ensure column exists)
 -- Add userId column as nullable first (in case the previous migration was modified to be nullable or removed)
 -- Using a check to see if the column exists might be safer if we are unsure about the state of 20260528010912_add_auth_models
 DO $$ 
