@@ -5,7 +5,7 @@ import { AppModule } from './app/app.module';
 import { PrismaClientExceptionFilter } from '@job-tracker-lite-angular/prisma';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bodyParser: false });
+  const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const allowedOrigins = (
     configService.get<string>('CORS_ORIGIN') ?? 'http://localhost:4200'
