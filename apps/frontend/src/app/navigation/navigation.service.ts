@@ -37,13 +37,11 @@ export class NavigationService {
   }
 
   handleBack(): void {
-    // Prefer real browser history navigation.
-    if (window.history.length > 1) {
+    if (this.router.navigated) {
       this.location.back();
       return;
     }
 
-    // Fallback when there is no history entry in this tab.
     void this.router.navigateByUrl('/');
   }
 
