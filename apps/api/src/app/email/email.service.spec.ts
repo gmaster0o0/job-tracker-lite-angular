@@ -40,7 +40,7 @@ describe('EmailService', () => {
 
   it.each<[SupportLang, string]>([
     ['en', 'Reset your password - Job Tracker Lite'],
-    ['hu', 'Jelszo visszaallitasa - Job Tracker Lite'],
+    ['hu', 'Jelszó visszaállítása - Job Tracker Lite'],
   ])('should send the reset password email in %s', async (lang, subject) => {
     await service.sendResetPasswordEmail(testRecipient, testResetUrl, lang);
 

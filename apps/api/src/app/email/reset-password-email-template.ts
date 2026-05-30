@@ -15,15 +15,15 @@ const resetPasswordEmailTemplates: Record<
   }
 > = {
   hu: {
-    subject: 'Jelszo visszaallitasa - Job Tracker Lite',
+    subject: 'Jelszó visszaállítása - Job Tracker Lite',
     text: (url: string) =>
-      `Kerted a jelszavad visszaallitasat a Job Tracker Lite alkalmazasban. Hasznald ezt a linket: ${url}`,
+      `Kérted a jelszavad visszaállítását a Job Tracker Lite alkalmazásban. Használd ezt a linket: ${url}`,
     html: (url: string) => `
         <p>Szia!</p>
-        <p>Kerted a jelszavad visszaallitasat a Job Tracker Lite alkalmazasban.</p>
-        <p>Kattints az alabbi linkre az uj jelszo megadasahoz:</p>
-        <p><a href="${url}">Jelszo visszaallitasa</a></p>
-        <p>Ha nem te kerted ezt a levelet, nyugodtan hagyd figyelmen kivul.</p>
+        <p>Kérted a jelszavad visszaállítását a Job Tracker Lite alkalmazásban.</p>
+        <p>Kattints az alábbi linkre az új jelszó megadásához:</p>
+        <p><a href="${url}">Jelszó visszaállítása</a></p>
+        <p>Ha nem te kérted ezt a levelet, nyugodtan hagyd figyelmen kívül.</p>
       `,
   },
   en: {
