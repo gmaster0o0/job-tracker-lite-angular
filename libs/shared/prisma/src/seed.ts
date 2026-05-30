@@ -2,6 +2,7 @@ console.log('Seed script started');
 
 import { PrismaClient, JobStatus } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { hashPassword } from 'better-auth/crypto';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { JobDto } from '@job-tracker-lite-angular/schemas';
@@ -16,16 +17,10 @@ import {
 const envPath = path.join(process.cwd(), '.env');
 dotenv.config({ path: envPath });
 
-const statusMap: Record<string, JobStatus> = {
-  saved: JobStatus.SAVED,
-  applied: JobStatus.APPLIED,
-  interview: JobStatus.INTERVIEW,
-  'job offered': JobStatus.JOB_OFFERED,
-  rejected: JobStatus.REJECTED,
-};
-
-const seedUserEmail = 'seed-user@example.com';
+const seedUserEmail = 'user@example.com';
+const seedUserPassword = 'Demo1234';
 const systemUserId = 'seed-user';
+const seedCredentialAccountId = 'seed-user-credential';
 
 const seedJobs = seedJobFixtures.map((job: JobDto) => {
   if (job.link == null) {
@@ -37,7 +32,7 @@ const seedJobs = seedJobFixtures.map((job: JobDto) => {
     link: job.link,
     description: job.description,
     company: job.company,
-    status: statusMap[job.status] ?? JobStatus.REJECTED,
+    status: job.status as JobStatus,
   };
 });
 
@@ -56,16 +51,36 @@ async function main() {
   console.log('Connected to database');
 
   const seedUser = await prisma.user.upsert({
-    where: { email: seedUserEmail },
+    where: { id: systemUserId },
     update: {
-      name: 'Seed User',
+      name: 'Demo User',
+      email: seedUserEmail,
       emailVerified: true,
     },
     create: {
       id: systemUserId,
-      name: 'Seed User',
+      name: 'Demo User',
       email: seedUserEmail,
       emailVerified: true,
+    },
+  });
+
+  const seedUserPasswordHash = await hashPassword(seedUserPassword);
+
+  await prisma.account.deleteMany({
+    where: {
+      userId: seedUser.id,
+      providerId: 'credential',
+    },
+  });
+
+  await prisma.account.create({
+    data: {
+      id: seedCredentialAccountId,
+      accountId: seedUser.id,
+      providerId: 'credential',
+      userId: seedUser.id,
+      password: seedUserPasswordHash,
     },
   });
 
@@ -77,6 +92,7 @@ async function main() {
         description: job.description,
         company: job.company,
         status: job.status,
+        userId: seedUser.id,
       },
       create: {
         ...job,
@@ -119,6 +135,7 @@ async function main() {
   console.log(
     `Seeded ${seedJobs.length} jobs with 0-2 contacts and 0-1 notes each (deterministic).`,
   );
+  console.log(`Demo login: ${seedUserEmail} / ${seedUserPassword}`);
 }
 
 main().catch(async (error) => {

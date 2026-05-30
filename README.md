@@ -68,6 +68,11 @@ npm run prisma:generate
 npm run db:seed
 ```
 
+Seeded jobs are owned by this demo account:
+
+- Email: `user@example.com`
+- Password: `Demo1234`
+
 ## Install
 
 From the repository root:
