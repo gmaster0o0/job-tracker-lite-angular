@@ -14,7 +14,6 @@ export const appRoutes: Route[] = [
       {
         path: '',
         pathMatch: 'full',
-        canActivate: [guestGuard],
         loadComponent: () =>
           import('./features/home/home.component').then((m) => m.HomeComponent),
       },
@@ -22,7 +21,6 @@ export const appRoutes: Route[] = [
         path: '',
         pathMatch: 'full',
         outlet: 'sidenav',
-        canActivate: [guestGuard],
         loadComponent: () =>
           import('./navigation/main-menu/main-menu.component').then(
             (m) => m.MainMenuComponent,
@@ -66,7 +64,6 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'settings',
-        canActivate: [authGuard],
         children: [
           {
             path: '',
@@ -115,7 +112,6 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'about',
-        canActivate: [authGuard],
         children: [
           {
             path: '',
