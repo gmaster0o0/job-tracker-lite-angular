@@ -59,8 +59,7 @@ describe('AuthDataAccessService', () => {
     expect(resetReq.request.withCredentials).toBe(true);
     expect(resetReq.request.body).toEqual({
       email: validForgotPasswordCredentials.email,
-      language: validForgotPasswordCredentials.language,
-      redirectTo: `${window.location.origin}/auth/reset-password`,
+      redirectTo: `${window.location.origin}/auth/reset-password?language=${validForgotPasswordCredentials.language}`,
     });
     resetReq.flush({ status: true });
 

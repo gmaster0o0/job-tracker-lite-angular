@@ -63,6 +63,8 @@ describe('ForgotPasswordComponent', () => {
 
     const alert = await harness.getErrorAlert();
     expect(alert).not.toBeNull();
-    expect(await alert?.getDescription()).toContain('Unable to send reset link');
+    expect(await alert?.getDescription()).toContain(
+      'Unable to send reset link',
+    );
   });
 });

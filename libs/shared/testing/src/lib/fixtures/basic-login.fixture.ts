@@ -38,7 +38,7 @@ export const invalidRegisterCredentialsMismatch = {
 
 export const validForgotPasswordCredentials = {
   email: 'john@example.com',
-  language: 'en',
+  language: 'en' as const,
 };
 
 export const validResetPasswordCredentials = {
