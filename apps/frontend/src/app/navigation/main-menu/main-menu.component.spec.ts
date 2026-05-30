@@ -11,6 +11,7 @@ import {
   createAuthSessionServiceMock,
   authSessionFixtures,
 } from '@job-tracker-lite-angular/testing';
+import { NavigationService } from '../navigation.service';
 
 const noop = () => {
   //emptsy function for matchMedia event listeners
@@ -50,6 +51,7 @@ describe('MainMenuComponent', () => {
       providers: [
         provideRouter([]),
         { provide: AuthSessionService, useValue: authSessionMock },
+        NavigationService,
       ],
     }).compileComponents();
 

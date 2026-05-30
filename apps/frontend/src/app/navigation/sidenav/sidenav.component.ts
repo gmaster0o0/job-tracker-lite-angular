@@ -10,6 +10,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
 import { version as appVersion } from '../../../environments/version';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
+import { AuthSessionService } from '@job-tracker-lite-angular/frontend-data-access';
 import { NavigationService } from '../navigation.service';
 @Component({
   standalone: true,
@@ -32,7 +33,10 @@ import { NavigationService } from '../navigation.service';
 })
 export class SidenavComponent {
   private readonly router = inject(Router);
+  private readonly authSession = inject(AuthSessionService);
   private readonly navigationService = inject(NavigationService);
+
+  protected readonly isAuthenticated = this.authSession.isAuthenticated;
 
   protected readonly isRoot = toSignal(
     this.router.events.pipe(
