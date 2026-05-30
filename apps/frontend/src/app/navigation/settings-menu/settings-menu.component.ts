@@ -25,7 +25,8 @@ type SettingsMenuItem = MenuItem & {
 export class SettingsMenuComponent {
   private readonly navigationService = inject(NavigationService);
 
-  protected readonly isItemVisible = this.navigationService.isItemVisible;
+  protected readonly isItemVisible = (item: MenuItem) =>
+    this.navigationService.isItemVisible(item);
 
   protected readonly items: readonly SettingsMenuItem[] = [
     {

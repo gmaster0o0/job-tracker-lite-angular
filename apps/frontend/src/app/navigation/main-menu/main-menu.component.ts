@@ -44,7 +44,8 @@ export class MainMenuComponent {
   private readonly navigationService = inject(NavigationService);
 
   protected readonly isAuthenticated = this.authSession.isAuthenticated;
-  protected readonly isItemVisible = this.navigationService.isItemVisible;
+  protected readonly isItemVisible = (item: MenuItem) =>
+    this.navigationService.isItemVisible(item);
 
   protected readonly items: readonly MainMenuItem[] = [
     {
