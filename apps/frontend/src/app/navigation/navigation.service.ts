@@ -14,7 +14,7 @@ export interface MenuItem {
   readonly questOnly?: boolean;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class NavigationService {
   private readonly authSession = inject(AuthSessionService);
   private readonly authDataAccess = inject(AuthDataAccessService);

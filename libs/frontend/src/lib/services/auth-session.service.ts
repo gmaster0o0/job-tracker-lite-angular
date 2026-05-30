@@ -12,9 +12,14 @@ export class AuthSessionService {
   readonly userId = computed(() => this.sessionState()?.user.id ?? null);
 
   async loadSession(): Promise<AuthSessionDto> {
-    const session = await this.authDataAccess.getSession();
-    this.sessionState.set(session);
-    return session;
+    try {
+      const session = await this.authDataAccess.getSession();
+      this.sessionState.set(session);
+      return session;
+    } catch {
+      this.sessionState.set(null);
+      return null;
+    }
   }
 
   setSession(session: AuthSessionDto): void {

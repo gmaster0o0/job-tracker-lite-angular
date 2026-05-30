@@ -277,9 +277,6 @@
         "example": "Írja be újra a jelszavát a megerősítéshez."
       }
     },
-    "errors": {
-      "unknown": "Sikertelen hitelesítés. Próbálja újra."
-    },
     "login": {
       "title": "Üdv újra",
       "subtitle": "Jelentkezz be a folytatáshoz.",
@@ -293,7 +290,8 @@
         "unknown": "Most nem sikerült bejelentkezni. Próbálja újra.",
         "invalid_email_or_password": "Hibás email vagy jelszó.",
         "user_not_found": "Nincs ilyen email címhez tartozó felhasználó.",
-        "email_not_verified": "Az email cím még nincs megerősítve. Ellenőrizze postafiókját."
+        "email_not_verified": "Az email cím még nincs megerősítve. Ellenőrizze postafiókját.",
+        "internal_error": "Hiba történt a bejelentkezés során. Kérjük, próbálja újra később."
       }
     },
     "register": {
@@ -308,7 +306,8 @@
         "unknown": "Most nem sikerült regisztrálni. Próbálja újra.",
         "user_already_exists": "Ezzel az email címmel már létezik fiók.",
         "user_already_exists_use_another_email": "Ezzel az email címmel már létezik fiók. Használjon másik email címet.",
-        "invalid_password": "A jelszó nem felel meg a követelményeknek."
+        "invalid_password": "A jelszó nem felel meg a követelményeknek.",
+        "internal_error": "Hiba történt a regisztráció során. Kérjük, próbálja újra később."
       }
     },
     "forgotPassword": {
@@ -339,11 +338,8 @@
     }
   },
   "settings": {
-    "preferences": "Beállítások",
+    "preferences": "Testreszabás",
     "account": "Fiókbeállítások",
     "privacy": "Adatvédelmi beállítások"
-  },
-  "setting": {
-    "preferences": "Beállítások"
   }
 }
