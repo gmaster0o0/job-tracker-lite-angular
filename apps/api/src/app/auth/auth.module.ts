@@ -1,27 +1,27 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config'; // Ha nem globális
 import { AuthModule as BetterAuthModule } from '@thallesp/nestjs-better-auth';
-import { PrismaService } from '@job-tracker-lite-angular/prisma';
+import { PrismaModule } from '@job-tracker-lite-angular/prisma'; // Ha nem globális
 import { EmailModule } from '../email/email.module';
-import { EmailService } from '../email/email.service';
-import { createBetterAuth } from './auth.config';
+import { AuthConfigFactory } from './auth.config.factory';
 
 @Module({
   imports: [
     EmailModule,
+    PrismaModule,
+    ConfigModule,
     BetterAuthModule.forRootAsync({
-      imports: [EmailModule],
-      inject: [PrismaService, EmailService, ConfigService],
-      useFactory: (
-        prisma: PrismaService,
-        emailService: EmailService,
-        configService: ConfigService,
-      ) => ({
-        auth: createBetterAuth(prisma, emailService, configService),
-        disableBodyParser: true,
-        disableGlobalAuthGuard: true,
-      }),
+      imports: [EmailModule, PrismaModule, ConfigModule],
+      inject: [AuthConfigFactory],
+      useFactory: (authConfigFactory: AuthConfigFactory) => {
+        return {
+          auth: authConfigFactory.create(),
+          disableBodyParser: true,
+          disableGlobalAuthGuard: true,
+        };
+      },
     }),
   ],
+  providers: [AuthConfigFactory],
 })
 export class AuthModule {}

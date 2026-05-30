@@ -286,7 +286,7 @@
       "unknown": "Authentication failed. Please try again."
     },
     "login": {
-      "title": "Welcome Back",
+      "title": "Login",
       "subtitle": "Sign in to continue managing your jobs.",
       "submit": "Sign in",
       "submitting": "Signing in...",
