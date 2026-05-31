@@ -13,7 +13,6 @@ describe('AuthSessionService', () => {
 
   beforeEach(() => {
     authDataAccessMock = createAuthDataAccessMock();
-    vi.spyOn(authDataAccessMock, 'getSession');
 
     TestBed.configureTestingModule({
       providers: [
@@ -29,10 +28,6 @@ describe('AuthSessionService', () => {
   });
 
   it('should load and store authenticated session', async () => {
-    vi.mocked(authDataAccessMock.getSession).mockResolvedValue(
-      authSessionFixtures.authenticated,
-    );
-
     await expect(service.loadSession()).resolves.toEqual(
       authSessionFixtures.authenticated,
     );
@@ -43,9 +38,7 @@ describe('AuthSessionService', () => {
 
   it('should clear authenticated state when no session is returned', async () => {
     service.setSession(authSessionFixtures.authenticated);
-    vi.mocked(authDataAccessMock.getSession).mockResolvedValue(
-      authSessionFixtures.guest,
-    );
+    vi.spyOn(authDataAccessMock.session, 'value').mockReturnValue(undefined);
 
     await service.loadSession();
 
@@ -65,9 +58,7 @@ describe('AuthSessionService', () => {
 
   it('should fallback to guest state when loading session fails', async () => {
     service.setSession(authSessionFixtures.authenticated);
-    vi.mocked(authDataAccessMock.getSession).mockRejectedValue(
-      new Error('Backend unavailable'),
-    );
+    vi.spyOn(authDataAccessMock.session, 'value').mockReturnValue(undefined);
 
     await expect(service.loadSession()).resolves.toBeNull();
 

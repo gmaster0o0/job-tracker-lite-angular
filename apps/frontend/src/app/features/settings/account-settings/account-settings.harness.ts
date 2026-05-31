@@ -28,9 +28,9 @@ export class AccountSettingsHarness extends ComponentHarness {
     return String(await input.getProperty('value'));
   }
 
-  async isCurrentEmailDisabled(): Promise<boolean> {
+  async isCurrentEmailReadonly(): Promise<boolean> {
     const input = await this.currentEmailInputLocator();
-    return Boolean(await input.getProperty('disabled'));
+    return Boolean(await input.getProperty('readOnly'));
   }
 
   async setNewEmail(email: string): Promise<void> {

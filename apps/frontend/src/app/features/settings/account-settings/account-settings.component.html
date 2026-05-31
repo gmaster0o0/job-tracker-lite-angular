@@ -1,4 +1,6 @@
-<div class="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8 md:py-10">
+<div
+  class="mx-auto flex h-full w-full max-w-4xl flex-col gap-6 overflow-y-auto px-4 py-8 md:py-10"
+>
   <div>
     <h1 class="text-3xl font-bold tracking-tight">{{ title() }}</h1>
     <p class="text-muted-foreground">{{ subtitle() }}</p>
@@ -28,9 +30,11 @@
               id="currentEmail"
               type="email"
               [value]="accountSettings().email"
-              class="w-full"
+              [placeholder]="isLoadingSettings() ? 'Loading...' : ''"
+              class="w-full cursor-not-allowed bg-muted/60 text-foreground pointer-events-none"
               readonly
-              disabled
+              tabindex="-1"
+              aria-readonly="true"
             />
           </hlm-field>
 
@@ -86,28 +90,27 @@
     </div>
 
     <hlm-card-footer class="justify-end">
-      <button
-        hlmBtn
-        type="submit"
-        form="changeEmailForm"
+      <app-save-button
+        [formId]="'changeEmailForm'"
         [disabled]="
           isLoadingSettings() ||
           changeEmailForm().invalid() ||
           isChangingEmail()
         "
-      >
-        @if (isChangingEmail()) {
-          {{ 'settings.accountSettings.changeEmail.submitting' | transloco }}
-        } @else {
-          {{ 'settings.accountSettings.changeEmail.submit' | transloco }}
-        }
-      </button>
+        [isSubmitting]="isChangingEmail()"
+        [idleLabel]="'settings.accountSettings.changeEmail.submit' | transloco"
+        [submittingLabel]="
+          'settings.accountSettings.changeEmail.submitting' | transloco
+        "
+      />
     </hlm-card-footer>
   </hlm-card>
 
   <hlm-card>
     <hlm-card-header>
       <h2 hlmCardTitle>
+        <ng-icon name="lucideKey"></ng-icon>
+
         {{ 'settings.accountSettings.changePassword.title' | transloco }}
       </h2>
       <p hlmCardDescription>
@@ -247,18 +250,17 @@
     </div>
 
     <hlm-card-footer class="justify-end">
-      <button
-        hlmBtn
-        type="submit"
-        form="changePasswordForm"
+      <app-save-button
+        [formId]="'changePasswordForm'"
         [disabled]="changePasswordForm().invalid() || isChangingPassword()"
-      >
-        @if (isChangingPassword()) {
-          {{ 'settings.accountSettings.changePassword.submitting' | transloco }}
-        } @else {
-          {{ 'settings.accountSettings.changePassword.submit' | transloco }}
-        }
-      </button>
+        [isSubmitting]="isChangingPassword()"
+        [idleLabel]="
+          'settings.accountSettings.changePassword.submit' | transloco
+        "
+        [submittingLabel]="
+          'settings.accountSettings.changePassword.submitting' | transloco
+        "
+      />
     </hlm-card-footer>
   </hlm-card>
 </div>

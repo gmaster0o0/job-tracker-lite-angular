@@ -45,7 +45,7 @@ describe('AccountSettingsComponent', () => {
     expect(await harness.getCurrentEmail()).toBe(
       accountSettingsFixtures.default.email,
     );
-    expect(await harness.isCurrentEmailDisabled()).toBe(true);
+    expect(await harness.isCurrentEmailReadonly()).toBe(true);
   });
 
   it('submits change email form', async () => {

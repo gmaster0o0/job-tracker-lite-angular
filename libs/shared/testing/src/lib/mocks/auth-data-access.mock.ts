@@ -21,7 +21,6 @@ export type AuthDataAccessMockOptions = {
   requestPasswordReset?: (dto: ForgotPasswordDto) => Promise<void>;
   resetPassword?: (dto: ResetPasswordDto) => Promise<void>;
   sendVerificationEmail?: (dto: SendVerificationEmailDto) => Promise<void>;
-  getAccountSettings?: () => Promise<AccountSettingsDto>;
   requestEmailChange?: (dto: ChangeEmailRequestDto) => Promise<void>;
   changePassword?: (dto: ChangePasswordDto) => Promise<void>;
 };
@@ -33,8 +32,22 @@ export function createAuthDataAccessMock(
   const accountSettings =
     options.accountSettings ?? accountSettingsFixtures.default;
 
+  const sessionState: AuthSessionDto | undefined = session ?? undefined;
+  const accountSettingsState: AccountSettingsDto | undefined = accountSettings;
+
   return {
-    getSession: async () => session,
+    session: {
+      value: () => sessionState,
+      error: () => undefined,
+      hasValue: () => sessionState !== undefined,
+      reload: () => true,
+    },
+    accountSettings: {
+      value: () => accountSettingsState,
+      error: () => undefined,
+      hasValue: () => accountSettingsState !== undefined,
+      reload: () => true,
+    },
     signIn: options.signIn ?? (async () => session),
     signUp: options.signUp ?? (async () => session),
     signOut: options.signOut ?? (async () => undefined),
@@ -43,8 +56,6 @@ export function createAuthDataAccessMock(
     resetPassword: options.resetPassword ?? (async () => undefined),
     sendVerificationEmail:
       options.sendVerificationEmail ?? (async () => undefined),
-    getAccountSettings:
-      options.getAccountSettings ?? (async () => accountSettings),
     requestEmailChange: options.requestEmailChange ?? (async () => undefined),
     changePassword: options.changePassword ?? (async () => undefined),
   };

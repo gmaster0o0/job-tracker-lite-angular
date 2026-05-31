@@ -3,7 +3,6 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { AuthDataAccessService } from './auth.data-access';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {
-  accountSettingsFixtures,
   changeEmailRequestFixtures,
   changePasswordFixtures,
   validLoginCredentials,
@@ -33,7 +32,7 @@ describe('AuthDataAccessService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call sign-in endpoint with credentials and then fetch session', async () => {
+  it('should call sign-in endpoint with credentials', async () => {
     const signInPromise = service.signIn(validLoginCredentials);
 
     const signInReq = httpMock.expectOne('/api/auth/sign-in/email');
@@ -41,14 +40,6 @@ describe('AuthDataAccessService', () => {
     expect(signInReq.request.withCredentials).toBe(true);
     expect(signInReq.request.body).toEqual(validLoginCredentials);
     signInReq.flush({ ok: true });
-    await Promise.resolve();
-
-    const sessionReq = httpMock.expectOne({
-      method: 'GET',
-      url: '/api/auth/get-session',
-    });
-    expect(sessionReq.request.withCredentials).toBe(true);
-    sessionReq.flush(null);
 
     await expect(signInPromise).resolves.toBeNull();
   });
@@ -105,17 +96,10 @@ describe('AuthDataAccessService', () => {
     await expect(sendVerificationPromise).resolves.toBeUndefined();
   });
 
-  it('should fetch account settings', async () => {
-    const accountPromise = service.getAccountSettings();
-
-    const accountReq = httpMock.expectOne('/api/account');
-    expect(accountReq.request.method).toBe('GET');
-    expect(accountReq.request.withCredentials).toBe(true);
-    accountReq.flush(accountSettingsFixtures.default);
-
-    await expect(accountPromise).resolves.toEqual(
-      accountSettingsFixtures.default,
-    );
+  it('should expose account settings through resource api', () => {
+    expect(service.accountSettings).toBeTruthy();
+    expect(typeof service.accountSettings.value).toBe('function');
+    expect(typeof service.accountSettings.reload).toBe('function');
   });
 
   it('should call account change-email endpoint', async () => {

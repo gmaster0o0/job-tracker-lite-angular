@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
   AccountSettingsDto,
@@ -10,7 +10,6 @@ import {
   RegisterDto,
   ResetPasswordDto,
   SendVerificationEmailDto,
-  authSessionResponseSchema,
 } from '@job-tracker-lite-angular/schemas';
 import { firstValueFrom } from 'rxjs';
 
@@ -20,16 +19,15 @@ import { firstValueFrom } from 'rxjs';
 export class AuthDataAccessService {
   private readonly http = inject(HttpClient);
 
-  async getSession(): Promise<AuthSessionDto> {
-    const session = await firstValueFrom(
-      this.http.get<AuthSessionDto>('/api/auth/get-session', {
-        withCredentials: true,
-      }),
-    );
+  readonly session = httpResource<AuthSessionDto>(() => ({
+    url: '/api/auth/get-session',
+    withCredentials: true,
+  }));
 
-    const parsed = authSessionResponseSchema.safeParse(session);
-    return parsed.success ? parsed.data : null;
-  }
+  readonly accountSettings = httpResource<AccountSettingsDto>(() => ({
+    url: '/api/account',
+    withCredentials: true,
+  }));
 
   async signIn(dto: LoginDto): Promise<AuthSessionDto> {
     await firstValueFrom(
@@ -45,7 +43,9 @@ export class AuthDataAccessService {
       ),
     );
 
-    return this.getSession();
+    this.session.reload();
+    await Promise.resolve();
+    return this.session.value() ?? null;
   }
 
   async signUp(dto: RegisterDto): Promise<AuthSessionDto> {
@@ -63,7 +63,9 @@ export class AuthDataAccessService {
       ),
     );
 
-    return this.getSession();
+    this.session.reload();
+    await Promise.resolve();
+    return this.session.value() ?? null;
   }
 
   async signOut(): Promise<void> {
@@ -122,14 +124,6 @@ export class AuthDataAccessService {
           withCredentials: true,
         },
       ),
-    );
-  }
-
-  async getAccountSettings(): Promise<AccountSettingsDto> {
-    return await firstValueFrom(
-      this.http.get<AccountSettingsDto>('/api/account', {
-        withCredentials: true,
-      }),
     );
   }
 
