@@ -6,6 +6,7 @@ import {
   LoginDto,
   RegisterDto,
   ResetPasswordDto,
+  SendVerificationEmailDto,
   authSessionResponseSchema,
 } from '@job-tracker-lite-angular/schemas';
 import { firstValueFrom } from 'rxjs';
@@ -99,6 +100,24 @@ export class AuthDataAccessService {
         {
           newPassword: dto.newPassword,
           token: dto.token,
+        },
+        {
+          withCredentials: true,
+        },
+      ),
+    );
+  }
+
+  async sendVerificationEmail(dto: SendVerificationEmailDto): Promise<void> {
+    const callbackTo = new URL('/auth/verify-email', window.location.origin);
+    callbackTo.searchParams.set('language', dto.language);
+
+    await firstValueFrom(
+      this.http.post(
+        '/api/auth/send-verification-email',
+        {
+          email: dto.email,
+          callbackURL: callbackTo.toString(),
         },
         {
           withCredentials: true,

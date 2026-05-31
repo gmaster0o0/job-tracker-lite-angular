@@ -36,9 +36,20 @@ export class AuthConfigFactory {
       emailAndPassword: {
         enabled: true,
         autoSignIn: true,
+        requireEmailVerification: true,
         sendResetPassword: async ({ user, url }) => {
           const language = getLanguageFromResetUrl(url);
           await this.emailService.sendResetPasswordEmail(
+            user.email,
+            url,
+            language,
+          );
+        },
+      },
+      emailVerification: {
+        sendVerificationEmail: async ({ user, url }) => {
+          const language = getLanguageFromResetUrl(url);
+          await this.emailService.sendVerificationEmail(
             user.email,
             url,
             language,

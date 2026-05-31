@@ -6,6 +6,7 @@ import {
   validLoginCredentials,
   validForgotPasswordCredentials,
   validResetPasswordCredentials,
+  validVerificationEmailCredentials,
 } from '@job-tracker-lite-angular/testing';
 
 describe('AuthDataAccessService', () => {
@@ -81,5 +82,24 @@ describe('AuthDataAccessService', () => {
     resetReq.flush({ status: true });
 
     await expect(resetPasswordPromise).resolves.toBeUndefined();
+  });
+
+  it('should call send-verification-email endpoint with redirect URL', async () => {
+    const sendVerificationPromise = service.sendVerificationEmail(
+      validVerificationEmailCredentials,
+    );
+
+    const verificationReq = httpMock.expectOne(
+      '/api/auth/send-verification-email',
+    );
+    expect(verificationReq.request.method).toBe('POST');
+    expect(verificationReq.request.withCredentials).toBe(true);
+    expect(verificationReq.request.body).toEqual({
+      email: validVerificationEmailCredentials.email,
+      callbackURL: `${window.location.origin}/auth/verify-email?language=${validVerificationEmailCredentials.language}`,
+    });
+    verificationReq.flush({ status: true });
+
+    await expect(sendVerificationPromise).resolves.toBeUndefined();
   });
 });

@@ -75,6 +75,15 @@ export const forgotPasswordSchema = z.object({
 
 export type ForgotPasswordDto = z.infer<typeof forgotPasswordSchema>;
 
+export const sendVerificationEmailSchema = z.object({
+  email: required.pipe(z.email()),
+  language: supportLangSchema,
+});
+
+export type SendVerificationEmailDto = z.infer<
+  typeof sendVerificationEmailSchema
+>;
+
 export const resetPasswordSchema = z
   .object({
     token: z.string(),
@@ -91,7 +100,7 @@ export const resetPasswordSchema = z
       });
     }
   });
-  
+
 export type ResetPasswordDto = z.infer<typeof resetPasswordSchema>;
 
 export const authUserSchema = z.object({

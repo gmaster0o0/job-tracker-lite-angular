@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
 import {
   FormField,
   FormRoot,
@@ -8,22 +7,30 @@ import {
   validateStandardSchema,
 } from '@angular/forms/signals';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import {
+  TranslocoModule,
+  translateSignal,
+  TranslocoService,
+} from '@jsverse/transloco';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
-import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import {
   AuthDataAccessService,
   ZodNgControlBridgeDirective,
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
-import { ServerErrorAlertComponent } from '@job-tracker-lite-angular/frontend-shared';
-import { registerSchema } from '@job-tracker-lite-angular/schemas';
+import { ServerErrorAlertComponent } from '../../../shared/server-error-alert/server-error-alert.component';
+import {
+  sendVerificationEmailSchema,
+  type SendVerificationEmailDto,
+} from '@job-tracker-lite-angular/schemas';
 
 @Component({
   standalone: true,
-  selector: 'app-register',
+  selector: 'app-verify-email-notice',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -38,41 +45,43 @@ import { registerSchema } from '@job-tracker-lite-angular/schemas';
     ZodNgControlBridgeDirective,
     ServerErrorAlertComponent,
   ],
-  templateUrl: './register.component.html',
+  templateUrl: './verify-email-notice.component.html',
 })
-export class RegisterComponent {
+export class VerifyEmailNoticeComponent {
   private readonly authDataAccess = inject(AuthDataAccessService);
-  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly translocoService = inject(TranslocoService);
 
-  protected readonly title = translateSignal('auth.register.title');
-  protected readonly subtitle = translateSignal('auth.register.subtitle');
+  protected readonly title = translateSignal('auth.verifyEmailNotice.title');
+  protected readonly subtitle = translateSignal(
+    'auth.verifyEmailNotice.subtitle',
+  );
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
+  protected readonly isSuccess = signal(false);
 
-  protected readonly registerModel = signal({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+  protected readonly verifyEmailNoticeModel = signal<SendVerificationEmailDto>({
+    email: this.route.snapshot.queryParamMap.get('email') ?? '',
+    language:
+      this.translocoService.getActiveLang() === 'hu'
+        ? ('hu' as const)
+        : ('en' as const),
   });
 
-  protected readonly registerForm = form(
-    this.registerModel,
-    (path) => validateStandardSchema(path, registerSchema),
+  protected readonly verifyEmailNoticeForm = form(
+    this.verifyEmailNoticeModel,
+    (path) => validateStandardSchema(path, sendVerificationEmailSchema),
     {
       submission: {
         action: async (data) => {
           this.isSubmitting.set(true);
           this.submitError.set(null);
+          this.isSuccess.set(false);
 
           try {
-            await this.authDataAccess.signUp(data().value());
-            await this.router.navigateByUrl(
-              `/auth/verify-email-notice?email=${encodeURIComponent(
-                data().value().email,
-              )}`,
-            );
+            await this.authDataAccess.sendVerificationEmail(data().value());
+            this.isSuccess.set(true);
           } catch (error) {
             this.submitError.set(
               isBackendError(error) ? error.errorCode : 'unknown',
