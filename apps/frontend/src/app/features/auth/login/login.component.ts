@@ -68,6 +68,15 @@ export class LoginComponent {
             await this.authDataAccess.signIn(data().value());
             await this.router.navigateByUrl('/jobs');
           } catch (error) {
+            if (this.shouldRedirectToVerifyEmail(error)) {
+              await this.router.navigateByUrl(
+                `/auth/verify-email-notice?email=${encodeURIComponent(
+                  data().value().email,
+                )}`,
+              );
+              return;
+            }
+
             this.submitError.set(
               isBackendError(error) ? error.errorCode : 'unknown',
             );
@@ -78,4 +87,12 @@ export class LoginComponent {
       },
     },
   );
+
+  private shouldRedirectToVerifyEmail(error: unknown): boolean {
+    if (!isBackendError(error)) {
+      return false;
+    }
+
+    return error.errorCode.toUpperCase() === 'EMAIL_NOT_VERIFIED';
+  }
 }
