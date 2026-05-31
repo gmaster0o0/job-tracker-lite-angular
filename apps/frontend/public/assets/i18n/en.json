@@ -286,10 +286,11 @@
       "unknown": "Authentication failed. Please try again."
     },
     "login": {
-      "title": "Welcome Back",
+      "title": "Login",
       "subtitle": "Sign in to continue managing your jobs.",
       "submit": "Sign in",
       "submitting": "Signing in...",
+      "forgotPasswordLink": "Forgot password?",
       "noAccount": "No account yet?",
       "registerLink": "Create one",
       "error": {
@@ -313,6 +314,32 @@
         "user_already_exists": "An account with this email already exists.",
         "user_already_exists_use_another_email": "An account with this email already exists. Use another email.",
         "invalid_password": "Password does not meet security requirements."
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "subtitle": "Enter your email and we will send you a reset link.",
+      "submit": "Send reset link",
+      "submitting": "Sending reset link...",
+      "backToLogin": "Back to sign in",
+      "success": "If an account exists for this email, a reset link has been sent.",
+      "error": {
+        "title": "Reset Link Request Failed",
+        "unknown": "Unable to send reset link right now. Please try again."
+      }
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Set your new password to continue.",
+      "submit": "Reset password",
+      "submitting": "Resetting password...",
+      "backToLogin": "Back to sign in",
+      "missingToken": "Reset token is missing or invalid.",
+      "success": "Password reset successful. Redirecting to sign in...",
+      "error": {
+        "title": "Password Reset Failed",
+        "unknown": "Unable to reset password right now. Please try again.",
+        "invalid_token": "Reset link is invalid or expired. Please request a new one."
       }
     }
   },

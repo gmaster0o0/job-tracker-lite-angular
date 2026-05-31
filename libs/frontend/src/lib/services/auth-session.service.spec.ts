@@ -62,4 +62,17 @@ describe('AuthSessionService', () => {
     expect(service.session()).toBeNull();
     expect(service.isAuthenticated()).toBe(false);
   });
+
+  it('should fallback to guest state when loading session fails', async () => {
+    service.setSession(authSessionFixtures.authenticated);
+    vi.mocked(authDataAccessMock.getSession).mockRejectedValue(
+      new Error('Backend unavailable'),
+    );
+
+    await expect(service.loadSession()).resolves.toBeNull();
+
+    expect(service.session()).toBeNull();
+    expect(service.isAuthenticated()).toBe(false);
+    expect(service.userId()).toBeNull();
+  });
 });

@@ -2,8 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
   AuthSessionDto,
+  ForgotPasswordDto,
   LoginDto,
   RegisterDto,
+  ResetPasswordDto,
   authSessionResponseSchema,
 } from '@job-tracker-lite-angular/schemas';
 import { firstValueFrom } from 'rxjs';
@@ -65,6 +67,39 @@ export class AuthDataAccessService {
       this.http.post(
         '/api/auth/sign-out',
         {},
+        {
+          withCredentials: true,
+        },
+      ),
+    );
+  }
+
+  async requestPasswordReset(dto: ForgotPasswordDto): Promise<void> {
+    const redirectTo = new URL('/auth/reset-password', window.location.origin);
+    redirectTo.searchParams.set('language', dto.language);
+
+    await firstValueFrom(
+      this.http.post(
+        '/api/auth/request-password-reset',
+        {
+          email: dto.email,
+          redirectTo: redirectTo.toString(),
+        },
+        {
+          withCredentials: true,
+        },
+      ),
+    );
+  }
+
+  async resetPassword(dto: ResetPasswordDto): Promise<void> {
+    await firstValueFrom(
+      this.http.post(
+        '/api/auth/reset-password',
+        {
+          newPassword: dto.newPassword,
+          token: dto.token,
+        },
         {
           withCredentials: true,
         },

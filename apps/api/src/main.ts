@@ -1,16 +1,15 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import * as dotenv from 'dotenv';
-import * as path from 'path';
 import { AppModule } from './app/app.module';
 import { PrismaClientExceptionFilter } from '@job-tracker-lite-angular/prisma';
 
-const envPath = path.join(process.cwd(), '.env');
-dotenv.config({ path: envPath });
-
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bodyParser: false });
-  const allowedOrigins = (process.env['CORS_ORIGIN'] ?? 'http://localhost:4200')
+  const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  const allowedOrigins = (
+    configService.get<string>('CORS_ORIGIN') ?? 'http://localhost:4200'
+  )
     .split(',')
     .map((origin) => origin.trim())
     .filter((origin) => origin.length > 0);
@@ -29,7 +28,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  const port = process.env.PORT || 3000;
+  const port = Number(configService.get<string>('PORT') ?? '3000');
   await app.listen(port);
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,

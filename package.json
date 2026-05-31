@@ -3,6 +3,7 @@
   "version": "0.3.2",
   "license": "MIT",
   "scripts": {
+    "app": "npx nx run-many --target=serve --projects=api,frontend --parallel=2",
     "prepare": "husky install",
     "prepare:dev": "npm run prisma:generate",
     "prisma:generate": "npx prisma generate --schema=libs/shared/prisma/db-schema/schema.prisma",
@@ -113,8 +114,10 @@
     "@better-auth/prisma-adapter": "^1.6.11",
     "@jsverse/transloco": "^8.3.0",
     "@jsverse/transloco-schematics": "^8.3.0",
+    "@nestjs-modules/mailer": "^2.3.6",
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
     "@ng-icons/core": ">=32.0.0 <34.0.0",

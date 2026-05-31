@@ -159,6 +159,15 @@
       </button>
 
       <p class="text-center text-sm text-muted-foreground">
+        <a
+          routerLink="/auth/forgot-password"
+          class="underline underline-offset-4"
+        >
+          {{ 'auth.login.forgotPasswordLink' | transloco }}
+        </a>
+      </p>
+
+      <p class="text-center text-sm text-muted-foreground">
         {{ 'auth.register.hasAccount' | transloco }}
         <a routerLink="/auth/login" class="underline underline-offset-4">
           {{ 'auth.register.loginLink' | transloco }}

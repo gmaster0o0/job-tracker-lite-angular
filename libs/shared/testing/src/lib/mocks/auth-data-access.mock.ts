@@ -1,7 +1,9 @@
 import {
+  ForgotPasswordDto,
   AuthSessionDto,
   LoginDto,
   RegisterDto,
+  ResetPasswordDto,
 } from '@job-tracker-lite-angular/schemas';
 import { authSessionFixtures } from '../fixtures/auth.fixtures';
 
@@ -10,6 +12,8 @@ export type AuthDataAccessMockOptions = {
   signIn?: (dto: LoginDto) => Promise<AuthSessionDto>;
   signUp?: (dto: RegisterDto) => Promise<AuthSessionDto>;
   signOut?: () => Promise<void>;
+  requestPasswordReset?: (dto: ForgotPasswordDto) => Promise<void>;
+  resetPassword?: (dto: ResetPasswordDto) => Promise<void>;
 };
 
 export function createAuthDataAccessMock(
@@ -22,5 +26,8 @@ export function createAuthDataAccessMock(
     signIn: options.signIn ?? (async () => session),
     signUp: options.signUp ?? (async () => session),
     signOut: options.signOut ?? (async () => undefined),
+    requestPasswordReset:
+      options.requestPasswordReset ?? (async () => undefined),
+    resetPassword: options.resetPassword ?? (async () => undefined),
   };
 }
