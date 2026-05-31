@@ -84,7 +84,7 @@ describe('AuthDataAccessService', () => {
     await expect(resetPasswordPromise).resolves.toBeUndefined();
   });
 
-  it('should call send-verification-email endpoint with redirect URL', async () => {
+  it('should call send-verification-email endpoint with email payload', async () => {
     const sendVerificationPromise = service.sendVerificationEmail(
       validVerificationEmailCredentials,
     );
@@ -96,7 +96,6 @@ describe('AuthDataAccessService', () => {
     expect(verificationReq.request.withCredentials).toBe(true);
     expect(verificationReq.request.body).toEqual({
       email: validVerificationEmailCredentials.email,
-      callbackURL: `${window.location.origin}/auth/verify-email?language=${validVerificationEmailCredentials.language}`,
     });
     verificationReq.flush({ status: true });
 

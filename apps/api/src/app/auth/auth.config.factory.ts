@@ -65,10 +65,19 @@ export class AuthConfigFactory {
   private getEmailVerificationConfig(): EmailVerificationConfig {
     return {
       sendVerificationEmail: async ({ user, url }) => {
+        const frontendOrigin =
+          this.configService.get<string>('FRONTEND_URL') ??
+          'http://localhost:4200';
+        const verifyUrl = new URL(url);
+
+        verifyUrl.searchParams.set(
+          'callbackURL',
+          `${frontendOrigin}/auth/verify-email`,
+        );
         const language = getLanguageFromResetUrl(url);
         await this.emailService.sendVerificationEmail(
           user.email,
-          url,
+          verifyUrl.toString(),
           language,
         );
       },

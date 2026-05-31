@@ -38,7 +38,7 @@ describe('LoginComponent', () => {
       LoginHarness,
     );
     router = TestBed.inject(Router);
-    vi.spyOn(router, 'navigateByUrl');
+    vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
   });
 
   it('should enable submit button when form is valid', async () => {
