@@ -1,5 +1,15 @@
 # Job Tracker Lite - Changelog
 
+### [0.3.3](https://github.com/gmaster0o0/job-tracker-lite-angular/compare/v0.3.1...v0.3.3) (2026-05-31)
+
+
+### 🚀New Features
+
+* **auth:** auth with  reset and verification ([3973c20](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/3973c20d63e1c1b5da0c5a24aac84030bd64a479)), closes [#51](https://github.com/gmaster0o0/job-tracker-lite-angular/issues/51)
+* **schemas:** add Zod validation with schemas ([6636d6c](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/6636d6c5dfdba47266dfdc846dc92f484223a894))
+* **settings:** language selection ([#46](https://github.com/gmaster0o0/job-tracker-lite-angular/issues/46)) ([483f543](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/483f543fd527d2e7060bbf6bbc2c17795459b96d)), closes [#24](https://github.com/gmaster0o0/job-tracker-lite-angular/issues/24)
+* **shared:** add server error alert component ([5395755](https://github.com/gmaster0o0/job-tracker-lite-angular/commit/5395755baf750402b0644870872a06f69327ab10))
+
 ### [0.3.2](https://github.com/gmaster0o0/job-tracker-lite-angular/compare/v0.3.1...v0.3.2) (2026-05-13)
 
 
