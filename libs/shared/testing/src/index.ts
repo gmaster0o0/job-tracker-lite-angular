@@ -9,6 +9,7 @@ export * from './lib/fixtures/notes.fixtures';
 export * from './lib/fixtures/basic-login.fixture';
 export * from './lib/fixtures/auth.fixtures';
 export * from './lib/fixtures/email.fixtures';
+export * from './lib/fixtures/home.fixtures';
 export * from './lib/mocks/jobs-data-access.mock';
 export * from './lib/mocks/contacts-data-access.mock';
 export * from './lib/mocks/notes-data-access.mock';

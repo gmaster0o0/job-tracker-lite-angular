@@ -1,0 +1,76 @@
+<section class="space-y-8" data-testid="hero-section">
+  <div class="space-y-4 text-center">
+    <h1 class="text-balance text-4xl font-bold tracking-tight text-foreground">
+      {{ 'home.landing.hero.title' | transloco }}
+    </h1>
+    <p
+      class="mx-auto max-w-2xl text-lg text-muted-foreground"
+      data-testid="hero-subtitle"
+    >
+      {{ 'home.landing.hero.subtitle' | transloco }}
+    </p>
+
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a
+        hlmBtn
+        class="min-w-36"
+        data-testid="hero-register-link"
+        variant="outline"
+        routerLink="/auth/register"
+      >
+        <ng-icon name="lucideUserPlus"></ng-icon>
+        {{ 'home.landing.hero.registerCta' | transloco }}
+      </a>
+
+      <a
+        hlmBtn
+        class="min-w-36"
+        data-testid="hero-login-link"
+        variant="outline"
+        routerLink="/auth/login"
+      >
+        <ng-icon name="lucideLogIn"></ng-icon>
+        {{ 'home.landing.hero.loginCta' | transloco }}
+      </a>
+    </div>
+  </div>
+
+  <div
+    class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4"
+    data-testid="hero-feature-grid"
+  >
+    @for (feature of featureCards; track feature.title()) {
+      <article hlmCard class="relative h-full">
+        <div hlmCardHeader class="space-y-3">
+          <div
+            [class]="
+              'flex h-10 w-10 items-center justify-center rounded-lg ' +
+              feature.iconBgClass
+            "
+          >
+            <ng-icon
+              [class]="'size-5 ' + feature.iconClass"
+              [name]="feature.iconName"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <h2 hlmCardTitle>{{ feature.title() }}</h2>
+              @if (feature.comingSoon) {
+                <span
+                  hlmBadge
+                  variant="secondary"
+                  data-testid="hero-feature-coming-soon"
+                >
+                  {{ 'home.landing.features.comingSoon' | transloco }}
+                </span>
+              }
+            </div>
+            <p hlmCardDescription>{{ feature.description() }}</p>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+</section>

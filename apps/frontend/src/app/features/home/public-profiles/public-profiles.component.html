@@ -1,0 +1,51 @@
+<section class="space-y-8" data-testid="public-profiles-section">
+  <div class="space-y-1">
+    <h2 class="text-2xl font-semibold tracking-tight text-foreground">
+      {{ title() }}
+    </h2>
+    <p class="text-muted-foreground">{{ subtitle() }}</p>
+  </div>
+
+  <div class="space-y-3" data-testid="public-profiles-list">
+    @for (profile of profiles; track profile.name) {
+      <article
+        hlmCard
+        class="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p
+          class="font-medium text-foreground"
+          data-testid="public-profile-name"
+        >
+          {{ profile.name }}
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4 text-sm">
+          <a
+            hlmBtn
+            variant="outline"
+            class="rounded-full"
+            data-testid="public-profile-linkedin"
+            [href]="profile.linkedInUrl"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            <ng-icon name="lucideLinkedin" />
+            LinkedIn
+          </a>
+          <a
+            hlmBtn
+            variant="outline"
+            class="rounded-full"
+            data-testid="public-profile-github"
+            [href]="profile.githubUrl"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            <ng-icon name="lucideGithub" />
+            GitHub
+          </a>
+        </div>
+      </article>
+    }
+  </div>
+</section>
