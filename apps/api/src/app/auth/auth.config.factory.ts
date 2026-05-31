@@ -1,10 +1,18 @@
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import { betterAuth } from 'better-auth';
+import type { BetterAuthOptions } from 'better-auth';
 import { prismaAdapter } from '@better-auth/prisma-adapter';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from '../email/email.service';
 import { getLanguageFromResetUrl } from '../email/email.utils';
 import { Injectable } from '@nestjs/common';
+
+type EmailAndPasswordConfig = NonNullable<
+  BetterAuthOptions['emailAndPassword']
+>;
+type EmailVerificationConfig = NonNullable<
+  BetterAuthOptions['emailVerification']
+>;
 
 @Injectable()
 export class AuthConfigFactory {
@@ -33,30 +41,38 @@ export class AuthConfigFactory {
         this.configService.get<string>('BETTER_AUTH_URL') ??
         this.defaultBaseUrl,
       trustedOrigins: this.getTrustedOrigins(this.configService),
-      emailAndPassword: {
-        enabled: true,
-        autoSignIn: true,
-        requireEmailVerification: true,
-        sendResetPassword: async ({ user, url }) => {
-          const language = getLanguageFromResetUrl(url);
-          await this.emailService.sendResetPasswordEmail(
-            user.email,
-            url,
-            language,
-          );
-        },
-      },
-      emailVerification: {
-        sendVerificationEmail: async ({ user, url }) => {
-          const language = getLanguageFromResetUrl(url);
-          await this.emailService.sendVerificationEmail(
-            user.email,
-            url,
-            language,
-          );
-        },
-      },
+      emailAndPassword: this.getEmailAndPasswordConfig(),
+      emailVerification: this.getEmailVerificationConfig(),
     });
+  }
+
+  private getEmailAndPasswordConfig(): EmailAndPasswordConfig {
+    return {
+      enabled: true,
+      autoSignIn: true,
+      requireEmailVerification: true,
+      sendResetPassword: async ({ user, url }) => {
+        const language = getLanguageFromResetUrl(url);
+        await this.emailService.sendResetPasswordEmail(
+          user.email,
+          url,
+          language,
+        );
+      },
+    };
+  }
+
+  private getEmailVerificationConfig(): EmailVerificationConfig {
+    return {
+      sendVerificationEmail: async ({ user, url }) => {
+        const language = getLanguageFromResetUrl(url);
+        await this.emailService.sendVerificationEmail(
+          user.email,
+          url,
+          language,
+        );
+      },
+    };
   }
 
   private getTrustedOrigins(configService: ConfigService): string[] {
