@@ -38,7 +38,7 @@ describe('LoginComponent', () => {
       LoginHarness,
     );
     router = TestBed.inject(Router);
-    vi.spyOn(router, 'navigateByUrl');
+    vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
   });
 
   it('should enable submit button when form is valid', async () => {
@@ -75,5 +75,24 @@ describe('LoginComponent', () => {
     expect(await alert?.getDescription()).toContain(
       'Invalid email or password',
     );
+  });
+
+  it('should redirect to verify email notice when account is not verified', async () => {
+    vi.mocked(authDataAccessMock.signIn).mockRejectedValue(
+      createBackendError('EMAIL_NOT_VERIFIED', 401),
+    );
+
+    await harness.setEmail(validLoginCredentials.email);
+    await harness.setPassword(validLoginCredentials.password);
+    await harness.submit();
+
+    expect(router.navigateByUrl).toHaveBeenCalledWith(
+      `/auth/verify-email-notice?email=${encodeURIComponent(
+        validLoginCredentials.email,
+      )}`,
+    );
+
+    const alert = await harness.getErrorAlert();
+    expect(await alert?.isVisible()).toBe(false);
   });
 });

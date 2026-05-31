@@ -322,6 +322,33 @@
         "unknown": "Most nem sikerült visszaállító linket küldeni. Próbáld újra."
       }
     },
+    "verifyEmailNotice": {
+      "title": "Email cím megerősítése",
+      "subtitle": "Elküldtük a megerősítő linket a postafiókodba. Itt újra el tudod küldeni, ha kell.",
+      "submit": "Megerősítő email újraküldése",
+      "submitting": "Megerősítő email küldése...",
+      "backToLogin": "Vissza a bejelentkezéshez",
+      "success": "Megerősítő email elküldve. Ellenőrizd a postafiókodat.",
+      "error": {
+        "title": "A megerősítő email küldése sikertelen",
+        "unknown": "Most nem sikerült megerősítő emailt küldeni. Próbáld újra."
+      }
+    },
+    "verifyEmail": {
+      "title": "Email cím megerősítése",
+      "subtitle": "A megerősítő link feldolgozása megtörtént.",
+      "success": "Az email címed megerősítve. Most már bejelentkezhetsz.",
+      "backToLogin": "Vissza a bejelentkezéshez",
+      "resendLink": "Megerősítő email újraküldése",
+      "error": {
+        "title": "Az email megerősítése sikertelen",
+        "invalid_token": "A megerősítő link érvénytelen vagy lejárt. Kérj újat.",
+        "token_expired": "A megerősítő link érvénytelen vagy lejárt. Kérj újat.",
+        "user_not_found": "Nem találtunk fiókot ehhez a megerősítő linkhez.",
+        "email_already_verified": "Ez az email cím már meg van erősítve.",
+        "email_mismatch": "Ez a megerősítő link nem egyezik a jelenlegi email címmel."
+      }
+    },
     "resetPassword": {
       "title": "Jelszó visszaállítása",
       "subtitle": "Állítsd be az új jelszavadat a folytatáshoz.",

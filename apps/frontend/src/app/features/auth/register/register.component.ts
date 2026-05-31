@@ -68,7 +68,11 @@ export class RegisterComponent {
 
           try {
             await this.authDataAccess.signUp(data().value());
-            await this.router.navigateByUrl('/jobs');
+            await this.router.navigateByUrl(
+              `/auth/verify-email-notice?email=${encodeURIComponent(
+                data().value().email,
+              )}`,
+            );
           } catch (error) {
             this.submitError.set(
               isBackendError(error) ? error.errorCode : 'unknown',

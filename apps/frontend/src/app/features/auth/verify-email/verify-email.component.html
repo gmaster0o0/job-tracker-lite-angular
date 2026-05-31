@@ -1,0 +1,36 @@
+<div class="mx-auto w-full max-w-md px-4 py-8 md:py-12">
+  <hlm-card>
+    <hlm-card-header>
+      <h1 hlmCardTitle>{{ title() }}</h1>
+      <p hlmCardDescription>{{ subtitle() }}</p>
+    </hlm-card-header>
+
+    <div hlmCardContent class="space-y-4">
+      @if (errorCode()) {
+        <app-server-error-alert
+          [errorMessage]="errorCode()"
+          translationPrefix="auth.verifyEmail"
+          cssClass="w-full"
+        />
+      } @else {
+        <p class="text-sm text-muted-foreground">
+          {{ 'auth.verifyEmail.success' | transloco }}
+        </p>
+      }
+    </div>
+
+    <hlm-card-footer class="flex flex-col items-stretch gap-3">
+      <a hlmBtn routerLink="/auth/login" class="w-full text-center">
+        {{ 'auth.verifyEmail.backToLogin' | transloco }}
+      </a>
+      <a
+        hlmBtn
+        variant="outline"
+        routerLink="/auth/verify-email-notice"
+        class="w-full text-center"
+      >
+        {{ 'auth.verifyEmail.resendLink' | transloco }}
+      </a>
+    </hlm-card-footer>
+  </hlm-card>
+</div>

@@ -7,6 +7,8 @@ import { EmailService } from './email.service';
 import {
   testRecipient,
   testResetUrl,
+  testVerificationRecipient,
+  testVerificationUrl,
   testSendOptions,
 } from '@job-tracker-lite-angular/testing';
 
@@ -47,6 +49,24 @@ describe('EmailService', () => {
     expect(emailProvider.send).toHaveBeenCalledWith(
       expect.objectContaining({
         to: testRecipient,
+        subject,
+      }),
+    );
+  });
+
+  it.each<[SupportLang, string]>([
+    ['en', 'Verify your email - Job Tracker Lite'],
+    ['hu', 'Email cím megerősítése - Job Tracker Lite'],
+  ])('should send the verification email in %s', async (lang, subject) => {
+    await service.sendVerificationEmail(
+      testVerificationRecipient,
+      testVerificationUrl,
+      lang,
+    );
+
+    expect(emailProvider.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: testVerificationRecipient,
         subject,
       }),
     );

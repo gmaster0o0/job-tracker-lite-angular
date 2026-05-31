@@ -328,6 +328,33 @@
         "unknown": "Unable to send reset link right now. Please try again."
       }
     },
+    "verifyEmailNotice": {
+      "title": "Verify your email",
+      "subtitle": "We sent a verification link to your inbox. You can resend it here if needed.",
+      "submit": "Resend verification email",
+      "submitting": "Resending verification email...",
+      "backToLogin": "Back to sign in",
+      "success": "Verification email sent. Check your inbox.",
+      "error": {
+        "title": "Verification Email Request Failed",
+        "unknown": "Unable to send verification email right now. Please try again."
+      }
+    },
+    "verifyEmail": {
+      "title": "Verify your email",
+      "subtitle": "Your verification link has been processed.",
+      "success": "Your email has been verified. You can now sign in.",
+      "backToLogin": "Back to sign in",
+      "resendLink": "Resend verification email",
+      "error": {
+        "title": "Email Verification Failed",
+        "invalid_token": "The verification link is invalid or expired. Please request a new one.",
+        "token_expired": "The verification link is invalid or expired. Please request a new one.",
+        "user_not_found": "We could not find an account for this verification link.",
+        "email_already_verified": "This email address has already been verified.",
+        "email_mismatch": "This verification link does not match the current email address."
+      }
+    },
     "resetPassword": {
       "title": "Reset Password",
       "subtitle": "Set your new password to continue.",

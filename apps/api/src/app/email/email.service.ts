@@ -7,6 +7,7 @@ import {
   type SendEmailOptions,
 } from './email-provider.interface';
 import { getResetPasswordEmailTemplate } from './reset-password-email-template';
+import { getVerificationEmailTemplate } from './verification-email-template';
 
 @Injectable()
 export class EmailService {
@@ -29,6 +30,21 @@ export class EmailService {
     lang: SupportLang = 'en',
   ): Promise<void> {
     const template = getResetPasswordEmailTemplate(resetUrl, lang);
+
+    await this.send({
+      to,
+      subject: template.subject,
+      text: template.text,
+      html: template.html,
+    });
+  }
+
+  async sendVerificationEmail(
+    to: string,
+    verificationUrl: string,
+    lang: SupportLang = 'en',
+  ): Promise<void> {
+    const template = getVerificationEmailTemplate(verificationUrl, lang);
 
     await this.send({
       to,

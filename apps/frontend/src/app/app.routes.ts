@@ -159,6 +159,22 @@ export const appRoutes: Route[] = [
               ),
           },
           {
+            path: 'verify-email-notice',
+            canActivate: [guestGuard],
+            loadComponent: () =>
+              import(
+                './features/auth/verify-email-notice/verify-email-notice.component'
+              ).then((m) => m.VerifyEmailNoticeComponent),
+          },
+          {
+            path: 'verify-email',
+            canActivate: [guestGuard],
+            loadComponent: () =>
+              import(
+                './features/auth/verify-email/verify-email.component'
+              ).then((m) => m.VerifyEmailComponent),
+          },
+          {
             path: 'forgot-password',
             canActivate: [guestGuard],
             loadComponent: () =>

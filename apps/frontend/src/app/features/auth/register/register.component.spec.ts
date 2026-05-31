@@ -65,7 +65,11 @@ describe('RegisterComponent', () => {
       password: validRegisterCredentials.password,
       confirmPassword: validRegisterCredentials.confirmPassword,
     });
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/jobs');
+    expect(router.navigateByUrl).toHaveBeenCalledWith(
+      `/auth/verify-email-notice?email=${encodeURIComponent(
+        validRegisterCredentials.email,
+      )}`,
+    );
   });
 
   it('should show error message on failure', async () => {
