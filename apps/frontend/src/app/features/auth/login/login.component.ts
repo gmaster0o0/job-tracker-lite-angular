@@ -15,6 +15,7 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import {
   AuthDataAccessService,
+  AuthSessionService,
   ZodNgControlBridgeDirective,
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
@@ -42,6 +43,7 @@ import { loginSchema } from '@job-tracker-lite-angular/schemas';
 })
 export class LoginComponent {
   private readonly authDataAccess = inject(AuthDataAccessService);
+  private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
 
   protected readonly title = translateSignal('auth.login.title');
@@ -65,7 +67,8 @@ export class LoginComponent {
           this.submitError.set(null);
 
           try {
-            await this.authDataAccess.signIn(data().value());
+            const session = await this.authDataAccess.signIn(data().value());
+            this.authSession.setSession(session);
             await this.router.navigateByUrl('/jobs');
           } catch (error) {
             if (this.shouldRedirectToVerifyEmail(error)) {

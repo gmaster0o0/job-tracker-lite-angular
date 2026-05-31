@@ -30,8 +30,8 @@ export class AuthDataAccessService {
   }));
 
   async signIn(dto: LoginDto): Promise<AuthSessionDto> {
-    await firstValueFrom(
-      this.http.post(
+    const session = await firstValueFrom(
+      this.http.post<AuthSessionDto>(
         '/api/auth/sign-in/email',
         {
           email: dto.email,
@@ -44,13 +44,12 @@ export class AuthDataAccessService {
     );
 
     this.session.reload();
-    await Promise.resolve();
-    return this.session.value() ?? null;
+    return session ?? null;
   }
 
   async signUp(dto: RegisterDto): Promise<AuthSessionDto> {
-    await firstValueFrom(
-      this.http.post(
+    const session = await firstValueFrom(
+      this.http.post<AuthSessionDto>(
         '/api/auth/sign-up/email',
         {
           name: dto.name,
@@ -64,8 +63,7 @@ export class AuthDataAccessService {
     );
 
     this.session.reload();
-    await Promise.resolve();
-    return this.session.value() ?? null;
+    return session ?? null;
   }
 
   async signOut(): Promise<void> {

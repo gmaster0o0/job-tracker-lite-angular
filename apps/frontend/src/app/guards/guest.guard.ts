@@ -5,6 +5,12 @@ import { AuthSessionService } from '@job-tracker-lite-angular/frontend-data-acce
 export const guestGuard: CanActivateFn = async () => {
   const authSession = inject(AuthSessionService);
   const router = inject(Router);
+  const cachedSession = authSession.session();
+
+  if (cachedSession) {
+    return router.createUrlTree(['/jobs']);
+  }
+
   const session = await authSession.loadSession();
 
   if (!session) {
