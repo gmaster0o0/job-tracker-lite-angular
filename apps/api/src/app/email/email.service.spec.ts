@@ -7,6 +7,8 @@ import { EmailService } from './email.service';
 import {
   testRecipient,
   testResetUrl,
+  testRestoreRecipient,
+  testRestoreUrl,
   testVerificationRecipient,
   testVerificationUrl,
   testSendOptions,
@@ -67,6 +69,24 @@ describe('EmailService', () => {
     expect(emailProvider.send).toHaveBeenCalledWith(
       expect.objectContaining({
         to: testVerificationRecipient,
+        subject,
+      }),
+    );
+  });
+
+  it.each<[SupportLang, string]>([
+    ['en', 'Restore your previous email - Job Tracker Lite'],
+    ['hu', 'Email visszaállítása - Job Tracker Lite'],
+  ])('should send the email restore email in %s', async (lang, subject) => {
+    await service.sendEmailRestoreEmail(
+      testRestoreRecipient,
+      testRestoreUrl,
+      lang,
+    );
+
+    expect(emailProvider.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: testRestoreRecipient,
         subject,
       }),
     );

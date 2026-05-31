@@ -20,6 +20,7 @@ model User {
   id            String    @id @default(cuid())
   name          String
   email         String    @unique
+  pendingEmail  String?
   emailVerified Boolean   @default(false)
   image         String?
   createdAt     DateTime  @default(now())
@@ -29,8 +30,29 @@ model User {
   jobs          Job[]
   contacts      Contact[]
   notes         Note[]
+  emailChangeTokens EmailChangeToken[]
 
   @@map("user")
+}
+
+enum EmailChangeTokenType {
+  VERIFY
+  RESTORE
+}
+
+model EmailChangeToken {
+  id        String               @id @default(cuid())
+  token     String               @unique
+  type      EmailChangeTokenType
+  oldEmail  String
+  newEmail  String
+  userId    String
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+
+  @@index([userId, type])
 }
 
 model Session {

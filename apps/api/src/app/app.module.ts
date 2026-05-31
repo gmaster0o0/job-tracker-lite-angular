@@ -4,6 +4,7 @@ import { PrismaModule } from '@job-tracker-lite-angular/prisma';
 import { JobsModule } from './jobs/jobs.module';
 import { HealthModule } from './healthcheck/healthcheck.module';
 import { AuthModule } from './auth/auth.module';
+import { AccountModule } from './account/account.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AuthModule } from './auth/auth.module';
     JobsModule,
     HealthModule,
     AuthModule,
+    AccountModule,
   ],
   controllers: [],
   providers: [],

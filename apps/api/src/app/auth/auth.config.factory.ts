@@ -64,6 +64,7 @@ export class AuthConfigFactory {
 
   private getEmailVerificationConfig(): EmailVerificationConfig {
     return {
+      expiresIn: 60 * 60 * 24,
       sendVerificationEmail: async ({ user, url }) => {
         const frontendOrigin =
           this.configService.get<string>('FRONTEND_URL') ??
