@@ -16,7 +16,7 @@ describe('AccountService', () => {
   let service: AccountService;
   let prismaMock: ReturnType<typeof createPrismaServiceMock>;
   let emailServiceMock: {
-    sendVerificationEmail: jest.Mock<
+    sendEmailChangeConfirmationEmail: jest.Mock<
       Promise<void>,
       [string, string, 'en' | 'hu']
     >;
@@ -33,7 +33,7 @@ describe('AccountService', () => {
     );
 
     emailServiceMock = {
-      sendVerificationEmail: jest.fn().mockResolvedValue(undefined),
+      sendEmailChangeConfirmationEmail: jest.fn().mockResolvedValue(undefined),
       sendEmailRestoreEmail: jest.fn().mockResolvedValue(undefined),
     };
 
@@ -107,7 +107,9 @@ describe('AccountService', () => {
         }),
       }),
     );
-    expect(emailServiceMock.sendVerificationEmail).toHaveBeenCalledWith(
+    expect(
+      emailServiceMock.sendEmailChangeConfirmationEmail,
+    ).toHaveBeenCalledWith(
       changeEmailRequestFixtures.valid.newEmail,
       expect.stringContaining('/account/verify-email-change?token='),
       'en',

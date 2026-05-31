@@ -111,7 +111,11 @@ export class AccountService {
       verifyToken,
     )}`;
 
-    await this.emailService.sendVerificationEmail(newEmail, verifyUrl, 'en');
+    await this.emailService.sendEmailChangeConfirmationEmail(
+      newEmail,
+      verifyUrl,
+      'en',
+    );
   }
 
   async verifyEmailChange(token: string): Promise<string> {
