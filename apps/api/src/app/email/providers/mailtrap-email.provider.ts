@@ -3,7 +3,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import {
   type EmailProvider,
   type SendEmailOptions,
-} from '../email-provider.interface';
+} from './email-provider.interface';
 
 @Injectable()
 export class MailtrapEmailProvider implements EmailProvider {

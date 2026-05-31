@@ -5,10 +5,11 @@ import {
   EMAIL_PROVIDER,
   type EmailProvider,
   type SendEmailOptions,
-} from './email-provider.interface';
-import { getResetPasswordEmailTemplate } from './reset-password-email-template';
-import { getVerificationEmailTemplate } from './verification-email-template';
-import { getRestoreEmailTemplate } from './restore-email-template';
+} from './providers/email-provider.interface';
+import { getResetPasswordEmailTemplate } from './templates/reset-password-email-template';
+import { getVerificationEmailTemplate } from './templates/verification-email-template';
+import { getRestoreEmailTemplate } from './templates/restore-email-template';
+import { getEmailChangeConfirmationTemplate } from './templates/email-change-confirmation-template';
 
 @Injectable()
 export class EmailService {
@@ -61,6 +62,21 @@ export class EmailService {
     lang: SupportLang = 'en',
   ): Promise<void> {
     const template = getRestoreEmailTemplate(restoreUrl, lang);
+
+    await this.send({
+      to,
+      subject: template.subject,
+      text: template.text,
+      html: template.html,
+    });
+  }
+
+  async sendEmailChangeConfirmationEmail(
+    to: string,
+    confirmationUrl: string,
+    lang: SupportLang = 'en',
+  ): Promise<void> {
+    const template = getEmailChangeConfirmationTemplate(confirmationUrl, lang);
 
     await this.send({
       to,

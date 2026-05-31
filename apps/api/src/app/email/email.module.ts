@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { getEmailConfig, getMailerOptions } from './email.config';
-import { EMAIL_PROVIDER } from './email-provider.interface';
+import { EMAIL_PROVIDER } from './providers/email-provider.interface';
 import { UnsupportedEmailProviderException } from './email.errors';
 import { EmailService } from './email.service';
 import { MailtrapEmailProvider } from './providers/mailtrap-email.provider';
