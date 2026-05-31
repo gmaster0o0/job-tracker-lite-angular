@@ -4,12 +4,34 @@ import { PreferencesComponent } from './preferences.component';
 import { PreferencesHarness } from './preferences.harness';
 import { ThemeService } from '@job-tracker-lite-angular/frontend-data-access';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
+import {
+  createMediaQueryListMock,
+  MockResizeObserver,
+} from '@job-tracker-lite-angular/testing';
+import { vi } from 'vitest';
 
 describe('PreferencesComponent', () => {
   let component: PreferencesComponent;
   let fixture: ComponentFixture<PreferencesComponent>;
   let harness: PreferencesHarness;
   let themeService: ThemeService;
+
+  beforeAll(() => {
+    Object.defineProperty(globalThis, 'ResizeObserver', {
+      configurable: true,
+      writable: true,
+      value: MockResizeObserver,
+    });
+
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      writable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        ...createMediaQueryListMock(false, () => vi.fn()),
+        media: query,
+      })),
+    });
+  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

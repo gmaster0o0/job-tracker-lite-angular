@@ -12,11 +12,24 @@ import {
 import {
   createAuthDataAccessMock,
   createAuthSessionServiceMock,
+  createMediaQueryListMock,
 } from '@job-tracker-lite-angular/testing';
 import { NavigationService } from '../navigation.service';
+import { vi } from 'vitest';
 
 describe('SidenavComponent', () => {
   let harness: SidenavHarness;
+
+  beforeAll(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      writable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        ...createMediaQueryListMock(false, () => vi.fn()),
+        media: query,
+      })),
+    });
+  });
 
   beforeEach(async () => {
     const authSessionMock = createAuthSessionServiceMock(() => () => undefined);

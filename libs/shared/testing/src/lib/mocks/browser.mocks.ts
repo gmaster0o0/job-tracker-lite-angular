@@ -22,10 +22,33 @@ export function createMediaQueryListMock(
   return {
     matches,
     media: '(prefers-color-scheme: dark)',
+    onchange: null,
     addEventListener: mockFactory(),
     removeEventListener: mockFactory(),
+    addListener: mockFactory(),
+    removeListener: mockFactory(),
     dispatchEvent: mockFactory(),
   } as unknown as MediaQueryList;
+}
+
+export class MockResizeObserver implements ResizeObserver {
+  private readonly observedElements = new Set<Element>();
+
+  constructor(private readonly callback: ResizeObserverCallback) {
+    this.callback([], this);
+  }
+
+  disconnect(): void {
+    this.observedElements.clear();
+  }
+
+  observe(target: Element, _options?: ResizeObserverOptions): void {
+    this.observedElements.add(target);
+  }
+
+  unobserve(target: Element): void {
+    this.observedElements.delete(target);
+  }
 }
 
 export function createDocumentElementMock(
