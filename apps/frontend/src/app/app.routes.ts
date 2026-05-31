@@ -1,4 +1,6 @@
 import { Route } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
+import { guestGuard } from './guards/guest.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -26,6 +28,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'jobs',
+        canActivate: [authGuard],
         children: [
           {
             path: '',
@@ -88,6 +91,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'profile',
+        canActivate: [authGuard],
         children: [
           {
             path: '',
@@ -123,6 +127,68 @@ export const appRoutes: Route[] = [
               import('./features/about/about.component').then(
                 (m) => m.AboutComponent,
               ),
+          },
+        ],
+      },
+      {
+        path: 'auth',
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            outlet: 'sidenav',
+            loadComponent: () =>
+              import('./navigation/main-menu/main-menu.component').then(
+                (m) => m.MainMenuComponent,
+              ),
+          },
+          {
+            path: 'login',
+            canActivate: [guestGuard],
+            loadComponent: () =>
+              import('./features/auth/login/login.component').then(
+                (m) => m.LoginComponent,
+              ),
+          },
+          {
+            path: 'register',
+            canActivate: [guestGuard],
+            loadComponent: () =>
+              import('./features/auth/register/register.component').then(
+                (m) => m.RegisterComponent,
+              ),
+          },
+          {
+            path: 'verify-email-notice',
+            canActivate: [guestGuard],
+            loadComponent: () =>
+              import(
+                './features/auth/verify-email-notice/verify-email-notice.component'
+              ).then((m) => m.VerifyEmailNoticeComponent),
+          },
+          {
+            path: 'verify-email',
+            canActivate: [guestGuard],
+            loadComponent: () =>
+              import(
+                './features/auth/verify-email/verify-email.component'
+              ).then((m) => m.VerifyEmailComponent),
+          },
+          {
+            path: 'forgot-password',
+            canActivate: [guestGuard],
+            loadComponent: () =>
+              import(
+                './features/auth/forgot-password/forgot-password.component'
+              ).then((m) => m.ForgotPasswordComponent),
+          },
+          {
+            path: 'reset-password',
+            canActivate: [guestGuard],
+            loadComponent: () =>
+              import(
+                './features/auth/reset-password/reset-password.component'
+              ).then((m) => m.ResetPasswordComponent),
           },
         ],
       },

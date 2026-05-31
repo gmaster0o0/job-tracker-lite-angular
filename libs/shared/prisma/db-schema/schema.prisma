@@ -4,6 +4,7 @@ generator client {
 }
 
 datasource db {
+  //DONT ADD THE URL HERE. ITS DEPRACTED IN v7
   provider = "postgresql"
 }
 
@@ -16,21 +17,84 @@ enum JobStatus {
 }
 
 model User {
-  id    String  @id @default(cuid())
-  email String  @unique
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  jobs          Job[]
+  contacts      Contact[]
+  notes         Note[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }
 
 model Job {
   id          String    @id @default(cuid())
   position    String
-  link        String?    @unique
+  link        String?   @unique
   description String?
   company     String
   status      JobStatus @default(SAVED)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   contacts    Contact[]
   notes       Note[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
 }
 
 model Contact {
@@ -39,9 +103,13 @@ model Contact {
   email       String?
   phoneNumber String?
   jobId       String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Note {
@@ -49,7 +117,11 @@ model Note {
   title       String
   body        String
   jobId       String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }

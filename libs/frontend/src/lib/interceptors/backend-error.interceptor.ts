@@ -51,8 +51,8 @@ function extractErrorCode(payload: unknown): string {
 
   const data = payload as Record<string, unknown>;
   const errorCode = data['errorCode'] ?? data['code'];
-  return typeof errorCode === 'string' && errorCode.length > 0
-    ? errorCode
+  return typeof errorCode === 'string' && errorCode.trim().length > 0
+    ? errorCode.trim()
     : PRISMA_ERROR_CODES.INTERNAL_SERVER_ERROR;
 }
 

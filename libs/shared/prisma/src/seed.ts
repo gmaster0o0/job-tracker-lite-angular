@@ -2,6 +2,7 @@ console.log('Seed script started');
 
 import { PrismaClient, JobStatus } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { hashPassword } from 'better-auth/crypto';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { JobDto } from '@job-tracker-lite-angular/schemas';
@@ -16,21 +17,24 @@ import {
 const envPath = path.join(process.cwd(), '.env');
 dotenv.config({ path: envPath });
 
-const statusMap: Record<string, JobStatus> = {
-  saved: JobStatus.SAVED,
-  applied: JobStatus.APPLIED,
-  interview: JobStatus.INTERVIEW,
-  'job offered': JobStatus.JOB_OFFERED,
-  rejected: JobStatus.REJECTED,
-};
+const seedUserEmail = 'user@example.com';
+const seedUserPassword = 'Demo1234';
+const systemUserId = 'seed-user';
+const seedCredentialAccountId = 'seed-user-credential';
 
-const seedJobs = seedJobFixtures.map((job: JobDto) => ({
-  position: job.position,
-  link: job.link,
-  description: job.description,
-  company: job.company,
-  status: statusMap[job.status] ?? JobStatus.REJECTED,
-}));
+const seedJobs = seedJobFixtures.map((job: JobDto) => {
+  if (job.link == null) {
+    throw new Error(`Seed job missing link for job ${job.position}`);
+  }
+
+  return {
+    position: job.position,
+    link: job.link,
+    description: job.description,
+    company: job.company,
+    status: job.status as JobStatus,
+  };
+});
 
 async function main() {
   console.log('Starting seed...');
@@ -46,6 +50,40 @@ async function main() {
   await prisma.$connect();
   console.log('Connected to database');
 
+  const seedUser = await prisma.user.upsert({
+    where: { id: systemUserId },
+    update: {
+      name: 'Demo User',
+      email: seedUserEmail,
+      emailVerified: true,
+    },
+    create: {
+      id: systemUserId,
+      name: 'Demo User',
+      email: seedUserEmail,
+      emailVerified: true,
+    },
+  });
+
+  const seedUserPasswordHash = await hashPassword(seedUserPassword);
+
+  await prisma.account.deleteMany({
+    where: {
+      userId: seedUser.id,
+      providerId: 'credential',
+    },
+  });
+
+  await prisma.account.create({
+    data: {
+      id: seedCredentialAccountId,
+      accountId: seedUser.id,
+      providerId: 'credential',
+      userId: seedUser.id,
+      password: seedUserPasswordHash,
+    },
+  });
+
   for (const [jobIndex, job] of seedJobs.entries()) {
     const seededJob = await prisma.job.upsert({
       where: { link: job.link },
@@ -54,8 +92,12 @@ async function main() {
         description: job.description,
         company: job.company,
         status: job.status,
+        userId: seedUser.id,
       },
-      create: job,
+      create: {
+        ...job,
+        userId: seedUser.id,
+      },
     });
 
     const contacts = getSeedContactsForJob(jobIndex, job.company);
@@ -65,6 +107,7 @@ async function main() {
       await prisma.contact.createMany({
         data: contacts.map((contact: SeedContactTemplate) => ({
           jobId: seededJob.id,
+          userId: seedUser.id,
           name: contact.name,
           email: contact.email,
           phoneNumber: contact.phoneNumber,
@@ -79,6 +122,7 @@ async function main() {
       await prisma.note.createMany({
         data: notes.map((note: SeedNoteTemplate) => ({
           jobId: seededJob.id,
+          userId: seedUser.id,
           title: note.title,
           body: note.body,
         })),
@@ -91,6 +135,7 @@ async function main() {
   console.log(
     `Seeded ${seedJobs.length} jobs with 0-2 contacts and 0-1 notes each (deterministic).`,
   );
+  console.log(`Demo login: ${seedUserEmail} / ${seedUserPassword}`);
 }
 
 main().catch(async (error) => {

@@ -22,6 +22,31 @@ export const validUserResponse = {
   email: 'admin@example.com',
 };
 
+export const validRegisterCredentials = {
+  name: 'John Doe',
+  email: 'john@example.com',
+  password: 'Password123!',
+  confirmPassword: 'Password123!',
+};
+
+export const invalidRegisterCredentialsMismatch = {
+  name: 'John Doe',
+  email: 'john@example.com',
+  password: 'Password123!',
+  confirmPassword: 'DifferentPassword123!',
+};
+
+export const validForgotPasswordCredentials = {
+  email: 'john@example.com',
+  language: 'en' as const,
+};
+
+export const validResetPasswordCredentials = {
+  token: 'reset-token-123',
+  newPassword: 'Password123!',
+  confirmPassword: 'Password123!',
+};
+
 export const buildZodIssue = (overrides: Record<string, unknown> = {}) => ({
   code: 'invalid_type',
   path: ['email'],

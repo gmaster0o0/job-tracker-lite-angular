@@ -1,7 +1,9 @@
 import { Test } from '@nestjs/testing';
+
 import { JobsController } from './jobs.controller';
 import { JobsService } from './jobs.service';
 import {
+  authSessionFixtures,
   createJobFixtures,
   jobFixtures,
   jobResultFixtures,
@@ -32,9 +34,9 @@ describe('JobsController', () => {
   it('should return jobs from the service', async () => {
     jobsService.findAll.mockResolvedValue([jobFixtures.frontendEngineer]);
 
-    await expect(controller.findAll()).resolves.toEqual([
-      jobFixtures.frontendEngineer,
-    ]);
+    await expect(
+      controller.findAll(authSessionFixtures.authenticated as never),
+    ).resolves.toEqual([jobFixtures.frontendEngineer]);
   });
 
   it('should delegate creation to the service', async () => {
@@ -43,7 +45,10 @@ describe('JobsController', () => {
     );
 
     await expect(
-      controller.create(createJobFixtures.designer),
+      controller.create(
+        authSessionFixtures.authenticated as never,
+        createJobFixtures.designer,
+      ),
     ).resolves.toEqual(jobResultFixtures.createdProductDesigner);
   });
 
@@ -54,7 +59,11 @@ describe('JobsController', () => {
     });
 
     await expect(
-      controller.updateStatus('ck1234567892', { status: JobStatus.APPLIED }),
+      controller.updateStatus(
+        authSessionFixtures.authenticated as never,
+        'ck1234567892',
+        { status: JobStatus.APPLIED },
+      ),
     ).resolves.toEqual({
       ...jobFixtures.backendEngineer,
       id: 'ck1234567892',

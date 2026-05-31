@@ -1,0 +1,178 @@
+<div class="mx-auto w-full max-w-md px-4 py-8 md:py-12">
+  <hlm-card>
+    <hlm-card-header>
+      <h1 hlmCardTitle>{{ title() }}</h1>
+      <p hlmCardDescription>{{ subtitle() }}</p>
+    </hlm-card-header>
+
+    <div hlmCardContent>
+      <form [formRoot]="registerForm" id="registerForm" class="space-y-4">
+        <hlm-field-group>
+          <hlm-field>
+            <label hlmLabel for="name">{{
+              'auth.fields.name.label' | transloco
+            }}</label>
+            <input
+              hlmInput
+              libFormField
+              id="name"
+              [formField]="registerForm.name"
+              placeholder="{{ 'auth.fields.name.placeholder' | transloco }}"
+              class="w-full"
+            />
+            @if (
+              registerForm.name().invalid() &&
+              (registerForm.name().touched() || registerForm.name().dirty())
+            ) {
+              <hlm-field-error validator="required">{{
+                'auth.fields.name.required' | transloco
+              }}</hlm-field-error>
+            } @else {
+              <p hlmDialogDescription>
+                {{ 'auth.fields.name.example' | transloco }}
+              </p>
+            }
+          </hlm-field>
+
+          <hlm-field>
+            <label hlmLabel for="email">{{
+              'auth.fields.email.label' | transloco
+            }}</label>
+            <input
+              hlmInput
+              libFormField
+              id="email"
+              type="email"
+              [formField]="registerForm.email"
+              placeholder="{{ 'auth.fields.email.placeholder' | transloco }}"
+              class="w-full"
+            />
+            @if (
+              registerForm.email().invalid() &&
+              (registerForm.email().touched() || registerForm.email().dirty())
+            ) {
+              <hlm-field-error validator="required">{{
+                'auth.fields.email.required' | transloco
+              }}</hlm-field-error>
+              <hlm-field-error validator="invalid_format">{{
+                'auth.fields.email.invalid_format' | transloco
+              }}</hlm-field-error>
+            } @else {
+              <p hlmDialogDescription>
+                {{ 'auth.fields.email.example' | transloco }}
+              </p>
+            }
+          </hlm-field>
+
+          <hlm-field>
+            <label hlmLabel for="password">{{
+              'auth.fields.password.label' | transloco
+            }}</label>
+            <input
+              hlmInput
+              libFormField
+              id="password"
+              type="password"
+              [formField]="registerForm.password"
+              placeholder="{{ 'auth.fields.password.placeholder' | transloco }}"
+              class="w-full"
+            />
+            @if (
+              registerForm.password().invalid() &&
+              (registerForm.password().touched() ||
+                registerForm.password().dirty())
+            ) {
+              <hlm-field-error validator="too_small">{{
+                'auth.fields.password.too_small' | transloco
+              }}</hlm-field-error>
+              <hlm-field-error validator="need_uppercase">{{
+                'auth.fields.password.need_uppercase' | transloco
+              }}</hlm-field-error>
+              <hlm-field-error validator="need_lowercase">{{
+                'auth.fields.password.need_lowercase' | transloco
+              }}</hlm-field-error>
+              <hlm-field-error validator="need_number">{{
+                'auth.fields.password.need_number' | transloco
+              }}</hlm-field-error>
+            } @else {
+              <p hlmDialogDescription>
+                {{ 'auth.fields.password.example' | transloco }}
+              </p>
+            }
+          </hlm-field>
+
+          <hlm-field>
+            <label hlmLabel for="confirmPassword">{{
+              'auth.fields.confirmPassword.label' | transloco
+            }}</label>
+            <input
+              hlmInput
+              libFormField
+              id="confirmPassword"
+              type="password"
+              [formField]="registerForm.confirmPassword"
+              placeholder="{{
+                'auth.fields.confirmPassword.placeholder' | transloco
+              }}"
+              class="w-full"
+            />
+            @if (
+              registerForm.confirmPassword().invalid() &&
+              (registerForm.confirmPassword().touched() ||
+                registerForm.confirmPassword().dirty())
+            ) {
+              <hlm-field-error validator="required">{{
+                'auth.fields.confirmPassword.required' | transloco
+              }}</hlm-field-error>
+              <hlm-field-error validator="password_mismatch">{{
+                'auth.fields.confirmPassword.password_mismatch' | transloco
+              }}</hlm-field-error>
+            } @else {
+              <p hlmDialogDescription>
+                {{ 'auth.fields.confirmPassword.example' | transloco }}
+              </p>
+            }
+          </hlm-field>
+
+          <app-server-error-alert
+            [errorMessage]="submitError()"
+            translationPrefix="auth.register"
+            cssClass="w-full"
+          />
+        </hlm-field-group>
+      </form>
+    </div>
+
+    <hlm-card-footer class="flex flex-col items-stretch gap-3">
+      <button
+        hlmBtn
+        type="submit"
+        form="registerForm"
+        class="w-full"
+        [disabled]="registerForm().invalid() || isSubmitting()"
+      >
+        @if (isSubmitting()) {
+          {{ 'auth.register.submitting' | transloco }}
+        } @else {
+          {{ 'auth.register.submit' | transloco }}
+        }
+      </button>
+
+      <p class="text-center text-sm text-muted-foreground">
+        <a
+          routerLink="/auth/forgot-password"
+          class="underline underline-offset-4"
+        >
+          {{ 'auth.login.forgotPasswordLink' | transloco }}
+        </a>
+      </p>
+
+      <p class="text-center text-sm text-muted-foreground">
+        {{ 'auth.register.hasAccount' | transloco }}
+        <a routerLink="/auth/login" class="underline underline-offset-4">
+          {{ 'auth.register.loginLink' | transloco }}
+        </a>
+      </p>
+    </hlm-card-footer>
+  </hlm-card>
+</div>
