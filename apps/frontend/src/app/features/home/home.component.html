@@ -1,29 +1,9 @@
-<div class="max-w-4xl mx-auto space-y-8 p-8">
-  <div>
-    <h1 class="text-4xl font-bold tracking-tight mb-2 text-foreground">
-      {{ 'home.welcome' | transloco }}
-    </h1>
-    <p class="text-muted-foreground text-lg">
-      {{ 'home.subtitle' | transloco }}
-    </p>
-  </div>
-  <div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      @for (item of homeCards; track item.title()) {
-        <app-home-card
-          [card]="item"
-          [iconTemplate]="getIcon(item.iconName)"
-        ></app-home-card>
-      }
-    </div>
-    <ng-template #jobsIcon
-      ><ng-icon class="size-8 text-blue-600" name="lucideBriefcase"
-    /></ng-template>
-    <ng-template #profileIcon
-      ><ng-icon class="size-8 text-purple-600" name="lucideUser"
-    /></ng-template>
-    <ng-template #settingsIcon
-      ><ng-icon class="size-8 text-slate-600" name="lucideSettings"
-    /></ng-template>
-  </div>
+<div class="mx-auto max-w-4xl space-y-8 p-8">
+  @if (isAuthenticated()) {
+    <app-landing-dashboard></app-landing-dashboard>
+  } @else {
+    <app-hero></app-hero>
+  }
+  <hr class="border-border my-10" aria-hidden="true" />
+  <app-public-profiles></app-public-profiles>
 </div>

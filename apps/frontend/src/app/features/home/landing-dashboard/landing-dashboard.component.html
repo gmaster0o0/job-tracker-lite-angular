@@ -1,0 +1,29 @@
+<div class="space-y-8">
+  <div>
+    <h1 class="mb-2 text-4xl font-bold tracking-tight text-foreground">
+      {{ 'home.welcome' | transloco }}
+    </h1>
+    <p class="text-lg text-muted-foreground">
+      {{ 'home.subtitle' | transloco }}
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+    @for (item of homeCards; track item.title()) {
+      <app-home-card
+        [card]="item"
+        [iconTemplate]="getIcon(item.iconName)"
+      ></app-home-card>
+    }
+  </div>
+
+  <ng-template #jobsIcon
+    ><ng-icon class="size-8 text-blue-600" name="lucideBriefcase"
+  /></ng-template>
+  <ng-template #profileIcon
+    ><ng-icon class="size-8 text-purple-600" name="lucideUser"
+  /></ng-template>
+  <ng-template #settingsIcon
+    ><ng-icon class="size-8 text-slate-600" name="lucideSettings"
+  /></ng-template>
+</div>

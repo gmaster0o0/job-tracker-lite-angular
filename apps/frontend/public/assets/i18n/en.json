@@ -233,6 +233,37 @@
   "home": {
     "welcome": "Welcome Back",
     "subtitle": "Where would you like to start today?",
+    "landing": {
+      "hero": {
+        "title": "Track every job application in one place",
+        "subtitle": "A free, bilingual workspace for job seekers. Track status, notes, and recruiter contacts in one place.",
+        "registerCta": "Register for free",
+        "loginCta": "Login"
+      },
+      "features": {
+        "jobs": {
+          "title": "Jobs",
+          "description": "Add and track applications step by step."
+        },
+        "contacts": {
+          "title": "Contacts",
+          "description": "Save recruiters and hiring manager contacts for each job."
+        },
+        "notes": {
+          "title": "Notes",
+          "description": "Capture key details and follow-ups for every application."
+        },
+        "coverLetter": {
+          "title": "Cover Letter",
+          "description": "Generate and store tailored cover letters for each application."
+        },
+        "comingSoon": "Coming soon"
+      },
+      "publicProfiles": {
+        "title": "Public profiles",
+        "subtitle": "Create a shareable profile with your LinkedIn, GitHub, and downloadable CV."
+      }
+    },
     "jobs": {
       "description": "Manage your job applications and track progress."
     },

@@ -228,6 +228,37 @@
   "home": {
     "welcome": "Üdvözöljük újra",
     "subtitle": "Hol szeretné kezdeni a mai napot?",
+    "landing": {
+      "hero": {
+        "title": "Kövesd nyomon az összes állásjelentkezésedet",
+        "subtitle": "Ingyenes, magyar nyelvű eszköz álláskeresőknek. Státuszkövetés, jegyzetek, kapcsolatok, kísérőlevél — egy helyen.",
+        "registerCta": "Regisztrálj ingyen",
+        "loginCta": "Bejelentkezés"
+      },
+      "features": {
+        "jobs": {
+          "title": "Munkák",
+          "description": "Jelentkezések hozzáadása és státuszkövetés lépésről lépésre."
+        },
+        "contacts": {
+          "title": "Kapcsolatok",
+          "description": "Recruiterek és hiring managerek mentése az adott munkához."
+        },
+        "notes": {
+          "title": "Jegyzetek",
+          "description": "Fontos részletek és teendők rögzítése minden jelentkezésnél."
+        },
+        "coverLetter": {
+          "title": "Kísérőlevél",
+          "description": "Munkánként generált kísérőlevél — bejelentkezés után elérhető."
+        },
+        "comingSoon": "hamarosan"
+      },
+      "publicProfiles": {
+        "title": "Publikus profil",
+        "subtitle": "Hozz létre megosztható profilt LinkedInnel, GitHubbal és letölthető CV-vel."
+      }
+    },
     "jobs": {
       "description": "Kezelje jelentkezéseit és kövesse nyomon a haladást."
     },
