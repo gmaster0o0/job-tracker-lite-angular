@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -23,6 +23,15 @@ export class ServerErrorAlertComponent {
    * Translation key prefix (e.g., 'jobs.create', 'jobs.update', 'contacts.create')
    */
   readonly translationPrefix = input.required<string>();
+
+  readonly errorTitleKey = computed(
+    () => `${this.translationPrefix()}.error.title`,
+  );
+
+  readonly errorDescriptionKey = computed(() => {
+    const normalizedErrorCode = this.errorMessage()?.toLowerCase() ?? 'unknown';
+    return `${this.translationPrefix()}.error.${normalizedErrorCode}`;
+  });
 
   /**
    * CSS class for customization (optional)
