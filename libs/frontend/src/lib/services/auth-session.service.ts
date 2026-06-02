@@ -11,28 +11,15 @@ export class AuthSessionService {
   readonly isAuthenticated = computed(() => this.sessionState() !== null);
   readonly userId = computed(() => this.sessionState()?.user.id ?? null);
 
-  private async waitForSessionResource(): Promise<void> {
-    const maxAttempts = 25;
-
-    for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-      const hasValue = this.authDataAccess.session.hasValue();
-      const hasError = this.authDataAccess.session.error() !== undefined;
-
-      if (hasValue || hasError) {
-        return;
-      }
-
-      await new Promise<void>((resolve) => setTimeout(resolve, 10));
-    }
-  }
-
   async loadSession(): Promise<AuthSessionDto> {
-    this.authDataAccess.session.reload();
-    await this.waitForSessionResource();
-
-    const session = this.authDataAccess.session.value() ?? null;
-    this.sessionState.set(session);
-    return session;
+    try {
+      const session = await this.authDataAccess.getSession();
+      this.sessionState.set(session);
+      return session;
+    } catch {
+      this.sessionState.set(null);
+      return null;
+    }
   }
 
   setSession(session: AuthSessionDto): void {

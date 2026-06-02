@@ -1,4 +1,4 @@
-import { HttpClient, httpResource } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
   AccountSettingsDto,
@@ -10,6 +10,7 @@ import {
   RegisterDto,
   ResetPasswordDto,
   SendVerificationEmailDto,
+  authSessionResponseSchema,
 } from '@job-tracker-lite-angular/schemas';
 import { firstValueFrom } from 'rxjs';
 
@@ -19,19 +20,20 @@ import { firstValueFrom } from 'rxjs';
 export class AuthDataAccessService {
   private readonly http = inject(HttpClient);
 
-  readonly session = httpResource<AuthSessionDto>(() => ({
-    url: '/api/auth/get-session',
-    withCredentials: true,
-  }));
+  async getSession(): Promise<AuthSessionDto> {
+    const session = await firstValueFrom(
+      this.http.get<AuthSessionDto>('/api/auth/get-session', {
+        withCredentials: true,
+      }),
+    );
 
-  readonly accountSettings = httpResource<AccountSettingsDto>(() => ({
-    url: '/api/account',
-    withCredentials: true,
-  }));
+    const parsed = authSessionResponseSchema.safeParse(session);
+    return parsed.success ? parsed.data : null;
+  }
 
   async signIn(dto: LoginDto): Promise<AuthSessionDto> {
-    const session = await firstValueFrom(
-      this.http.post<AuthSessionDto>(
+    await firstValueFrom(
+      this.http.post(
         '/api/auth/sign-in/email',
         {
           email: dto.email,
@@ -43,13 +45,12 @@ export class AuthDataAccessService {
       ),
     );
 
-    this.session.reload();
-    return session ?? null;
+    return this.getSession();
   }
 
   async signUp(dto: RegisterDto): Promise<AuthSessionDto> {
-    const session = await firstValueFrom(
-      this.http.post<AuthSessionDto>(
+    await firstValueFrom(
+      this.http.post(
         '/api/auth/sign-up/email',
         {
           name: dto.name,
@@ -62,8 +63,7 @@ export class AuthDataAccessService {
       ),
     );
 
-    this.session.reload();
-    return session ?? null;
+    return this.getSession();
   }
 
   async signOut(): Promise<void> {
@@ -122,6 +122,14 @@ export class AuthDataAccessService {
           withCredentials: true,
         },
       ),
+    );
+  }
+
+  async getAccountSettings(): Promise<AccountSettingsDto> {
+    return await firstValueFrom(
+      this.http.get<AccountSettingsDto>('/api/account', {
+        withCredentials: true,
+      }),
     );
   }
 

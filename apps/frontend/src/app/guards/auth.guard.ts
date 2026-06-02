@@ -5,12 +5,6 @@ import { AuthSessionService } from '@job-tracker-lite-angular/frontend-data-acce
 export const authGuard: CanActivateFn = async () => {
   const authSession = inject(AuthSessionService);
   const router = inject(Router);
-  const cachedSession = authSession.session();
-
-  if (cachedSession) {
-    return true;
-  }
-
   const session = await authSession.loadSession();
 
   if (session) {

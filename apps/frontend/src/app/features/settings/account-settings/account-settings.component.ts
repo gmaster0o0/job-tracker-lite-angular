@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   FormField,
   FormRoot,
@@ -69,10 +69,6 @@ export class AccountSettingsComponent {
   });
 
   protected readonly isLoadingSettings = signal(true);
-
-  private readonly accountSettingsResource =
-    this.authDataAccess.accountSettings;
-  private readonly sessionResource = this.authDataAccess.session;
 
   protected readonly isChangingEmail = signal(false);
   protected readonly changeEmailError = signal<string | null>(null);
@@ -155,36 +151,23 @@ export class AccountSettingsComponent {
   );
 
   constructor() {
-    this.accountSettingsResource.reload();
-    this.sessionResource.reload();
-
-    effect(() => {
-      const response = this.accountSettingsResource.value();
-      if (response) {
-        const parsed = accountSettingsSchema.safeParse(response);
-        if (parsed.success) {
-          this.accountSettings.set(parsed.data);
-        }
-        this.isLoadingSettings.set(false);
-        return;
-      }
-
-      if (this.accountSettingsResource.error()) {
-        const session = this.sessionResource.value();
-        if (session?.user?.email) {
-          const current = this.accountSettings();
-          this.accountSettings.set({
-            ...current,
-            email: session.user.email,
-            emailVerified: session.user.emailVerified,
-          });
-        }
-        this.isLoadingSettings.set(false);
-      }
-    });
+    void this.loadSettings();
   }
 
   protected toggleNewPasswordVisibility(): void {
     this.isNewPasswordVisible.update((v) => !v);
+  }
+
+  private async loadSettings(): Promise<void> {
+    this.isLoadingSettings.set(true);
+    try {
+      const response = await this.authDataAccess.getAccountSettings();
+      const parsed = accountSettingsSchema.safeParse(response);
+      if (parsed.success) {
+        this.accountSettings.set(parsed.data);
+      }
+    } finally {
+      this.isLoadingSettings.set(false);
+    }
   }
 }
