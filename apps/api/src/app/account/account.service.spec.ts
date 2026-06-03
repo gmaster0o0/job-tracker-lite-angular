@@ -7,6 +7,7 @@ import {
   accountSettingsFixtures,
   accountUserFixtures,
   changeEmailRequestFixtures,
+  createEmailServiceMock,
   createPrismaServiceMock,
   emailChangeTokenFixtures,
 } from '@job-tracker-lite-angular/testing';
@@ -15,27 +16,15 @@ import { EmailChangeTokenType } from '@prisma/client';
 describe('AccountService', () => {
   let service: AccountService;
   let prismaMock: ReturnType<typeof createPrismaServiceMock>;
-  let emailServiceMock: {
-    sendEmailChangeConfirmationEmail: jest.Mock<
-      Promise<void>,
-      [string, string, 'en' | 'hu']
-    >;
-    sendEmailRestoreEmail: jest.Mock<
-      Promise<void>,
-      [string, string, 'en' | 'hu']
-    >;
-  };
+  let emailServiceMock: ReturnType<typeof createEmailServiceMock>;
 
   beforeEach(async () => {
     prismaMock = createPrismaServiceMock(jest.fn);
-    prismaMock.$transaction.mockImplementation(async (cb: any) =>
-      cb(prismaMock),
+    prismaMock.$transaction.mockImplementation(async (callback: any) =>
+      callback(prismaMock),
     );
 
-    emailServiceMock = {
-      sendEmailChangeConfirmationEmail: jest.fn().mockResolvedValue(undefined),
-      sendEmailRestoreEmail: jest.fn().mockResolvedValue(undefined),
-    };
+    emailServiceMock = createEmailServiceMock();
 
     const moduleRef = await Test.createTestingModule({
       providers: [

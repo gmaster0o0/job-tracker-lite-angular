@@ -20,4 +20,5 @@ export * from './lib/mocks/jobs-service.mock';
 export * from './lib/mocks/data-access.mock';
 export * from './lib/mocks/auth-data-access.mock';
 export * from './lib/mocks/auth-session-service.mock';
+export * from './lib/mocks/email-service.mock';
 export * from './lib/mocks/browser.mocks';
