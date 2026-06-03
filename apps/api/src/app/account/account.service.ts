@@ -10,13 +10,12 @@ import { EmailChangeTokenType } from '@prisma/client';
 import { EmailService } from '../email/email.service';
 import { randomUUID } from 'crypto';
 
-const EMAIL_VERIFICATION_EXPIRES_IN_SECONDS = 60 * 60 * 24;
-const EMAIL_RESTORE_EXPIRES_IN_SECONDS = 60 * 60 * 24 * 7;
-
 @Injectable()
 export class AccountService {
   private readonly defaultFrontendUrl = 'http://localhost:4200';
   private readonly defaultAuthApiUrl = 'http://localhost:3000/api/auth';
+  private readonly defaultEmailVerificationExpiresIn = 60 * 60 * 24; // 24 hours
+  private readonly defaultEmailRestoreExpiresIn = 60 * 60 * 24 * 7; // 7 days
 
   constructor(
     private readonly prisma: PrismaService,
@@ -77,7 +76,7 @@ export class AccountService {
 
     const verifyToken = randomUUID();
     const verifyTokenExpiresAt = this.addSeconds(
-      EMAIL_VERIFICATION_EXPIRES_IN_SECONDS,
+      this.getEmailVerificationExpiresInSeconds(),
     );
 
     await this.prisma.$transaction(async (tx) => {
@@ -155,7 +154,7 @@ export class AccountService {
 
     const restoreToken = randomUUID();
     const restoreTokenExpiresAt = this.addSeconds(
-      EMAIL_RESTORE_EXPIRES_IN_SECONDS,
+      this.getEmailRestoreExpiresInSeconds(),
     );
 
     await this.prisma.$transaction(async (tx) => {
@@ -292,6 +291,20 @@ export class AccountService {
     return `${this.getFrontendOrigin()}/auth/login?emailRestore=${encodeURIComponent(
       status,
     )}`;
+  }
+
+  private getEmailVerificationExpiresInSeconds(): number {
+    return (
+      this.configService.get<number>('EMAIL_VERIFICATION_EXPIRES_IN_SECONDS') ??
+      this.defaultEmailVerificationExpiresIn
+    );
+  }
+
+  private getEmailRestoreExpiresInSeconds(): number {
+    return (
+      this.configService.get<number>('EMAIL_RESTORE_EXPIRES_IN_SECONDS') ??
+      this.defaultEmailRestoreExpiresIn
+    );
   }
 
   private addSeconds(seconds: number): Date {
