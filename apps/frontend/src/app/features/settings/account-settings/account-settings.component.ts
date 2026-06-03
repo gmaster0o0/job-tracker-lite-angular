@@ -145,7 +145,9 @@ export class AccountSettingsComponent {
             this.changePasswordForm.currentPassword().reset();
             this.changePasswordForm.newPassword().reset();
             this.changePasswordForm.confirmPassword().reset();
-            await this.navigationService.handleLogout();
+            await this.navigationService.handleLogout({
+              passwordChanged: true,
+            });
           } catch (error) {
             this.changePasswordError.set(
               isBackendError(error) ? error.errorCode.toLowerCase() : 'unknown',

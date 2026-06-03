@@ -45,9 +45,9 @@ export class NavigationService {
     void this.router.navigateByUrl('/');
   }
 
-  async handleLogout(): Promise<void> {
+  async handleLogout(stateData?: Record<string, any>): Promise<void> {
     await this.authDataAccess.signOut();
     this.authSession.clearSession();
-    await this.router.navigateByUrl('/auth/login');
+    await this.router.navigateByUrl('/auth/login', { state: stateData });
   }
 }

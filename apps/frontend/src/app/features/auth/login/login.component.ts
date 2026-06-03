@@ -48,9 +48,15 @@ export class LoginComponent {
 
   protected readonly title = translateSignal('auth.login.title');
   protected readonly subtitle = translateSignal('auth.login.subtitle');
+  protected readonly subtitleAfterPasswordChange = translateSignal(
+    'auth.login.subtitleAfterPasswordChange',
+  );
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
+  protected readonly wasPasswordChanged = signal(
+    this.router.currentNavigation()?.extras.state?.['passwordChanged'] ?? false,
+  );
 
   protected readonly loginModel = signal({
     email: '',
