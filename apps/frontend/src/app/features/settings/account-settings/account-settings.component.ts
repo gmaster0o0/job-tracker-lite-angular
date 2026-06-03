@@ -16,6 +16,7 @@ import {
   SaveButtonComponent,
   ServerErrorAlertComponent,
 } from '@job-tracker-lite-angular/frontend-shared';
+import { NavigationService } from '../../../navigation/navigation.service';
 import {
   accountSettingsSchema,
   changeEmailRequestSchema,
@@ -56,6 +57,7 @@ import {
 })
 export class AccountSettingsComponent {
   private readonly authDataAccess = inject(AuthDataAccessService);
+  private readonly navigationService = inject(NavigationService);
 
   protected readonly title = translateSignal('settings.accountSettings.title');
   protected readonly subtitle = translateSignal(
@@ -133,11 +135,17 @@ export class AccountSettingsComponent {
           try {
             await this.authDataAccess.changePassword(data().value());
             this.changePasswordSuccess.set(true);
+            // Clear the form values and reset the form state so validation
+            // errors do not appear immediately after a successful submit.
             this.passwordModel.set({
               currentPassword: '',
               newPassword: '',
               confirmPassword: '',
             });
+            this.changePasswordForm.currentPassword().reset();
+            this.changePasswordForm.newPassword().reset();
+            this.changePasswordForm.confirmPassword().reset();
+            await this.navigationService.handleLogout();
           } catch (error) {
             this.changePasswordError.set(
               isBackendError(error) ? error.errorCode.toLowerCase() : 'unknown',

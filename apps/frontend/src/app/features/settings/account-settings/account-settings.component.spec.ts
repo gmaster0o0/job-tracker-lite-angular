@@ -1,8 +1,9 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AccountSettingsComponent } from './account-settings.component';
 import { AccountSettingsHarness } from './account-settings.harness';
 import { AuthDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { NavigationService } from '../../../navigation/navigation.service';
 import {
   accountSettingsFixtures,
   changeEmailRequestFixtures,
@@ -13,6 +14,8 @@ import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { vi } from 'vitest';
 
 describe('AccountSettingsComponent', () => {
+  let fixture: ComponentFixture<AccountSettingsComponent>;
+  let component: AccountSettingsComponent;
   let harness: AccountSettingsHarness;
   let authDataAccessMock: ReturnType<typeof createAuthDataAccessMock>;
 
@@ -31,10 +34,17 @@ describe('AccountSettingsComponent', () => {
           provide: AuthDataAccessService,
           useValue: authDataAccessMock,
         },
+        {
+          provide: NavigationService,
+          useValue: {
+            handleLogout: vi.fn(async () => undefined),
+          },
+        },
       ],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(AccountSettingsComponent);
+    fixture = TestBed.createComponent(AccountSettingsComponent);
+    component = fixture.componentInstance;
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       AccountSettingsHarness,
@@ -78,5 +88,44 @@ describe('AccountSettingsComponent', () => {
     expect(authDataAccessMock.changePassword).toHaveBeenCalledWith(
       changePasswordFixtures.valid,
     );
+  });
+
+  it('logs out and redirects after successful password change', async () => {
+    const navigationService = TestBed.inject(NavigationService) as any;
+
+    await harness.setCurrentPassword(
+      changePasswordFixtures.valid.currentPassword,
+    );
+    await harness.setNewPassword(changePasswordFixtures.valid.newPassword);
+    await harness.setConfirmPassword(
+      changePasswordFixtures.valid.confirmPassword,
+    );
+    await harness.submitChangePassword();
+
+    expect(authDataAccessMock.changePassword).toHaveBeenCalledWith(
+      changePasswordFixtures.valid,
+    );
+    expect(navigationService.handleLogout).toHaveBeenCalled();
+  });
+
+  it('resets password form state after successful change', async () => {
+    await harness.setCurrentPassword(
+      changePasswordFixtures.valid.currentPassword,
+    );
+    await harness.setNewPassword(changePasswordFixtures.valid.newPassword);
+    await harness.setConfirmPassword(
+      changePasswordFixtures.valid.confirmPassword,
+    );
+    await harness.submitChangePassword();
+
+    await fixture.whenStable();
+    const form = component['changePasswordForm'] as any;
+
+    expect(form.currentPassword().touched()).toBe(false);
+    expect(form.currentPassword().dirty()).toBe(false);
+    expect(form.newPassword().touched()).toBe(false);
+    expect(form.newPassword().dirty()).toBe(false);
+    expect(form.confirmPassword().touched()).toBe(false);
+    expect(form.confirmPassword().dirty()).toBe(false);
   });
 });
