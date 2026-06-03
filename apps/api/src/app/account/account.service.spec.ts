@@ -24,7 +24,7 @@ describe('AccountService', () => {
       callback(prismaMock),
     );
 
-    emailServiceMock = createEmailServiceMock();
+    emailServiceMock = createEmailServiceMock((fn) => jest.fn(fn));
 
     const moduleRef = await Test.createTestingModule({
       providers: [

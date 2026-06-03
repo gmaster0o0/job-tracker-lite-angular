@@ -1,17 +1,23 @@
 export type EmailServiceMock = {
-  sendEmailChangeConfirmationEmail: jest.Mock<
-    Promise<void>,
-    [string, string, 'en' | 'hu']
-  >;
-  sendEmailRestoreEmail: jest.Mock<
-    Promise<void>,
-    [string, string, 'en' | 'hu']
-  >;
+  sendEmailChangeConfirmationEmail: (
+    email: string,
+    url: string,
+    locale: 'en' | 'hu',
+  ) => Promise<void>;
+  sendEmailRestoreEmail: (
+    email: string,
+    url: string,
+    locale: 'en' | 'hu',
+  ) => Promise<void>;
 };
 
-export function createEmailServiceMock(): EmailServiceMock {
+export function createEmailServiceMock(
+  createMock: <T extends (...args: any[]) => any>(
+    fn: T,
+  ) => (...args: Parameters<T>) => ReturnType<T> = (fn) => fn,
+): EmailServiceMock {
   return {
-    sendEmailChangeConfirmationEmail: jest.fn().mockResolvedValue(undefined),
-    sendEmailRestoreEmail: jest.fn().mockResolvedValue(undefined),
+    sendEmailChangeConfirmationEmail: createMock(async () => undefined),
+    sendEmailRestoreEmail: createMock(async () => undefined),
   };
 }
