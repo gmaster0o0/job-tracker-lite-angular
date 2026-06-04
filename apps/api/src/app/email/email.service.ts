@@ -6,10 +6,12 @@ import {
   type EmailProvider,
   type SendEmailOptions,
 } from './providers/email-provider.interface';
-import { getResetPasswordEmailTemplate } from './templates/reset-password-email-template';
-import { getVerificationEmailTemplate } from './templates/verification-email-template';
-import { getRestoreEmailTemplate } from './templates/restore-email-template';
-import { getEmailChangeConfirmationTemplate } from './templates/email-change-confirmation-template';
+import {
+  getResetPasswordEmailTemplate,
+  getEmailChangeConfirmationTemplate,
+  getRestoreEmailTemplate,
+  getVerificationEmailTemplate,
+} from './templates';
 
 @Injectable()
 export class EmailService {
