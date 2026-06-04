@@ -16,7 +16,6 @@ import {
   SaveButtonComponent,
   ServerErrorAlertComponent,
 } from '@job-tracker-lite-angular/frontend-shared';
-import { NavigationService } from '../../../navigation/navigation.service';
 import {
   accountSettingsSchema,
   changeEmailRequestSchema,
@@ -34,6 +33,7 @@ import {
   lucideKey,
   lucideMail,
 } from '@ng-icons/lucide';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   standalone: true,
@@ -57,7 +57,7 @@ import {
 })
 export class AccountSettingsComponent {
   private readonly authDataAccess = inject(AuthDataAccessService);
-  private readonly navigationService = inject(NavigationService);
+  private readonly authService = inject(AuthService);
 
   protected readonly title = translateSignal('settings.accountSettings.title');
   protected readonly subtitle = translateSignal(
@@ -145,7 +145,7 @@ export class AccountSettingsComponent {
             this.changePasswordForm.currentPassword().reset();
             this.changePasswordForm.newPassword().reset();
             this.changePasswordForm.confirmPassword().reset();
-            await this.navigationService.handleLogout({
+            await this.authService.handleLogout({
               passwordChanged: true,
             });
           } catch (error) {

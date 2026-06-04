@@ -1,10 +1,7 @@
 import { Location } from '@angular/common';
 import { inject, Injectable, Signal } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  AuthDataAccessService,
-  AuthSessionService,
-} from '@job-tracker-lite-angular/frontend-data-access';
+import { AuthSessionService } from '@job-tracker-lite-angular/frontend-data-access';
 
 export interface MenuItem {
   readonly label: Signal<string>;
@@ -17,7 +14,6 @@ export interface MenuItem {
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
   private readonly authSession = inject(AuthSessionService);
-  private readonly authDataAccess = inject(AuthDataAccessService);
   protected readonly isAuthenticated = this.authSession.isAuthenticated;
   private readonly router = inject(Router);
   private readonly location = inject(Location);
@@ -43,11 +39,5 @@ export class NavigationService {
     }
 
     void this.router.navigateByUrl('/');
-  }
-
-  async handleLogout(stateData?: Record<string, any>): Promise<void> {
-    await this.authDataAccess.signOut();
-    this.authSession.clearSession();
-    await this.router.navigateByUrl('/auth/login', { state: stateData });
   }
 }

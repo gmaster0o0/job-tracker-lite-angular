@@ -12,6 +12,7 @@ import { version as appVersion } from '../../../environments/version';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import { AuthSessionService } from '@job-tracker-lite-angular/frontend-data-access';
 import { NavigationService } from '../navigation.service';
+import { AuthService } from '../../features/auth/auth.service';
 @Component({
   standalone: true,
   selector: 'app-sidenav',
@@ -35,6 +36,7 @@ export class SidenavComponent {
   private readonly router = inject(Router);
   private readonly authSession = inject(AuthSessionService);
   private readonly navigationService = inject(NavigationService);
+  private readonly authService = inject(AuthService);
 
   protected readonly isAuthenticated = this.authSession.isAuthenticated;
 
@@ -63,6 +65,6 @@ export class SidenavComponent {
   }
 
   protected handleLogout(): Promise<void> {
-    return this.navigationService.handleLogout();
+    return this.authService.handleLogout();
   }
 }
