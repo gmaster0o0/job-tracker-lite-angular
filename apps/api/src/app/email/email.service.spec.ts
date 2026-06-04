@@ -1,12 +1,17 @@
 import { HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { SupportLang } from '@job-tracker-lite-angular/schemas';
-import { EMAIL_PROVIDER, SendEmailOptions } from './email-provider.interface';
+import {
+  EMAIL_PROVIDER,
+  SendEmailOptions,
+} from './providers/email-provider.interface';
 import { EMAIL_ERROR_CODES } from './email.errors';
 import { EmailService } from './email.service';
 import {
   testRecipient,
   testResetUrl,
+  testRestoreRecipient,
+  testRestoreUrl,
   testVerificationRecipient,
   testVerificationUrl,
   testSendOptions,
@@ -71,6 +76,61 @@ describe('EmailService', () => {
       }),
     );
   });
+
+  it.each<[SupportLang, string]>([
+    ['en', 'Restore your previous email - Job Tracker Lite'],
+    ['hu', 'Email visszaállítása - Job Tracker Lite'],
+  ])('should send the email restore email in %s', async (lang, subject) => {
+    await service.sendEmailRestoreEmail(
+      testRestoreRecipient,
+      testRestoreUrl,
+      lang,
+    );
+
+    expect(emailProvider.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: testRestoreRecipient,
+        subject,
+      }),
+    );
+  });
+
+  it('should include the restore URL in the email restore payload', async () => {
+    await service.sendEmailRestoreEmail(
+      testRestoreRecipient,
+      testRestoreUrl,
+      'en',
+    );
+
+    expect(emailProvider.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: testRestoreRecipient,
+        text: expect.stringContaining(testRestoreUrl),
+        html: expect.stringContaining(testRestoreUrl),
+      }),
+    );
+  });
+
+  it.each<[SupportLang, string]>([
+    ['en', 'Confirm your email change - Job Tracker Lite'],
+    ['hu', 'Email-cim valtozas megerositese - Job Tracker Lite'],
+  ])(
+    'should send the email change confirmation email in %s',
+    async (lang, subject) => {
+      await service.sendEmailChangeConfirmationEmail(
+        testVerificationRecipient,
+        testVerificationUrl,
+        lang,
+      );
+
+      expect(emailProvider.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          to: testVerificationRecipient,
+          subject,
+        }),
+      );
+    },
+  );
 
   it('should wrap provider errors in a backend-style exception', async () => {
     emailProvider.send.mockRejectedValueOnce(new Error('smtp failed'));

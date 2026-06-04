@@ -55,13 +55,21 @@ async function main() {
     update: {
       name: 'Demo User',
       email: seedUserEmail,
+      pendingEmail: null,
       emailVerified: true,
     },
     create: {
       id: systemUserId,
       name: 'Demo User',
       email: seedUserEmail,
+      pendingEmail: null,
       emailVerified: true,
+    },
+  });
+
+  await prisma.emailChangeToken.deleteMany({
+    where: {
+      userId: seedUser.id,
     },
   });
 

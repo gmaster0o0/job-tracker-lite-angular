@@ -2,10 +2,10 @@
   <hlm-alert variant="destructive" [class]="cssClass()">
     <ng-icon name="lucideAlertCircle" />
     <h4 hlmAlertTitle>
-      {{ translationPrefix() + '.error.title' | transloco }}
+      {{ errorTitleKey() | transloco }}
     </h4>
     <p hlmAlertDescription>
-      {{ translationPrefix() + '.error.' + errorMessage() | transloco }}
+      {{ errorDescriptionKey() | transloco }}
     </p>
   </hlm-alert>
 }

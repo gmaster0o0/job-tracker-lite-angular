@@ -404,6 +404,44 @@
   "settings": {
     "preferences": "Preferences",
     "account": "Account",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "accountSettings": {
+      "title": "Account Settings",
+      "subtitle": "Update your email and password securely.",
+      "changeEmail": {
+        "title": "Change Email",
+        "description": "Enter a new email address. We will send a verification link to it.",
+        "currentEmail": "Current email",
+        "newEmail": "New email",
+        "submit": "Save",
+        "submitting": "Saving...",
+        "success": "Verification email sent to your new address.",
+        "pendingEmailNotice": "Pending email change: {{email}}. Verify it from your inbox to finish.",
+        "error": {
+          "title": "Email Update Failed",
+          "unknown": "Unable to update email right now. Please try again.",
+          "user_already_exists": "An account with this email already exists.",
+          "email_is_same": "Please use a different email than your current one."
+        }
+      },
+      "changePassword": {
+        "title": "Update Password",
+        "description": "Use your current password, then set a new one.",
+        "currentPassword": "Current password",
+        "newPassword": "New password",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "submit": "Save",
+        "submitting": "Saving...",
+        "success": "Password updated successfully.",
+        "error": {
+          "title": "Password Update Failed",
+          "unknown": "Unable to update password right now. Please try again.",
+          "invalid_password": "Your current password is incorrect.",
+          "password_too_short": "Your new password is too short.",
+          "password_too_long": "Your new password is too long."
+        }
+      }
+    }
   }
 }

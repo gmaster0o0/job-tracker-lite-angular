@@ -398,6 +398,44 @@
   "settings": {
     "preferences": "Testreszabás",
     "account": "Fiókbeállítások",
-    "privacy": "Adatvédelmi beállítások"
+    "privacy": "Adatvédelmi beállítások",
+    "accountSettings": {
+      "title": "Fiókbeállítások",
+      "subtitle": "Frissítse biztonságosan email címét és jelszavát.",
+      "changeEmail": {
+        "title": "Email módosítása",
+        "description": "Adj meg új email címet. A megerősítő linket az új címre küldjük.",
+        "currentEmail": "Jelenlegi email",
+        "newEmail": "Új email",
+        "submit": "Mentés",
+        "submitting": "Mentés...",
+        "success": "Megerősítő email elküldve az új címre.",
+        "pendingEmailNotice": "Függő email módosítás: {{email}}. A befejezéshez erősítsd meg a postaládádból.",
+        "error": {
+          "title": "Email módosítás sikertelen",
+          "unknown": "Most nem sikerült az email módosítása. Próbáld újra.",
+          "user_already_exists": "Ezzel az email címmel már létezik fiók.",
+          "email_is_same": "Kérjük, a jelenlegitől eltérő email címet adjon meg."
+        }
+      },
+      "changePassword": {
+        "title": "Jelszó módosítása",
+        "description": "Add meg a jelenlegi jelszavad, majd állíts be újat.",
+        "currentPassword": "Jelenlegi jelszó",
+        "newPassword": "Új jelszó",
+        "showPassword": "Jelszó megjelenítése",
+        "hidePassword": "Jelszó elrejtése",
+        "submit": "Mentés",
+        "submitting": "Mentés...",
+        "success": "A jelszó sikeresen frissítve.",
+        "error": {
+          "title": "Jelszó módosítás sikertelen",
+          "unknown": "Most nem sikerült a jelszó frissítése. Próbáld újra.",
+          "invalid_password": "A jelenlegi jelszó hibás.",
+          "password_too_short": "Az új jelszó túl rövid.",
+          "password_too_long": "Az új jelszó túl hosszú."
+        }
+      }
+    }
   }
 }

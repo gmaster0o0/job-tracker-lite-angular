@@ -27,6 +27,22 @@ export function createPrismaServiceMock(mockFactory: () => any) {
       update: mockFactory(),
       delete: mockFactory(),
     },
+    user: {
+      findUnique: mockFactory(),
+      findUniqueOrThrow: mockFactory(),
+      findFirst: mockFactory(),
+      update: mockFactory(),
+    },
+    session: {
+      deleteMany: mockFactory(),
+    },
+    emailChangeToken: {
+      findUnique: mockFactory(),
+      delete: mockFactory(),
+      deleteMany: mockFactory(),
+      create: mockFactory(),
+    },
+    $transaction: mockFactory(),
     __fixtures: {
       jobs: allPrismaJobFixtures,
       contacts: allPrismaContactFixtures,

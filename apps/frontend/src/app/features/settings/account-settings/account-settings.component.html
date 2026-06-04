@@ -1,0 +1,266 @@
+<div
+  class="mx-auto flex h-full w-full max-w-4xl flex-col gap-6 overflow-y-auto px-4 py-8 md:py-10"
+>
+  <div>
+    <h1 class="text-3xl font-bold tracking-tight">{{ title() }}</h1>
+    <p class="text-muted-foreground">{{ subtitle() }}</p>
+  </div>
+
+  <hlm-card>
+    <hlm-card-header>
+      <h2 hlmCardTitle>
+        <ng-icon name="lucideMail"></ng-icon>
+
+        {{ 'settings.accountSettings.changeEmail.title' | transloco }}
+      </h2>
+      <p hlmCardDescription>
+        {{ 'settings.accountSettings.changeEmail.description' | transloco }}
+      </p>
+    </hlm-card-header>
+
+    <div hlmCardContent>
+      <form [formRoot]="changeEmailForm" id="changeEmailForm" class="space-y-2">
+        <hlm-field-group>
+          <hlm-field>
+            <label hlmLabel for="currentEmail">{{
+              'settings.accountSettings.changeEmail.currentEmail' | transloco
+            }}</label>
+            <input
+              hlmInput
+              id="currentEmail"
+              type="email"
+              [value]="accountSettings().email"
+              [placeholder]="isLoadingSettings() ? 'Loading...' : ''"
+              class="w-full cursor-not-allowed bg-muted/60 text-foreground pointer-events-none"
+              readonly
+              tabindex="-1"
+              aria-readonly="true"
+            />
+          </hlm-field>
+
+          <hlm-field>
+            <label hlmLabel for="newEmail">{{
+              'settings.accountSettings.changeEmail.newEmail' | transloco
+            }}</label>
+            <input
+              hlmInput
+              libFormField
+              id="newEmail"
+              type="email"
+              [formField]="changeEmailForm.newEmail"
+              placeholder="{{ 'auth.fields.email.placeholder' | transloco }}"
+              class="w-full"
+            />
+            @if (
+              changeEmailForm.newEmail().invalid() &&
+              (changeEmailForm.newEmail().touched() ||
+                changeEmailForm.newEmail().dirty())
+            ) {
+              <hlm-field-error validator="required">{{
+                'auth.fields.email.required' | transloco
+              }}</hlm-field-error>
+              <hlm-field-error validator="invalid_format">{{
+                'auth.fields.email.invalid_format' | transloco
+              }}</hlm-field-error>
+            }
+          </hlm-field>
+
+          @if (accountSettings().pendingEmail) {
+            <p class="text-sm text-muted-foreground">
+              {{
+                'settings.accountSettings.changeEmail.pendingEmailNotice'
+                  | transloco: { email: accountSettings().pendingEmail }
+              }}
+            </p>
+          }
+
+          @if (changeEmailSuccess()) {
+            <p class="text-sm text-emerald-600">
+              {{ 'settings.accountSettings.changeEmail.success' | transloco }}
+            </p>
+          }
+
+          <app-server-error-alert
+            [errorMessage]="changeEmailError()"
+            translationPrefix="settings.accountSettings.changeEmail"
+            cssClass="w-full"
+          />
+        </hlm-field-group>
+      </form>
+    </div>
+
+    <hlm-card-footer class="justify-end">
+      <app-save-button
+        [formId]="'changeEmailForm'"
+        [disabled]="
+          isLoadingSettings() ||
+          changeEmailForm().invalid() ||
+          isChangingEmail()
+        "
+        [isSubmitting]="isChangingEmail()"
+        [idleLabel]="'settings.accountSettings.changeEmail.submit' | transloco"
+        [submittingLabel]="
+          'settings.accountSettings.changeEmail.submitting' | transloco
+        "
+      />
+    </hlm-card-footer>
+  </hlm-card>
+
+  <hlm-card>
+    <hlm-card-header>
+      <h2 hlmCardTitle>
+        <ng-icon name="lucideKey"></ng-icon>
+
+        {{ 'settings.accountSettings.changePassword.title' | transloco }}
+      </h2>
+      <p hlmCardDescription>
+        {{ 'settings.accountSettings.changePassword.description' | transloco }}
+      </p>
+    </hlm-card-header>
+
+    <div hlmCardContent>
+      <form [formRoot]="changePasswordForm" id="changePasswordForm">
+        <hlm-field-group>
+          <hlm-field>
+            <label hlmLabel for="currentPassword">{{
+              'settings.accountSettings.changePassword.currentPassword'
+                | transloco
+            }}</label>
+            <input
+              hlmInput
+              libFormField
+              id="currentPassword"
+              type="password"
+              [formField]="changePasswordForm.currentPassword"
+              placeholder="{{ 'auth.fields.password.placeholder' | transloco }}"
+              class="w-full"
+            />
+            @if (
+              changePasswordForm.currentPassword().invalid() &&
+              (changePasswordForm.currentPassword().touched() ||
+                changePasswordForm.currentPassword().dirty())
+            ) {
+              <hlm-field-error validator="required">{{
+                'auth.fields.password.required' | transloco
+              }}</hlm-field-error>
+            }
+          </hlm-field>
+
+          <hlm-field>
+            <label hlmLabel for="newPassword">{{
+              'settings.accountSettings.changePassword.newPassword' | transloco
+            }}</label>
+            <div class="relative">
+              <input
+                hlmInput
+                libFormField
+                id="newPassword"
+                [type]="isNewPasswordVisible() ? 'text' : 'password'"
+                [formField]="changePasswordForm.newPassword"
+                placeholder="{{
+                  'auth.fields.password.placeholder' | transloco
+                }}"
+                class="w-full pr-12"
+              />
+              <button
+                hlmBtn
+                variant="ghost"
+                size="sm"
+                type="button"
+                class="absolute right-1 top-1/2 -translate-y-1/2"
+                (click)="toggleNewPasswordVisibility()"
+                [attr.aria-label]="
+                  isNewPasswordVisible()
+                    ? ('settings.accountSettings.changePassword.hidePassword'
+                      | transloco)
+                    : ('settings.accountSettings.changePassword.showPassword'
+                      | transloco)
+                "
+              >
+                <ng-icon
+                  [name]="isNewPasswordVisible() ? 'lucideEyeOff' : 'lucideEye'"
+                />
+              </button>
+            </div>
+
+            @if (
+              changePasswordForm.newPassword().invalid() &&
+              (changePasswordForm.newPassword().touched() ||
+                changePasswordForm.newPassword().dirty())
+            ) {
+              <hlm-field-error validator="too_small">{{
+                'auth.fields.password.too_small' | transloco
+              }}</hlm-field-error>
+              <hlm-field-error validator="need_uppercase">{{
+                'auth.fields.password.need_uppercase' | transloco
+              }}</hlm-field-error>
+              <hlm-field-error validator="need_lowercase">{{
+                'auth.fields.password.need_lowercase' | transloco
+              }}</hlm-field-error>
+              <hlm-field-error validator="need_number">{{
+                'auth.fields.password.need_number' | transloco
+              }}</hlm-field-error>
+            }
+          </hlm-field>
+
+          <hlm-field>
+            <label hlmLabel for="confirmPassword">{{
+              'auth.fields.confirmPassword.label' | transloco
+            }}</label>
+            <input
+              hlmInput
+              libFormField
+              id="confirmPassword"
+              type="password"
+              [formField]="changePasswordForm.confirmPassword"
+              placeholder="{{
+                'auth.fields.confirmPassword.placeholder' | transloco
+              }}"
+              class="w-full"
+            />
+            @if (
+              changePasswordForm.confirmPassword().invalid() &&
+              (changePasswordForm.confirmPassword().touched() ||
+                changePasswordForm.confirmPassword().dirty())
+            ) {
+              <hlm-field-error validator="required">{{
+                'auth.fields.confirmPassword.required' | transloco
+              }}</hlm-field-error>
+              <hlm-field-error validator="password_mismatch">{{
+                'auth.fields.confirmPassword.password_mismatch' | transloco
+              }}</hlm-field-error>
+            }
+          </hlm-field>
+
+          @if (changePasswordSuccess()) {
+            <p class="text-sm text-emerald-600">
+              {{
+                'settings.accountSettings.changePassword.success' | transloco
+              }}
+            </p>
+          }
+
+          <app-server-error-alert
+            [errorMessage]="changePasswordError()"
+            translationPrefix="settings.accountSettings.changePassword"
+            cssClass="w-full"
+          />
+        </hlm-field-group>
+      </form>
+    </div>
+
+    <hlm-card-footer class="justify-end">
+      <app-save-button
+        [formId]="'changePasswordForm'"
+        [disabled]="changePasswordForm().invalid() || isChangingPassword()"
+        [isSubmitting]="isChangingPassword()"
+        [idleLabel]="
+          'settings.accountSettings.changePassword.submit' | transloco
+        "
+        [submittingLabel]="
+          'settings.accountSettings.changePassword.submitting' | transloco
+        "
+      />
+    </hlm-card-footer>
+  </hlm-card>
+</div>

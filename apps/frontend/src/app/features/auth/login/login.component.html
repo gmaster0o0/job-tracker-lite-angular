@@ -2,7 +2,14 @@
   <hlm-card>
     <hlm-card-header>
       <h1 hlmCardTitle>{{ title() }}</h1>
-      <p hlmCardDescription>{{ subtitle() }}</p>
+
+      @if (wasPasswordChanged()) {
+        <p hlmCardDescription class="text-green-600">
+          {{ subtitleAfterPasswordChange() }}
+        </p>
+      } @else {
+        <p hlmCardDescription>{{ subtitle() }}</p>
+      }
     </hlm-card-header>
 
     <div hlmCardContent>

@@ -87,6 +87,14 @@ export const appRoutes: Route[] = [
                 './features/settings/preferences/preferences.component'
               ).then((m) => m.PreferencesComponent),
           },
+          {
+            path: 'account',
+            canActivate: [authGuard],
+            loadComponent: () =>
+              import(
+                './features/settings/account-settings/account-settings.component'
+              ).then((m) => m.AccountSettingsComponent),
+          },
         ],
       },
       {

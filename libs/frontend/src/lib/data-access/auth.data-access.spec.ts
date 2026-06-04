@@ -3,6 +3,9 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { AuthDataAccessService } from './auth.data-access';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {
+  accountSettingsFixtures,
+  changeEmailRequestFixtures,
+  changePasswordFixtures,
   validLoginCredentials,
   validForgotPasswordCredentials,
   validResetPasswordCredentials,
@@ -100,5 +103,50 @@ describe('AuthDataAccessService', () => {
     verificationReq.flush({ status: true });
 
     await expect(sendVerificationPromise).resolves.toBeUndefined();
+  });
+
+  it('should fetch account settings', async () => {
+    const accountPromise = service.getAccountSettings();
+
+    const accountReq = httpMock.expectOne('/api/account');
+    expect(accountReq.request.method).toBe('GET');
+    expect(accountReq.request.withCredentials).toBe(true);
+    accountReq.flush(accountSettingsFixtures.default);
+
+    await expect(accountPromise).resolves.toEqual(
+      accountSettingsFixtures.default,
+    );
+  });
+
+  it('should call account change-email endpoint', async () => {
+    const requestPromise = service.requestEmailChange(
+      changeEmailRequestFixtures.valid,
+    );
+
+    const req = httpMock.expectOne('/api/account/change-email');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.withCredentials).toBe(true);
+    expect(req.request.body).toEqual(changeEmailRequestFixtures.valid);
+    req.flush({ status: true });
+
+    await expect(requestPromise).resolves.toBeUndefined();
+  });
+
+  it('should call auth change-password endpoint and revoke other sessions', async () => {
+    const changePasswordPromise = service.changePassword(
+      changePasswordFixtures.valid,
+    );
+
+    const req = httpMock.expectOne('/api/auth/change-password');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.withCredentials).toBe(true);
+    expect(req.request.body).toEqual({
+      currentPassword: changePasswordFixtures.valid.currentPassword,
+      newPassword: changePasswordFixtures.valid.newPassword,
+      revokeOtherSessions: true,
+    });
+    req.flush({ status: true });
+
+    await expect(changePasswordPromise).resolves.toBeUndefined();
   });
 });

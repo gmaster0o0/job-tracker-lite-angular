@@ -3,7 +3,6 @@ import { BaseExceptionFilter } from '@nestjs/core';
 import type { Response } from 'express';
 import {
   BETTER_AUTH_ERROR_CODE_MESSAGES,
-  BETTER_AUTH_ERROR_CODES,
   BETTER_AUTH_STATUS_MAP,
 } from './better-auth-error.constants';
 
@@ -40,7 +39,7 @@ export class BetterAuthExceptionFilter extends BaseExceptionFilter {
 
     return response.status(statusCode).json({
       statusCode,
-      errorCode: errorCode || BETTER_AUTH_ERROR_CODES.INTERNAL_SERVER_ERROR,
+      errorCode: errorCode || 'internal_server_error',
       message,
     });
   }

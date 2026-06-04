@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
+  AccountSettingsDto,
   AuthSessionDto,
+  ChangeEmailRequestDto,
+  ChangePasswordDto,
   ForgotPasswordDto,
   LoginDto,
   RegisterDto,
@@ -114,6 +117,44 @@ export class AuthDataAccessService {
         '/api/auth/send-verification-email',
         {
           email: dto.email,
+        },
+        {
+          withCredentials: true,
+        },
+      ),
+    );
+  }
+
+  async getAccountSettings(): Promise<AccountSettingsDto> {
+    return await firstValueFrom(
+      this.http.get<AccountSettingsDto>('/api/account', {
+        withCredentials: true,
+      }),
+    );
+  }
+
+  async requestEmailChange(dto: ChangeEmailRequestDto): Promise<void> {
+    await firstValueFrom(
+      this.http.post(
+        '/api/account/change-email',
+        {
+          newEmail: dto.newEmail,
+        },
+        {
+          withCredentials: true,
+        },
+      ),
+    );
+  }
+
+  async changePassword(dto: ChangePasswordDto): Promise<void> {
+    await firstValueFrom(
+      this.http.post(
+        '/api/auth/change-password',
+        {
+          currentPassword: dto.currentPassword,
+          newPassword: dto.newPassword,
+          revokeOtherSessions: true,
         },
         {
           withCredentials: true,
