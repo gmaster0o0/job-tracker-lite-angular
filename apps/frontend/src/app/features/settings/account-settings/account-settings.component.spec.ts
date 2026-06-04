@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AccountSettingsComponent } from './account-settings.component';
 import { AccountSettingsHarness } from './account-settings.harness';
 import { AuthDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
-import { NavigationService } from '../../../navigation/navigation.service';
 import {
   accountSettingsFixtures,
   changeEmailRequestFixtures,
@@ -12,12 +11,14 @@ import {
 } from '@job-tracker-lite-angular/testing';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { vi } from 'vitest';
+import { AuthService } from '../../auth/auth.service';
 
 describe('AccountSettingsComponent', () => {
   let fixture: ComponentFixture<AccountSettingsComponent>;
   let component: AccountSettingsComponent;
   let harness: AccountSettingsHarness;
   let authDataAccessMock: ReturnType<typeof createAuthDataAccessMock>;
+  let authServiceMock: { handleLogout: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     authDataAccessMock = createAuthDataAccessMock({
@@ -27,6 +28,10 @@ describe('AccountSettingsComponent', () => {
     vi.spyOn(authDataAccessMock, 'requestEmailChange');
     vi.spyOn(authDataAccessMock, 'changePassword');
 
+    authServiceMock = {
+      handleLogout: vi.fn(async () => undefined),
+    };
+
     await TestBed.configureTestingModule({
       imports: [AccountSettingsComponent, getTranslocoModule()],
       providers: [
@@ -35,10 +40,8 @@ describe('AccountSettingsComponent', () => {
           useValue: authDataAccessMock,
         },
         {
-          provide: NavigationService,
-          useValue: {
-            handleLogout: vi.fn(async () => undefined),
-          },
+          provide: AuthService,
+          useValue: authServiceMock,
         },
       ],
     }).compileComponents();
@@ -91,7 +94,7 @@ describe('AccountSettingsComponent', () => {
   });
 
   it('logs out and redirects after successful password change', async () => {
-    const navigationService = TestBed.inject(NavigationService) as any;
+    const authService = TestBed.inject(AuthService) as any;
 
     await harness.setCurrentPassword(
       changePasswordFixtures.valid.currentPassword,
@@ -105,7 +108,9 @@ describe('AccountSettingsComponent', () => {
     expect(authDataAccessMock.changePassword).toHaveBeenCalledWith(
       changePasswordFixtures.valid,
     );
-    expect(navigationService.handleLogout).toHaveBeenCalled();
+    expect(authService.handleLogout).toHaveBeenCalledWith({
+      passwordChanged: true,
+    });
   });
 
   it('resets password form state after successful change', async () => {
