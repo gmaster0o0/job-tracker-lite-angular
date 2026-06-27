@@ -15,6 +15,8 @@ Key points to keep:
 
 - **Centralized fixtures & mocks**: keep test data and lightweight mocks in `libs/shared/testing/src/lib/fixtures/` and `libs/shared/testing/src/lib/mocks/`, export from `libs/shared/testing/src/index.ts`, and reuse across tests.
 
+**WHEN**: create new fixtures or mocks it should be framework-agnostic, small, and semantic. Avoid duplicating existing fixtures.
+
 - **Generate and use harnesses**: generate Angular harnesses for UI components and use test harness APIs (e.g., `TestbedHarnessEnvironment`) to interact with components in tests.
 
 Example usage:
@@ -38,5 +40,4 @@ Checklist:
 
 Keep tests focused and fast: prefer small, semantic fixtures, simple mocks, and harness-driven UI interaction.
 
-## e2e and Integration Testing
 
