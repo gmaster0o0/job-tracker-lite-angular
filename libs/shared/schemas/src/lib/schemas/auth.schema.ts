@@ -109,16 +109,16 @@ export const authUserSchema = z.object({
   email: z.email(),
   emailVerified: z.boolean(),
   image: z.string().nullable(),
-  createdAt: z.union([z.string(), z.date()]),
-  updatedAt: z.union([z.string(), z.date()]),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 });
 
 export const authSessionSchema = z.object({
   id: z.string(),
   token: z.string(),
-  expiresAt: z.union([z.string(), z.date()]),
-  createdAt: z.union([z.string(), z.date()]),
-  updatedAt: z.union([z.string(), z.date()]),
+  expiresAt: z.coerce.date(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
   ipAddress: z.string().nullish(),
   userAgent: z.string().nullish(),
   userId: z.string(),

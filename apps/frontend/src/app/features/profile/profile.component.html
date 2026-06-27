@@ -1,0 +1,514 @@
+<div class="container mx-auto max-w-4xl py-8 px-4">
+  <h1 class="mb-8 text-3xl font-bold tracking-tight">User Profile</h1>
+
+  @if (profileResource.isLoading()) {
+    <div class="flex h-64 items-center justify-center">
+      <p class="text-muted-foreground animate-pulse">Loading profile...</p>
+    </div>
+  } @else if (profileResource.value(); as profile) {
+    <div class="grid gap-8">
+      <!-- Personal Info Section -->
+      <section hlmCard>
+        <div
+          hlmCardHeader
+          class="flex flex-row items-center justify-between space-y-0"
+        >
+          <div>
+            <h2 hlmCardTitle>Personal Information</h2>
+            <p hlmCardDescription>Your basic identification and bio.</p>
+          </div>
+          @if (editingSection() !== 'personal') {
+            <button
+              hlmBtn
+              variant="ghost"
+              size="sm"
+              (click)="editSection('personal', profile)"
+            >
+              <ng-icon hlm name="lucidePencil" size="sm" class="mr-2" />
+              Edit
+            </button>
+          }
+        </div>
+        <div hlmCardContent>
+          @if (editingSection() === 'personal') {
+            <div class="grid gap-4">
+              <div class="grid gap-2">
+                <label hlmLabel for="name">Name</label>
+                <input
+                  hlmInput
+                  id="name"
+                  [(ngModel)]="editData.name"
+                  placeholder="Your Name"
+                />
+              </div>
+              <div class="grid gap-2">
+                <label hlmLabel for="title">Professional Title</label>
+                <input
+                  hlmInput
+                  id="title"
+                  [(ngModel)]="editData.title"
+                  placeholder="e.g. Senior Frontend Developer"
+                />
+              </div>
+              <div class="grid gap-2">
+                <label hlmLabel for="city">City</label>
+                <input
+                  hlmInput
+                  id="city"
+                  [(ngModel)]="editData.city"
+                  placeholder="e.g. New York, USA"
+                />
+              </div>
+              <div class="grid gap-2">
+                <label hlmLabel for="bio">Bio</label>
+                <textarea
+                  hlmInput
+                  id="bio"
+                  [(ngModel)]="editData.bio"
+                  placeholder="Tell us about yourself..."
+                  class="min-h-[100px]"
+                ></textarea>
+              </div>
+              <div class="flex items-center gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="isPublic"
+                  [(ngModel)]="editData.isPublic"
+                  class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <label
+                  hlmLabel
+                  for="isPublic"
+                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >Make Profile Public</label
+                >
+              </div>
+            </div>
+          } @else {
+            <div class="grid gap-4">
+              <div class="flex items-center gap-4">
+                <div
+                  class="flex h-16 w-16 items-center justify-center rounded-full bg-secondary text-secondary-foreground text-2xl font-bold"
+                >
+                  {{ profile.name?.charAt(0) || '?' }}
+                </div>
+                <div class="grid gap-1">
+                  <p class="text-xl font-bold leading-none">
+                    {{ profile.name || 'Set your name' }}
+                  </p>
+                  <p class="text-muted-foreground">
+                    {{ profile.title || 'Add professional title' }}
+                  </p>
+                </div>
+              </div>
+              @if (profile.city) {
+                <div
+                  class="flex items-center gap-2 text-sm text-muted-foreground"
+                >
+                  <ng-icon hlm name="lucideMapPin" size="xs" />
+                  {{ profile.city }}
+                </div>
+              }
+              @if (profile.bio) {
+                <p
+                  class="mt-2 text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap"
+                >
+                  {{ profile.bio }}
+                </p>
+              }
+              <div class="mt-2 flex gap-2">
+                @if (profile.isPublic) {
+                  <hlm-badge
+                    variant="outline"
+                    class="text-green-600 border-green-200 bg-green-50"
+                    >Public</hlm-badge
+                  >
+                } @else {
+                  <hlm-badge variant="secondary">Private</hlm-badge>
+                }
+              </div>
+            </div>
+          }
+        </div>
+        @if (editingSection() === 'personal') {
+          <div
+            hlmCardFooter
+            class="flex justify-end gap-2 bg-muted/50 py-3 px-6 rounded-b-lg"
+          >
+            <button hlmBtn variant="ghost" (click)="cancelEdit()">
+              Cancel
+            </button>
+            <button hlmBtn (click)="saveSection('personal')">
+              Save Changes
+            </button>
+          </div>
+        }
+      </section>
+
+      <!-- Contact Section -->
+      <section hlmCard>
+        <div
+          hlmCardHeader
+          class="flex flex-row items-center justify-between space-y-0"
+        >
+          <div>
+            <h2 hlmCardTitle>Contact & Links</h2>
+            <p hlmCardDescription>How recruiters and peers can find you.</p>
+          </div>
+          @if (editingSection() !== 'contact') {
+            <button
+              hlmBtn
+              variant="ghost"
+              size="sm"
+              (click)="editSection('contact', profile)"
+            >
+              <ng-icon hlm name="lucidePencil" size="sm" class="mr-2" />
+              Edit
+            </button>
+          }
+        </div>
+        <div hlmCardContent>
+          @if (editingSection() === 'contact') {
+            <div class="grid gap-4">
+              <div class="grid gap-2">
+                <label hlmLabel for="email">Contact Email</label>
+                <input
+                  hlmInput
+                  id="email"
+                  [(ngModel)]="editData.email"
+                  placeholder="email@example.com"
+                />
+              </div>
+              <div class="grid gap-2">
+                <label hlmLabel for="linkedin">LinkedIn Profile URL</label>
+                <input
+                  hlmInput
+                  id="linkedin"
+                  [(ngModel)]="editData.linkedin"
+                  placeholder="https://linkedin.com/in/username"
+                />
+              </div>
+              <div class="grid gap-2">
+                <label hlmLabel for="github">GitHub Profile URL</label>
+                <input
+                  hlmInput
+                  id="github"
+                  [(ngModel)]="editData.github"
+                  placeholder="https://github.com/username"
+                />
+              </div>
+              <div class="grid gap-2">
+                <label hlmLabel for="webpage"
+                  >Personal Website / Portfolio</label
+                >
+                <input
+                  hlmInput
+                  id="webpage"
+                  [(ngModel)]="editData.webpage"
+                  placeholder="https://example.com"
+                />
+              </div>
+            </div>
+          } @else {
+            <div class="grid gap-3 sm:grid-cols-2">
+              <div class="flex items-center gap-3">
+                <ng-icon
+                  hlm
+                  name="lucideMail"
+                  size="sm"
+                  class="text-muted-foreground"
+                />
+                <span class="text-sm">{{
+                  profile.email || 'No contact email set'
+                }}</span>
+              </div>
+              @if (profile.linkedin) {
+                <div class="flex items-center gap-3">
+                  <ng-icon
+                    hlm
+                    name="lucideLinkedin"
+                    size="sm"
+                    class="text-[#0A66C2]"
+                  />
+                  <a
+                    [href]="profile.linkedin"
+                    target="_blank"
+                    class="text-sm text-primary hover:underline truncate"
+                    >{{ profile.linkedin }}</a
+                  >
+                </div>
+              }
+              @if (profile.github) {
+                <div class="flex items-center gap-3">
+                  <ng-icon
+                    hlm
+                    name="lucideGithub"
+                    size="sm"
+                    class="text-foreground"
+                  />
+                  <a
+                    [href]="profile.github"
+                    target="_blank"
+                    class="text-sm text-primary hover:underline truncate"
+                    >{{ profile.github }}</a
+                  >
+                </div>
+              }
+              @if (profile.webpage) {
+                <div class="flex items-center gap-3">
+                  <ng-icon
+                    hlm
+                    name="lucideGlobe"
+                    size="sm"
+                    class="text-muted-foreground"
+                  />
+                  <a
+                    [href]="profile.webpage"
+                    target="_blank"
+                    class="text-sm text-primary hover:underline truncate"
+                    >{{ profile.webpage }}</a
+                  >
+                </div>
+              }
+            </div>
+          }
+        </div>
+        @if (editingSection() === 'contact') {
+          <div
+            hlmCardFooter
+            class="flex justify-end gap-2 bg-muted/50 py-3 px-6 rounded-b-lg"
+          >
+            <button hlmBtn variant="ghost" (click)="cancelEdit()">
+              Cancel
+            </button>
+            <button hlmBtn (click)="saveSection('contact')">
+              Save Changes
+            </button>
+          </div>
+        }
+      </section>
+
+      <!-- Skills Section -->
+      <section hlmCard>
+        <div
+          hlmCardHeader
+          class="flex flex-row items-center justify-between space-y-0"
+        >
+          <div>
+            <h2 hlmCardTitle>Core Skills</h2>
+            <p hlmCardDescription>Your technical expertise and tools.</p>
+          </div>
+          @if (editingSection() !== 'skills') {
+            <button
+              hlmBtn
+              variant="ghost"
+              size="sm"
+              (click)="editSection('skills', profile)"
+            >
+              <ng-icon hlm name="lucidePencil" size="sm" class="mr-2" />
+              Edit
+            </button>
+          }
+        </div>
+        <div hlmCardContent>
+          @if (editingSection() === 'skills') {
+            <div class="grid gap-6">
+              <div
+                class="flex flex-wrap gap-2 min-h-[40px] p-4 border rounded-md bg-muted/20"
+              >
+                @for (
+                  skill of editData.coreSkills;
+                  track skill;
+                  let i = $index
+                ) {
+                  <hlm-badge
+                    class="gap-1 px-3 py-1 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors"
+                  >
+                    {{ skill }}
+                    <button
+                      (click)="removeSkill(i)"
+                      class="ml-1 hover:text-destructive transition-colors"
+                    >
+                      <ng-icon hlm name="lucideX" size="xs" />
+                    </button>
+                  </hlm-badge>
+                } @empty {
+                  <p class="text-sm text-muted-foreground italic">
+                    No skills added yet.
+                  </p>
+                }
+              </div>
+              <div class="flex gap-2">
+                <input
+                  hlmInput
+                  #newSkillInput
+                  placeholder="Add a skill (e.g. Angular, TypeScript, Prisma)..."
+                  class="flex-1"
+                  (keyup.enter)="
+                    addSkill(newSkillInput.value); newSkillInput.value = ''
+                  "
+                />
+                <button
+                  hlmBtn
+                  (click)="
+                    addSkill(newSkillInput.value); newSkillInput.value = ''
+                  "
+                >
+                  <ng-icon hlm name="lucidePlus" size="sm" class="mr-2" />
+                  Add
+                </button>
+              </div>
+            </div>
+          } @else {
+            <div class="flex flex-wrap gap-2">
+              @for (skill of profile.coreSkills; track skill) {
+                <hlm-badge variant="secondary" class="px-3 py-1">{{
+                  skill
+                }}</hlm-badge>
+              } @empty {
+                <div
+                  class="flex flex-col items-center justify-center w-full py-8 border border-dashed rounded-lg bg-muted/10"
+                >
+                  <p class="text-sm text-muted-foreground italic">
+                    No skills added yet. Click edit to add your expertise.
+                  </p>
+                </div>
+              }
+            </div>
+          }
+        </div>
+        @if (editingSection() === 'skills') {
+          <div
+            hlmCardFooter
+            class="flex justify-end gap-2 bg-muted/50 py-3 px-6 rounded-b-lg"
+          >
+            <button hlmBtn variant="ghost" (click)="cancelEdit()">
+              Cancel
+            </button>
+            <button hlmBtn (click)="saveSection('skills')">Save Changes</button>
+          </div>
+        }
+      </section>
+
+      <!-- Career Preferences Section -->
+      <section hlmCard>
+        <div
+          hlmCardHeader
+          class="flex flex-row items-center justify-between space-y-0"
+        >
+          <div>
+            <h2 hlmCardTitle>Professional Preferences</h2>
+            <p hlmCardDescription>
+              Your career path and preferred working environment.
+            </p>
+          </div>
+          @if (editingSection() !== 'preferences') {
+            <button
+              hlmBtn
+              variant="ghost"
+              size="sm"
+              (click)="editSection('preferences', profile)"
+            >
+              <ng-icon hlm name="lucidePencil" size="sm" class="mr-2" />
+              Edit
+            </button>
+          }
+        </div>
+        <div hlmCardContent>
+          @if (editingSection() === 'preferences') {
+            <div class="grid gap-4 sm:grid-cols-3">
+              <div class="grid gap-2">
+                <label hlmLabel for="experienceLevel">Experience Level</label>
+                <select
+                  hlmInput
+                  id="experienceLevel"
+                  [(ngModel)]="editData.experienceLevel"
+                  class="bg-background"
+                >
+                  <option [ngValue]="null">Select Level</option>
+                  @for (level of experienceLevels; track level) {
+                    <option [value]="level">{{ level }}</option>
+                  }
+                </select>
+              </div>
+              <div class="grid gap-2">
+                <label hlmLabel for="workingStyle">Working style</label>
+                <select
+                  hlmInput
+                  id="workingStyle"
+                  [(ngModel)]="editData.workingStyle"
+                  class="bg-background"
+                >
+                  <option [ngValue]="null">Select Style</option>
+                  @for (style of workingStyles; track style) {
+                    <option [value]="style">{{ style }}</option>
+                  }
+                </select>
+              </div>
+              <div class="grid gap-2">
+                <label hlmLabel for="careerType">Contract Type</label>
+                <select
+                  hlmInput
+                  id="careerType"
+                  [(ngModel)]="editData.careerType"
+                  class="bg-background"
+                >
+                  <option [ngValue]="null">Select Type</option>
+                  @for (type of careerTypes; track type) {
+                    <option [value]="type">{{ type }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          } @else {
+            <div class="grid gap-4 sm:grid-cols-3">
+              <div class="grid gap-1.5 p-4 rounded-lg bg-secondary/30">
+                <p
+                  class="text-xs text-muted-foreground uppercase font-bold tracking-widest"
+                >
+                  Experience
+                </p>
+                <p class="text-lg font-semibold">
+                  {{ profile.experienceLevel || 'Not set' }}
+                </p>
+              </div>
+              <div class="grid gap-1.5 p-4 rounded-lg bg-secondary/30">
+                <p
+                  class="text-xs text-muted-foreground uppercase font-bold tracking-widest"
+                >
+                  Working Style
+                </p>
+                <p class="text-lg font-semibold">
+                  {{ profile.workingStyle || 'Not set' }}
+                </p>
+              </div>
+              <div class="grid gap-1.5 p-4 rounded-lg bg-secondary/30">
+                <p
+                  class="text-xs text-muted-foreground uppercase font-bold tracking-widest"
+                >
+                  Contract
+                </p>
+                <p class="text-lg font-semibold">
+                  {{ profile.careerType || 'Not set' }}
+                </p>
+              </div>
+            </div>
+          }
+        </div>
+        @if (editingSection() === 'preferences') {
+          <div
+            hlmCardFooter
+            class="flex justify-end gap-2 bg-muted/50 py-3 px-6 rounded-b-lg"
+          >
+            <button hlmBtn variant="ghost" (click)="cancelEdit()">
+              Cancel
+            </button>
+            <button hlmBtn (click)="saveSection('preferences')">
+              Save Changes
+            </button>
+          </div>
+        }
+      </section>
+    </div>
+  }
+</div>
