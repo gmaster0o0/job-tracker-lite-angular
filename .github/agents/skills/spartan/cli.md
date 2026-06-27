@@ -3,7 +3,7 @@
 The CLI is an Nx plugin that also runs as Angular CLI schematics. Pick the invocation that matches
 the workspace (`info --json` reports `workspaceType`):
 
-- **Nx** (`nx.json` present): `npx nx g @spartan-ng/cli:<generator>` (or `pnpm nx g ...`).
+- **Nx** (`nx.json` present): `npx nx g @spartan-ng/cli:<generator>` (or `npx nx g ...`).
 - **Angular CLI** (`angular.json`, no `nx.json`): `ng g @spartan-ng/cli:<generator>`.
 
 Install the plugin first: `npm i -D @spartan-ng/cli`.

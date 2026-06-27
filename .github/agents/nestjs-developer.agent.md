@@ -111,8 +111,8 @@ apps/api/src/app/
 **3. Database Schema & Migrations**
 
 - Modify `libs/shared/prisma/schema.prisma` for data model changes
-- Run `pnpm prisma migrate dev` to create migrations
-- Run `pnpm prisma generate` to update Prisma Client types
+- Run `npx prisma migrate dev` to create migrations
+- Run `npx prisma generate` to update Prisma Client types
 - Test migrations in development before committing
 
 **4. Database Access**
@@ -441,10 +441,10 @@ model Contact {
 }
 
 // 2. Generate migration
-// Run: pnpm prisma migrate dev --name add_contacts_table
+// Run: npx prisma migrate dev --name add_contacts_table
 
 // 3. Update Prisma Client types
-// Run: pnpm prisma generate
+// Run: npx prisma generate
 
 // 4. Use new model in service
 async createContact(jobId: string, dto: CreateContactDto) {

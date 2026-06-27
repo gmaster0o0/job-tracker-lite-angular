@@ -21,9 +21,9 @@ npx prisma migrate dev --name add_<change> --schema=libs/shared/prisma/db-schema
 
 ```bash
 npx prisma generate --schema=libs/shared/prisma/db-schema/schema.prisma
-pnpm nx build prisma
-pnpm run db:seed   # optional
-pnpm test
+npx nx build prisma
+npm run db:seed   # optional
+npm test
 ```
 
 4. Commit & push
