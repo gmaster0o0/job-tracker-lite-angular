@@ -1,6 +1,8 @@
 ---
 name: one-validator-schema
 description: Create Zod 4 schemas for backend and frontend validation. USE WHEN user wants to create or edit Zod schemas for data structures, DTOs, API validation, or form validation.
+argument-hint: 'Create or update a Zod schema for shared DTO validation.'
+user-invocable: true
 ---
 
 # Zod 4 Schema Creation Guide
@@ -9,42 +11,36 @@ This skill guides you through creating Zod schemas in this project using **Zod 4
 
 ## 🚨 Critical: Zod 4 Breaking Changes
 
-**ALWAYS use Zod 4 syntax.** Many AI suggestions use deprecated Zod 3 patterns. This project uses `zod@^4.4.3`.
+**ALWAYS use Zod 4 syntax.** This project uses `zod@^4.4.3`, and the repository uses supported top-level helper forms.
 
-### Common Deprecated Patterns (DO NOT USE)
+### Valid Zod 4 Forms in this repo
 
-❌ **WRONG (Zod 3 - Deprecated):**
+✅ **Preferred style in this project:**
 ```typescript
-z.email()           // ❌ Direct method no longer exists
-z.cuid2()           // ❌ Direct method no longer exists  
-z.url()             // ❌ Direct method no longer exists
-z.iso.datetime()    // ❌ The `iso` namespace was removed
-z.e164()            // ❌ Direct method no longer exists
-z.uuid()            // ❌ Direct method no longer exists
+z.cuid2()
+z.email()
+z.url()
+z.datetime()
+z.e164()
+z.uuid()
 ```
 
-✅ **CORRECT (Zod 4):**
+❌ **Also valid:**
 ```typescript
-z.string().email()       // ✅ Email validation on string
-z.string().cuid2()       // ✅ CUID2 validation on string
-z.string().url()         // ✅ URL validation on string
-z.string().datetime()    // ✅ ISO datetime (no `iso` namespace)
-z.string().e164()        // ✅ E.164 phone format on string
-z.string().uuid()        // ✅ UUID validation on string
+z.string().email()
+z.string().cuid2()
+z.string().url()
+z.string().datetime()
+z.string().e164()
+z.string().uuid()
 ```
 
-### Migration Quick Reference
+### What to avoid
 
-| Deprecated (Zod 3) | Zod 4 Replacement |
-|-------------------|-------------------|
-| `z.email()` | `z.string().email()` |
-| `z.cuid2()` | `z.string().cuid2()` |
-| `z.url()` | `z.string().url()` |
-| `z.uuid()` | `z.string().uuid()` |
-| `z.e164()` | `z.string().e164()` |
-| `z.iso.datetime()` | `z.string().datetime()` |
-| `z.iso.date()` | `z.string().date()` |
-| `z.iso.time()` | `z.string().time()` |
+- `z.iso.datetime()`
+- `z.iso.date()`
+- `z.iso.time()`
+- legacy Zod 3-only syntax
 
 ## 📁 Project Structure
 
@@ -83,10 +79,9 @@ Every schema must have a corresponding DTO type using `z.infer`:
 import { z } from 'zod';
 
 export const userSchema = z.object({
-  id: z.string().cuid2(),                    // ✅ Zod 4 syntax
-  email: z.string().email(),                 // ✅ Zod 4 syntax
+  id: z.cuid2(),
+  email: z.email(),
   name: z.string(),
-  createdAt: z.string().datetime(),          // ✅ Zod 4 syntax (no `iso`)
 });
 
 export type UserDto = z.infer<typeof userSchema>;
@@ -186,7 +181,7 @@ Use `superRefine` on the object for validating multiple fields:
 export const registerSchema = z
   .object({
     name: required,
-    email: required.pipe(z.string().email()),  // ✅ Combine validators with pipe
+    email: required.pipe(z.email()),  // ✅ Combine validators with pipe
     password: basicPasswordSchema,
     confirmPassword: required,
   })
@@ -248,7 +243,7 @@ import { required, emptyStringToNull } from '../validators';
 export const createJobSchema = z.object({
   position: required,                                    // Reusable validator
   company: required,                                     // Reusable validator
-  link: emptyStringToNull(z.string().url().nullable()), // ✅ Zod 4 + custom
+  link: emptyStringToNull(z.url().nullable()),           // ✅ Zod 4 + custom
   description: z.string().nullable(),
   status: jobStatusSchema.default(JobStatus.SAVED),
 });
@@ -265,7 +260,7 @@ Create related schemas using `.partial()`, `.pick()`, `.omit()`:
 export const createJobSchema = z.object({
   position: required,
   company: required,
-  link: emptyStringToNull(z.string().url().nullable()),  // ✅ Zod 4
+  link: emptyStringToNull(z.url().nullable()),  // ✅ Zod 4
   description: z.string().nullable(),
   status: jobStatusSchema.default(JobStatus.SAVED),
 });
@@ -304,15 +299,15 @@ export type SupportLang = z.infer<typeof supportLangSchema>;
 For route parameters (like IDs):
 
 ```typescript
-export const jobIdParamSchema = z.string().cuid2();    // ✅ Zod 4 syntax
-export const contactIdParamSchema = z.string().cuid2(); // ✅ Zod 4 syntax
+export const jobIdParamSchema = z.cuid2();    // ✅ Zod 4 syntax
+export const contactIdParamSchema = z.cuid2(); // ✅ Zod 4 syntax
 ```
 
 ## 📋 Checklist
 
 When creating a new schema, ensure:
 
-- [ ] Using **Zod 4 syntax** (e.g., `z.string().email()`, not `z.email()`)
+- [ ] Using **Zod 4 syntax** (e.g., `z.email()`, not `z.email()`)
 - [ ] File is in `libs/shared/schemas/src/lib/schemas/{domain}.schema.ts`
 - [ ] Every schema has a corresponding DTO type using `z.infer`
 - [ ] Custom validators use `superRefine` and include `errorCode`

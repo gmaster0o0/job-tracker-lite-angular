@@ -200,6 +200,10 @@ export class CreateContactComponent {
 </hlm-field>
 ```
 
+**Validation Error Display**:
+
+To use the Angulars's `validator` attribute in `<hlm-field-error>`, you need to add the `ZodNgControlBridgeDirective` to your component imports. This directive bridges Zod validation errors to Angular form controls.
+
 ### 4. Backend Error Handling
 
 **Add ServerErrorAlertComponent** (after all fields, inside `<hlm-field-group>`):
@@ -209,6 +213,7 @@ export class CreateContactComponent {
 ```
 
 **Translation Keys Pattern**:
+
 
 ```json
 // i18n files

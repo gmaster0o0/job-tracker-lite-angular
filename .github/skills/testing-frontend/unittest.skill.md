@@ -5,6 +5,8 @@ description: Short guidance for writing frontend unit tests and using centralize
 
 # testing-frontend-unit
 
+## Unit Testing Frontend Components
+
 Purpose: Keep frontend unit tests simple and consistent.
 
 Key points to keep:
@@ -35,3 +37,6 @@ Checklist:
 - Avoid manual change detection: don't call `fixture.detectChanges()` when using `TestbedHarnessEnvironment`; use harness APIs instead.
 
 Keep tests focused and fast: prefer small, semantic fixtures, simple mocks, and harness-driven UI interaction.
+
+## e2e and Integration Testing
+
