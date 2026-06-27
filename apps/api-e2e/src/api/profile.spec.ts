@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import request from 'supertest';
 import { ProfileModule } from '@job-tracker-lite-angular/api/app/profile/profile.module';
-import { ProfileService } from '@job-tracker-lite-angular/api/app/profile/profile.service';
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import {
   createPrismaServiceMock,
@@ -18,7 +17,7 @@ import { AuthGuard } from '@thallesp/nestjs-better-auth';
 
 describe('api/profile (e2e)', () => {
   let app: INestApplication;
-  let prismaMock: any;
+  let prismaMock: ReturnType<typeof createPrismaServiceMock>;
 
   const mockAuthGuard: CanActivate = {
     canActivate: (context: ExecutionContext) => {
@@ -59,6 +58,22 @@ describe('api/profile (e2e)', () => {
       .expect(200);
 
     expect(res.body.name).toBe(userProfileFixtures.johnDoe.name);
+  });
+
+  it('GET /api/profile should hide non-visible section data', async () => {
+    prismaMock.userProfile.findUnique.mockResolvedValue({
+      ...userProfileFixtures.johnDoe,
+      contactVisibility: false,
+    });
+
+    const res = await request(app.getHttpServer())
+      .get('/api/profile')
+      .expect(200);
+
+    expect(res.body.email).toBeNull();
+    expect(res.body.linkedin).toBeNull();
+    expect(res.body.github).toBeNull();
+    expect(res.body.webpage).toBeNull();
   });
 
   it('PATCH /api/profile', async () => {

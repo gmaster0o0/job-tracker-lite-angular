@@ -9,28 +9,68 @@ import {
 export class ProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private sanitizeVisibility(profile: UserProfileDto): UserProfileDto {
+    const sanitizedProfile: UserProfileDto = { ...profile };
+
+    const hidePersonal =
+      !profile.isPublic || profile.personalVisibility === false;
+    const hideContact =
+      !profile.isPublic || profile.contactVisibility === false;
+    const hideSkills = !profile.isPublic || profile.skillsVisibility === false;
+    const hidePreference =
+      !profile.isPublic || profile.preferenceVisibility === false;
+
+    if (hidePersonal) {
+      sanitizedProfile.name = null;
+      sanitizedProfile.title = null;
+      sanitizedProfile.city = null;
+      sanitizedProfile.bio = null;
+    }
+
+    if (hideContact) {
+      sanitizedProfile.email = null;
+      sanitizedProfile.linkedin = null;
+      sanitizedProfile.github = null;
+      sanitizedProfile.webpage = null;
+    }
+
+    if (hideSkills) {
+      sanitizedProfile.coreSkills = [];
+    }
+
+    if (hidePreference) {
+      sanitizedProfile.experienceLevel = null;
+      sanitizedProfile.workingStyle = null;
+      sanitizedProfile.careerType = null;
+    }
+
+    return sanitizedProfile;
+  }
+
   async getProfile(userId: string): Promise<UserProfileDto> {
     const profile = await this.prisma.userProfile.findUnique({
       where: { userId },
     });
 
     if (!profile) {
-      return this.prisma.userProfile.create({
+      const createdProfile = await this.prisma.userProfile.create({
         data: {
           userId,
           coreSkills: [],
         },
       });
+
+      return this.sanitizeVisibility(createdProfile);
     }
 
-    return profile;
+    return this.sanitizeVisibility(profile);
   }
 
   async updateProfile(
     userId: string,
     updateProfileDto: UpdateUserProfileDto,
   ): Promise<UserProfileDto> {
-    return this.prisma.userProfile.upsert({
+    const profile = await this.prisma.userProfile.upsert({
       where: { userId },
       update: updateProfileDto,
       create: {
@@ -39,5 +79,7 @@ export class ProfileService {
         coreSkills: updateProfileDto.coreSkills ?? [],
       },
     });
+
+    return this.sanitizeVisibility(profile);
   }
 }

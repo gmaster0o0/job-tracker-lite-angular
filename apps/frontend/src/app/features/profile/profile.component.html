@@ -83,50 +83,70 @@
                   >Make Profile Public</label
                 >
               </div>
+              <div class="flex items-center gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="personalVisibility"
+                  [(ngModel)]="editData.personalVisibility"
+                  class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <label
+                  hlmLabel
+                  for="personalVisibility"
+                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >Show Personal Section</label
+                >
+              </div>
             </div>
           } @else {
-            <div class="grid gap-4">
-              <div class="flex items-center gap-4">
-                <div
-                  class="flex h-16 w-16 items-center justify-center rounded-full bg-secondary text-secondary-foreground text-2xl font-bold"
-                >
-                  {{ profile.name?.charAt(0) || '?' }}
-                </div>
-                <div class="grid gap-1">
-                  <p class="text-xl font-bold leading-none">
-                    {{ profile.name || 'Set your name' }}
-                  </p>
-                  <p class="text-muted-foreground">
-                    {{ profile.title || 'Add professional title' }}
-                  </p>
-                </div>
-              </div>
-              @if (profile.city) {
-                <div
-                  class="flex items-center gap-2 text-sm text-muted-foreground"
-                >
-                  <ng-icon hlm name="lucideMapPin" size="xs" />
-                  {{ profile.city }}
-                </div>
-              }
-              @if (profile.bio) {
-                <p
-                  class="mt-2 text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap"
-                >
-                  {{ profile.bio }}
-                </p>
-              }
-              <div class="mt-2 flex gap-2">
-                @if (profile.isPublic) {
-                  <hlm-badge
-                    variant="outline"
-                    class="text-green-600 border-green-200 bg-green-50"
-                    >Public</hlm-badge
+            @if (isSectionVisible(profile, 'personalVisibility')) {
+              <div class="grid gap-4">
+                <div class="flex items-center gap-4">
+                  <div
+                    class="flex h-16 w-16 items-center justify-center rounded-full bg-secondary text-secondary-foreground text-2xl font-bold"
                   >
-                } @else {
-                  <hlm-badge variant="secondary">Private</hlm-badge>
+                    {{ profile.name?.charAt(0) || '?' }}
+                  </div>
+                  <div class="grid gap-1">
+                    <p class="text-xl font-bold leading-none">
+                      {{ profile.name || 'Set your name' }}
+                    </p>
+                    <p class="text-muted-foreground">
+                      {{ profile.title || 'Add professional title' }}
+                    </p>
+                  </div>
+                </div>
+                @if (profile.city) {
+                  <div
+                    class="flex items-center gap-2 text-sm text-muted-foreground"
+                  >
+                    <ng-icon hlm name="lucideMapPin" size="xs" />
+                    {{ profile.city }}
+                  </div>
+                }
+                @if (profile.bio) {
+                  <p
+                    class="mt-2 text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap"
+                  >
+                    {{ profile.bio }}
+                  </p>
                 }
               </div>
+            } @else {
+              <p class="text-sm text-muted-foreground italic">
+                Personal section is hidden.
+              </p>
+            }
+            <div class="mt-2 flex gap-2">
+              @if (isSectionVisible(profile, 'personalVisibility')) {
+                <hlm-badge
+                  variant="outline"
+                  class="text-green-600 border-green-200 bg-green-50"
+                  >Visible</hlm-badge
+                >
+              } @else {
+                <hlm-badge variant="secondary">Hidden</hlm-badge>
+              }
             </div>
           }
         </div>
@@ -208,69 +228,89 @@
                   placeholder="https://example.com"
                 />
               </div>
+              <div class="flex items-center gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="contactVisibility"
+                  [(ngModel)]="editData.contactVisibility"
+                  class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <label
+                  hlmLabel
+                  for="contactVisibility"
+                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >Show Contact Section</label
+                >
+              </div>
             </div>
           } @else {
-            <div class="grid gap-3 sm:grid-cols-2">
-              <div class="flex items-center gap-3">
-                <ng-icon
-                  hlm
-                  name="lucideMail"
-                  size="sm"
-                  class="text-muted-foreground"
-                />
-                <span class="text-sm">{{
-                  profile.email || 'No contact email set'
-                }}</span>
-              </div>
-              @if (profile.linkedin) {
+            @if (isSectionVisible(profile, 'contactVisibility')) {
+              <div class="grid gap-3 sm:grid-cols-2">
                 <div class="flex items-center gap-3">
                   <ng-icon
                     hlm
-                    name="lucideLinkedin"
-                    size="sm"
-                    class="text-[#0A66C2]"
-                  />
-                  <a
-                    [href]="profile.linkedin"
-                    target="_blank"
-                    class="text-sm text-primary hover:underline truncate"
-                    >{{ profile.linkedin }}</a
-                  >
-                </div>
-              }
-              @if (profile.github) {
-                <div class="flex items-center gap-3">
-                  <ng-icon
-                    hlm
-                    name="lucideGithub"
-                    size="sm"
-                    class="text-foreground"
-                  />
-                  <a
-                    [href]="profile.github"
-                    target="_blank"
-                    class="text-sm text-primary hover:underline truncate"
-                    >{{ profile.github }}</a
-                  >
-                </div>
-              }
-              @if (profile.webpage) {
-                <div class="flex items-center gap-3">
-                  <ng-icon
-                    hlm
-                    name="lucideGlobe"
+                    name="lucideMail"
                     size="sm"
                     class="text-muted-foreground"
                   />
-                  <a
-                    [href]="profile.webpage"
-                    target="_blank"
-                    class="text-sm text-primary hover:underline truncate"
-                    >{{ profile.webpage }}</a
-                  >
+                  <span class="text-sm">{{
+                    profile.email || 'No contact email set'
+                  }}</span>
                 </div>
-              }
-            </div>
+                @if (profile.linkedin) {
+                  <div class="flex items-center gap-3">
+                    <ng-icon
+                      hlm
+                      name="lucideLinkedin"
+                      size="sm"
+                      class="text-[#0A66C2]"
+                    />
+                    <a
+                      [href]="profile.linkedin"
+                      target="_blank"
+                      class="text-sm text-primary hover:underline truncate"
+                      >{{ profile.linkedin }}</a
+                    >
+                  </div>
+                }
+                @if (profile.github) {
+                  <div class="flex items-center gap-3">
+                    <ng-icon
+                      hlm
+                      name="lucideGithub"
+                      size="sm"
+                      class="text-foreground"
+                    />
+                    <a
+                      [href]="profile.github"
+                      target="_blank"
+                      class="text-sm text-primary hover:underline truncate"
+                      >{{ profile.github }}</a
+                    >
+                  </div>
+                }
+                @if (profile.webpage) {
+                  <div class="flex items-center gap-3">
+                    <ng-icon
+                      hlm
+                      name="lucideGlobe"
+                      size="sm"
+                      class="text-muted-foreground"
+                    />
+                    <a
+                      [href]="profile.webpage"
+                      target="_blank"
+                      class="text-sm text-primary hover:underline truncate"
+                      >{{ profile.webpage }}</a
+                    >
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="text-sm text-muted-foreground italic">
+                Contact section is hidden.
+              </p>
+            }
           }
         </div>
         @if (editingSection() === 'contact') {
@@ -358,23 +398,43 @@
                   Add
                 </button>
               </div>
+              <div class="flex items-center gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="skillsVisibility"
+                  [(ngModel)]="editData.skillsVisibility"
+                  class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <label
+                  hlmLabel
+                  for="skillsVisibility"
+                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >Show Skills Section</label
+                >
+              </div>
             </div>
           } @else {
-            <div class="flex flex-wrap gap-2">
-              @for (skill of profile.coreSkills; track skill) {
-                <hlm-badge variant="secondary" class="px-3 py-1">{{
-                  skill
-                }}</hlm-badge>
-              } @empty {
-                <div
-                  class="flex flex-col items-center justify-center w-full py-8 border border-dashed rounded-lg bg-muted/10"
-                >
-                  <p class="text-sm text-muted-foreground italic">
-                    No skills added yet. Click edit to add your expertise.
-                  </p>
-                </div>
-              }
-            </div>
+            @if (isSectionVisible(profile, 'skillsVisibility')) {
+              <div class="flex flex-wrap gap-2">
+                @for (skill of profile.coreSkills; track skill) {
+                  <hlm-badge variant="secondary" class="px-3 py-1">{{
+                    skill
+                  }}</hlm-badge>
+                } @empty {
+                  <div
+                    class="flex flex-col items-center justify-center w-full py-8 border border-dashed rounded-lg bg-muted/10"
+                  >
+                    <p class="text-sm text-muted-foreground italic">
+                      No skills added yet. Click edit to add your expertise.
+                    </p>
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="text-sm text-muted-foreground italic">
+                Skills section is hidden.
+              </p>
+            }
           }
         </div>
         @if (editingSection() === 'skills') {
@@ -459,40 +519,60 @@
                   }
                 </select>
               </div>
+              <div class="flex items-center gap-2 pt-2 sm:col-span-3">
+                <input
+                  type="checkbox"
+                  id="preferenceVisibility"
+                  [(ngModel)]="editData.preferenceVisibility"
+                  class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <label
+                  hlmLabel
+                  for="preferenceVisibility"
+                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >Show Preferences Section</label
+                >
+              </div>
             </div>
           } @else {
-            <div class="grid gap-4 sm:grid-cols-3">
-              <div class="grid gap-1.5 p-4 rounded-lg bg-secondary/30">
-                <p
-                  class="text-xs text-muted-foreground uppercase font-bold tracking-widest"
-                >
-                  Experience
-                </p>
-                <p class="text-lg font-semibold">
-                  {{ profile.experienceLevel || 'Not set' }}
-                </p>
+            @if (isSectionVisible(profile, 'preferenceVisibility')) {
+              <div class="grid gap-4 sm:grid-cols-3">
+                <div class="grid gap-1.5 p-4 rounded-lg bg-secondary/30">
+                  <p
+                    class="text-xs text-muted-foreground uppercase font-bold tracking-widest"
+                  >
+                    Experience
+                  </p>
+                  <p class="text-lg font-semibold">
+                    {{ profile.experienceLevel || 'Not set' }}
+                  </p>
+                </div>
+                <div class="grid gap-1.5 p-4 rounded-lg bg-secondary/30">
+                  <p
+                    class="text-xs text-muted-foreground uppercase font-bold tracking-widest"
+                  >
+                    Working Style
+                  </p>
+                  <p class="text-lg font-semibold">
+                    {{ profile.workingStyle || 'Not set' }}
+                  </p>
+                </div>
+                <div class="grid gap-1.5 p-4 rounded-lg bg-secondary/30">
+                  <p
+                    class="text-xs text-muted-foreground uppercase font-bold tracking-widest"
+                  >
+                    Contract
+                  </p>
+                  <p class="text-lg font-semibold">
+                    {{ profile.careerType || 'Not set' }}
+                  </p>
+                </div>
               </div>
-              <div class="grid gap-1.5 p-4 rounded-lg bg-secondary/30">
-                <p
-                  class="text-xs text-muted-foreground uppercase font-bold tracking-widest"
-                >
-                  Working Style
-                </p>
-                <p class="text-lg font-semibold">
-                  {{ profile.workingStyle || 'Not set' }}
-                </p>
-              </div>
-              <div class="grid gap-1.5 p-4 rounded-lg bg-secondary/30">
-                <p
-                  class="text-xs text-muted-foreground uppercase font-bold tracking-widest"
-                >
-                  Contract
-                </p>
-                <p class="text-lg font-semibold">
-                  {{ profile.careerType || 'Not set' }}
-                </p>
-              </div>
-            </div>
+            } @else {
+              <p class="text-sm text-muted-foreground italic">
+                Preferences section is hidden.
+              </p>
+            }
           }
         </div>
         @if (editingSection() === 'preferences') {

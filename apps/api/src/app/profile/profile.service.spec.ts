@@ -45,7 +45,9 @@ describe('ProfileService', () => {
     prismaMock.userProfile.create.mockResolvedValue(userProfileFixtures.empty);
 
     const result = await service.getProfile(authUserIdFixture);
-    expect(result).toEqual(userProfileFixtures.empty);
+    expect(result).toEqual({
+      ...userProfileFixtures.empty,
+    });
     expect(prismaMock.userProfile.create).toHaveBeenCalledWith({
       data: {
         userId: authUserIdFixture,
@@ -72,5 +74,38 @@ describe('ProfileService', () => {
         coreSkills: [],
       },
     });
+  });
+
+  it('should hide a section when visibility is false', async () => {
+    prismaMock.userProfile.findUnique.mockResolvedValue({
+      ...userProfileFixtures.johnDoe,
+      contactVisibility: false,
+    });
+
+    const result = await service.getProfile(authUserIdFixture);
+
+    expect(result.email).toBeNull();
+    expect(result.linkedin).toBeNull();
+    expect(result.github).toBeNull();
+    expect(result.webpage).toBeNull();
+    expect(result.name).toBe(userProfileFixtures.johnDoe.name);
+  });
+
+  it('should hide all sections when profile is not public', async () => {
+    prismaMock.userProfile.findUnique.mockResolvedValue({
+      ...userProfileFixtures.johnDoe,
+      isPublic: false,
+      personalVisibility: true,
+      contactVisibility: true,
+      skillsVisibility: true,
+      preferenceVisibility: true,
+    });
+
+    const result = await service.getProfile(authUserIdFixture);
+
+    expect(result.name).toBeNull();
+    expect(result.email).toBeNull();
+    expect(result.coreSkills).toEqual([]);
+    expect(result.experienceLevel).toBeNull();
   });
 });

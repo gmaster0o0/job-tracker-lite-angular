@@ -39,6 +39,17 @@ export class ProfileComponent {
   workingStyles: WorkingStyle[] = ['REMOTE', 'HYBRID', 'ON_SITE'];
   careerTypes: CareerPreferenceType[] = ['FULL_TIME', 'PART_TIME', 'CONTRACT'];
 
+  isSectionVisible(
+    profile: UserProfileDto,
+    sectionVisibility:
+      | 'personalVisibility'
+      | 'contactVisibility'
+      | 'skillsVisibility'
+      | 'preferenceVisibility',
+  ) {
+    return profile.isPublic && profile[sectionVisibility];
+  }
+
   editSection(section: string, profile: UserProfileDto) {
     this.editingSection.set(section);
     this.editData = {
@@ -62,6 +73,7 @@ export class ProfileComponent {
         city: this.editData.city,
         bio: this.editData.bio,
         isPublic: this.editData.isPublic,
+        personalVisibility: this.editData.personalVisibility,
       };
     } else if (section === 'contact') {
       updateDto = {
@@ -69,16 +81,19 @@ export class ProfileComponent {
         linkedin: this.editData.linkedin,
         github: this.editData.github,
         webpage: this.editData.webpage,
+        contactVisibility: this.editData.contactVisibility,
       };
     } else if (section === 'skills') {
       updateDto = {
         coreSkills: this.editData.coreSkills,
+        skillsVisibility: this.editData.skillsVisibility,
       };
     } else if (section === 'preferences') {
       updateDto = {
         experienceLevel: this.editData.experienceLevel,
         workingStyle: this.editData.workingStyle,
         careerType: this.editData.careerType,
+        preferenceVisibility: this.editData.preferenceVisibility,
       };
     }
 

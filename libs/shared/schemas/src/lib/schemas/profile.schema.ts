@@ -33,6 +33,10 @@ export const userProfileSchema = z.object({
   workingStyle: workingStyleSchema.nullable().optional(),
   careerType: careerPreferenceTypeSchema.nullable().optional(),
   isPublic: z.boolean().default(false),
+  personalVisibility: z.boolean().default(true),
+  contactVisibility: z.boolean().default(true),
+  skillsVisibility: z.boolean().default(true),
+  preferenceVisibility: z.boolean().default(true),
 });
 
 export const updateUserProfileSchema = userProfileSchema
