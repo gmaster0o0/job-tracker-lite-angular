@@ -7,7 +7,10 @@ import { profileIcons, hlmImports } from './profile.hlmimports';
 import { EditButtonComponent } from '../../shared/edit-button/edit-button.component';
 import { SaveButtonComponent } from '../../shared/save-button/save-button.component';
 import { CancelButtonComponent } from '../../shared/cancel-button/cancel-button.component';
-import { CareerPreferenceComponent } from './career-preference/career-preference.component';
+import {
+  CareerPreferenceComponent,
+  SaveState,
+} from './career-preference/career-preference.component';
 import { TranslocoModule } from '@jsverse/transloco';
 
 import {
@@ -38,7 +41,12 @@ export class ProfileComponent {
 
   editingSection = signal<string | null>(null);
   savingSection = signal<string | null>(null);
+  isCareerPreferenceSaving = signal(false);
   editData: Partial<UserProfileDto> = {};
+
+  onCareerPreferenceSaveStateChange(state: SaveState) {
+    this.isCareerPreferenceSaving.set(state === 'saving');
+  }
 
   isSectionVisible(
     profile: UserProfileDto,

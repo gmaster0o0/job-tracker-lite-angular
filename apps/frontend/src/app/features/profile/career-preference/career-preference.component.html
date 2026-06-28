@@ -46,7 +46,7 @@
           id="experience"
           [value]="experienceLevel()"
           (valueChange)="onExperienceLevelChange($event)"
-          [disabled]="saveState() === 'saving'"
+          [disabled]="disabled() || saveState() === 'saving'"
         >
           <hlm-select-trigger class="w-56">
             @if (experienceLevel(); as value) {
@@ -79,7 +79,7 @@
           id="workingStyle"
           [value]="workingStyle()"
           (valueChange)="onWorkingStyleChange($event)"
-          [disabled]="saveState() === 'saving'"
+          [disabled]="disabled() || saveState() === 'saving'"
         >
           <hlm-select-trigger class="w-56">
             @if (workingStyle(); as value) {
@@ -111,7 +111,7 @@
           id="careerType"
           [value]="careerType()"
           (valueChange)="onCareerTypeChange($event)"
-          [disabled]="saveState() === 'saving'"
+          [disabled]="disabled() || saveState() === 'saving'"
           class="w-full"
         >
           <hlm-select-trigger class="w-56">

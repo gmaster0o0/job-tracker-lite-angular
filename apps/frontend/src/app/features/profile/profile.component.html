@@ -28,6 +28,9 @@
               <app-edit-button
                 (edit)="editSection('personal', profile)"
                 editLabel="{{ 'common.edit' | transloco }}"
+                [disabled]="
+                  editingSection() !== null || isCareerPreferenceSaving()
+                "
               />
             } @else {
               <app-cancel-button
@@ -53,12 +56,9 @@
               </div>
               <div class="grid gap-2 flex-1">
                 <div class="grid gap-2">
-                  <label
-                    hlmLabel
-                    for="name"
-                    class="text-xs text-muted-foreground uppercase font-semibold"
-                    >{{ 'profile.personal.nameLabel' | transloco }}</label
-                  >
+                  <label hlmLabel for="name">{{
+                    'profile.personal.nameLabel' | transloco
+                  }}</label>
                   <hlm-input-group
                     [class.bg-secondary]="editingSection() === 'personal'"
                     class="flex items-center gap-2"
@@ -75,7 +75,7 @@
                           : profile.name
                       "
                       (ngModelChange)="editData.name = $event"
-                      [readonly]="editingSection() !== 'personal'"
+                      [disabled]="editingSection() !== 'personal'"
                       placeholder="{{
                         'profile.personal.namePlaceholder' | transloco
                       }}"
@@ -86,12 +86,9 @@
                 </div>
 
                 <div class="grid gap-2">
-                  <label
-                    hlmLabel
-                    for="title"
-                    class="text-xs text-muted-foreground uppercase font-semibold"
-                    >{{ 'profile.personal.titleLabel' | transloco }}</label
-                  >
+                  <label hlmLabel for="title">{{
+                    'profile.personal.titleLabel' | transloco
+                  }}</label>
                   <hlm-input-group
                     [class.bg-secondary]="editingSection() === 'personal'"
                     class="flex items-center gap-2"
@@ -108,7 +105,7 @@
                           : profile.title
                       "
                       (ngModelChange)="editData.title = $event"
-                      [readonly]="editingSection() !== 'personal'"
+                      [disabled]="editingSection() !== 'personal'"
                       placeholder="{{
                         'profile.personal.titlePlaceholder' | transloco
                       }}"
@@ -121,12 +118,9 @@
             </div>
 
             <div class="grid gap-2">
-              <label
-                hlmLabel
-                for="city"
-                class="text-xs text-muted-foreground uppercase font-semibold"
-                >{{ 'profile.personal.locationLabel' | transloco }}</label
-              >
+              <label hlmLabel for="city">{{
+                'profile.personal.locationLabel' | transloco
+              }}</label>
               <hlm-input-group
                 [class.bg-secondary]="editingSection() === 'personal'"
                 class="flex items-center gap-2"
@@ -143,7 +137,7 @@
                       : profile.city
                   "
                   (ngModelChange)="editData.city = $event"
-                  [readonly]="editingSection() !== 'personal'"
+                  [disabled]="editingSection() !== 'personal'"
                   placeholder="{{
                     'profile.personal.locationPlaceholder' | transloco
                   }}"
@@ -154,26 +148,28 @@
             </div>
 
             <div class="grid gap-2">
-              <label
-                hlmLabel
-                for="bio"
-                class="text-xs text-muted-foreground uppercase font-semibold"
-                >{{ 'profile.personal.bioLabel' | transloco }}</label
+              <label hlmLabel for="bio">{{
+                'profile.personal.bioLabel' | transloco
+              }}</label>
+              <hlm-input-group
+                [class.bg-secondary]="editingSection() === 'personal'"
+                class="flex items-center gap-2"
               >
-              <textarea
-                hlmTextarea
-                id="bio"
-                [ngModel]="
-                  editingSection() === 'personal' ? editData.bio : profile.bio
-                "
-                (ngModelChange)="editData.bio = $event"
-                [readonly]="editingSection() !== 'personal'"
-                placeholder="{{
-                  'profile.personal.bioPlaceholder' | transloco
-                }}"
-                class="min-h-[100px] resize-none"
-                [class.cursor-default]="editingSection() !== 'personal'"
-              ></textarea>
+                <textarea
+                  hlmTextarea
+                  id="bio"
+                  [ngModel]="
+                    editingSection() === 'personal' ? editData.bio : profile.bio
+                  "
+                  (ngModelChange)="editData.bio = $event"
+                  [disabled]="editingSection() !== 'personal'"
+                  placeholder="{{
+                    'profile.personal.bioPlaceholder' | transloco
+                  }}"
+                  class="min-h-[100px] resize-none"
+                  [class.cursor-default]="editingSection() !== 'personal'"
+                ></textarea>
+              </hlm-input-group>
             </div>
           </div>
         </div>
@@ -196,6 +192,9 @@
               <app-edit-button
                 (edit)="editSection('contact', profile)"
                 editLabel="{{ 'common.edit' | transloco }}"
+                [disabled]="
+                  editingSection() !== null || isCareerPreferenceSaving()
+                "
               />
             } @else {
               <app-cancel-button
@@ -214,12 +213,9 @@
         <div hlmCardContent>
           <div class="grid gap-4 sm:grid-cols-2">
             <div class="grid gap-2">
-              <label
-                hlmLabel
-                for="email"
-                class="text-xs text-muted-foreground uppercase font-semibold"
-                >{{ 'profile.contact.emailLabel' | transloco }}</label
-              >
+              <label hlmLabel for="email">{{
+                'profile.contact.emailLabel' | transloco
+              }}</label>
               <hlm-input-group
                 [class.bg-secondary]="editingSection() === 'contact'"
                 class="flex items-center gap-2"
@@ -236,7 +232,7 @@
                       : profile.email
                   "
                   (ngModelChange)="editData.email = $event"
-                  [readonly]="editingSection() !== 'contact'"
+                  [disabled]="editingSection() !== 'contact'"
                   placeholder="{{
                     'profile.contact.emailPlaceholder' | transloco
                   }}"
@@ -247,12 +243,9 @@
             </div>
 
             <div class="grid gap-2">
-              <label
-                hlmLabel
-                for="linkedin"
-                class="text-xs text-muted-foreground uppercase font-semibold"
-                >{{ 'profile.contact.linkedinLabel' | transloco }}</label
-              >
+              <label hlmLabel for="linkedin">{{
+                'profile.contact.linkedinLabel' | transloco
+              }}</label>
               <hlm-input-group
                 [class.bg-secondary]="editingSection() === 'contact'"
                 class="flex items-center gap-2"
@@ -269,7 +262,7 @@
                       : profile.linkedin
                   "
                   (ngModelChange)="editData.linkedin = $event"
-                  [readonly]="editingSection() !== 'contact'"
+                  [disabled]="editingSection() !== 'contact'"
                   placeholder="{{
                     'profile.contact.linkedinPlaceholder' | transloco
                   }}"
@@ -280,12 +273,9 @@
             </div>
 
             <div class="grid gap-2">
-              <label
-                hlmLabel
-                for="github"
-                class="text-xs text-muted-foreground uppercase font-semibold"
-                >{{ 'profile.contact.githubLabel' | transloco }}</label
-              >
+              <label hlmLabel for="github">{{
+                'profile.contact.githubLabel' | transloco
+              }}</label>
               <hlm-input-group
                 [class.bg-secondary]="editingSection() === 'contact'"
                 class="flex items-center gap-2"
@@ -302,7 +292,7 @@
                       : profile.github
                   "
                   (ngModelChange)="editData.github = $event"
-                  [readonly]="editingSection() !== 'contact'"
+                  [disabled]="editingSection() !== 'contact'"
                   placeholder="{{
                     'profile.contact.githubPlaceholder' | transloco
                   }}"
@@ -313,12 +303,9 @@
             </div>
 
             <div class="grid gap-2">
-              <label
-                hlmLabel
-                for="website"
-                class="text-xs text-muted-foreground uppercase font-semibold"
-                >{{ 'profile.contact.websiteLabel' | transloco }}</label
-              >
+              <label hlmLabel for="website">{{
+                'profile.contact.websiteLabel' | transloco
+              }}</label>
               <hlm-input-group
                 [class.bg-secondary]="editingSection() === 'contact'"
                 class="flex items-center gap-2"
@@ -335,7 +322,7 @@
                       : profile.webpage
                   "
                   (ngModelChange)="editData.webpage = $event"
-                  [readonly]="editingSection() !== 'contact'"
+                  [disabled]="editingSection() !== 'contact'"
                   placeholder="{{
                     'profile.contact.websitePlaceholder' | transloco
                   }}"
@@ -365,6 +352,9 @@
               <app-edit-button
                 (edit)="editSection('skills', profile)"
                 editLabel="{{ 'common.edit' | transloco }}"
+                [disabled]="
+                  editingSection() !== null || isCareerPreferenceSaving()
+                "
               />
             } @else {
               <app-cancel-button
@@ -416,12 +406,9 @@
               [class.mt-4]="editingSection() === 'skills'"
             >
               <div class="grid gap-2">
-                <label
-                  hlmLabel
-                  for="newSkill"
-                  class="text-xs text-muted-foreground uppercase font-semibold"
-                  >{{ 'profile.skills.placeholder' | transloco }}</label
-                >
+                <label hlmLabel for="newSkill">{{
+                  'profile.skills.placeholder' | transloco
+                }}</label>
                 <div class="flex gap-2">
                   <hlm-input-group class="flex-1 flex items-center gap-2">
                     <hlm-input-group-addon align="inline-start">
@@ -456,7 +443,11 @@
       </section>
 
       <!-- Career Preferences Section -->
-      <app-career-preference [profile]="profile" />
+      <app-career-preference
+        [profile]="profile"
+        [disabled]="editingSection() !== null"
+        (saveStateChanged)="onCareerPreferenceSaveStateChange($event)"
+      />
     </div>
   }
 </div>

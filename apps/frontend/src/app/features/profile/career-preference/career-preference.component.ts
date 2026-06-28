@@ -3,8 +3,8 @@ import {
   inject,
   signal,
   input,
-  effect,
   linkedSignal,
+  output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +21,7 @@ import {
 import { hlmImports } from '../profile.hlmimports';
 import { HlmSpinner } from '@spartan-ng/helm/spinner';
 
-type SaveState = 'idle' | 'saving' | 'saved' | 'error';
+export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
 @Component({
   standalone: true,
@@ -40,6 +40,7 @@ export class CareerPreferenceComponent {
   private readonly profileData = inject(ProfileDataAccessService);
 
   profile = input.required<UserProfileDto>();
+  disabled = input<boolean>(false);
 
   // Signals for each field
   experienceLevel = linkedSignal(() => this.profile().experienceLevel ?? null);
@@ -48,6 +49,7 @@ export class CareerPreferenceComponent {
 
   // SaveState
   saveState = signal<SaveState>('idle');
+  saveStateChanged = output<SaveState>();
 
   // Enums
   experienceLevels: ExperienceLevel[] = [
@@ -96,6 +98,7 @@ export class CareerPreferenceComponent {
 
   private async save() {
     this.saveState.set('saving');
+    this.saveStateChanged.emit('saving');
     try {
       await this.profileData.updateProfile({
         experienceLevel: this.experienceLevel(),
@@ -103,18 +106,22 @@ export class CareerPreferenceComponent {
         careerType: this.careerType(),
       });
       this.saveState.set('saved');
+      this.saveStateChanged.emit('saved');
 
       // Reset to idle after 2s
       setTimeout(() => {
         this.saveState.set('idle');
+        this.saveStateChanged.emit('idle');
       }, 2000);
     } catch (error) {
       console.error('Failed to save preferences', error);
       this.saveState.set('error');
+      this.saveStateChanged.emit('error');
 
       // Reset to idle after 2s
       setTimeout(() => {
         this.saveState.set('idle');
+        this.saveStateChanged.emit('idle');
       }, 2000);
     }
   }
