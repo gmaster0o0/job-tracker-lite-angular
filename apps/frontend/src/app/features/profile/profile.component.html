@@ -51,45 +51,72 @@
               >
                 {{ profile.name?.charAt(0) || '?' }}
               </div>
-              <div class="grid gap-1 flex-1 min-h-[4rem] justify-center">
-                <label hlmLabel for="name" class="sr-only">{{
-                  'profile.personal.nameLabel' | transloco
-                }}</label>
-                <input
-                  hlmInput
-                  id="name"
-                  [ngModel]="
-                    editingSection() === 'personal'
-                      ? editData.name
-                      : profile.name
-                  "
-                  (ngModelChange)="editData.name = $event"
-                  [readonly]="editingSection() !== 'personal'"
-                  placeholder="{{
-                    'profile.personal.namePlaceholder' | transloco
-                  }}"
-                  class="text-xl font-bold border-none bg-transparent shadow-none focus-visible:ring-0 w-full h-auto py-0 px-0"
-                  [class.cursor-default]="editingSection() !== 'personal'"
-                />
-                <label hlmLabel for="title" class="sr-only">{{
-                  'profile.personal.titleLabel' | transloco
-                }}</label>
-                <input
-                  hlmInput
-                  id="title"
-                  [ngModel]="
-                    editingSection() === 'personal'
-                      ? editData.title
-                      : profile.title
-                  "
-                  (ngModelChange)="editData.title = $event"
-                  [readonly]="editingSection() !== 'personal'"
-                  placeholder="{{
-                    'profile.personal.titlePlaceholder' | transloco
-                  }}"
-                  class="text-muted-foreground text-sm border-none bg-transparent shadow-none focus-visible:ring-0 w-full h-auto py-0 px-0"
-                  [class.cursor-default]="editingSection() !== 'personal'"
-                />
+              <div class="grid gap-2 flex-1">
+                <div class="grid gap-2">
+                  <label
+                    hlmLabel
+                    for="name"
+                    class="text-xs text-muted-foreground uppercase font-semibold"
+                    >{{ 'profile.personal.nameLabel' | transloco }}</label
+                  >
+                  <hlm-input-group
+                    [class.bg-secondary]="editingSection() === 'personal'"
+                    class="flex items-center gap-2"
+                  >
+                    <hlm-input-group-addon align="inline-start">
+                      <ng-icon name="lucideUser" />
+                    </hlm-input-group-addon>
+                    <input
+                      hlmInputGroupInput
+                      id="name"
+                      [ngModel]="
+                        editingSection() === 'personal'
+                          ? editData.name
+                          : profile.name
+                      "
+                      (ngModelChange)="editData.name = $event"
+                      [readonly]="editingSection() !== 'personal'"
+                      placeholder="{{
+                        'profile.personal.namePlaceholder' | transloco
+                      }}"
+                      class="flex-1 text-sm h-auto"
+                      [class.cursor-default]="editingSection() !== 'personal'"
+                    />
+                  </hlm-input-group>
+                </div>
+
+                <div class="grid gap-2">
+                  <label
+                    hlmLabel
+                    for="title"
+                    class="text-xs text-muted-foreground uppercase font-semibold"
+                    >{{ 'profile.personal.titleLabel' | transloco }}</label
+                  >
+                  <hlm-input-group
+                    [class.bg-secondary]="editingSection() === 'personal'"
+                    class="flex items-center gap-2"
+                  >
+                    <hlm-input-group-addon align="inline-start">
+                      <ng-icon name="lucideBriefcase" />
+                    </hlm-input-group-addon>
+                    <input
+                      hlmInputGroupInput
+                      id="title"
+                      [ngModel]="
+                        editingSection() === 'personal'
+                          ? editData.title
+                          : profile.title
+                      "
+                      (ngModelChange)="editData.title = $event"
+                      [readonly]="editingSection() !== 'personal'"
+                      placeholder="{{
+                        'profile.personal.titlePlaceholder' | transloco
+                      }}"
+                      class="flex-1 text-sm h-auto"
+                      [class.cursor-default]="editingSection() !== 'personal'"
+                    />
+                  </hlm-input-group>
+                </div>
               </div>
             </div>
 
@@ -100,32 +127,30 @@
                 class="text-xs text-muted-foreground uppercase font-semibold"
                 >{{ 'profile.personal.locationLabel' | transloco }}</label
               >
-              <div
+              <hlm-input-group
                 [class.bg-secondary]="editingSection() === 'personal'"
                 class="flex items-center gap-2"
               >
-                <hlm-input-group>
-                  <hlm-input-group-addon align="inline-start">
-                    <ng-icon name="lucideMapPin" />
-                  </hlm-input-group-addon>
-                  <input
-                    hlmInputGroupInput
-                    id="city"
-                    [ngModel]="
-                      editingSection() === 'personal'
-                        ? editData.city
-                        : profile.city
-                    "
-                    (ngModelChange)="editData.city = $event"
-                    [readonly]="editingSection() !== 'personal'"
-                    placeholder="{{
-                      'profile.personal.locationPlaceholder' | transloco
-                    }}"
-                    class="flex-1 text-sm h-auto"
-                    [class.cursor-default]="editingSection() !== 'personal'"
-                  />
-                </hlm-input-group>
-              </div>
+                <hlm-input-group-addon align="inline-start">
+                  <ng-icon name="lucideMapPin" />
+                </hlm-input-group-addon>
+                <input
+                  hlmInputGroupInput
+                  id="city"
+                  [ngModel]="
+                    editingSection() === 'personal'
+                      ? editData.city
+                      : profile.city
+                  "
+                  (ngModelChange)="editData.city = $event"
+                  [readonly]="editingSection() !== 'personal'"
+                  placeholder="{{
+                    'profile.personal.locationPlaceholder' | transloco
+                  }}"
+                  class="flex-1 text-sm h-auto"
+                  [class.cursor-default]="editingSection() !== 'personal'"
+                />
+              </hlm-input-group>
             </div>
 
             <div class="grid gap-2">
@@ -135,22 +160,20 @@
                 class="text-xs text-muted-foreground uppercase font-semibold"
                 >{{ 'profile.personal.bioLabel' | transloco }}</label
               >
-              <div [class.bg-secondary]="editingSection() === 'personal'">
-                <textarea
-                  hlmInput
-                  id="bio"
-                  [ngModel]="
-                    editingSection() === 'personal' ? editData.bio : profile.bio
-                  "
-                  (ngModelChange)="editData.bio = $event"
-                  [readonly]="editingSection() !== 'personal'"
-                  placeholder="{{
-                    'profile.personal.bioPlaceholder' | transloco
-                  }}"
-                  class="w-full min-h-[100px] bg-transparent border-none shadow-none focus-visible:ring-0 p-0 text-sm leading-relaxed resize-none"
-                  [class.cursor-default]="editingSection() !== 'personal'"
-                ></textarea>
-              </div>
+              <textarea
+                hlmTextarea
+                id="bio"
+                [ngModel]="
+                  editingSection() === 'personal' ? editData.bio : profile.bio
+                "
+                (ngModelChange)="editData.bio = $event"
+                [readonly]="editingSection() !== 'personal'"
+                placeholder="{{
+                  'profile.personal.bioPlaceholder' | transloco
+                }}"
+                class="min-h-[100px] resize-none"
+                [class.cursor-default]="editingSection() !== 'personal'"
+              ></textarea>
             </div>
           </div>
         </div>
@@ -190,25 +213,22 @@
         </div>
         <div hlmCardContent>
           <div class="grid gap-4 sm:grid-cols-2">
-            <div class="grid gap-1.5">
+            <div class="grid gap-2">
               <label
                 hlmLabel
                 for="email"
                 class="text-xs text-muted-foreground uppercase font-semibold"
                 >{{ 'profile.contact.emailLabel' | transloco }}</label
               >
-              <div
-                class="min-h-[40px] flex items-center gap-2 px-2 rounded-md transition-colors"
+              <hlm-input-group
                 [class.bg-secondary]="editingSection() === 'contact'"
+                class="flex items-center gap-2"
               >
-                <ng-icon
-                  hlm
-                  name="lucideMail"
-                  size="sm"
-                  class="text-muted-foreground flex-shrink-0"
-                />
+                <hlm-input-group-addon align="inline-start">
+                  <ng-icon name="lucideMail" />
+                </hlm-input-group-addon>
                 <input
-                  hlmInput
+                  hlmInputGroupInput
                   id="email"
                   [ngModel]="
                     editingSection() === 'contact'
@@ -220,30 +240,28 @@
                   placeholder="{{
                     'profile.contact.emailPlaceholder' | transloco
                   }}"
-                  class="flex-1 bg-transparent border-none shadow-none focus-visible:ring-0 p-0 text-sm h-auto"
+                  class="flex-1 text-sm h-auto"
+                  [class.cursor-default]="editingSection() !== 'contact'"
                 />
-              </div>
+              </hlm-input-group>
             </div>
 
-            <div class="grid gap-1.5">
+            <div class="grid gap-2">
               <label
                 hlmLabel
                 for="linkedin"
                 class="text-xs text-muted-foreground uppercase font-semibold"
                 >{{ 'profile.contact.linkedinLabel' | transloco }}</label
               >
-              <div
-                class="min-h-[40px] flex items-center gap-2 px-2 rounded-md transition-colors"
+              <hlm-input-group
                 [class.bg-secondary]="editingSection() === 'contact'"
+                class="flex items-center gap-2"
               >
-                <ng-icon
-                  hlm
-                  name="lucideLinkedin"
-                  size="sm"
-                  class="text-[#0A66C2] flex-shrink-0"
-                />
+                <hlm-input-group-addon align="inline-start">
+                  <ng-icon name="lucideLinkedin" class="text-[#0A66C2]" />
+                </hlm-input-group-addon>
                 <input
-                  hlmInput
+                  hlmInputGroupInput
                   id="linkedin"
                   [ngModel]="
                     editingSection() === 'contact'
@@ -255,30 +273,28 @@
                   placeholder="{{
                     'profile.contact.linkedinPlaceholder' | transloco
                   }}"
-                  class="flex-1 bg-transparent border-none shadow-none focus-visible:ring-0 p-0 text-sm h-auto"
+                  class="flex-1 text-sm h-auto"
+                  [class.cursor-default]="editingSection() !== 'contact'"
                 />
-              </div>
+              </hlm-input-group>
             </div>
 
-            <div class="grid gap-1.5">
+            <div class="grid gap-2">
               <label
                 hlmLabel
                 for="github"
                 class="text-xs text-muted-foreground uppercase font-semibold"
                 >{{ 'profile.contact.githubLabel' | transloco }}</label
               >
-              <div
-                class="min-h-[40px] flex items-center gap-2 px-2 rounded-md transition-colors"
+              <hlm-input-group
                 [class.bg-secondary]="editingSection() === 'contact'"
+                class="flex items-center gap-2"
               >
-                <ng-icon
-                  hlm
-                  name="lucideGithub"
-                  size="sm"
-                  class="flex-shrink-0 text-foreground"
-                />
+                <hlm-input-group-addon align="inline-start">
+                  <ng-icon name="lucideGithub" />
+                </hlm-input-group-addon>
                 <input
-                  hlmInput
+                  hlmInputGroupInput
                   id="github"
                   [ngModel]="
                     editingSection() === 'contact'
@@ -290,30 +306,28 @@
                   placeholder="{{
                     'profile.contact.githubPlaceholder' | transloco
                   }}"
-                  class="flex-1 bg-transparent border-none shadow-none focus-visible:ring-0 p-0 text-sm h-auto"
+                  class="flex-1 text-sm h-auto"
+                  [class.cursor-default]="editingSection() !== 'contact'"
                 />
-              </div>
+              </hlm-input-group>
             </div>
 
-            <div class="grid gap-1.5">
+            <div class="grid gap-2">
               <label
                 hlmLabel
                 for="website"
                 class="text-xs text-muted-foreground uppercase font-semibold"
                 >{{ 'profile.contact.websiteLabel' | transloco }}</label
               >
-              <div
-                class="min-h-[40px] flex items-center gap-2 px-2 rounded-md transition-colors"
+              <hlm-input-group
                 [class.bg-secondary]="editingSection() === 'contact'"
+                class="flex items-center gap-2"
               >
-                <ng-icon
-                  hlm
-                  name="lucideGlobe"
-                  size="sm"
-                  class="text-muted-foreground flex-shrink-0"
-                />
+                <hlm-input-group-addon align="inline-start">
+                  <ng-icon name="lucideGlobe" />
+                </hlm-input-group-addon>
                 <input
-                  hlmInput
+                  hlmInputGroupInput
                   id="website"
                   [ngModel]="
                     editingSection() === 'contact'
@@ -325,9 +339,10 @@
                   placeholder="{{
                     'profile.contact.websitePlaceholder' | transloco
                   }}"
-                  class="flex-1 bg-transparent border-none shadow-none focus-visible:ring-0 p-0 text-sm h-auto"
+                  class="flex-1 text-sm h-auto"
+                  [class.cursor-default]="editingSection() !== 'contact'"
                 />
-              </div>
+              </hlm-input-group>
             </div>
           </div>
         </div>
@@ -393,35 +408,48 @@
             </div>
 
             <div
-              class="flex gap-2 transition-all duration-200 overflow-hidden"
+              class="transition-all duration-200 overflow-hidden"
               [class.h-0]="editingSection() !== 'skills'"
               [class.opacity-0]="editingSection() !== 'skills'"
               [class.mt-0]="editingSection() !== 'skills'"
-              [class.h-10]="editingSection() === 'skills'"
-              [class.mt-2]="editingSection() === 'skills'"
+              [class.h-auto]="editingSection() === 'skills'"
+              [class.mt-4]="editingSection() === 'skills'"
             >
-              <label hlmLabel for="newSkill" class="sr-only">{{
-                'profile.skills.placeholder' | transloco
-              }}</label>
-              <input
-                hlmInput
-                #newSkillInput
-                id="newSkill"
-                placeholder="{{ 'profile.skills.placeholder' | transloco }}"
-                class="flex-1"
-                (keyup.enter)="
-                  addSkill(newSkillInput.value); newSkillInput.value = ''
-                "
-              />
-              <button
-                hlmBtn
-                (click)="
-                  addSkill(newSkillInput.value); newSkillInput.value = ''
-                "
-              >
-                <ng-icon hlm name="lucidePlus" size="sm" class="mr-2" />
-                {{ 'common.add' | transloco }}
-              </button>
+              <div class="grid gap-2">
+                <label
+                  hlmLabel
+                  for="newSkill"
+                  class="text-xs text-muted-foreground uppercase font-semibold"
+                  >{{ 'profile.skills.placeholder' | transloco }}</label
+                >
+                <div class="flex gap-2">
+                  <hlm-input-group class="flex-1 flex items-center gap-2">
+                    <hlm-input-group-addon align="inline-start">
+                      <ng-icon name="lucidePlus" />
+                    </hlm-input-group-addon>
+                    <input
+                      hlmInputGroupInput
+                      #newSkillInput
+                      id="newSkill"
+                      placeholder="{{
+                        'profile.skills.placeholder' | transloco
+                      }}"
+                      class="flex-1 text-sm h-auto"
+                      (keyup.enter)="
+                        addSkill(newSkillInput.value); newSkillInput.value = ''
+                      "
+                    />
+                  </hlm-input-group>
+                  <button
+                    hlmBtn
+                    (click)="
+                      addSkill(newSkillInput.value); newSkillInput.value = ''
+                    "
+                  >
+                    {{ 'common.add' | transloco }}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -439,50 +467,37 @@
               {{ 'profile.preferences.description' | transloco }}
             </p>
           </div>
-          <div class="flex gap-2">
-            @if (editingSection() !== 'preferences') {
-              <app-edit-button
-                (edit)="editSection('preferences', profile)"
-                editLabel="{{ 'common.edit' | transloco }}"
-              />
-            } @else {
-              <app-cancel-button
-                (clicked)="cancelEdit()"
-                cancelLabel="{{ 'common.cancel' | transloco }}"
-              />
-              <app-save-button
-                formId="preferences"
-                [isSubmitting]="savingSection() === 'preferences'"
-                idleLabel="{{ 'common.saveChanges' | transloco }}"
-                (click)="saveSection('preferences')"
-              />
-            }
-          </div>
         </div>
         <div hlmCardContent>
-          <div class="grid gap-4 sm:grid-cols-3">
-            <label
-              hlmLabel
-              for="experience"
-              class="text-xs text-muted-foreground uppercase font-bold tracking-widest"
-              >{{ 'profile.preferences.experienceLabel' | transloco }}
-            </label>
-            <div class="min-h-[28px] flex items-center">
+          <div class="grid gap-6 sm:grid-cols-3">
+            <hlm-field class="grid gap-2">
+              <label
+                hlmLabel
+                for="experience"
+                class="text-xs text-muted-foreground uppercase font-semibold"
+                >{{ 'profile.preferences.experienceLabel' | transloco }}
+              </label>
               <hlm-select
                 id="experience"
-                class="inline-block w-full"
-                [ngModel]="
-                  editingSection() === 'preferences'
-                    ? editData.experienceLevel
-                    : profile.experienceLevel
-                "
+                class="w-full"
+                [ngModel]="editData.experienceLevel ?? profile.experienceLevel"
                 (ngModelChange)="editData.experienceLevel = $event"
-                [disabled]="editingSection() !== 'preferences'"
               >
                 <hlm-select-trigger
-                  class="w-full px-0 border-none bg-transparent shadow-none focus:ring-0 text-lg font-semibold h-auto disabled:opacity-100 disabled:cursor-default"
+                  [class.bg-secondary]="editData.experienceLevel !== undefined"
                 >
-                  <hlm-select-value />
+                  @if (
+                    editData.experienceLevel ?? profile.experienceLevel;
+                    as value
+                  ) {
+                    <span>{{
+                      'profile.experienceLevels.' + value | transloco
+                    }}</span>
+                  } @else {
+                    <span class="text-muted-foreground">{{
+                      'profile.preferences.experienceLabel' | transloco
+                    }}</span>
+                  }
                 </hlm-select-trigger>
                 <hlm-select-content *hlmSelectPortal>
                   <hlm-select-item [value]="null">{{
@@ -490,36 +505,43 @@
                   }}</hlm-select-item>
                   @for (level of experienceLevels; track level) {
                     <hlm-select-item [value]="level">{{
-                      'experienceLevels.' + level | transloco
+                      'profile.experienceLevels.' + level | transloco
                     }}</hlm-select-item>
                   }
                 </hlm-select-content>
               </hlm-select>
-            </div>
-          </div>
-          <div class="grid gap-4 sm:grid-cols-3">
-            <label
-              hlmLabel
-              for="workingStyle"
-              class="text-xs text-muted-foreground uppercase font-bold tracking-widest"
-              >{{ 'profile.preferences.workingStyleLabel' | transloco }}</label
-            >
-            <div class="min-h-[28px] flex items-center">
+            </hlm-field>
+
+            <hlm-field class="grid gap-2">
+              <label
+                hlmLabel
+                for="workingStyle"
+                class="text-xs text-muted-foreground uppercase font-semibold"
+                >{{
+                  'profile.preferences.workingStyleLabel' | transloco
+                }}</label
+              >
               <hlm-select
                 id="workingStyle"
-                class="inline-block w-full"
-                [ngModel]="
-                  editingSection() === 'preferences'
-                    ? editData.workingStyle
-                    : profile.workingStyle
-                "
+                class="w-full"
+                [ngModel]="editData.workingStyle ?? profile.workingStyle"
                 (ngModelChange)="editData.workingStyle = $event"
-                [disabled]="editingSection() !== 'preferences'"
               >
                 <hlm-select-trigger
-                  class="w-full px-0 border-none bg-transparent shadow-none focus:ring-0 text-lg font-semibold h-auto disabled:opacity-100 disabled:cursor-default"
+                  [class.bg-secondary]="editData.workingStyle !== undefined"
                 >
-                  <hlm-select-value />
+                  @if (
+                    editData.workingStyle ?? profile.workingStyle;
+                    as value
+                  ) {
+                    <span>{{
+                      'profile.workingStyles.' + value | transloco
+                    }}</span>
+                  } @else {
+                    <span class="text-muted-foreground">{{
+                      'profile.preferences.workingStyleLabel' | transloco
+                    }}</span>
+                  }
                 </hlm-select-trigger>
                 <hlm-select-content *hlmSelectPortal>
                   <hlm-select-item [value]="null">{{
@@ -527,36 +549,35 @@
                   }}</hlm-select-item>
                   @for (style of workingStyles; track style) {
                     <hlm-select-item [value]="style">{{
-                      'workingStyles.' + style | transloco
+                      'profile.workingStyles.' + style | transloco
                     }}</hlm-select-item>
                   }
                 </hlm-select-content>
               </hlm-select>
-            </div>
-          </div>
-          <div class="grid gap-4 sm:grid-cols-3">
-            <label
-              hlmLabel
-              for="careerType"
-              class="text-xs text-muted-foreground uppercase font-bold tracking-widest"
-              >{{ 'profile.preferences.careerTypeLabel' | transloco }}</label
-            >
-            <div class="min-h-[28px] flex items-center">
+            </hlm-field>
+
+            <hlm-field class="grid gap-2">
+              <label hlmFieldLabel for="careerType">
+                {{ 'profile.preferences.careerTypeLabel' | transloco }}</label
+              >
               <hlm-select
                 id="careerType"
-                class="inline-block w-full"
-                [ngModel]="
-                  editingSection() === 'preferences'
-                    ? editData.careerType
-                    : profile.careerType
-                "
+                class="w-full"
+                [ngModel]="editData.careerType ?? profile.careerType"
                 (ngModelChange)="editData.careerType = $event"
-                [disabled]="editingSection() !== 'preferences'"
               >
                 <hlm-select-trigger
-                  class="w-full px-0 border-none bg-transparent shadow-none focus:ring-0 text-lg font-semibold h-auto disabled:opacity-100 disabled:cursor-default"
+                  [class.bg-secondary]="editData.careerType !== undefined"
                 >
-                  <hlm-select-value />
+                  @if (editData.careerType ?? profile.careerType; as value) {
+                    <span>{{
+                      'profile.careerTypes.' + value | transloco
+                    }}</span>
+                  } @else {
+                    <span class="text-muted-foreground">{{
+                      'profile.preferences.careerTypeLabel' | transloco
+                    }}</span>
+                  }
                 </hlm-select-trigger>
                 <hlm-select-content *hlmSelectPortal>
                   <hlm-select-item [value]="null">{{
@@ -564,12 +585,12 @@
                   }}</hlm-select-item>
                   @for (type of careerTypes; track type) {
                     <hlm-select-item [value]="type">{{
-                      'careerTypes.' + type | transloco
+                      'profile.careerTypes.' + type | transloco
                     }}</hlm-select-item>
                   }
                 </hlm-select-content>
               </hlm-select>
-            </div>
+            </hlm-field>
           </div>
         </div>
       </section>
