@@ -1,0 +1,10 @@
+<button
+  hlmBtn
+  variant="ghost"
+  size="sm"
+  type="button"
+  [disabled]="disabled()"
+  (click)="clicked.emit()"
+>
+  <ng-content>Cancel</ng-content>
+</button>

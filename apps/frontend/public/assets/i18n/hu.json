@@ -13,8 +13,10 @@
     "cancel": "Mégse",
     "saveChanges": "Mentés",
     "create": "Létrehozás",
-    "login": "Bejelentkezés",
-    "register": "Regisztráció",
+    "edit": "Szerkesztés",
+    "save": "Mentés",
+    "add": "Hozzáadás",
+    "remove": "Eltávolítás",
     "logout": "Kijelentkezés",
     "overview": "Áttekintés",
     "contacts": "Kapcsolatok",
@@ -23,6 +25,8 @@
     "profile": "Profil",
     "settings": "Beállítások",
     "about": "Az alkalmazásról",
+    "login": "Bejelentkezés",
+    "register": "Regisztráció",
     "saving": "Mentés..."
   },
   "jobs": {
@@ -189,6 +193,170 @@
     "dark": "Sötét",
     "system": "Rendszer"
   },
+  "settings": {
+    "accountSettings": {
+      "changeEmail": {
+        "title": "Email módosítása",
+        "description": "Adj meg új email címet. A megerősítő linket az új címre küldjük.",
+        "currentEmail": "Jelenlegi email",
+        "newEmail": "Új email",
+        "pendingEmailNotice": "Függő email módosítás: {{email}}. A befejezéshez erősítsd meg a postaládádból.",
+        "success": "Megerősítő email elküldve az új címre.",
+        "submit": "Mentés",
+        "submitting": "Mentés...",
+        "error": {
+          "title": "Email módosítás sikertelen",
+          "unknown": "Most nem sikerült az email módosítása. Próbáld újra.",
+          "user_already_exists": "Ezzel az email címmel már létezik fiók.",
+          "email_is_same": "Kérjük, a jelenlegitől eltérő email címet adjon meg."
+        }
+      },
+      "changePassword": {
+        "title": "Jelszó módosítása",
+        "description": "Add meg a jelenlegi jelszavad, majd állíts be újat.",
+        "currentPassword": "Jelenlegi jelszó",
+        "newPassword": "Új jelszó",
+        "hidePassword": "Jelszó elrejtése",
+        "showPassword": "Jelszó megjelenítése",
+        "success": "A jelszó sikeresen frissítve.",
+        "submit": "Mentés",
+        "submitting": "Mentés...",
+        "error": {
+          "title": "Jelszó módosítás sikertelen",
+          "unknown": "Most nem sikerült a jelszó frissítése. Próbáld újra.",
+          "invalid_password": "A jelenlegi jelszó hibás.",
+          "password_too_short": "Az új jelszó túl rövid.",
+          "password_too_long": "Az új jelszó túl hosszú."
+        }
+      },
+      "title": "Fiókbeállítások",
+      "subtitle": "Frissítse biztonságosan email címét és jelszavát."
+    },
+    "preferences": "Testreszabás",
+    "account": "Fiókbeállítások",
+    "privacy": "Adatvédelmi beállítások"
+  },
+  "auth": {
+    "fields": {
+      "email": {
+        "placeholder": "pelda@pelda.hu",
+        "required": "Az email megadása kötelező.",
+        "invalid_format": "Adjon meg érvényes email címet.",
+        "label": "Email",
+        "example": "Példa: pelda@pelda.hu"
+      },
+      "password": {
+        "placeholder": "Adja meg a jelszót",
+        "required": "A jelszó megadása kötelező.",
+        "too_small": "A jelszó legalább 8 karakter legyen.",
+        "need_uppercase": "A jelszó tartalmazzon legalább egy nagybetűt.",
+        "need_lowercase": "A jelszó tartalmazzon legalább egy kisbetűt.",
+        "need_number": "A jelszó tartalmazzon legalább egy számot.",
+        "label": "Jelszó",
+        "example": "Használjon legalább 8 karaktert, köztük nagybetűt, kisbetűt és számot."
+      },
+      "confirmPassword": {
+        "label": "Jelszó megerősítése",
+        "placeholder": "Erősítse meg a jelszót",
+        "required": "Erősítse meg a jelszót.",
+        "password_mismatch": "A jelszavak nem egyeznek.",
+        "example": "Írja be újra a jelszavát a megerősítéshez."
+      },
+      "name": {
+        "label": "Név",
+        "placeholder": "Adja meg a teljes nevét",
+        "required": "A név megadása kötelező.",
+        "example": "Példa: Kovács Anna"
+      }
+    },
+    "verifyEmailNotice": {
+      "success": "Megerősítő email elküldve. Ellenőrizd a postafiókodat.",
+      "submitting": "Megerősítő email küldése...",
+      "submit": "Megerősítő email újraküldése",
+      "backToLogin": "Vissza a bejelentkezéshez",
+      "title": "Email cím megerősítése",
+      "subtitle": "Elküldtük a megerősítő linket a postafiókodba. Itt újra el tudod küldeni, ha kell.",
+      "error": {
+        "title": "A megerősítő email küldése sikertelen",
+        "unknown": "Most nem sikerült megerősítő emailt küldeni. Próbáld újra."
+      }
+    },
+    "verifyEmail": {
+      "success": "Az email címed megerősítve. Most már bejelentkezhetsz.",
+      "backToLogin": "Vissza a bejelentkezéshez",
+      "resendLink": "Megerősítő email újraküldése",
+      "title": "Email cím megerősítése",
+      "subtitle": "A megerősítő link feldolgozása megtörtént.",
+      "error": {
+        "title": "Az email megerősítése sikertelen",
+        "invalid_token": "A megerősítő link érvénytelen vagy lejárt. Kérj újat.",
+        "token_expired": "A megerősítő link érvénytelen vagy lejárt. Kérj újat.",
+        "user_not_found": "Nem találtunk fiókot ehhez a megerősítő linkhez.",
+        "email_already_verified": "Ez az email cím már meg van erősítve.",
+        "email_mismatch": "Ez a megerősítő link nem egyezik a jelenlegi email címmel."
+      }
+    },
+    "resetPassword": {
+      "missingToken": "A visszaállító token hiányzik vagy érvénytelen.",
+      "success": "A jelszó visszaállítása sikeres. Átirányítás bejelentkezésre...",
+      "submitting": "Jelszó visszaállítása...",
+      "submit": "Jelszó visszaállítása",
+      "backToLogin": "Vissza a bejelentkezéshez",
+      "title": "Jelszó visszaállítása",
+      "subtitle": "Állítsd be az új jelszavadat a folytatáshoz.",
+      "error": {
+        "title": "A jelszó visszaállítása sikertelen",
+        "unknown": "Most nem sikerült visszaállítani a jelszót. Próbáld újra.",
+        "invalid_token": "A visszaállító link érvénytelen vagy lejárt. Kérj új linket."
+      }
+    },
+    "register": {
+      "submitting": "Fiók létrehozása...",
+      "submit": "Fiók létrehozása",
+      "hasAccount": "Van már fiókod?",
+      "loginLink": "Jelentkezz be",
+      "title": "Fiók létrehozása",
+      "subtitle": "Regisztrálj a jelentkezéseid követéséhez.",
+      "error": {
+        "title": "Regisztráció sikertelen",
+        "unknown": "Most nem sikerült regisztrálni. Próbálja újra.",
+        "user_already_exists": "Ezzel az email címmel már létezik fiók.",
+        "user_already_exists_use_another_email": "Ezzel az email címmel már létezik fiók. Használjon másik email címet.",
+        "invalid_password": "A jelszó nem felel meg a követelményeknek.",
+        "internal_error": "Hiba történt a regisztráció során. Kérjük, próbálja újra később."
+      }
+    },
+    "login": {
+      "forgotPasswordLink": "Elfelejtett jelszó?",
+      "submitting": "Bejelentkezés...",
+      "submit": "Bejelentkezés",
+      "noAccount": "Nincs még fiókod?",
+      "registerLink": "Regisztrálj",
+      "title": "Bejelentkezés",
+      "subtitle": "Jelentkezz be a folytatáshoz.",
+      "subtitleAfterPasswordChange": "auth.login.subtitleAfterPasswordChange",
+      "error": {
+        "title": "Bejelentkezés sikertelen",
+        "unknown": "Most nem sikerült bejelentkezni. Próbálja újra.",
+        "invalid_email_or_password": "Hibás email vagy jelszó.",
+        "user_not_found": "Nincs ilyen email címhez tartozó felhasználó.",
+        "email_not_verified": "Az email cím még nincs megerősítve. Ellenőrizze postafiókját.",
+        "internal_error": "Hiba történt a bejelentkezés során. Kérjük, próbálja újra később."
+      }
+    },
+    "forgotPassword": {
+      "success": "Ha létezik fiók ehhez az email címhez, elküldtük a visszaállító linket.",
+      "submitting": "Visszaállító link küldése...",
+      "submit": "Visszaállító link küldése",
+      "backToLogin": "Vissza a bejelentkezéshez",
+      "title": "Elfelejtett jelszó",
+      "subtitle": "Add meg az email címedet, és küldünk egy visszaállító linket.",
+      "error": {
+        "title": "Visszaállító link küldése sikertelen",
+        "unknown": "Most nem sikerült visszaállító linket küldeni. Próbáld újra."
+      }
+    }
+  },
   "contacts": {
     "edit": {
       "title": "Kapcsolat szerkesztése",
@@ -236,6 +404,7 @@
         "loginCta": "Bejelentkezés"
       },
       "features": {
+        "comingSoon": "hamarosan",
         "jobs": {
           "title": "Munkák",
           "description": "Jelentkezések hozzáadása és státuszkövetés lépésről lépésre."
@@ -251,8 +420,7 @@
         "coverLetter": {
           "title": "Kísérőlevél",
           "description": "Munkánként generált kísérőlevél — bejelentkezés után elérhető."
-        },
-        "comingSoon": "hamarosan"
+        }
       },
       "publicProfiles": {
         "title": "Publikus profil",
@@ -271,171 +439,69 @@
   },
   "navigation": {
     "backTooltip": "Vissza az előző oldalra",
-    "notImplementedTooltip": "Ez a funkció még nincs megvalósítva",
     "statusTooltip": "Az alkalmazás állapotának megtekintése",
-    "appTitleTooltip": "Nyissa meg a Job Tracker Lite GitHub oldalát"
+    "appTitleTooltip": "Nyissa meg a Job Tracker Lite GitHub oldalát",
+    "notImplementedTooltip": "Ez a funkció még nincs megvalósítva"
   },
-  "auth": {
-    "fields": {
-      "name": {
-        "label": "Név",
-        "placeholder": "Adja meg a teljes nevét",
-        "required": "A név megadása kötelező.",
-        "example": "Példa: Kovács Anna"
-      },
-      "email": {
-        "label": "Email",
-        "placeholder": "pelda@pelda.hu",
-        "required": "Az email megadása kötelező.",
-        "invalid_format": "Adjon meg érvényes email címet.",
-        "example": "Példa: pelda@pelda.hu"
-      },
-      "password": {
-        "label": "Jelszó",
-        "placeholder": "Adja meg a jelszót",
-        "required": "A jelszó megadása kötelező.",
-        "too_small": "A jelszó legalább 8 karakter legyen.",
-        "need_uppercase": "A jelszó tartalmazzon legalább egy nagybetűt.",
-        "need_lowercase": "A jelszó tartalmazzon legalább egy kisbetűt.",
-        "need_number": "A jelszó tartalmazzon legalább egy számot.",
-        "example": "Használjon legalább 8 karaktert, köztük nagybetűt, kisbetűt és számot."
-      },
-      "confirmPassword": {
-        "label": "Jelszó megerősítése",
-        "placeholder": "Erősítse meg a jelszót",
-        "required": "Erősítse meg a jelszót.",
-        "password_mismatch": "A jelszavak nem egyeznek.",
-        "example": "Írja be újra a jelszavát a megerősítéshez."
-      }
+  "profile": {
+    "title": "Felhasználói profil",
+    "loading": "Profil betöltése...",
+    "personal": {
+      "title": "Személyes információk",
+      "description": "Alapvető azonosítás és bemutatkozás.",
+      "nameLabel": "Név",
+      "namePlaceholder": "Az Ön neve",
+      "titleLabel": "Szakmai megnevezés",
+      "titlePlaceholder": "Szakmai megnevezés",
+      "locationLabel": "Helyszín",
+      "locationPlaceholder": "pl. Budapest, Magyarország",
+      "bioLabel": "Bio",
+      "bioPlaceholder": "Meséljen magáról...",
+      "publicLabel": "Profil publikussá tétele"
     },
-    "login": {
-      "title": "Bejelentkezés",
-      "subtitle": "Jelentkezz be a folytatáshoz.",
-      "submit": "Bejelentkezés",
-      "submitting": "Bejelentkezés...",
-      "forgotPasswordLink": "Elfelejtett jelszó?",
-      "noAccount": "Nincs még fiókod?",
-      "registerLink": "Regisztrálj",
-      "error": {
-        "title": "Bejelentkezés sikertelen",
-        "unknown": "Most nem sikerült bejelentkezni. Próbálja újra.",
-        "invalid_email_or_password": "Hibás email vagy jelszó.",
-        "user_not_found": "Nincs ilyen email címhez tartozó felhasználó.",
-        "email_not_verified": "Az email cím még nincs megerősítve. Ellenőrizze postafiókját.",
-        "internal_error": "Hiba történt a bejelentkezés során. Kérjük, próbálja újra később."
-      }
+    "contact": {
+      "title": "Kapcsolat és linkek",
+      "description": "Hogyan találhatják meg a toborzók és munkatársak.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "email@pelda.hu",
+      "linkedinLabel": "LinkedIn",
+      "linkedinPlaceholder": "LinkedIn URL",
+      "githubLabel": "GitHub",
+      "githubPlaceholder": "GitHub URL",
+      "websiteLabel": "Portfólió / Weboldal",
+      "websitePlaceholder": "Portfólió URL"
     },
-    "register": {
-      "title": "Fiók létrehozása",
-      "subtitle": "Regisztrálj a jelentkezéseid követéséhez.",
-      "submit": "Fiók létrehozása",
-      "submitting": "Fiók létrehozása...",
-      "hasAccount": "Van már fiókod?",
-      "loginLink": "Jelentkezz be",
-      "error": {
-        "title": "Regisztráció sikertelen",
-        "unknown": "Most nem sikerült regisztrálni. Próbálja újra.",
-        "user_already_exists": "Ezzel az email címmel már létezik fiók.",
-        "user_already_exists_use_another_email": "Ezzel az email címmel már létezik fiók. Használjon másik email címet.",
-        "invalid_password": "A jelszó nem felel meg a követelményeknek.",
-        "internal_error": "Hiba történt a regisztráció során. Kérjük, próbálja újra később."
-      }
+    "skills": {
+      "title": "Főbb készségek",
+      "description": "Technikai szakértelem és eszközök.",
+      "empty": "Még nincsenek hozzáadott készségek.",
+      "placeholder": "Adjon hozzá technikai készséget..."
     },
-    "forgotPassword": {
-      "title": "Elfelejtett jelszó",
-      "subtitle": "Add meg az email címedet, és küldünk egy visszaállító linket.",
-      "submit": "Visszaállító link küldése",
-      "submitting": "Visszaállító link küldése...",
-      "backToLogin": "Vissza a bejelentkezéshez",
-      "success": "Ha létezik fiók ehhez az email címhez, elküldtük a visszaállító linket.",
-      "error": {
-        "title": "Visszaállító link küldése sikertelen",
-        "unknown": "Most nem sikerült visszaállító linket küldeni. Próbáld újra."
-      }
+    "preferences": {
+      "title": "Szakmai preferenciák",
+      "description": "Karrierút és preferált munkakörnyezet.",
+      "experienceLabel": "Tapasztalat",
+      "workingStyleLabel": "Munkavégzés módja",
+      "careerTypeLabel": "Szerződés típusa",
+      "notSet": "Nincs beállítva"
     },
-    "verifyEmailNotice": {
-      "title": "Email cím megerősítése",
-      "subtitle": "Elküldtük a megerősítő linket a postafiókodba. Itt újra el tudod küldeni, ha kell.",
-      "submit": "Megerősítő email újraküldése",
-      "submitting": "Megerősítő email küldése...",
-      "backToLogin": "Vissza a bejelentkezéshez",
-      "success": "Megerősítő email elküldve. Ellenőrizd a postafiókodat.",
-      "error": {
-        "title": "A megerősítő email küldése sikertelen",
-        "unknown": "Most nem sikerült megerősítő emailt küldeni. Próbáld újra."
-      }
+    "experienceLevels": {
+      "INTERN": "Gyakornok",
+      "JUNIOR": "Junior",
+      "MID": "Középszintű",
+      "SENIOR": "Szenior",
+      "LEAD": "Vezető",
+      "EXPERT": "Szakértő"
     },
-    "verifyEmail": {
-      "title": "Email cím megerősítése",
-      "subtitle": "A megerősítő link feldolgozása megtörtént.",
-      "success": "Az email címed megerősítve. Most már bejelentkezhetsz.",
-      "backToLogin": "Vissza a bejelentkezéshez",
-      "resendLink": "Megerősítő email újraküldése",
-      "error": {
-        "title": "Az email megerősítése sikertelen",
-        "invalid_token": "A megerősítő link érvénytelen vagy lejárt. Kérj újat.",
-        "token_expired": "A megerősítő link érvénytelen vagy lejárt. Kérj újat.",
-        "user_not_found": "Nem találtunk fiókot ehhez a megerősítő linkhez.",
-        "email_already_verified": "Ez az email cím már meg van erősítve.",
-        "email_mismatch": "Ez a megerősítő link nem egyezik a jelenlegi email címmel."
-      }
+    "workingStyles": {
+      "REMOTE": "Távmunka",
+      "HYBRID": "Hibrid",
+      "ON_SITE": "Helyszíni"
     },
-    "resetPassword": {
-      "title": "Jelszó visszaállítása",
-      "subtitle": "Állítsd be az új jelszavadat a folytatáshoz.",
-      "submit": "Jelszó visszaállítása",
-      "submitting": "Jelszó visszaállítása...",
-      "backToLogin": "Vissza a bejelentkezéshez",
-      "missingToken": "A visszaállító token hiányzik vagy érvénytelen.",
-      "success": "A jelszó visszaállítása sikeres. Átirányítás bejelentkezésre...",
-      "error": {
-        "title": "A jelszó visszaállítása sikertelen",
-        "unknown": "Most nem sikerült visszaállítani a jelszót. Próbáld újra.",
-        "invalid_token": "A visszaállító link érvénytelen vagy lejárt. Kérj új linket."
-      }
-    }
-  },
-  "settings": {
-    "preferences": "Testreszabás",
-    "account": "Fiókbeállítások",
-    "privacy": "Adatvédelmi beállítások",
-    "accountSettings": {
-      "title": "Fiókbeállítások",
-      "subtitle": "Frissítse biztonságosan email címét és jelszavát.",
-      "changeEmail": {
-        "title": "Email módosítása",
-        "description": "Adj meg új email címet. A megerősítő linket az új címre küldjük.",
-        "currentEmail": "Jelenlegi email",
-        "newEmail": "Új email",
-        "submit": "Mentés",
-        "submitting": "Mentés...",
-        "success": "Megerősítő email elküldve az új címre.",
-        "pendingEmailNotice": "Függő email módosítás: {{email}}. A befejezéshez erősítsd meg a postaládádból.",
-        "error": {
-          "title": "Email módosítás sikertelen",
-          "unknown": "Most nem sikerült az email módosítása. Próbáld újra.",
-          "user_already_exists": "Ezzel az email címmel már létezik fiók.",
-          "email_is_same": "Kérjük, a jelenlegitől eltérő email címet adjon meg."
-        }
-      },
-      "changePassword": {
-        "title": "Jelszó módosítása",
-        "description": "Add meg a jelenlegi jelszavad, majd állíts be újat.",
-        "currentPassword": "Jelenlegi jelszó",
-        "newPassword": "Új jelszó",
-        "showPassword": "Jelszó megjelenítése",
-        "hidePassword": "Jelszó elrejtése",
-        "submit": "Mentés",
-        "submitting": "Mentés...",
-        "success": "A jelszó sikeresen frissítve.",
-        "error": {
-          "title": "Jelszó módosítás sikertelen",
-          "unknown": "Most nem sikerült a jelszó frissítése. Próbáld újra.",
-          "invalid_password": "A jelenlegi jelszó hibás.",
-          "password_too_short": "Az új jelszó túl rövid.",
-          "password_too_long": "Az új jelszó túl hosszú."
-        }
-      }
+    "careerTypes": {
+      "FULL_TIME": "Teljes munkaidő",
+      "PART_TIME": "Részmunkaidő",
+      "CONTRACT": "Szerződéses"
     }
   }
 }

@@ -24,7 +24,8 @@ export class ProfileHarness extends ComponentHarness {
   async clickEditPersonal(): Promise<void> {
     const buttons = await this.getButtons();
     for (const button of buttons) {
-      if ((await button.text()).includes('Edit')) {
+      const text = await button.text();
+      if (text.toLowerCase().includes('edit')) {
         return button.click();
       }
     }
@@ -34,10 +35,13 @@ export class ProfileHarness extends ComponentHarness {
   async save(): Promise<void> {
     const buttons = await this.getButtons();
     for (const button of buttons) {
-      if ((await button.text()).includes('Save Changes')) {
+      const text = await button.text();
+      // The save button is inside app-save-button, but getButtons is locatorForAll('button')
+      // so it should find the inner button.
+      if (text.toLowerCase().includes('save')) {
         return button.click();
       }
     }
-    throw new Error('Save Changes button not found');
+    throw new Error('Save button not found');
   }
 }

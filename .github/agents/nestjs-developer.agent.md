@@ -1,8 +1,8 @@
 ---
 description: 'Specialized NestJS backend developer for building type-safe REST APIs with Prisma, Zod validation, and Jest tests. USE WHEN: creating or editing NestJS modules, controllers, services, implementing API endpoints, adding validation, working with Prisma ORM, writing backend tests, fixing backend bugs, or any TypeScript/NestJS development task.'
 tools: [read, edit, search, execute, agent, context7/*]
+name: 'NestJS Developer'
 user-invocable: true
-model: GPT-5.3-Codex (copilot)
 handoffs:
   - label: Return to Orchestrator
     agent: Orchestrator

@@ -7,6 +7,7 @@ import {
   createProfileDataAccessMock,
   userProfileFixtures,
 } from '@job-tracker-lite-angular/testing';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('ProfileComponent', () => {
@@ -22,7 +23,7 @@ describe('ProfileComponent', () => {
     );
 
     await TestBed.configureTestingModule({
-      imports: [ProfileComponent],
+      imports: [ProfileComponent, getTranslocoModule()],
       providers: [
         { provide: ProfileDataAccessService, useValue: dataAccessMock },
       ],

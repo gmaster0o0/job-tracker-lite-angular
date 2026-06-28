@@ -2,9 +2,8 @@
 description: 'Orchestrates Planner, NestJS Developer, and Frontend Developer agents to complete features end-to-end. USE WHEN: implementing a full-stack feature, coordinating backend and frontend work, end-to-end delivery, delegating tasks across multiple specialist agents, feature planning and implementation, or when a task spans both API and UI layers.'
 name: 'Orchestrator'
 tools: [agent, todo]
-model: Gemini 3 Flash (Preview) (copilot)
 argument-hint: 'Describe the feature, bug, or task you want done end-to-end.'
-agents: ['Planner', 'NestJS Developer', 'Frontend Developer']
+agents: ['Planner', 'NestJS Developer', 'Angular Developer']
 user-invocable: true
 ---
 
@@ -64,6 +63,8 @@ For bugs or small fixes, skip PLAN and delegate directly to the relevant develop
 
 - After each subagent completes, check the `todo` list and confirm the deliverable matches the plan.
 - If a subagent output is incomplete or incorrect, re-delegate with corrected context rather than fixing it yourself.
+- If a subagent reports a blocker, escalate to the user for resolution rather than attempting to work around it.
+- Each implementation done if the test, lint,typecheck, and build passes successfully. If any of these fail, the subagent must fix them before marking the task as DONE.
 - Report final status to the user: what was done, by which agent, and any remaining open items.
 
 ## Output Format

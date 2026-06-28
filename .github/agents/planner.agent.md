@@ -3,7 +3,6 @@ description: 'Create implementation plans after researching the codebase and ver
 name: 'Planner'
 argument-hint: 'Describe the feature, bug, refactor, or decision that needs a plan.'
 tools: ['vscode', 'execute', 'read', 'agent', 'context7/*', 'edit', 'search', 'web', 'vscode/memory', 'todo']
-model: GPT-5.4 (copilot)
 user-invocable: true
 handoffs:
   - label: Return to Orchestrator

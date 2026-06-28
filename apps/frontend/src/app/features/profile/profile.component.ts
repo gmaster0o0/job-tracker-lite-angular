@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { provideIcons } from '@ng-icons/core';
 import { profileIcons, hlmImports } from './profile.hlmimports';
+import { SaveButtonComponent } from '../../shared/save-button/save-button.component';
+import { CancelButtonComponent } from '../../shared/cancel-button/cancel-button.component';
+import { TranslocoModule } from '@jsverse/transloco';
 
 import {
   UserProfileDto,
@@ -16,7 +19,14 @@ import {
 @Component({
   standalone: true,
   selector: 'app-profile',
-  imports: [CommonModule, FormsModule, ...hlmImports],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SaveButtonComponent,
+    CancelButtonComponent,
+    TranslocoModule,
+    hlmImports,
+  ],
   providers: [provideIcons(profileIcons)],
   templateUrl: './profile.component.html',
 })
@@ -26,6 +36,7 @@ export class ProfileComponent {
   profileResource = this.profileData.profileResource;
 
   editingSection = signal<string | null>(null);
+  savingSection = signal<string | null>(null);
   editData: Partial<UserProfileDto> = {};
 
   experienceLevels: ExperienceLevel[] = [
@@ -98,10 +109,13 @@ export class ProfileComponent {
     }
 
     try {
+      this.savingSection.set(section);
       await this.profileData.updateProfile(updateDto);
       this.editingSection.set(null);
     } catch (error) {
       console.error('Failed to update profile', error);
+    } finally {
+      this.savingSection.set(null);
     }
   }
 
