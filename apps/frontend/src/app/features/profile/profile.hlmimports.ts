@@ -8,6 +8,7 @@ import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { BrnSelectImports } from '@spartan-ng/brain/select';
+import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
 
 import {
   lucidePencil,
@@ -36,6 +37,7 @@ export const hlmImports = [
   ...HlmTextareaImports,
   ...HlmSelectImports,
   ...BrnSelectImports,
+  ...HlmInputGroupImports,
 ] as const;
 
 export const profileIcons = {

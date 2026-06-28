@@ -10,4 +10,5 @@ import { HlmButton } from '@spartan-ng/helm/button';
 export class CancelButtonComponent {
   readonly disabled = input(false);
   readonly clicked = output<void>();
+  readonly cancelLabel = input<string>('Cancel');
 }

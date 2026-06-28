@@ -8,6 +8,7 @@ import {
 import { ZodBody } from '@job-tracker-lite-angular/core-utils';
 import {
   AuthGuard,
+  AllowAnonymous,
   Session,
   type UserSession,
 } from '@thallesp/nestjs-better-auth';
@@ -18,6 +19,7 @@ export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Get()
+  @AllowAnonymous()
   async getProfile(@Session() session: UserSession): Promise<UserProfileDto> {
     return this.profileService.getProfile(session.user.id);
   }

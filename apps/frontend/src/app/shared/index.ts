@@ -6,6 +6,7 @@ export * from './edit-job-dialog-footer/edit-job-dialog-footer.component';
 export * from './edit-job-dialog-footer/edit-job-dialog-footer.harness';
 export * from './progession-stepper/progession-stepper.component';
 export * from './progession-stepper/progession-stepper.harness';
+export * from './edit-button/edit-button.component';
 export * from './save-button/save-button.component';
 export * from './save-button/save-button.harness';
 export * from './server-error-alert/server-error-alert.component';

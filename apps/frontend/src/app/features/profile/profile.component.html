@@ -25,17 +25,15 @@
           </div>
           <div class="flex gap-2">
             @if (editingSection() !== 'personal') {
-              <button
-                hlmBtn
-                variant="ghost"
-                size="sm"
-                (click)="editSection('personal', profile)"
-              >
-                <ng-icon hlm name="lucidePencil" size="sm" class="mr-2" />
-                {{ 'common.edit' | transloco }}
-              </button>
+              <app-edit-button
+                (edit)="editSection('personal', profile)"
+                editLabel="{{ 'common.edit' | transloco }}"
+              />
             } @else {
-              <app-cancel-button (clicked)="cancelEdit()" />
+              <app-cancel-button
+                (clicked)="cancelEdit()"
+                cancelLabel="{{ 'common.cancel' | transloco }}"
+              />
               <app-save-button
                 formId="personal"
                 [isSubmitting]="savingSection() === 'personal'"
@@ -102,29 +100,31 @@
                 class="text-xs text-muted-foreground uppercase font-semibold"
                 >{{ 'profile.personal.locationLabel' | transloco }}</label
               >
-              <div [class.bg-secondary]="editingSection() === 'personal'">
-                <ng-icon
-                  hlm
-                  name="lucideMapPin"
-                  size="xs"
-                  class="text-muted-foreground flex-shrink-0"
-                />
-                <input
-                  hlmInput
-                  id="city"
-                  [ngModel]="
-                    editingSection() === 'personal'
-                      ? editData.city
-                      : profile.city
-                  "
-                  (ngModelChange)="editData.city = $event"
-                  [readonly]="editingSection() !== 'personal'"
-                  placeholder="{{
-                    'profile.personal.locationPlaceholder' | transloco
-                  }}"
-                  class="flex-1 bg-transparent border-none shadow-none focus-visible:ring-0 p-0 text-sm h-auto"
-                  [class.cursor-default]="editingSection() !== 'personal'"
-                />
+              <div
+                [class.bg-secondary]="editingSection() === 'personal'"
+                class="flex items-center gap-2"
+              >
+                <hlm-input-group>
+                  <hlm-input-group-addon align="inline-start">
+                    <ng-icon name="lucideMapPin" />
+                  </hlm-input-group-addon>
+                  <input
+                    hlmInputGroupInput
+                    id="city"
+                    [ngModel]="
+                      editingSection() === 'personal'
+                        ? editData.city
+                        : profile.city
+                    "
+                    (ngModelChange)="editData.city = $event"
+                    [readonly]="editingSection() !== 'personal'"
+                    placeholder="{{
+                      'profile.personal.locationPlaceholder' | transloco
+                    }}"
+                    class="flex-1 text-sm h-auto"
+                    [class.cursor-default]="editingSection() !== 'personal'"
+                  />
+                </hlm-input-group>
               </div>
             </div>
 
@@ -152,22 +152,6 @@
                 ></textarea>
               </div>
             </div>
-
-            <div class="flex items-center gap-2 pt-2 border-t">
-              <input
-                type="checkbox"
-                id="isPublic"
-                [(ngModel)]="editData.isPublic"
-                [disabled]="editingSection() !== 'personal'"
-                class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-              />
-              <label
-                hlmLabel
-                for="isPublic"
-                class="text-sm font-medium leading-none"
-                >{{ 'profile.personal.publicLabel' | transloco }}</label
-              >
-            </div>
           </div>
         </div>
       </section>
@@ -186,17 +170,15 @@
           </div>
           <div class="flex gap-2">
             @if (editingSection() !== 'contact') {
-              <button
-                hlmBtn
-                variant="ghost"
-                size="sm"
-                (click)="editSection('contact', profile)"
-              >
-                <ng-icon hlm name="lucidePencil" size="sm" class="mr-2" />
-                {{ 'common.edit' | transloco }}
-              </button>
+              <app-edit-button
+                (edit)="editSection('contact', profile)"
+                editLabel="{{ 'common.edit' | transloco }}"
+              />
             } @else {
-              <app-cancel-button (clicked)="cancelEdit()" />
+              <app-cancel-button
+                (clicked)="cancelEdit()"
+                cancelLabel="{{ 'common.cancel' | transloco }}"
+              />
               <app-save-button
                 formId="contact"
                 [isSubmitting]="savingSection() === 'contact'"
@@ -365,17 +347,15 @@
           </div>
           <div class="flex gap-2">
             @if (editingSection() !== 'skills') {
-              <button
-                hlmBtn
-                variant="ghost"
-                size="sm"
-                (click)="editSection('skills', profile)"
-              >
-                <ng-icon hlm name="lucidePencil" size="sm" class="mr-2" />
-                {{ 'common.edit' | transloco }}
-              </button>
+              <app-edit-button
+                (edit)="editSection('skills', profile)"
+                editLabel="{{ 'common.edit' | transloco }}"
+              />
             } @else {
-              <app-cancel-button (clicked)="cancelEdit()" />
+              <app-cancel-button
+                (clicked)="cancelEdit()"
+                cancelLabel="{{ 'common.cancel' | transloco }}"
+              />
               <app-save-button
                 formId="skills"
                 [isSubmitting]="savingSection() === 'skills'"
@@ -461,17 +441,15 @@
           </div>
           <div class="flex gap-2">
             @if (editingSection() !== 'preferences') {
-              <button
-                hlmBtn
-                variant="ghost"
-                size="sm"
-                (click)="editSection('preferences', profile)"
-              >
-                <ng-icon hlm name="lucidePencil" size="sm" class="mr-2" />
-                {{ 'common.edit' | transloco }}
-              </button>
+              <app-edit-button
+                (edit)="editSection('preferences', profile)"
+                editLabel="{{ 'common.edit' | transloco }}"
+              />
             } @else {
-              <app-cancel-button (clicked)="cancelEdit()" />
+              <app-cancel-button
+                (clicked)="cancelEdit()"
+                cancelLabel="{{ 'common.cancel' | transloco }}"
+              />
               <app-save-button
                 formId="preferences"
                 [isSubmitting]="savingSection() === 'preferences'"

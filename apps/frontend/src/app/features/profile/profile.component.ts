@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { provideIcons } from '@ng-icons/core';
 import { profileIcons, hlmImports } from './profile.hlmimports';
+import { EditButtonComponent } from '../../shared/edit-button/edit-button.component';
 import { SaveButtonComponent } from '../../shared/save-button/save-button.component';
 import { CancelButtonComponent } from '../../shared/cancel-button/cancel-button.component';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -22,6 +23,7 @@ import {
   imports: [
     CommonModule,
     FormsModule,
+    EditButtonComponent,
     SaveButtonComponent,
     CancelButtonComponent,
     TranslocoModule,
