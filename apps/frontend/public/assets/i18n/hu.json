@@ -28,7 +28,9 @@
     "about": "Az alkalmazásról",
     "login": "Bejelentkezés",
     "register": "Regisztráció",
-    "saving": "Mentés..."
+    "saving": "Mentés...",
+    "saved": "Mentve",
+    "error": "Hiba"
   },
   "jobs": {
     "progression": {

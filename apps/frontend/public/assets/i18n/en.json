@@ -28,7 +28,9 @@
     "about": "About",
     "login": "Login",
     "register": "Register",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "saved": "Saved",
+    "error": "Error"
   },
   "jobs": {
     "progression": {

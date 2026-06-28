@@ -7,14 +7,12 @@ import { profileIcons, hlmImports } from './profile.hlmimports';
 import { EditButtonComponent } from '../../shared/edit-button/edit-button.component';
 import { SaveButtonComponent } from '../../shared/save-button/save-button.component';
 import { CancelButtonComponent } from '../../shared/cancel-button/cancel-button.component';
+import { CareerPreferenceComponent } from './career-preference/career-preference.component';
 import { TranslocoModule } from '@jsverse/transloco';
 
 import {
   UserProfileDto,
   UpdateUserProfileDto,
-  ExperienceLevel,
-  WorkingStyle,
-  CareerPreferenceType,
 } from '@job-tracker-lite-angular/schemas';
 
 @Component({
@@ -26,6 +24,7 @@ import {
     EditButtonComponent,
     SaveButtonComponent,
     CancelButtonComponent,
+    CareerPreferenceComponent,
     TranslocoModule,
     hlmImports,
   ],
@@ -40,17 +39,6 @@ export class ProfileComponent {
   editingSection = signal<string | null>(null);
   savingSection = signal<string | null>(null);
   editData: Partial<UserProfileDto> = {};
-
-  experienceLevels: ExperienceLevel[] = [
-    'INTERN',
-    'JUNIOR',
-    'MID',
-    'SENIOR',
-    'LEAD',
-    'EXPERT',
-  ];
-  workingStyles: WorkingStyle[] = ['REMOTE', 'HYBRID', 'ON_SITE'];
-  careerTypes: CareerPreferenceType[] = ['FULL_TIME', 'PART_TIME', 'CONTRACT'];
 
   isSectionVisible(
     profile: UserProfileDto,
@@ -100,13 +88,6 @@ export class ProfileComponent {
       updateDto = {
         coreSkills: this.editData.coreSkills,
         skillsVisibility: this.editData.skillsVisibility,
-      };
-    } else if (section === 'preferences') {
-      updateDto = {
-        experienceLevel: this.editData.experienceLevel,
-        workingStyle: this.editData.workingStyle,
-        careerType: this.editData.careerType,
-        preferenceVisibility: this.editData.preferenceVisibility,
       };
     }
 

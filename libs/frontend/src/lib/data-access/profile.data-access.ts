@@ -19,7 +19,7 @@ export class ProfileDataAccessService {
     const updated = await firstValueFrom(
       this.http.patch<UserProfileDto>('/api/profile', dto),
     );
-    this.profileResource.reload();
+    this.profileResource.update(() => updated);
 
     return updated;
   }
