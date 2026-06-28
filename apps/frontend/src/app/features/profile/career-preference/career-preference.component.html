@@ -14,13 +14,10 @@
       <div data-testid="saveStateIndicator">
         @switch (saveState()) {
           @case ('saving') {
-            <div class="flex items-center gap-2 text-sm text-muted-foreground">
-              <ng-icon
-                name="lucideLoader"
-                class="animate-spin w-4 h-4"
-              ></ng-icon>
-              <span>{{ 'common.saving' | transloco }}</span>
-            </div>
+            <span hlmBadge variant="secondary">
+              <hlm-spinner class="text-xs" />
+              {{ 'common.saving' | transloco }}
+            </span>
           }
           @case ('saved') {
             <div class="flex items-center gap-2 text-sm text-green-600">
@@ -38,72 +35,65 @@
       </div>
     </div>
   </div>
-  <!-- Experience Level-->
   <div hlmCardContent>
     <div class="grid gap-6 sm:grid-cols-3">
+      <!-- Experience Level-->
       <hlm-field class="grid gap-2">
-        <label
-          hlmLabel
-          for="experience"
-          class="text-xs text-muted-foreground uppercase font-semibold"
-          >{{ 'profile.preferences.experienceLabel' | transloco }}</label
-        >
+        <label hlmFieldLabel for="experience">{{
+          'profile.preferences.experienceLabel' | transloco
+        }}</label>
         <hlm-select
           id="experience"
-          class="w-full"
-          [ngModel]="experienceLevel()"
-          (ngModelChange)="onExperienceLevelChange($event)"
+          [value]="experienceLevel()"
+          (valueChange)="onExperienceLevelChange($event)"
           [disabled]="saveState() === 'saving'"
         >
-          <hlm-select-trigger [class.bg-secondary]="experienceLevel() !== null">
+          <hlm-select-trigger class="w-56">
             @if (experienceLevel(); as value) {
               <span>{{ 'profile.experienceLevels.' + value | transloco }}</span>
             } @else {
               <span class="text-muted-foreground">{{
-                'profile.preferences.experienceLabel' | transloco
+                'profile.preferences.notSet' | transloco
               }}</span>
             }
           </hlm-select-trigger>
+
           <hlm-select-content *hlmSelectPortal>
-            <hlm-select-item [value]="null">{{
-              'profile.preferences.notSet' | transloco
-            }}</hlm-select-item>
+            <hlm-select-label>{{
+              'profile.preferences.experienceLabel' | transloco
+            }}</hlm-select-label>
             @for (level of experienceLevels; track level) {
-              <hlm-select-item [value]="level">{{
-                'profile.experienceLevels.' + level | transloco
-              }}</hlm-select-item>
+              <hlm-select-item [value]="level">
+                {{ 'profile.experienceLevels.' + level | transloco }}
+              </hlm-select-item>
             }
           </hlm-select-content>
         </hlm-select>
       </hlm-field>
       <!-- Working Style -->
       <hlm-field class="grid gap-2">
-        <label
-          hlmLabel
-          for="workingStyle"
-          class="text-xs text-muted-foreground uppercase font-semibold"
-          >{{ 'profile.preferences.workingStyleLabel' | transloco }}</label
-        >
+        <label hlmFieldLabel for="workingStyle">{{
+          'profile.preferences.workingStyleLabel' | transloco
+        }}</label>
         <hlm-select
           id="workingStyle"
-          class="w-full"
-          [ngModel]="workingStyle()"
-          (ngModelChange)="onWorkingStyleChange($event)"
+          [value]="workingStyle()"
+          (valueChange)="onWorkingStyleChange($event)"
           [disabled]="saveState() === 'saving'"
         >
-          <hlm-select-trigger [class.bg-secondary]="workingStyle() !== null">
+          <hlm-select-trigger class="w-56">
             @if (workingStyle(); as value) {
               <span>{{ 'profile.workingStyles.' + value | transloco }}</span>
             } @else {
               <span class="text-muted-foreground">{{
-                'profile.preferences.workingStyleLabel' | transloco
+                'profile.preferences.notSet' | transloco
               }}</span>
             }
           </hlm-select-trigger>
           <hlm-select-content *hlmSelectPortal>
-            <hlm-select-item [value]="null">{{
-              'profile.preferences.notSet' | transloco
-            }}</hlm-select-item>
+            <hlm-select-label>{{
+              'profile.preferences.workingStyleLabel' | transloco
+            }}</hlm-select-label>
             @for (style of workingStyles; track style) {
               <hlm-select-item [value]="style">{{
                 'profile.workingStyles.' + style | transloco
@@ -119,29 +109,31 @@
         >
         <hlm-select
           id="careerType"
-          class="w-full"
-          [ngModel]="careerType()"
-          (ngModelChange)="onCareerTypeChange($event)"
+          [value]="careerType()"
+          (valueChange)="onCareerTypeChange($event)"
           [disabled]="saveState() === 'saving'"
+          class="w-full"
         >
-          <hlm-select-trigger [class.bg-secondary]="careerType() !== null">
+          <hlm-select-trigger class="w-56">
             @if (careerType(); as value) {
               <span>{{ 'profile.careerTypes.' + value | transloco }}</span>
             } @else {
               <span class="text-muted-foreground">{{
-                'profile.preferences.careerTypeLabel' | transloco
+                'profile.preferences.notSet' | transloco
               }}</span>
             }
           </hlm-select-trigger>
           <hlm-select-content *hlmSelectPortal>
-            <hlm-select-item [value]="null">{{
-              'profile.preferences.notSet' | transloco
-            }}</hlm-select-item>
-            @for (type of careerTypes; track type) {
-              <hlm-select-item [value]="type">{{
-                'profile.careerTypes.' + type | transloco
-              }}</hlm-select-item>
-            }
+            <hlm-select-group>
+              <hlm-select-label>{{
+                'profile.preferences.careerTypeLabel' | transloco
+              }}</hlm-select-label>
+              @for (type of careerTypes; track type) {
+                <hlm-select-item [value]="type">{{
+                  'profile.careerTypes.' + type | transloco
+                }}</hlm-select-item>
+              }
+            </hlm-select-group>
           </hlm-select-content>
         </hlm-select>
       </hlm-field>

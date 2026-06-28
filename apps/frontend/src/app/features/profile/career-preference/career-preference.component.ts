@@ -1,4 +1,11 @@
-import { Component, inject, signal, input, effect } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  input,
+  effect,
+  linkedSignal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
@@ -12,13 +19,14 @@ import {
   CareerPreferenceType,
 } from '@job-tracker-lite-angular/schemas';
 import { hlmImports } from '../profile.hlmimports';
+import { HlmSpinner } from '@spartan-ng/helm/spinner';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
 @Component({
   standalone: true,
   selector: 'app-career-preference',
-  imports: [CommonModule, FormsModule, TranslocoModule, hlmImports],
+  imports: [CommonModule, FormsModule, TranslocoModule, hlmImports, HlmSpinner],
   providers: [
     provideIcons({
       lucideCheck,
@@ -34,9 +42,9 @@ export class CareerPreferenceComponent {
   profile = input.required<UserProfileDto>();
 
   // Signals for each field
-  experienceLevel = signal<ExperienceLevel | null>(null);
-  workingStyle = signal<WorkingStyle | null>(null);
-  careerType = signal<CareerPreferenceType | null>(null);
+  experienceLevel = linkedSignal(() => this.profile().experienceLevel ?? null);
+  workingStyle = linkedSignal(() => this.profile().workingStyle ?? null);
+  careerType = linkedSignal(() => this.profile().careerType ?? null);
 
   // SaveState
   saveState = signal<SaveState>('idle');
@@ -56,30 +64,21 @@ export class CareerPreferenceComponent {
   private saveTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
-    // Initialize signals from profile
-    effect(
-      () => {
-        const prof = this.profile();
-        this.experienceLevel.set(prof.experienceLevel ?? null);
-        this.workingStyle.set(prof.workingStyle ?? null);
-        this.careerType.set(prof.careerType ?? null);
-      },
-      { allowSignalWrites: true },
-    );
+    // Effect to reset saveState to 'idle' when profile changes
   }
 
-  onExperienceLevelChange(value: ExperienceLevel | null) {
-    this.experienceLevel.set(value);
+  onExperienceLevelChange(value: ExperienceLevel | null | undefined) {
+    this.experienceLevel.set(value ?? null);
     this.debounceAndSave();
   }
 
-  onWorkingStyleChange(value: WorkingStyle | null) {
-    this.workingStyle.set(value);
+  onWorkingStyleChange(value: WorkingStyle | null | undefined) {
+    this.workingStyle.set(value ?? null);
     this.debounceAndSave();
   }
 
-  onCareerTypeChange(value: CareerPreferenceType | null) {
-    this.careerType.set(value);
+  onCareerTypeChange(value: CareerPreferenceType | null | undefined) {
+    this.careerType.set(value ?? null);
     this.debounceAndSave();
   }
 
