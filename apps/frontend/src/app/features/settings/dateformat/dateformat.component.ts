@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { HlmCardImports } from 'spartan/ui/helm';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { provideIcons } from '@ng-icons/core';
 import { lucideGlobe } from '@ng-icons/lucide';

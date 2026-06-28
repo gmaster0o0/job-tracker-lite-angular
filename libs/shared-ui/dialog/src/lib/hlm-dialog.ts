@@ -6,7 +6,6 @@ import {
 import { HlmDialogOverlay } from './hlm-dialog-overlay';
 
 @Component({
-  standalone: true,
   selector: 'hlm-dialog',
   exportAs: 'hlmDialog',
   imports: [HlmDialogOverlay],

@@ -2,7 +2,6 @@ import { Directive } from '@angular/core';
 import { classes } from '@spartan-ng/helm/utils';
 
 @Directive({
-  standalone: true,
   selector: 'ul[hlmSidebarMenu]',
   host: {
     'data-slot': 'sidebar-menu',
@@ -11,6 +10,6 @@ import { classes } from '@spartan-ng/helm/utils';
 })
 export class HlmSidebarMenu {
   constructor() {
-    classes(() => 'flex w-full min-w-0 flex-col gap-1');
+    classes(() => 'gap-1 flex w-full min-w-0 flex-col');
   }
 }

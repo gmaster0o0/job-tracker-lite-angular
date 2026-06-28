@@ -2,7 +2,6 @@ import { Directive } from '@angular/core';
 import { classes } from '@spartan-ng/helm/utils';
 
 @Directive({
-  standalone: true,
   selector: '[hlmSidebarContent],hlm-sidebar-content',
   host: {
     'data-slot': 'sidebar-content',
@@ -13,7 +12,7 @@ export class HlmSidebarContent {
   constructor() {
     classes(
       () =>
-        'flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden',
+        'no-scrollbar gap-2 flex min-h-0 flex-1 flex-col overflow-auto group-data-[collapsible=icon]:overflow-hidden',
     );
   }
 }

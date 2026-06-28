@@ -2,7 +2,6 @@ import { Directive } from '@angular/core';
 import { classes } from '@spartan-ng/helm/utils';
 
 @Directive({
-  standalone: true,
   selector: '[hlmSidebarFooter],hlm-sidebar-footer',
   host: {
     'data-slot': 'sidebar-footer',
@@ -11,6 +10,6 @@ import { classes } from '@spartan-ng/helm/utils';
 })
 export class HlmSidebarFooter {
   constructor() {
-    classes(() => 'flex flex-col gap-2 p-2');
+    classes(() => 'gap-2 p-2 flex flex-col');
   }
 }

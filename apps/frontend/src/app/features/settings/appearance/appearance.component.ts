@@ -1,6 +1,6 @@
 import { Component, effect, inject, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HlmCardImports } from 'spartan/ui/helm';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 import { provideIcons } from '@ng-icons/core';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { lucideMonitor, lucideMoon, lucideSun } from '@ng-icons/lucide';

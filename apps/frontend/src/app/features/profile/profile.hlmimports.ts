@@ -7,7 +7,7 @@ import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
-import { BrnSelectImports } from '@spartan-ng/brain/select';
+
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 
@@ -28,19 +28,18 @@ import {
 } from '@ng-icons/lucide';
 
 export const hlmImports = [
-  ...HlmButtonImports,
-  ...HlmCardImports,
-  ...HlmInputImports,
-  ...HlmLabelImports,
-  ...HlmBadgeImports,
-  ...HlmIconImports,
-  ...HlmSeparatorImports,
-  ...HlmTextareaImports,
-  ...HlmSelectImports,
-  ...BrnSelectImports,
-  ...HlmInputGroupImports,
-  ...HlmFieldImports,
-] as const;
+  HlmButtonImports,
+  HlmCardImports,
+  HlmInputImports,
+  HlmLabelImports,
+  HlmBadgeImports,
+  HlmIconImports,
+  HlmSeparatorImports,
+  HlmTextareaImports,
+  HlmSelectImports,
+  HlmInputGroupImports,
+  HlmFieldImports,
+];
 
 export const profileIcons = {
   lucidePencil,

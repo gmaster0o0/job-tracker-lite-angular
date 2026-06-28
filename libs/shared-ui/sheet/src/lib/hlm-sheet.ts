@@ -7,7 +7,6 @@ import { BrnSheet } from '@spartan-ng/brain/sheet';
 import { HlmSheetOverlay } from './hlm-sheet-overlay';
 
 @Component({
-  standalone: true,
   selector: 'hlm-sheet',
   exportAs: 'hlmSheet',
   imports: [HlmSheetOverlay],
