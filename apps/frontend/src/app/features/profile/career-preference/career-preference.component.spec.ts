@@ -33,7 +33,6 @@ describe('CareerPreferenceComponent', () => {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
 
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,

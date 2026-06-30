@@ -38,7 +38,6 @@ describe('SkillManagerComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(HostComponent);
-    fixture.detectChanges();
 
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -54,8 +53,6 @@ describe('SkillManagerComponent', () => {
   it('should add a skill with Enter key', async () => {
     await harness.enterSkill('GraphQL');
     await harness.pressEnterOnInput();
-    await fixture.whenStable();
-    fixture.detectChanges();
 
     const skills = await harness.getSkillTexts();
     expect(skills.some((skill) => skill.includes('GraphQL'))).toBe(true);
@@ -67,11 +64,9 @@ describe('SkillManagerComponent', () => {
     const before = await harness.getSkillTexts();
 
     await harness.removeSkillAt(0);
-    fixture.detectChanges();
     expect(await harness.hasDiscardButton()).toBe(true);
 
     await harness.clickDiscard();
-    fixture.detectChanges();
 
     const after = await harness.getSkillTexts();
     expect(after).toEqual(before);
@@ -81,8 +76,6 @@ describe('SkillManagerComponent', () => {
   it('should save modified skills', async () => {
     await harness.enterSkill('Playwright');
     await harness.pressEnterOnInput();
-    await fixture.whenStable();
-    fixture.detectChanges();
 
     await harness.clickSave();
 

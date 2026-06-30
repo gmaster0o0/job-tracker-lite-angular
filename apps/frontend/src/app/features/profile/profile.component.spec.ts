@@ -31,7 +31,7 @@ describe('ProfileComponent', () => {
 
     fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       ProfileHarness,
@@ -46,7 +46,7 @@ describe('ProfileComponent', () => {
   it('should update name on save', async () => {
     await harness.clickEditPersonal();
     await harness.setName('Jane Doe');
-    fixture.detectChanges();
+
     await fixture.whenStable();
     await harness.save();
 
@@ -60,7 +60,7 @@ describe('ProfileComponent', () => {
   it('should update bio on save', async () => {
     await harness.clickEditPersonal();
     await harness.setBio('Short bio\nwith two lines');
-    fixture.detectChanges();
+
     await fixture.whenStable();
     await harness.save();
 
