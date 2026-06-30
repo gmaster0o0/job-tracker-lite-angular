@@ -96,10 +96,13 @@
             >
               <input
                 id="newSkill"
+                #newSkillInput
                 hlmInputGroupInput
                 brnComboboxChipInput
                 class="h-auto flex-1 text-sm"
                 [placeholder]="'profile.skills.placeholder' | transloco"
+                [value]="newSkill()"
+                (input)="onSearchChange(newSkillInput.value)"
                 (keyup.enter)="addSkillFromInput()"
               />
             </hlm-input-group>
@@ -124,6 +127,24 @@
                       class="w-full rounded-sm px-2 py-1 text-left text-sm hover:bg-accent"
                     >
                       {{ suggestion }}
+                    </button>
+                  }
+
+                  @if (canAddNewElement()) {
+                    <div class="my-1 border-t"></div>
+                    <button
+                      type="button"
+                      class="flex w-full items-center gap-2 rounded-sm px-2 py-1 text-left text-sm hover:bg-accent"
+                      (click)="addSkillFromInput()"
+                    >
+                      <ng-icon
+                        hlm
+                        name="lucidePlusCircle"
+                        class="h-4 w-4 text-muted-foreground"
+                      />
+                      <span>
+                        {{ 'profile.skills.addNewElement' | transloco }}
+                      </span>
                     </button>
                   }
                 </div>

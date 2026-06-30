@@ -10,7 +10,12 @@ import {
 import { CommonModule } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
 import { provideIcons } from '@ng-icons/core';
-import { lucideAlertCircle, lucideCheck, lucideX } from '@ng-icons/lucide';
+import {
+  lucideAlertCircle,
+  lucideCheck,
+  lucidePlusCircle,
+  lucideX,
+} from '@ng-icons/lucide';
 import {
   BrnComboboxAnchor,
   BrnComboboxChipInput,
@@ -49,6 +54,7 @@ type SaveState = 'idle' | 'saving' | 'saved' | 'error';
     provideIcons({
       lucideCheck,
       lucideAlertCircle,
+      lucidePlusCircle,
       lucideX,
     }),
   ],
@@ -112,6 +118,24 @@ export class SkillManagerComponent {
         suggestion.toLowerCase().includes(query) &&
         !this.draftSkills().includes(suggestion),
     );
+  });
+
+  protected readonly canAddNewElement = computed(() => {
+    const candidate = this.newSkill().trim();
+    if (!candidate) {
+      return false;
+    }
+
+    const candidateLower = candidate.toLowerCase();
+
+    const existsInDraft = this.draftSkills().some(
+      (skill) => skill.toLowerCase() === candidateLower,
+    );
+    const existsAsSuggestion = this.autocompleteSuggestions().some(
+      (suggestion) => suggestion.toLowerCase() === candidateLower,
+    );
+
+    return !existsInDraft && !existsAsSuggestion;
   });
 
   protected onSearchChange(search: string) {

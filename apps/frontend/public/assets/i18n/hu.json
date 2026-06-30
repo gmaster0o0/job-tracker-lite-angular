@@ -478,7 +478,8 @@
       "title": "Főbb készségek",
       "description": "Technikai szakértelem és eszközök.",
       "empty": "Még nincsenek hozzáadott készségek.",
-      "placeholder": "Adjon hozzá technikai készséget..."
+      "placeholder": "Adjon hozzá technikai készséget...",
+      "addNewElement": "Új elem hozzáadása"
     },
     "preferences": {
       "title": "Szakmai preferenciák",

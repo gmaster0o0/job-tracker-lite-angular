@@ -484,7 +484,8 @@
       "title": "Core Skills",
       "description": "Your technical expertise and tools.",
       "empty": "No skills added yet.",
-      "placeholder": "Add a technical skill..."
+      "placeholder": "Add a technical skill...",
+      "addNewElement": "Add new element"
     },
     "preferences": {
       "title": "Professional Preferences",

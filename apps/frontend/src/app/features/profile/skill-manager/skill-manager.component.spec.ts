@@ -54,6 +54,7 @@ describe('SkillManagerComponent', () => {
   it('should add a skill with Enter key', async () => {
     await harness.enterSkill('GraphQL');
     await harness.pressEnterOnInput();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     const skills = await harness.getSkillTexts();
@@ -80,6 +81,7 @@ describe('SkillManagerComponent', () => {
   it('should save modified skills', async () => {
     await harness.enterSkill('Playwright');
     await harness.pressEnterOnInput();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     await harness.clickSave();
