@@ -1,24 +1,42 @@
 import { ComponentHarness } from '@angular/cdk/testing';
+import { InlineInputHarness } from '../../shared/inline-edit/input/input.component.harness';
+import { InlineTextareaHarness } from '../../shared/inline-edit/textarea/textarea.component.harness';
 
 export class ProfileHarness extends ComponentHarness {
   static hostSelector = 'app-profile';
 
-  private getNameInput = this.locatorFor('input#name');
-  private getTitleInput = this.locatorFor('input#title');
-  private getCityInput = this.locatorFor('input#city');
-  private getBioTextarea = this.locatorFor('textarea#bio');
+  private getNameInput = this.locatorFor(
+    InlineInputHarness.with({ id: 'name' }),
+  );
+  private getTitleInput = this.locatorFor(
+    InlineInputHarness.with({ id: 'title' }),
+  );
+  private getCityInput = this.locatorFor(
+    InlineInputHarness.with({ id: 'city' }),
+  );
+  private getBioTextarea = this.locatorFor(
+    InlineTextareaHarness.with({ id: 'bio' }),
+  );
   private getButtons = this.locatorForAll('button');
 
   async getName(): Promise<string> {
     const input = await this.getNameInput();
-    return input.getProperty('value');
+    return input.getValue();
   }
 
   async setName(value: string): Promise<void> {
     const input = await this.getNameInput();
-    await input.clear();
-    await input.sendKeys(value);
-    await input.blur();
+    await input.setValue(value);
+  }
+
+  async getBio(): Promise<string> {
+    const textarea = await this.getBioTextarea();
+    return textarea.getValue();
+  }
+
+  async setBio(value: string): Promise<void> {
+    const textarea = await this.getBioTextarea();
+    await textarea.setValue(value);
   }
 
   async clickEditPersonal(): Promise<void> {

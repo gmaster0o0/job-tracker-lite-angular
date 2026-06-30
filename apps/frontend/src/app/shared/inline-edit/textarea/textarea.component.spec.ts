@@ -1,0 +1,118 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { InlineTextareaComponent } from './textarea.component';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { InlineTextareaHarness } from './textarea.component.harness';
+import { provideIcons } from '@ng-icons/core';
+import { lucideUser } from '@ng-icons/lucide';
+
+describe('InlineTextareaComponent', () => {
+  let component: InlineTextareaComponent;
+  let fixture: ComponentFixture<InlineTextareaComponent>;
+  let harness: InlineTextareaHarness;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [InlineTextareaComponent],
+      providers: [provideIcons({ lucideUser })],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(InlineTextareaComponent);
+    component = fixture.componentInstance;
+    harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      InlineTextareaHarness,
+    );
+    fixture.componentRef.setInput('value', '');
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should show read-only mode by default', async () => {
+    expect(await harness.isEditing()).toBeFalsy();
+  });
+
+  it('should show placeholder in read-only mode if value and fallbackValue is empty', async () => {
+    fixture.componentRef.setInput('placeholder', 'Enter bio');
+    fixture.detectChanges();
+
+    expect(await harness.getValue()).toBe('Enter bio');
+  });
+
+  it('should show fallbackValue in read-only mode if value is empty', async () => {
+    fixture.componentRef.setInput('placeholder', 'Enter bio');
+    fixture.componentRef.setInput('fallbackValue', 'N/A');
+    fixture.detectChanges();
+
+    expect(await harness.getValue()).toBe('N/A');
+  });
+
+  it('should show value in editing mode', async () => {
+    fixture.componentRef.setInput('isEditing', true);
+    fixture.componentRef.setInput('value', 'Hello');
+    fixture.detectChanges();
+
+    expect(await harness.isEditing()).toBeTruthy();
+    expect(await harness.getValue()).toBe('Hello');
+  });
+
+  it('should trim value changes when autoTrim is true', async () => {
+    fixture.componentRef.setInput('isEditing', true);
+    fixture.componentRef.setInput('autoTrim', true);
+    fixture.detectChanges();
+
+    await harness.setValue('  multiple lines\nwith spaces  ');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.value()).toBe('multiple lines\nwith spaces');
+  });
+
+  it('should not trim value changes when autoTrim is false', async () => {
+    fixture.componentRef.setInput('isEditing', true);
+    fixture.componentRef.setInput('autoTrim', false);
+    fixture.detectChanges();
+
+    await harness.setValue('  multiple lines\nwith spaces  ');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.value()).toBe('  multiple lines\nwith spaces  ');
+  });
+
+  it('should show icon when provided', async () => {
+    fixture.componentRef.setInput('icon', 'lucideUser');
+    fixture.detectChanges();
+
+    expect(await harness.hasIcon()).toBeTruthy();
+  });
+
+  it('should correctly report editing state', async () => {
+    fixture.componentRef.setInput('isEditing', false);
+    fixture.detectChanges();
+    expect(await harness.isEditing()).toBe(false);
+
+    fixture.componentRef.setInput('isEditing', true);
+    fixture.detectChanges();
+    expect(await harness.isEditing()).toBe(true);
+  });
+
+  it('should show placeholder in textarea field when editing', async () => {
+    fixture.componentRef.setInput('isEditing', true);
+    fixture.componentRef.setInput('placeholder', 'Enter bio');
+    fixture.detectChanges();
+
+    expect(await harness.getPlaceholder()).toBe('Enter bio');
+  });
+
+  it('should throw error when trying to set value in read-only mode', async () => {
+    fixture.componentRef.setInput('isEditing', false);
+    fixture.detectChanges();
+
+    await expect(harness.setValue('test')).rejects.toThrow(
+      'Cannot set value while not in editing mode',
+    );
+  });
+});

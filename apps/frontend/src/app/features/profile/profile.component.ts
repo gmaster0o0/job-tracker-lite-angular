@@ -1,6 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { provideIcons } from '@ng-icons/core';
 import { profileIcons, hlmImports } from './profile.hlmimports';
@@ -17,19 +16,22 @@ import {
   UserProfileDto,
   UpdateUserProfileDto,
 } from '@job-tracker-lite-angular/schemas';
+import { InlineInputComponent } from '../../shared/inline-edit/input/input.component';
+import { InlineTextareaComponent } from '../../shared/inline-edit/textarea/textarea.component';
 
 @Component({
   standalone: true,
   selector: 'app-profile',
   imports: [
     CommonModule,
-    FormsModule,
     EditButtonComponent,
     SaveButtonComponent,
     CancelButtonComponent,
     CareerPreferenceComponent,
     TranslocoModule,
     hlmImports,
+    InlineInputComponent,
+    InlineTextareaComponent,
   ],
   providers: [provideIcons(profileIcons)],
   templateUrl: './profile.component.html',

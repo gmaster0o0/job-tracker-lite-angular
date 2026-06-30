@@ -59,60 +59,32 @@
                   <label hlmLabel for="name">{{
                     'profile.personal.nameLabel' | transloco
                   }}</label>
-                  <hlm-input-group
-                    [class.bg-secondary]="editingSection() === 'personal'"
-                    class="flex items-center gap-2"
-                  >
-                    <hlm-input-group-addon align="inline-start">
-                      <ng-icon name="lucideUser" />
-                    </hlm-input-group-addon>
-                    <input
-                      hlmInputGroupInput
-                      id="name"
-                      [ngModel]="
-                        editingSection() === 'personal'
-                          ? editData.name
-                          : profile.name
-                      "
-                      (ngModelChange)="editData.name = $event"
-                      [disabled]="editingSection() !== 'personal'"
-                      placeholder="{{
-                        'profile.personal.namePlaceholder' | transloco
-                      }}"
-                      class="flex-1 text-sm h-auto"
-                      [class.cursor-default]="editingSection() !== 'personal'"
-                    />
-                  </hlm-input-group>
+                  <app-inline-input
+                    id="name"
+                    icon="lucideUser"
+                    [isEditing]="editingSection() === 'personal'"
+                    [placeholder]="
+                      'profile.personal.namePlaceholder' | transloco
+                    "
+                    [fallbackValue]="profile.name"
+                    [(value)]="editData.name"
+                  />
                 </div>
 
                 <div class="grid gap-2">
                   <label hlmLabel for="title">{{
                     'profile.personal.titleLabel' | transloco
                   }}</label>
-                  <hlm-input-group
-                    [class.bg-secondary]="editingSection() === 'personal'"
-                    class="flex items-center gap-2"
-                  >
-                    <hlm-input-group-addon align="inline-start">
-                      <ng-icon name="lucideBriefcase" />
-                    </hlm-input-group-addon>
-                    <input
-                      hlmInputGroupInput
-                      id="title"
-                      [ngModel]="
-                        editingSection() === 'personal'
-                          ? editData.title
-                          : profile.title
-                      "
-                      (ngModelChange)="editData.title = $event"
-                      [disabled]="editingSection() !== 'personal'"
-                      placeholder="{{
-                        'profile.personal.titlePlaceholder' | transloco
-                      }}"
-                      class="flex-1 text-sm h-auto"
-                      [class.cursor-default]="editingSection() !== 'personal'"
-                    />
-                  </hlm-input-group>
+                  <app-inline-input
+                    id="title"
+                    icon="lucideBriefcase"
+                    [isEditing]="editingSection() === 'personal'"
+                    [placeholder]="
+                      'profile.personal.titlePlaceholder' | transloco
+                    "
+                    [fallbackValue]="profile.title"
+                    [(value)]="editData.title"
+                  />
                 </div>
               </div>
             </div>
@@ -121,55 +93,27 @@
               <label hlmLabel for="city">{{
                 'profile.personal.locationLabel' | transloco
               }}</label>
-              <hlm-input-group
-                [class.bg-secondary]="editingSection() === 'personal'"
-                class="flex items-center gap-2"
-              >
-                <hlm-input-group-addon align="inline-start">
-                  <ng-icon name="lucideMapPin" />
-                </hlm-input-group-addon>
-                <input
-                  hlmInputGroupInput
-                  id="city"
-                  [ngModel]="
-                    editingSection() === 'personal'
-                      ? editData.city
-                      : profile.city
-                  "
-                  (ngModelChange)="editData.city = $event"
-                  [disabled]="editingSection() !== 'personal'"
-                  placeholder="{{
-                    'profile.personal.locationPlaceholder' | transloco
-                  }}"
-                  class="flex-1 text-sm h-auto"
-                  [class.cursor-default]="editingSection() !== 'personal'"
-                />
-              </hlm-input-group>
+              <app-inline-input
+                id="title"
+                icon="lucideBriefcase"
+                [isEditing]="editingSection() === 'personal'"
+                [placeholder]="'profile.personal.titlePlaceholder' | transloco"
+                [fallbackValue]="profile.title"
+                [(value)]="editData.title"
+              />
             </div>
 
             <div class="grid gap-2">
               <label hlmLabel for="bio">{{
                 'profile.personal.bioLabel' | transloco
               }}</label>
-              <hlm-input-group
-                [class.bg-secondary]="editingSection() === 'personal'"
-                class="flex items-center gap-2"
-              >
-                <textarea
-                  hlmTextarea
-                  id="bio"
-                  [ngModel]="
-                    editingSection() === 'personal' ? editData.bio : profile.bio
-                  "
-                  (ngModelChange)="editData.bio = $event"
-                  [disabled]="editingSection() !== 'personal'"
-                  placeholder="{{
-                    'profile.personal.bioPlaceholder' | transloco
-                  }}"
-                  class="min-h-[100px] resize-none"
-                  [class.cursor-default]="editingSection() !== 'personal'"
-                ></textarea>
-              </hlm-input-group>
+              <app-inline-textarea
+                id="bio"
+                [isEditing]="editingSection() === 'personal'"
+                [placeholder]="'profile.personal.bioPlaceholder' | transloco"
+                [fallbackValue]="profile.bio"
+                [(value)]="editData.bio"
+              />
             </div>
           </div>
         </div>
@@ -216,120 +160,58 @@
               <label hlmLabel for="email">{{
                 'profile.contact.emailLabel' | transloco
               }}</label>
-              <hlm-input-group
-                [class.bg-secondary]="editingSection() === 'contact'"
-                class="flex items-center gap-2"
-              >
-                <hlm-input-group-addon align="inline-start">
-                  <ng-icon name="lucideMail" />
-                </hlm-input-group-addon>
-                <input
-                  hlmInputGroupInput
-                  id="email"
-                  [ngModel]="
-                    editingSection() === 'contact'
-                      ? editData.email
-                      : profile.email
-                  "
-                  (ngModelChange)="editData.email = $event"
-                  [disabled]="editingSection() !== 'contact'"
-                  placeholder="{{
-                    'profile.contact.emailPlaceholder' | transloco
-                  }}"
-                  class="flex-1 text-sm h-auto"
-                  [class.cursor-default]="editingSection() !== 'contact'"
-                />
-              </hlm-input-group>
+              <app-inline-input
+                id="email"
+                icon="lucideMail"
+                [isEditing]="editingSection() === 'contact'"
+                [placeholder]="'profile.contact.emailPlaceholder' | transloco"
+                [fallbackValue]="profile.email"
+                [(value)]="editData.email"
+              />
             </div>
 
             <div class="grid gap-2">
               <label hlmLabel for="linkedin">{{
                 'profile.contact.linkedinLabel' | transloco
               }}</label>
-              <hlm-input-group
-                [class.bg-secondary]="editingSection() === 'contact'"
-                class="flex items-center gap-2"
-              >
-                <hlm-input-group-addon align="inline-start">
-                  <ng-icon name="lucideLinkedin" class="text-[#0A66C2]" />
-                </hlm-input-group-addon>
-                <input
-                  hlmInputGroupInput
-                  id="linkedin"
-                  [ngModel]="
-                    editingSection() === 'contact'
-                      ? editData.linkedin
-                      : profile.linkedin
-                  "
-                  (ngModelChange)="editData.linkedin = $event"
-                  [disabled]="editingSection() !== 'contact'"
-                  placeholder="{{
-                    'profile.contact.linkedinPlaceholder' | transloco
-                  }}"
-                  class="flex-1 text-sm h-auto"
-                  [class.cursor-default]="editingSection() !== 'contact'"
-                />
-              </hlm-input-group>
+              <app-inline-input
+                id="linkedin"
+                icon="lucideLinkedin"
+                [isEditing]="editingSection() === 'contact'"
+                [placeholder]="
+                  'profile.contact.linkedinPlaceholder' | transloco
+                "
+                [fallbackValue]="profile.linkedin"
+                [(value)]="editData.linkedin"
+              />
             </div>
 
             <div class="grid gap-2">
               <label hlmLabel for="github">{{
                 'profile.contact.githubLabel' | transloco
               }}</label>
-              <hlm-input-group
-                [class.bg-secondary]="editingSection() === 'contact'"
-                class="flex items-center gap-2"
-              >
-                <hlm-input-group-addon align="inline-start">
-                  <ng-icon name="lucideGithub" />
-                </hlm-input-group-addon>
-                <input
-                  hlmInputGroupInput
-                  id="github"
-                  [ngModel]="
-                    editingSection() === 'contact'
-                      ? editData.github
-                      : profile.github
-                  "
-                  (ngModelChange)="editData.github = $event"
-                  [disabled]="editingSection() !== 'contact'"
-                  placeholder="{{
-                    'profile.contact.githubPlaceholder' | transloco
-                  }}"
-                  class="flex-1 text-sm h-auto"
-                  [class.cursor-default]="editingSection() !== 'contact'"
-                />
-              </hlm-input-group>
+              <app-inline-input
+                id="github"
+                icon="lucideGithub"
+                [isEditing]="editingSection() === 'contact'"
+                [placeholder]="'profile.contact.githubPlaceholder' | transloco"
+                [fallbackValue]="profile.github"
+                [(value)]="editData.github"
+              />
             </div>
 
             <div class="grid gap-2">
               <label hlmLabel for="website">{{
                 'profile.contact.websiteLabel' | transloco
               }}</label>
-              <hlm-input-group
-                [class.bg-secondary]="editingSection() === 'contact'"
-                class="flex items-center gap-2"
-              >
-                <hlm-input-group-addon align="inline-start">
-                  <ng-icon name="lucideGlobe" />
-                </hlm-input-group-addon>
-                <input
-                  hlmInputGroupInput
-                  id="website"
-                  [ngModel]="
-                    editingSection() === 'contact'
-                      ? editData.webpage
-                      : profile.webpage
-                  "
-                  (ngModelChange)="editData.webpage = $event"
-                  [disabled]="editingSection() !== 'contact'"
-                  placeholder="{{
-                    'profile.contact.websitePlaceholder' | transloco
-                  }}"
-                  class="flex-1 text-sm h-auto"
-                  [class.cursor-default]="editingSection() !== 'contact'"
-                />
-              </hlm-input-group>
+              <app-inline-input
+                id="website"
+                icon="lucideGlobe"
+                [isEditing]="editingSection() === 'contact'"
+                [placeholder]="'profile.contact.websitePlaceholder' | transloco"
+                [fallbackValue]="profile.webpage"
+                [(value)]="editData.webpage"
+              />
             </div>
           </div>
         </div>

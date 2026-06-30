@@ -57,6 +57,20 @@ describe('ProfileComponent', () => {
     );
   });
 
+  it('should update bio on save', async () => {
+    await harness.clickEditPersonal();
+    await harness.setBio('Short bio\nwith two lines');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await harness.save();
+
+    expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
+      expect.objectContaining({
+        bio: 'Short bio\nwith two lines',
+      }),
+    );
+  });
+
   it('should send personalVisibility when saving personal section', async () => {
     component.editSection('personal', userProfileFixtures.johnDoe);
     component.editData.personalVisibility = false;
