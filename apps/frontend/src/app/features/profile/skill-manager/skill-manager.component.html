@@ -85,8 +85,6 @@
             brnCombobox
             [value]="selectedSuggestion()"
             (valueChange)="onSuggestionSelected($event)"
-            [search]="newSkill()"
-            (searchChange)="onSearchChange($event)"
             [disabled]="disabled() || saveState() === 'saving'"
           >
             <hlm-input-group
@@ -96,14 +94,11 @@
             >
               <input
                 id="newSkill"
-                #newSkillInput
                 hlmInputGroupInput
                 brnComboboxChipInput
                 class="h-auto flex-1 text-sm"
                 [placeholder]="'profile.skills.placeholder' | transloco"
-                [value]="newSkill()"
-                (input)="onSearchChange(newSkillInput.value)"
-                (keyup.enter)="addSkillFromInput()"
+                (input)="onSearchChange($event)"
               />
             </hlm-input-group>
 

@@ -138,8 +138,12 @@ export class SkillManagerComponent {
     return !existsInDraft && !existsAsSuggestion;
   });
 
-  protected onSearchChange(search: string) {
-    this.newSkill.set(search);
+  protected onSearchChange(search: string | Event) {
+    const value =
+      typeof search === 'string'
+        ? search
+        : (search.target as HTMLInputElement).value;
+    this.newSkill.set(value);
   }
 
   protected onSuggestionSelected(skills: string[] | null | undefined) {
@@ -156,8 +160,8 @@ export class SkillManagerComponent {
     this.newSkill.set('');
   }
 
-  protected addSkillFromInput() {
-    this.addSkill(this.newSkill());
+  protected addSkillFromInput(value?: string) {
+    this.addSkill(value ?? this.newSkill());
   }
 
   protected removeSkill(skillToRemove: string) {
