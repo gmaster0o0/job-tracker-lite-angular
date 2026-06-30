@@ -29,7 +29,9 @@
                 (edit)="editSection('personal', profile)"
                 editLabel="{{ 'common.edit' | transloco }}"
                 [disabled]="
-                  editingSection() !== null || isCareerPreferenceSaving()
+                  editingSection() !== null ||
+                  isCareerPreferenceSaving() ||
+                  isSkillManagerSaving()
                 "
               />
             } @else {
@@ -137,7 +139,9 @@
                 (edit)="editSection('contact', profile)"
                 editLabel="{{ 'common.edit' | transloco }}"
                 [disabled]="
-                  editingSection() !== null || isCareerPreferenceSaving()
+                  editingSection() !== null ||
+                  isCareerPreferenceSaving() ||
+                  isSkillManagerSaving()
                 "
               />
             } @else {
@@ -217,117 +221,16 @@
         </div>
       </section>
 
-      <!-- Skills Section -->
-      <section hlmCard>
-        <div
-          hlmCardHeader
-          class="flex flex-row items-center justify-between space-y-0"
-        >
-          <div>
-            <h2 hlmCardTitle>{{ 'profile.skills.title' | transloco }}</h2>
-            <p hlmCardDescription>
-              {{ 'profile.skills.description' | transloco }}
-            </p>
-          </div>
-          <div class="flex gap-2">
-            @if (editingSection() !== 'skills') {
-              <app-edit-button
-                (edit)="editSection('skills', profile)"
-                editLabel="{{ 'common.edit' | transloco }}"
-                [disabled]="
-                  editingSection() !== null || isCareerPreferenceSaving()
-                "
-              />
-            } @else {
-              <app-cancel-button
-                (clicked)="cancelEdit()"
-                cancelLabel="{{ 'common.cancel' | transloco }}"
-              />
-              <app-save-button
-                formId="skills"
-                [isSubmitting]="savingSection() === 'skills'"
-                idleLabel="{{ 'common.saveChanges' | transloco }}"
-                (click)="saveSection('skills')"
-              />
-            }
-          </div>
-        </div>
-        <div hlmCardContent>
-          <div class="grid gap-4 min-h-[120px]">
-            <div class="flex flex-wrap gap-2 items-start content-start">
-              @for (
-                skill of editingSection() === 'skills'
-                  ? editData.coreSkills
-                  : profile.coreSkills;
-                track skill;
-                let i = $index
-              ) {
-                <hlm-badge variant="secondary" class="px-3 py-1 gap-1">
-                  {{ skill }}
-                  <button
-                    (click)="removeSkill(i)"
-                    [class.hidden]="editingSection() !== 'skills'"
-                    aria-label="{{ 'common.remove' | transloco }}"
-                  >
-                    <ng-icon hlm name="lucideX" size="xs" />
-                  </button>
-                </hlm-badge>
-              } @empty {
-                <p class="text-sm text-muted-foreground italic py-1">
-                  {{ 'profile.skills.empty' | transloco }}
-                </p>
-              }
-            </div>
-
-            <div
-              class="transition-all duration-200 overflow-hidden"
-              [class.h-0]="editingSection() !== 'skills'"
-              [class.opacity-0]="editingSection() !== 'skills'"
-              [class.mt-0]="editingSection() !== 'skills'"
-              [class.h-auto]="editingSection() === 'skills'"
-              [class.mt-4]="editingSection() === 'skills'"
-            >
-              <div class="grid gap-2">
-                <label hlmLabel for="newSkill">{{
-                  'profile.skills.placeholder' | transloco
-                }}</label>
-                <div class="flex gap-2">
-                  <hlm-input-group class="flex-1 flex items-center gap-2">
-                    <hlm-input-group-addon align="inline-start">
-                      <ng-icon name="lucidePlus" />
-                    </hlm-input-group-addon>
-                    <input
-                      hlmInputGroupInput
-                      #newSkillInput
-                      id="newSkill"
-                      placeholder="{{
-                        'profile.skills.placeholder' | transloco
-                      }}"
-                      class="flex-1 text-sm h-auto"
-                      (keyup.enter)="
-                        addSkill(newSkillInput.value); newSkillInput.value = ''
-                      "
-                    />
-                  </hlm-input-group>
-                  <button
-                    hlmBtn
-                    (click)="
-                      addSkill(newSkillInput.value); newSkillInput.value = ''
-                    "
-                  >
-                    {{ 'common.add' | transloco }}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <app-skill-manager
+        [profile]="profile"
+        [disabled]="editingSection() !== null || isCareerPreferenceSaving()"
+        (saveStateChanged)="onSkillManagerSaveStateChange($event)"
+      ></app-skill-manager>
 
       <!-- Career Preferences Section -->
       <app-career-preference
         [profile]="profile"
-        [disabled]="editingSection() !== null"
+        [disabled]="editingSection() !== null || isSkillManagerSaving()"
         (saveStateChanged)="onCareerPreferenceSaveStateChange($event)"
       />
     </div>

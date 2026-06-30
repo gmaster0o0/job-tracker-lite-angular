@@ -11,6 +11,7 @@ import {
   SaveState,
 } from './career-preference/career-preference.component';
 import { TranslocoModule } from '@jsverse/transloco';
+import { SkillManagerComponent } from './skill-manager/skill-manager.component';
 
 import {
   UserProfileDto,
@@ -28,6 +29,7 @@ import { InlineTextareaComponent } from '../../shared/inline-edit/textarea/texta
     SaveButtonComponent,
     CancelButtonComponent,
     CareerPreferenceComponent,
+    SkillManagerComponent,
     TranslocoModule,
     hlmImports,
     InlineInputComponent,
@@ -44,10 +46,15 @@ export class ProfileComponent {
   editingSection = signal<string | null>(null);
   savingSection = signal<string | null>(null);
   isCareerPreferenceSaving = signal(false);
+  isSkillManagerSaving = signal(false);
   editData: Partial<UserProfileDto> = {};
 
   onCareerPreferenceSaveStateChange(state: SaveState) {
     this.isCareerPreferenceSaving.set(state === 'saving');
+  }
+
+  onSkillManagerSaveStateChange(state: 'idle' | 'saving' | 'saved' | 'error') {
+    this.isSkillManagerSaving.set(state === 'saving');
   }
 
   isSectionVisible(
@@ -109,23 +116,6 @@ export class ProfileComponent {
       console.error('Failed to update profile', error);
     } finally {
       this.savingSection.set(null);
-    }
-  }
-
-  removeSkill(index: number) {
-    if (this.editData.coreSkills) {
-      this.editData.coreSkills.splice(index, 1);
-    }
-  }
-
-  addSkill(skill: string) {
-    const trimmedSkill = skill.trim();
-    if (
-      trimmedSkill &&
-      this.editData.coreSkills &&
-      !this.editData.coreSkills.includes(trimmedSkill)
-    ) {
-      this.editData.coreSkills.push(trimmedSkill);
     }
   }
 }
