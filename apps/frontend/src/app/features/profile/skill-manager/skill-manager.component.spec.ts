@@ -52,9 +52,8 @@ describe('SkillManagerComponent', () => {
 
   it('should add a skill by clicking "Add new element"', async () => {
     await harness.enterSkill('GraphQL');
-    fixture.detectChanges();
+
     await harness.clickAddNewElement();
-    fixture.detectChanges();
 
     const skills = await harness.getSkillTexts();
     expect(skills.some((skill) => skill.includes('GraphQL'))).toBe(true);
@@ -77,15 +76,13 @@ describe('SkillManagerComponent', () => {
 
   it('should save modified skills', async () => {
     await harness.enterSkill('Playwright');
-    fixture.detectChanges();
+
     await harness.clickAddNewElement();
-    fixture.detectChanges();
 
     const saveButton = await harness.hasSaveButton();
     expect(saveButton).toBe(true);
 
     await harness.clickSave();
-    fixture.detectChanges();
 
     expect(updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({
