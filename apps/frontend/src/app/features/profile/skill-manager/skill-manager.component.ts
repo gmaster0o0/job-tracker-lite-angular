@@ -29,7 +29,11 @@ import {
 import { HlmSpinner } from '@spartan-ng/helm/spinner';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { UserProfileDto } from '@job-tracker-lite-angular/schemas';
-import { hlmImports } from '../profile.hlmimports';
+import {
+  formImports,
+  interactiveImports,
+  layoutImports,
+} from '../profile.hlmimports';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -39,7 +43,9 @@ type SaveState = 'idle' | 'saving' | 'saved' | 'error';
   imports: [
     CommonModule,
     TranslocoModule,
-    hlmImports,
+    formImports,
+    interactiveImports,
+    layoutImports,
     HlmSpinner,
     BrnComboboxMultiple,
     BrnComboboxAnchor,

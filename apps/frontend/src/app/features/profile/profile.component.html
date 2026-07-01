@@ -11,226 +11,37 @@
     </div>
   } @else if (profileResource.value(); as profile) {
     <div class="grid gap-8">
-      <!-- Personal Info Section -->
-      <section hlmCard>
-        <div
-          hlmCardHeader
-          class="flex flex-row items-center justify-between space-y-0"
-        >
-          <div>
-            <h2 hlmCardTitle>{{ 'profile.personal.title' | transloco }}</h2>
-            <p hlmCardDescription>
-              {{ 'profile.personal.description' | transloco }}
-            </p>
-          </div>
-          <div class="flex gap-2">
-            @if (editingSection() !== 'personal') {
-              <app-edit-button
-                (edit)="editSection('personal', profile)"
-                editLabel="{{ 'common.edit' | transloco }}"
-                [disabled]="
-                  editingSection() !== null ||
-                  isCareerPreferenceSaving() ||
-                  isSkillManagerSaving()
-                "
-              />
-            } @else {
-              <app-cancel-button
-                (clicked)="cancelEdit()"
-                cancelLabel="{{ 'common.cancel' | transloco }}"
-              />
-              <app-save-button
-                formId="personal"
-                [isSubmitting]="savingSection() === 'personal'"
-                idleLabel="{{ 'common.saveChanges' | transloco }}"
-                (click)="saveSection('personal')"
-              />
-            }
-          </div>
-        </div>
-        <div hlmCardContent>
-          <div class="grid gap-4">
-            <div class="flex items-center gap-4">
-              <div
-                class="flex h-16 w-16 items-center justify-center rounded-full bg-secondary text-secondary-foreground text-2xl font-bold"
-              >
-                {{ profile.name?.charAt(0) || '?' }}
-              </div>
-              <div class="grid gap-2 flex-1">
-                <div class="grid gap-2">
-                  <label hlmLabel for="name">{{
-                    'profile.personal.nameLabel' | transloco
-                  }}</label>
-                  <app-inline-input
-                    id="name"
-                    icon="lucideUser"
-                    [isEditing]="editingSection() === 'personal'"
-                    [placeholder]="
-                      'profile.personal.namePlaceholder' | transloco
-                    "
-                    [fallbackValue]="profile.name"
-                    [(value)]="editData.name"
-                  />
-                </div>
+      <app-personal-info
+        [profile]="profile"
+        [(editData)]="editData"
+        [isEditing]="editingSection() === 'personal'"
+        [isSaving]="savingSection() === 'personal'"
+        [disabled]="isPersonalDisabled()"
+        (edit)="editSection('personal', profile)"
+        (cancelEdit)="cancelEdit()"
+        (save)="saveSection('personal', $event)"
+      />
 
-                <div class="grid gap-2">
-                  <label hlmLabel for="title">{{
-                    'profile.personal.titleLabel' | transloco
-                  }}</label>
-                  <app-inline-input
-                    id="title"
-                    icon="lucideBriefcase"
-                    [isEditing]="editingSection() === 'personal'"
-                    [placeholder]="
-                      'profile.personal.titlePlaceholder' | transloco
-                    "
-                    [fallbackValue]="profile.title"
-                    [(value)]="editData.title"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="grid gap-2">
-              <label hlmLabel for="city">{{
-                'profile.personal.locationLabel' | transloco
-              }}</label>
-              <app-inline-input
-                id="title"
-                icon="lucideBriefcase"
-                [isEditing]="editingSection() === 'personal'"
-                [placeholder]="'profile.personal.titlePlaceholder' | transloco"
-                [fallbackValue]="profile.title"
-                [(value)]="editData.title"
-              />
-            </div>
-
-            <div class="grid gap-2">
-              <label hlmLabel for="bio">{{
-                'profile.personal.bioLabel' | transloco
-              }}</label>
-              <app-inline-textarea
-                id="bio"
-                [isEditing]="editingSection() === 'personal'"
-                [placeholder]="'profile.personal.bioPlaceholder' | transloco"
-                [fallbackValue]="profile.bio"
-                [(value)]="editData.bio"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Contact Section -->
-      <section hlmCard>
-        <div
-          hlmCardHeader
-          class="flex flex-row items-center justify-between space-y-0"
-        >
-          <div>
-            <h2 hlmCardTitle>{{ 'profile.contact.title' | transloco }}</h2>
-            <p hlmCardDescription>
-              {{ 'profile.contact.description' | transloco }}
-            </p>
-          </div>
-          <div class="flex gap-2">
-            @if (editingSection() !== 'contact') {
-              <app-edit-button
-                (edit)="editSection('contact', profile)"
-                editLabel="{{ 'common.edit' | transloco }}"
-                [disabled]="
-                  editingSection() !== null ||
-                  isCareerPreferenceSaving() ||
-                  isSkillManagerSaving()
-                "
-              />
-            } @else {
-              <app-cancel-button
-                (clicked)="cancelEdit()"
-                cancelLabel="{{ 'common.cancel' | transloco }}"
-              />
-              <app-save-button
-                formId="contact"
-                [isSubmitting]="savingSection() === 'contact'"
-                idleLabel="{{ 'common.saveChanges' | transloco }}"
-                (click)="saveSection('contact')"
-              />
-            }
-          </div>
-        </div>
-        <div hlmCardContent>
-          <div class="grid gap-4 sm:grid-cols-2">
-            <div class="grid gap-2">
-              <label hlmLabel for="email">{{
-                'profile.contact.emailLabel' | transloco
-              }}</label>
-              <app-inline-input
-                id="email"
-                icon="lucideMail"
-                [isEditing]="editingSection() === 'contact'"
-                [placeholder]="'profile.contact.emailPlaceholder' | transloco"
-                [fallbackValue]="profile.email"
-                [(value)]="editData.email"
-              />
-            </div>
-
-            <div class="grid gap-2">
-              <label hlmLabel for="linkedin">{{
-                'profile.contact.linkedinLabel' | transloco
-              }}</label>
-              <app-inline-input
-                id="linkedin"
-                icon="lucideLinkedin"
-                [isEditing]="editingSection() === 'contact'"
-                [placeholder]="
-                  'profile.contact.linkedinPlaceholder' | transloco
-                "
-                [fallbackValue]="profile.linkedin"
-                [(value)]="editData.linkedin"
-              />
-            </div>
-
-            <div class="grid gap-2">
-              <label hlmLabel for="github">{{
-                'profile.contact.githubLabel' | transloco
-              }}</label>
-              <app-inline-input
-                id="github"
-                icon="lucideGithub"
-                [isEditing]="editingSection() === 'contact'"
-                [placeholder]="'profile.contact.githubPlaceholder' | transloco"
-                [fallbackValue]="profile.github"
-                [(value)]="editData.github"
-              />
-            </div>
-
-            <div class="grid gap-2">
-              <label hlmLabel for="website">{{
-                'profile.contact.websiteLabel' | transloco
-              }}</label>
-              <app-inline-input
-                id="website"
-                icon="lucideGlobe"
-                [isEditing]="editingSection() === 'contact'"
-                [placeholder]="'profile.contact.websitePlaceholder' | transloco"
-                [fallbackValue]="profile.webpage"
-                [(value)]="editData.webpage"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      <app-contact-info
+        [profile]="profile"
+        [(editData)]="editData"
+        [isEditing]="editingSection() === 'contact'"
+        [isSaving]="savingSection() === 'contact'"
+        [disabled]="isContactDisabled()"
+        (edit)="editSection('contact', profile)"
+        (cancelEdit)="cancelEdit()"
+        (save)="saveSection('contact', $event)"
+      />
 
       <app-skill-manager
         [profile]="profile"
-        [disabled]="editingSection() !== null || isCareerPreferenceSaving()"
+        [disabled]="isAnySectionEditing() || isCareerPreferenceSaving()"
         (saveStateChanged)="onSkillManagerSaveStateChange($event)"
       ></app-skill-manager>
 
-      <!-- Career Preferences Section -->
       <app-career-preference
         [profile]="profile"
-        [disabled]="editingSection() !== null || isSkillManagerSaving()"
+        [disabled]="isAnySectionEditing() || isSkillManagerSaving()"
         (saveStateChanged)="onCareerPreferenceSaveStateChange($event)"
       />
     </div>

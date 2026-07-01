@@ -1,65 +1,70 @@
 import { ComponentHarness } from '@angular/cdk/testing';
-import { InlineInputHarness } from '../../shared/inline-edit/input/input.component.harness';
-import { InlineTextareaHarness } from '../../shared/inline-edit/textarea/textarea.component.harness';
+import { PersonalInfoHarness } from './personal-info/personal-info.harness';
+import { ContactInfoHarness } from './contact-info/contact-info.harness';
 
 export class ProfileHarness extends ComponentHarness {
   static hostSelector = 'app-profile';
 
-  private getNameInput = this.locatorFor(
-    InlineInputHarness.with({ id: 'name' }),
-  );
-  private getTitleInput = this.locatorFor(
-    InlineInputHarness.with({ id: 'title' }),
-  );
-  private getCityInput = this.locatorFor(
-    InlineInputHarness.with({ id: 'city' }),
-  );
-  private getBioTextarea = this.locatorFor(
-    InlineTextareaHarness.with({ id: 'bio' }),
-  );
-  private getButtons = this.locatorForAll('button');
+  private readonly personalInfoLocator = this.locatorFor(PersonalInfoHarness);
+  private readonly contactInfoLocator = this.locatorFor(ContactInfoHarness);
 
   async getName(): Promise<string> {
-    const input = await this.getNameInput();
-    return input.getValue();
+    const personalInfo = await this.personalInfoLocator();
+    return personalInfo.getName();
   }
 
   async setName(value: string): Promise<void> {
-    const input = await this.getNameInput();
-    await input.setValue(value);
+    const personalInfo = await this.personalInfoLocator();
+    await personalInfo.setName(value);
   }
 
   async getBio(): Promise<string> {
-    const textarea = await this.getBioTextarea();
-    return textarea.getValue();
+    const personalInfo = await this.personalInfoLocator();
+    return personalInfo.getBio();
   }
 
   async setBio(value: string): Promise<void> {
-    const textarea = await this.getBioTextarea();
-    await textarea.setValue(value);
+    const personalInfo = await this.personalInfoLocator();
+    await personalInfo.setBio(value);
   }
 
   async clickEditPersonal(): Promise<void> {
-    const buttons = await this.getButtons();
-    for (const button of buttons) {
-      const text = await button.text();
-      if (text.toLowerCase().includes('edit')) {
-        return button.click();
-      }
-    }
-    throw new Error('Edit button not found');
+    const personalInfo = await this.personalInfoLocator();
+    return personalInfo.clickEdit();
   }
 
-  async save(): Promise<void> {
-    const buttons = await this.getButtons();
-    for (const button of buttons) {
-      const text = await button.text();
-      // The save button is inside app-save-button, but getButtons is locatorForAll('button')
-      // so it should find the inner button.
-      if (text.toLowerCase().includes('save')) {
-        return button.click();
-      }
-    }
-    throw new Error('Save button not found');
+  async clickEditContact(): Promise<void> {
+    const contactInfo = await this.contactInfoLocator();
+    return contactInfo.clickEdit();
+  }
+
+  async savePersonal(): Promise<void> {
+    const personalInfo = await this.personalInfoLocator();
+    return personalInfo.clickSave();
+  }
+
+  async saveContact(): Promise<void> {
+    const contactInfo = await this.contactInfoLocator();
+    return contactInfo.clickSave();
+  }
+
+  async cancelPersonal(): Promise<void> {
+    const personalInfo = await this.personalInfoLocator();
+    return personalInfo.clickCancel();
+  }
+
+  async cancelContact(): Promise<void> {
+    const contactInfo = await this.contactInfoLocator();
+    return contactInfo.clickCancel();
+  }
+
+  async getEmail(): Promise<string> {
+    const contactInfo = await this.contactInfoLocator();
+    return contactInfo.getEmail();
+  }
+
+  async setEmail(value: string): Promise<void> {
+    const contactInfo = await this.contactInfoLocator();
+    await contactInfo.setEmail(value);
   }
 }

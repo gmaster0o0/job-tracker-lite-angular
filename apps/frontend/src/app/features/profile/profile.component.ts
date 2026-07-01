@@ -1,39 +1,34 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { provideIcons } from '@ng-icons/core';
-import { profileIcons, hlmImports } from './profile.hlmimports';
-import { EditButtonComponent } from '../../shared/edit-button/edit-button.component';
-import { SaveButtonComponent } from '../../shared/save-button/save-button.component';
-import { CancelButtonComponent } from '../../shared/cancel-button/cancel-button.component';
+import { profileIcons } from './profile.hlmimports';
 import {
   CareerPreferenceComponent,
   SaveState,
 } from './career-preference/career-preference.component';
 import { TranslocoModule } from '@jsverse/transloco';
 import { SkillManagerComponent } from './skill-manager/skill-manager.component';
+import { PersonalInfoComponent } from './personal-info/personal-info.component';
+import { ContactInfoComponent } from './contact-info/contact-info.component';
 
 import {
   UserProfileDto,
   UpdateUserProfileDto,
 } from '@job-tracker-lite-angular/schemas';
-import { InlineInputComponent } from '../../shared/inline-edit/input/input.component';
-import { InlineTextareaComponent } from '../../shared/inline-edit/textarea/textarea.component';
+
+type SectionName = 'personal' | 'contact' | 'skills';
 
 @Component({
   standalone: true,
   selector: 'app-profile',
   imports: [
     CommonModule,
-    EditButtonComponent,
-    SaveButtonComponent,
-    CancelButtonComponent,
+    PersonalInfoComponent,
+    ContactInfoComponent,
     CareerPreferenceComponent,
     SkillManagerComponent,
     TranslocoModule,
-    hlmImports,
-    InlineInputComponent,
-    InlineTextareaComponent,
   ],
   providers: [provideIcons(profileIcons)],
   templateUrl: './profile.component.html',
@@ -43,11 +38,30 @@ export class ProfileComponent {
 
   profileResource = this.profileData.profileResource;
 
-  editingSection = signal<string | null>(null);
-  savingSection = signal<string | null>(null);
+  editingSection = signal<SectionName | null>(null);
+  savingSection = signal<SectionName | null>(null);
+  editData = signal<Partial<UserProfileDto>>({});
+
   isCareerPreferenceSaving = signal(false);
   isSkillManagerSaving = signal(false);
-  editData: Partial<UserProfileDto> = {};
+
+  // egyszerre csak egy szekció szerkeszthető
+  isAnySectionEditing = computed(() => this.editingSection() !== null);
+
+  isPersonalDisabled = computed(
+    () =>
+      this.editingSection() === 'contact' ||
+      this.isAnySectionEditing() ||
+      this.isCareerPreferenceSaving() ||
+      this.isSkillManagerSaving(),
+  );
+  isContactDisabled = computed(
+    () =>
+      this.editingSection() === 'personal' ||
+      this.isAnySectionEditing() ||
+      this.isCareerPreferenceSaving() ||
+      this.isSkillManagerSaving(),
+  );
 
   onCareerPreferenceSaveStateChange(state: SaveState) {
     this.isCareerPreferenceSaving.set(state === 'saving');
@@ -57,57 +71,20 @@ export class ProfileComponent {
     this.isSkillManagerSaving.set(state === 'saving');
   }
 
-  isSectionVisible(
-    profile: UserProfileDto,
-    sectionVisibility:
-      | 'personalVisibility'
-      | 'contactVisibility'
-      | 'skillsVisibility'
-      | 'preferenceVisibility',
-  ) {
-    return profile.isPublic && profile[sectionVisibility];
-  }
-
-  editSection(section: string, profile: UserProfileDto) {
+  editSection(section: SectionName, profile: UserProfileDto) {
     this.editingSection.set(section);
-    this.editData = {
+    this.editData.set({
       ...profile,
       coreSkills: [...profile.coreSkills],
-    };
+    });
   }
 
   cancelEdit() {
     this.editingSection.set(null);
-    this.editData = {};
+    this.editData.set({});
   }
 
-  async saveSection(section: string) {
-    let updateDto: UpdateUserProfileDto = {};
-
-    if (section === 'personal') {
-      updateDto = {
-        name: this.editData.name,
-        title: this.editData.title,
-        city: this.editData.city,
-        bio: this.editData.bio,
-        isPublic: this.editData.isPublic,
-        personalVisibility: this.editData.personalVisibility,
-      };
-    } else if (section === 'contact') {
-      updateDto = {
-        email: this.editData.email,
-        linkedin: this.editData.linkedin,
-        github: this.editData.github,
-        webpage: this.editData.webpage,
-        contactVisibility: this.editData.contactVisibility,
-      };
-    } else if (section === 'skills') {
-      updateDto = {
-        coreSkills: this.editData.coreSkills,
-        skillsVisibility: this.editData.skillsVisibility,
-      };
-    }
-
+  async saveSection(section: SectionName, updateDto: UpdateUserProfileDto) {
     try {
       this.savingSection.set(section);
       await this.profileData.updateProfile(updateDto);

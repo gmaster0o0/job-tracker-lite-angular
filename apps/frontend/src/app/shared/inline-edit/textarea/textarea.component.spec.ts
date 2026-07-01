@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InlineTextareaComponent } from './textarea.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { InlineTextareaHarness } from './textarea.component.harness';
+import { InlineTextareaHarness } from './textarea.harness';
 import { provideIcons } from '@ng-icons/core';
 import { lucideUser } from '@ng-icons/lucide';
 

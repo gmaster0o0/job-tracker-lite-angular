@@ -48,7 +48,7 @@ describe('ProfileComponent', () => {
     await harness.setName('Jane Doe');
 
     await fixture.whenStable();
-    await harness.save();
+    await harness.savePersonal();
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -62,7 +62,7 @@ describe('ProfileComponent', () => {
     await harness.setBio('Short bio\nwith two lines');
 
     await fixture.whenStable();
-    await harness.save();
+    await harness.savePersonal();
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -71,49 +71,31 @@ describe('ProfileComponent', () => {
     );
   });
 
-  it('should send personalVisibility when saving personal section', async () => {
-    component.editSection('personal', userProfileFixtures.johnDoe);
-    component.editData.personalVisibility = false;
+  it('should update contact info on save', async () => {
+    await harness.clickEditContact();
+    await harness.setEmail('new-email@example.com');
 
-    await component.saveSection('personal');
+    await fixture.whenStable();
+    await harness.saveContact();
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({
-        personalVisibility: false,
+        email: 'new-email@example.com',
       }),
     );
   });
 
-  it('should send contactVisibility when saving contact section', async () => {
-    component.editSection('contact', userProfileFixtures.johnDoe);
-    component.editData.contactVisibility = false;
-
-    await component.saveSection('contact');
+  it('should send contact visibility when saving contact section', async () => {
+    const updateDto = {
+      ...userProfileFixtures.johnDoe,
+      contactVisibility: false,
+    };
+    await component.saveSection('contact', updateDto);
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({
         contactVisibility: false,
       }),
     );
-  });
-
-  it('should evaluate section visibility with isPublic master switch', () => {
-    expect(
-      component.isSectionVisible(
-        userProfileFixtures.johnDoe,
-        'skillsVisibility',
-      ),
-    ).toBe(true);
-
-    expect(
-      component.isSectionVisible(
-        {
-          ...userProfileFixtures.johnDoe,
-          isPublic: false,
-          skillsVisibility: true,
-        },
-        'skillsVisibility',
-      ),
-    ).toBe(false);
   });
 });

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InlineInputComponent } from './input.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { InlineInputHarness } from './input.component.harness';
+import { InlineInputHarness } from './input.harness';
 import { provideIcons } from '@ng-icons/core';
 import { lucideUser } from '@ng-icons/lucide';
 

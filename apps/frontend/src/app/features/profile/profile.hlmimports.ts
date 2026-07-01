@@ -27,18 +27,20 @@ import {
   lucideCheck,
 } from '@ng-icons/lucide';
 
-export const hlmImports = [
-  HlmButtonImports,
-  HlmCardImports,
+export const formImports = [
   HlmInputImports,
   HlmLabelImports,
-  HlmBadgeImports,
-  HlmIconImports,
-  HlmSeparatorImports,
   HlmTextareaImports,
   HlmSelectImports,
   HlmInputGroupImports,
   HlmFieldImports,
+];
+export const layoutImports = [HlmCardImports, HlmSeparatorImports];
+
+export const interactiveImports = [
+  HlmButtonImports,
+  HlmBadgeImports,
+  HlmIconImports,
 ];
 
 export const profileIcons = {

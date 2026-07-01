@@ -18,7 +18,11 @@ import {
   WorkingStyle,
   CareerPreferenceType,
 } from '@job-tracker-lite-angular/schemas';
-import { hlmImports } from '../profile.hlmimports';
+import {
+  formImports,
+  interactiveImports,
+  layoutImports,
+} from '../profile.hlmimports';
 import { HlmSpinner } from '@spartan-ng/helm/spinner';
 
 export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
@@ -26,7 +30,15 @@ export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 @Component({
   standalone: true,
   selector: 'app-career-preference',
-  imports: [CommonModule, FormsModule, TranslocoModule, hlmImports, HlmSpinner],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslocoModule,
+    formImports,
+    interactiveImports,
+    layoutImports,
+    HlmSpinner,
+  ],
   providers: [
     provideIcons({
       lucideCheck,
