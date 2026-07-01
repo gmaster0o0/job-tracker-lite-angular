@@ -2,7 +2,6 @@ import { Directive } from '@angular/core';
 import { BrnDialogTrigger } from '@spartan-ng/brain/dialog';
 
 @Directive({
-  standalone: true,
   selector: 'button[hlmDialogTrigger],button[hlmDialogTriggerFor]',
   hostDirectives: [
     {
@@ -10,8 +9,6 @@ import { BrnDialogTrigger } from '@spartan-ng/brain/dialog';
       inputs: ['id', 'brnDialogTriggerFor: hlmDialogTriggerFor', 'type'],
     },
   ],
-  host: {
-    'data-slot': 'dialog-trigger',
-  },
+  host: { 'data-slot': 'dialog-trigger' },
 })
 export class HlmDialogTrigger {}

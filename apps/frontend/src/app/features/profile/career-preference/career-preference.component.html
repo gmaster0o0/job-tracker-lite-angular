@@ -1,0 +1,142 @@
+<section hlmCard>
+  <div
+    hlmCardHeader
+    class="flex flex-row items-center justify-between space-y-0"
+  >
+    <div>
+      <h2 hlmCardTitle>{{ 'profile.preferences.title' | transloco }}</h2>
+      <p hlmCardDescription>
+        {{ 'profile.preferences.description' | transloco }}
+      </p>
+    </div>
+    <!-- Save State Indicator -->
+    <div class="flex items-center gap-2">
+      <div data-testid="saveStateIndicator">
+        @switch (saveState()) {
+          @case ('saving') {
+            <span hlmBadge variant="secondary">
+              <hlm-spinner class="text-xs" />
+              {{ 'common.saving' | transloco }}
+            </span>
+          }
+          @case ('saved') {
+            <div class="flex items-center gap-2 text-sm text-green-600">
+              <ng-icon name="lucideCheck" class="w-4 h-4"></ng-icon>
+              <span>{{ 'common.saved' | transloco }}</span>
+            </div>
+          }
+          @case ('error') {
+            <div class="flex items-center gap-2 text-sm text-red-600">
+              <ng-icon name="lucideAlertCircle" class="w-4 h-4"></ng-icon>
+              <span>{{ 'common.error' | transloco }}</span>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+  <div hlmCardContent>
+    <div class="grid gap-6 sm:grid-cols-3">
+      <!-- Experience Level-->
+      <hlm-field class="grid gap-2">
+        <label hlmFieldLabel for="experience">{{
+          'profile.preferences.experienceLabel' | transloco
+        }}</label>
+        <hlm-select
+          id="experience"
+          [value]="experienceLevel()"
+          (valueChange)="onExperienceLevelChange($event)"
+          [disabled]="disabled() || saveState() === 'saving'"
+        >
+          <hlm-select-trigger class="w-56">
+            @if (experienceLevel(); as value) {
+              <span>{{ 'profile.experienceLevels.' + value | transloco }}</span>
+            } @else {
+              <span class="text-muted-foreground">{{
+                'profile.preferences.notSet' | transloco
+              }}</span>
+            }
+          </hlm-select-trigger>
+
+          <hlm-select-content *hlmSelectPortal>
+            <hlm-select-label>{{
+              'profile.preferences.experienceLabel' | transloco
+            }}</hlm-select-label>
+            @for (level of experienceLevels; track level) {
+              <hlm-select-item [value]="level">
+                {{ 'profile.experienceLevels.' + level | transloco }}
+              </hlm-select-item>
+            }
+          </hlm-select-content>
+        </hlm-select>
+      </hlm-field>
+      <!-- Working Style -->
+      <hlm-field class="grid gap-2">
+        <label hlmFieldLabel for="workingStyle">{{
+          'profile.preferences.workingStyleLabel' | transloco
+        }}</label>
+        <hlm-select
+          id="workingStyle"
+          [value]="workingStyle()"
+          (valueChange)="onWorkingStyleChange($event)"
+          [disabled]="disabled() || saveState() === 'saving'"
+        >
+          <hlm-select-trigger class="w-56">
+            @if (workingStyle(); as value) {
+              <span>{{ 'profile.workingStyles.' + value | transloco }}</span>
+            } @else {
+              <span class="text-muted-foreground">{{
+                'profile.preferences.notSet' | transloco
+              }}</span>
+            }
+          </hlm-select-trigger>
+          <hlm-select-content *hlmSelectPortal>
+            <hlm-select-label>{{
+              'profile.preferences.workingStyleLabel' | transloco
+            }}</hlm-select-label>
+            @for (style of workingStyles; track style) {
+              <hlm-select-item [value]="style">{{
+                'profile.workingStyles.' + style | transloco
+              }}</hlm-select-item>
+            }
+          </hlm-select-content>
+        </hlm-select>
+      </hlm-field>
+      <!-- Career Type -->
+      <hlm-field class="grid gap-2">
+        <label hlmFieldLabel for="careerType">
+          {{ 'profile.preferences.careerTypeLabel' | transloco }}</label
+        >
+        <hlm-select
+          id="careerType"
+          [value]="careerType()"
+          (valueChange)="onCareerTypeChange($event)"
+          [disabled]="disabled() || saveState() === 'saving'"
+          class="w-full"
+        >
+          <hlm-select-trigger class="w-56">
+            @if (careerType(); as value) {
+              <span>{{ 'profile.careerTypes.' + value | transloco }}</span>
+            } @else {
+              <span class="text-muted-foreground">{{
+                'profile.preferences.notSet' | transloco
+              }}</span>
+            }
+          </hlm-select-trigger>
+          <hlm-select-content *hlmSelectPortal>
+            <hlm-select-group>
+              <hlm-select-label>{{
+                'profile.preferences.careerTypeLabel' | transloco
+              }}</hlm-select-label>
+              @for (type of careerTypes; track type) {
+                <hlm-select-item [value]="type">{{
+                  'profile.careerTypes.' + type | transloco
+                }}</hlm-select-item>
+              }
+            </hlm-select-group>
+          </hlm-select-content>
+        </hlm-select>
+      </hlm-field>
+    </div>
+  </div>
+</section>

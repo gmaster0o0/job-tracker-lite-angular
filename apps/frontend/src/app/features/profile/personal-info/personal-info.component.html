@@ -1,0 +1,104 @@
+<section hlmCard>
+  <div
+    hlmCardHeader
+    class="flex flex-row items-center justify-between space-y-0"
+  >
+    <div>
+      <h2 hlmCardTitle>{{ 'profile.personal.title' | transloco }}</h2>
+      <p hlmCardDescription>
+        {{ 'profile.personal.description' | transloco }}
+      </p>
+    </div>
+    <div class="flex gap-2">
+      @if (!isEditing()) {
+        <app-edit-button
+          (edit)="edit.emit()"
+          editLabel="{{ 'common.edit' | transloco }}"
+          [disabled]="disabled()"
+        />
+      } @else {
+        <app-cancel-button
+          (clicked)="cancelEdit.emit()"
+          cancelLabel="{{ 'common.cancel' | transloco }}"
+        />
+        <app-save-button
+          formId="personal"
+          [isSubmitting]="isSaving()"
+          idleLabel="{{ 'common.saveChanges' | transloco }}"
+          (click)="onSave()"
+        />
+      }
+    </div>
+  </div>
+  <div hlmCardContent>
+    <div class="grid gap-4">
+      <div class="flex items-center gap-4">
+        <div
+          class="flex h-16 w-16 items-center justify-center rounded-full bg-secondary text-secondary-foreground text-2xl font-bold"
+        >
+          {{ profile().name?.charAt(0) || '?' }}
+        </div>
+        <div class="grid gap-2 flex-1">
+          <div class="grid gap-2">
+            <label hlmLabel for="name">{{
+              'profile.personal.nameLabel' | transloco
+            }}</label>
+            <app-inline-input
+              id="name"
+              icon="lucideUser"
+              [isEditing]="isEditing()"
+              [placeholder]="'profile.personal.namePlaceholder' | transloco"
+              [fallbackValue]="profile().name"
+              [value]="editData().name"
+              (valueChange)="updateField('name', $event)"
+            />
+          </div>
+
+          <div class="grid gap-2">
+            <label hlmLabel for="title">{{
+              'profile.personal.titleLabel' | transloco
+            }}</label>
+            <app-inline-input
+              id="title"
+              icon="lucideBriefcase"
+              [isEditing]="isEditing()"
+              [placeholder]="'profile.personal.titlePlaceholder' | transloco"
+              [fallbackValue]="profile().title"
+              [value]="editData().title"
+              (valueChange)="updateField('title', $event)"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="grid gap-2">
+        <label hlmLabel for="city">{{
+          'profile.personal.locationLabel' | transloco
+        }}</label>
+        <app-inline-input
+          id="city"
+          icon="lucideMapPin"
+          [isEditing]="isEditing()"
+          [placeholder]="'profile.personal.locationPlaceholder' | transloco"
+          [fallbackValue]="profile().city"
+          [value]="editData().city"
+          (valueChange)="updateField('city', $event)"
+        />
+      </div>
+
+      <div class="grid gap-2">
+        <label hlmLabel for="bio">{{
+          'profile.personal.bioLabel' | transloco
+        }}</label>
+        <app-inline-textarea
+          id="bio"
+          [isEditing]="isEditing()"
+          [placeholder]="'profile.personal.bioPlaceholder' | transloco"
+          [fallbackValue]="profile().bio"
+          [value]="editData().bio"
+          (valueChange)="updateField('bio', $event)"
+        />
+      </div>
+    </div>
+  </div>
+</section>

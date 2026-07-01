@@ -102,11 +102,8 @@ describe('EditContactComponent', () => {
     const updateContact = vi.fn();
     contactsDataAccessMock.updateContact = updateContact;
 
-    fixture.detectChanges();
-
     await harness.fillForm(updateContactFixtures.missingName);
     await harness.submit();
-    fixture.detectChanges();
 
     expect(await harness.getNameErrorText()).toBeTruthy();
     expect(updateContact).not.toHaveBeenCalled();
@@ -116,11 +113,8 @@ describe('EditContactComponent', () => {
     const updateContact = vi.fn();
     contactsDataAccessMock.updateContact = updateContact;
 
-    fixture.detectChanges();
-
     await harness.fillForm(updateContactFixtures.invalidEmail);
     await harness.submit();
-    fixture.detectChanges();
 
     expect(await harness.getEmailErrorText()).toBeTruthy();
     expect(updateContact).not.toHaveBeenCalled();
@@ -130,11 +124,8 @@ describe('EditContactComponent', () => {
     const updateContact = vi.fn();
     contactsDataAccessMock.updateContact = updateContact;
 
-    fixture.detectChanges();
-
     await harness.fillForm(updateContactFixtures.invalidPhone);
     await harness.submit();
-    fixture.detectChanges();
 
     expect(await harness.getPhoneErrorText()).toBeTruthy();
     expect(updateContact).not.toHaveBeenCalled();
@@ -145,8 +136,6 @@ describe('EditContactComponent', () => {
       .fn()
       .mockResolvedValue(contactFixtures.updatedContact);
     contactsDataAccessMock.updateContact = updateContact;
-
-    fixture.detectChanges();
 
     await harness.fillForm(updateContactFixtures.missingEmailAndPhone);
     await harness.submit();
@@ -164,8 +153,6 @@ describe('EditContactComponent', () => {
 
     const updateContact = vi.fn().mockRejectedValue(backendError);
     contactsDataAccessMock.updateContact = updateContact;
-
-    fixture.detectChanges();
 
     await harness.fillForm(updateContactFixtures.updatedContact);
     await harness.submit();

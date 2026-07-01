@@ -11,10 +11,13 @@
   "common": {
     "back": "Back",
     "cancel": "Cancel",
+    "discard": "Discard",
     "saveChanges": "Save Changes",
     "create": "Create",
-    "login": "Login",
-    "register": "Register",
+    "edit": "Edit",
+    "save": "Save",
+    "add": "Add",
+    "remove": "Remove",
     "logout": "Logout",
     "overview": "Overview",
     "contacts": "Contacts",
@@ -23,7 +26,11 @@
     "profile": "Profile",
     "settings": "Settings",
     "about": "About",
-    "saving": "Saving..."
+    "login": "Login",
+    "register": "Register",
+    "saving": "Saving...",
+    "saved": "Saved",
+    "error": "Error"
   },
   "jobs": {
     "progression": {
@@ -191,6 +198,171 @@
     "dark": "Dark",
     "system": "System"
   },
+  "settings": {
+    "accountSettings": {
+      "changeEmail": {
+        "title": "Change Email",
+        "description": "Enter a new email address. We will send a verification link to it.",
+        "currentEmail": "Current email",
+        "newEmail": "New email",
+        "pendingEmailNotice": "Pending email change: {{email}}. Verify it from your inbox to finish.",
+        "success": "Verification email sent to your new address.",
+        "submit": "Save",
+        "submitting": "Saving...",
+        "error": {
+          "title": "Email Update Failed",
+          "unknown": "Unable to update email right now. Please try again.",
+          "user_already_exists": "An account with this email already exists.",
+          "email_is_same": "Please use a different email than your current one."
+        }
+      },
+      "changePassword": {
+        "title": "Update Password",
+        "description": "Use your current password, then set a new one.",
+        "currentPassword": "Current password",
+        "newPassword": "New password",
+        "hidePassword": "Hide password",
+        "showPassword": "Show password",
+        "success": "Password updated successfully.",
+        "submit": "Save",
+        "submitting": "Saving...",
+        "error": {
+          "title": "Password Update Failed",
+          "unknown": "Unable to update password right now. Please try again.",
+          "invalid_password": "Your current password is incorrect.",
+          "password_too_short": "Your new password is too short.",
+          "password_too_long": "Your new password is too long."
+        }
+      },
+      "title": "Account Settings",
+      "subtitle": "Update your email and password securely."
+    },
+    "preferences": "Preferences",
+    "account": "Account",
+    "privacy": "Privacy"
+  },
+  "auth": {
+    "fields": {
+      "email": {
+        "placeholder": "you@example.com",
+        "required": "Email is required.",
+        "invalid_format": "Please enter a valid email address.",
+        "label": "Email",
+        "example": "Example: you@example.com"
+      },
+      "password": {
+        "placeholder": "Enter your password",
+        "required": "Password is required.",
+        "too_small": "Password must be at least 8 characters.",
+        "need_uppercase": "Password must contain at least one uppercase letter.",
+        "need_lowercase": "Password must contain at least one lowercase letter.",
+        "need_number": "Password must contain at least one number.",
+        "label": "Password",
+        "example": "Use at least 8 characters, including uppercase, lowercase, and a number."
+      },
+      "confirmPassword": {
+        "label": "Confirm password",
+        "placeholder": "Confirm your password",
+        "required": "Please confirm your password.",
+        "password_mismatch": "Passwords do not match.",
+        "example": "Re-enter your password to confirm."
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter your full name",
+        "required": "Name is required.",
+        "example": "Example: Jane Doe"
+      }
+    },
+    "verifyEmailNotice": {
+      "success": "Verification email sent. Check your inbox.",
+      "submitting": "Resending verification email...",
+      "submit": "Resend verification email",
+      "backToLogin": "Back to sign in",
+      "title": "Verify your email",
+      "subtitle": "We sent a verification link to your inbox. You can resend it here if needed.",
+      "error": {
+        "title": "Verification Email Request Failed",
+        "unknown": "Unable to send verification email right now. Please try again."
+      }
+    },
+    "verifyEmail": {
+      "success": "Your email has been verified. You can now sign in.",
+      "backToLogin": "Back to sign in",
+      "resendLink": "Resend verification email",
+      "title": "Verify your email",
+      "subtitle": "Your verification link has been processed.",
+      "error": {
+        "title": "Email Verification Failed",
+        "invalid_token": "The verification link is invalid or expired. Please request a new one.",
+        "token_expired": "The verification link is invalid or expired. Please request a new one.",
+        "user_not_found": "We could not find an account for this verification link.",
+        "email_already_verified": "This email address has already been verified.",
+        "email_mismatch": "This verification link does not match the current email address."
+      }
+    },
+    "resetPassword": {
+      "missingToken": "Reset token is missing or invalid.",
+      "success": "Password reset successful. Redirecting to sign in...",
+      "submitting": "Resetting password...",
+      "submit": "Reset password",
+      "backToLogin": "Back to sign in",
+      "title": "Reset Password",
+      "subtitle": "Set your new password to continue.",
+      "error": {
+        "title": "Password Reset Failed",
+        "unknown": "Unable to reset password right now. Please try again.",
+        "invalid_token": "Reset link is invalid or expired. Please request a new one."
+      }
+    },
+    "register": {
+      "submitting": "Creating account...",
+      "submit": "Create account",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "title": "Create Account",
+      "subtitle": "Register to track your applications.",
+      "error": {
+        "title": "Registration Failed",
+        "unknown": "Unable to register right now. Please try again.",
+        "user_already_exists": "An account with this email already exists.",
+        "user_already_exists_use_another_email": "An account with this email already exists. Use another email.",
+        "invalid_password": "Password does not meet security requirements."
+      }
+    },
+    "login": {
+      "forgotPasswordLink": "Forgot password?",
+      "submitting": "Signing in...",
+      "submit": "Sign in",
+      "noAccount": "No account yet?",
+      "registerLink": "Create one",
+      "title": "Login",
+      "subtitle": "Sign in to continue managing your jobs.",
+      "subtitleAfterPasswordChange": "auth.login.subtitleAfterPasswordChange",
+      "error": {
+        "title": "Sign In Failed",
+        "unknown": "Unable to sign in right now. Please try again.",
+        "invalid_email_or_password": "Invalid email or password.",
+        "user_not_found": "No user found with this email.",
+        "email_not_verified": "Email address has not been verified. Check your inbox."
+      }
+    },
+    "forgotPassword": {
+      "success": "If an account exists for this email, a reset link has been sent.",
+      "submitting": "Sending reset link...",
+      "submit": "Send reset link",
+      "backToLogin": "Back to sign in",
+      "title": "Forgot Password",
+      "subtitle": "Enter your email and we will send you a reset link.",
+      "error": {
+        "title": "Reset Link Request Failed",
+        "unknown": "Unable to send reset link right now. Please try again."
+      }
+    },
+    "errors": {
+      "unknown": "Authentication failed. Please try again."
+    }
+  },
   "contacts": {
     "edit": {
       "title": "Edit Contact",
@@ -241,6 +413,7 @@
         "loginCta": "Login"
       },
       "features": {
+        "comingSoon": "Coming soon",
         "jobs": {
           "title": "Jobs",
           "description": "Add and track applications step by step."
@@ -256,8 +429,7 @@
         "coverLetter": {
           "title": "Cover Letter",
           "description": "Generate and store tailored cover letters for each application."
-        },
-        "comingSoon": "Coming soon"
+        }
       },
       "publicProfiles": {
         "title": "Public profiles",
@@ -276,172 +448,70 @@
   },
   "navigation": {
     "backTooltip": "Go back to the previous page",
-    "notImplementedTooltip": "This function not implemented yet",
     "statusTooltip": "View application health status",
-    "appTitleTooltip": "Open the Job Tracker Lite GitHub page"
+    "appTitleTooltip": "Open the Job Tracker Lite GitHub page",
+    "notImplementedTooltip": "This function not implemented yet"
   },
-  "auth": {
-    "fields": {
-      "name": {
-        "label": "Name",
-        "placeholder": "Enter your full name",
-        "required": "Name is required.",
-        "example": "Example: Jane Doe"
-      },
-      "email": {
-        "label": "Email",
-        "placeholder": "you@example.com",
-        "required": "Email is required.",
-        "invalid_format": "Please enter a valid email address.",
-        "example": "Example: you@example.com"
-      },
-      "password": {
-        "label": "Password",
-        "placeholder": "Enter your password",
-        "required": "Password is required.",
-        "too_small": "Password must be at least 8 characters.",
-        "need_uppercase": "Password must contain at least one uppercase letter.",
-        "need_lowercase": "Password must contain at least one lowercase letter.",
-        "need_number": "Password must contain at least one number.",
-        "example": "Use at least 8 characters, including uppercase, lowercase, and a number."
-      },
-      "confirmPassword": {
-        "label": "Confirm password",
-        "placeholder": "Confirm your password",
-        "required": "Please confirm your password.",
-        "password_mismatch": "Passwords do not match.",
-        "example": "Re-enter your password to confirm."
-      }
+  "profile": {
+    "title": "User Profile",
+    "loading": "Loading profile...",
+    "personal": {
+      "title": "Personal Information",
+      "description": "Your basic identification and bio.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Your Name",
+      "titleLabel": "Professional Title",
+      "titlePlaceholder": "Professional Title",
+      "locationLabel": "Location",
+      "locationPlaceholder": "e.g. New York, USA",
+      "bioLabel": "Bio",
+      "bioPlaceholder": "Tell us about yourself...",
+      "publicLabel": "Make Profile Public"
     },
-    "errors": {
-      "unknown": "Authentication failed. Please try again."
+    "contact": {
+      "title": "Contact & Links",
+      "description": "How recruiters and peers can find you.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "email@example.com",
+      "linkedinLabel": "LinkedIn",
+      "linkedinPlaceholder": "LinkedIn URL",
+      "githubLabel": "GitHub",
+      "githubPlaceholder": "GitHub URL",
+      "websiteLabel": "Portfolio / Website",
+      "websitePlaceholder": "Portfolio URL"
     },
-    "login": {
-      "title": "Login",
-      "subtitle": "Sign in to continue managing your jobs.",
-      "submit": "Sign in",
-      "submitting": "Signing in...",
-      "forgotPasswordLink": "Forgot password?",
-      "noAccount": "No account yet?",
-      "registerLink": "Create one",
-      "error": {
-        "title": "Sign In Failed",
-        "unknown": "Unable to sign in right now. Please try again.",
-        "invalid_email_or_password": "Invalid email or password.",
-        "user_not_found": "No user found with this email.",
-        "email_not_verified": "Email address has not been verified. Check your inbox."
-      }
+    "skills": {
+      "title": "Core Skills",
+      "description": "Your technical expertise and tools.",
+      "empty": "No skills added yet.",
+      "placeholder": "Add a technical skill...",
+      "addNewElement": "Add new element"
     },
-    "register": {
-      "title": "Create Account",
-      "subtitle": "Register to track your applications.",
-      "submit": "Create account",
-      "submitting": "Creating account...",
-      "hasAccount": "Already have an account?",
-      "loginLink": "Sign in",
-      "error": {
-        "title": "Registration Failed",
-        "unknown": "Unable to register right now. Please try again.",
-        "user_already_exists": "An account with this email already exists.",
-        "user_already_exists_use_another_email": "An account with this email already exists. Use another email.",
-        "invalid_password": "Password does not meet security requirements."
-      }
+    "preferences": {
+      "title": "Professional Preferences",
+      "description": "Your career path and preferred environment.",
+      "experienceLabel": "Experience",
+      "workingStyleLabel": "Working Style",
+      "careerTypeLabel": "Contract",
+      "notSet": "Not set"
     },
-    "forgotPassword": {
-      "title": "Forgot Password",
-      "subtitle": "Enter your email and we will send you a reset link.",
-      "submit": "Send reset link",
-      "submitting": "Sending reset link...",
-      "backToLogin": "Back to sign in",
-      "success": "If an account exists for this email, a reset link has been sent.",
-      "error": {
-        "title": "Reset Link Request Failed",
-        "unknown": "Unable to send reset link right now. Please try again."
-      }
+    "experienceLevels": {
+      "INTERN": "Intern",
+      "JUNIOR": "Junior",
+      "MID": "Mid-level",
+      "SENIOR": "Senior",
+      "LEAD": "Lead",
+      "EXPERT": "Expert"
     },
-    "verifyEmailNotice": {
-      "title": "Verify your email",
-      "subtitle": "We sent a verification link to your inbox. You can resend it here if needed.",
-      "submit": "Resend verification email",
-      "submitting": "Resending verification email...",
-      "backToLogin": "Back to sign in",
-      "success": "Verification email sent. Check your inbox.",
-      "error": {
-        "title": "Verification Email Request Failed",
-        "unknown": "Unable to send verification email right now. Please try again."
-      }
+    "workingStyles": {
+      "REMOTE": "Remote",
+      "HYBRID": "Hybrid",
+      "ON_SITE": "On-site"
     },
-    "verifyEmail": {
-      "title": "Verify your email",
-      "subtitle": "Your verification link has been processed.",
-      "success": "Your email has been verified. You can now sign in.",
-      "backToLogin": "Back to sign in",
-      "resendLink": "Resend verification email",
-      "error": {
-        "title": "Email Verification Failed",
-        "invalid_token": "The verification link is invalid or expired. Please request a new one.",
-        "token_expired": "The verification link is invalid or expired. Please request a new one.",
-        "user_not_found": "We could not find an account for this verification link.",
-        "email_already_verified": "This email address has already been verified.",
-        "email_mismatch": "This verification link does not match the current email address."
-      }
-    },
-    "resetPassword": {
-      "title": "Reset Password",
-      "subtitle": "Set your new password to continue.",
-      "submit": "Reset password",
-      "submitting": "Resetting password...",
-      "backToLogin": "Back to sign in",
-      "missingToken": "Reset token is missing or invalid.",
-      "success": "Password reset successful. Redirecting to sign in...",
-      "error": {
-        "title": "Password Reset Failed",
-        "unknown": "Unable to reset password right now. Please try again.",
-        "invalid_token": "Reset link is invalid or expired. Please request a new one."
-      }
-    }
-  },
-  "settings": {
-    "preferences": "Preferences",
-    "account": "Account",
-    "privacy": "Privacy",
-    "accountSettings": {
-      "title": "Account Settings",
-      "subtitle": "Update your email and password securely.",
-      "changeEmail": {
-        "title": "Change Email",
-        "description": "Enter a new email address. We will send a verification link to it.",
-        "currentEmail": "Current email",
-        "newEmail": "New email",
-        "submit": "Save",
-        "submitting": "Saving...",
-        "success": "Verification email sent to your new address.",
-        "pendingEmailNotice": "Pending email change: {{email}}. Verify it from your inbox to finish.",
-        "error": {
-          "title": "Email Update Failed",
-          "unknown": "Unable to update email right now. Please try again.",
-          "user_already_exists": "An account with this email already exists.",
-          "email_is_same": "Please use a different email than your current one."
-        }
-      },
-      "changePassword": {
-        "title": "Update Password",
-        "description": "Use your current password, then set a new one.",
-        "currentPassword": "Current password",
-        "newPassword": "New password",
-        "showPassword": "Show password",
-        "hidePassword": "Hide password",
-        "submit": "Save",
-        "submitting": "Saving...",
-        "success": "Password updated successfully.",
-        "error": {
-          "title": "Password Update Failed",
-          "unknown": "Unable to update password right now. Please try again.",
-          "invalid_password": "Your current password is incorrect.",
-          "password_too_short": "Your new password is too short.",
-          "password_too_long": "Your new password is too long."
-        }
-      }
+    "careerTypes": {
+      "FULL_TIME": "Full-time",
+      "PART_TIME": "Part-time",
+      "CONTRACT": "Contract"
     }
   }
 }

@@ -1,0 +1,28 @@
+@if (!isEditing()) {
+  <div
+    class="flex min-h-10 w-full items-center gap-2 border border-transparent px-3 py-2 text-sm cursor-pointer select-none"
+  >
+    @if (icon()) {
+      <ng-icon [name]="icon()" class="h-4 w-4 text-muted-foreground shrink-0" />
+    }
+    <span class="whitespace-pre-wrap break-words text-foreground">
+      {{ fallbackValue() || placeholder() }}
+    </span>
+  </div>
+} @else {
+  <div
+    class="flex min-h-[100px] w-full items-start gap-2 border border-input rounded-md bg-secondary px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-ring"
+  >
+    @if (icon()) {
+      <ng-icon [name]="icon()" class="h-4 w-4 text-muted-foreground shrink-0" />
+    }
+    <textarea
+      hlmTextarea
+      [(ngModel)]="value"
+      (ngModelChange)="onInputChange($event)"
+      [placeholder]="placeholder()"
+      class="min-h-[80px] w-full resize-none bg-transparent text-sm outline-none border-none p-0"
+      rows="4"
+    ></textarea>
+  </div>
+}

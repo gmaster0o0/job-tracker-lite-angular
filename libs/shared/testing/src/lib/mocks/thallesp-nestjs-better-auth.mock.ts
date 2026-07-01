@@ -2,7 +2,7 @@ import type { AuthSessionDto } from '@job-tracker-lite-angular/schemas';
 
 export class AuthGuard {}
 
-export const Public = () => {
+const noopDecorator = () => {
   return (
     _target: object,
     _propertyKey?: string | symbol,
@@ -12,9 +12,13 @@ export const Public = () => {
   };
 };
 
+export const AllowAnonymous = noopDecorator;
+export const OptionalAuth = noopDecorator;
+export const Public = noopDecorator;
+
 export const Session = () => {
   return (target: object, key: string | symbol, index: number) => {
-    //empty
+    // empty
   };
 };
 

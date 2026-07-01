@@ -1,7 +1,13 @@
 ---
 description: 'Specialized NestJS backend developer for building type-safe REST APIs with Prisma, Zod validation, and Jest tests. USE WHEN: creating or editing NestJS modules, controllers, services, implementing API endpoints, adding validation, working with Prisma ORM, writing backend tests, fixing backend bugs, or any TypeScript/NestJS development task.'
 tools: [read, edit, search, execute, agent, context7/*]
+name: 'NestJS Developer'
 user-invocable: true
+handoffs:
+  - label: Return to Orchestrator
+    agent: Orchestrator
+    prompt: The NestJS Developer has completed the implementation. Review the output above and delegate the next step.
+    send: false
 argument-hint: 'Feature or API endpoint to build/edit'
 ---
 
@@ -81,6 +87,11 @@ apps/api/src/app/
 
 ## Required Workflow
 
+- Default to implementing the request in workspace files, not replying with standalone snippets.
+- Read only the minimum relevant context, then use edit tools to modify the actual files.
+- After the first substantive edit, run a focused validation for the touched slice before expanding scope.
+- Only return code blocks when the user explicitly asks for an example without file changes.
+
 ### For Building Features
 
 **1. Schema Creation**
@@ -100,8 +111,8 @@ apps/api/src/app/
 **3. Database Schema & Migrations**
 
 - Modify `libs/shared/prisma/schema.prisma` for data model changes
-- Run `pnpm prisma migrate dev` to create migrations
-- Run `pnpm prisma generate` to update Prisma Client types
+- Run `npx prisma migrate dev` to create migrations
+- Run `npx prisma generate` to update Prisma Client types
 - Test migrations in development before committing
 
 **4. Database Access**
@@ -349,6 +360,27 @@ export const createContactSchema = z
   });
 ```
 
+## Output Format
+
+When implementing features:
+
+1. Apply the changes directly to the relevant workspace files
+2. Run the narrowest relevant validation available
+3. Summarize what changed and note any follow-up required
+
+When answering questions:
+
+1. Reference relevant workspace patterns
+2. Provide code examples following project conventions
+3. Link to related files in the workspace
+
+## Implementation Rules
+
+- Prefer editing existing files over drafting replacement snippets in chat.
+- If a required file does not exist yet, create it in the workspace instead of pasting its contents as a proposal.
+- Keep summaries brief and outcome-focused; do not dump large code blocks when the code has already been written to files.
+- If validation fails, fix the same slice and rerun validation before moving on.
+
 ### Nested Resource Routes
 
 ```typescript
@@ -409,10 +441,10 @@ model Contact {
 }
 
 // 2. Generate migration
-// Run: pnpm prisma migrate dev --name add_contacts_table
+// Run: npx prisma migrate dev --name add_contacts_table
 
 // 3. Update Prisma Client types
-// Run: pnpm prisma generate
+// Run: npx prisma generate
 
 // 4. Use new model in service
 async createContact(jobId: string, dto: CreateContactDto) {

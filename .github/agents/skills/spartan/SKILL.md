@@ -9,7 +9,7 @@ description: >-
 user-invocable: false
 allowed-tools:
   - Bash(npx nx g @spartan-ng/cli:*)
-  - Bash(pnpm nx g @spartan-ng/cli:*)
+  - Bash(npx nx g @spartan-ng/cli:*)
   - Bash(ng g @spartan-ng/cli:*)
 ---
 
@@ -27,7 +27,7 @@ primitive under the hood. Always prefer existing components over hand-written ma
 
 All CLI commands run through the workspace's runner. Detect it from the project:
 
-- **Nx workspace** (has `nx.json`): `npx nx g @spartan-ng/cli:<generator>` (or `pnpm nx g ...`).
+- **Nx workspace** (has `nx.json`): `npx nx g @spartan-ng/cli:<generator>` (or `npx nx g ...`).
 - **Angular CLI workspace** (has `angular.json`, no `nx.json`): `ng g @spartan-ng/cli:<generator>`.
 
 ## Current project context
@@ -99,19 +99,19 @@ Read the rule file before doing the related work:
 
 <!-- Icon in a button: ng-icon -->
 <button hlmBtn size="icon" variant="ghost">
-	<ng-icon name="lucideTrash" />
+  <ng-icon name="lucideTrash" />
 </button>
 
 <!-- Loading state: compose a spinner, there is no isLoading input -->
 <button hlmBtn [disabled]="loading()">
-	@if (loading()) {
-	<hlm-spinner />
-	} Save
+  @if (loading()) {
+  <hlm-spinner />
+  } Save
 </button>
 
 <!-- Layout: gap, not space-* ; size-* when width == height -->
 <div class="flex items-center gap-2">
-	<span hlmBadge variant="secondary">beta</span>
+  <span hlmBadge variant="secondary">beta</span>
 </div>
 ```
 

@@ -1,5 +1,5 @@
 import { Component, input, TemplateRef } from '@angular/core';
-import { HlmCardImports } from 'spartan/ui/helm';
+import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HomeCard } from '../home-card.model';
 import { RouterLink } from '@angular/router';
 import { HlmIconImports } from '@spartan-ng/helm/icon';

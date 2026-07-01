@@ -1,0 +1,10 @@
+<button
+  hlmBtn
+  variant="outline"
+  size="sm"
+  type="button"
+  [disabled]="disabled()"
+  (click)="clicked.emit()"
+>
+  {{ cancelLabel() }}
+</button>

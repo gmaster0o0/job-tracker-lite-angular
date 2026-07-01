@@ -1,0 +1,49 @@
+<div class="container mx-auto max-w-4xl py-8 px-4">
+  <h1 class="mb-8 text-3xl font-bold tracking-tight">
+    {{ 'profile.title' | transloco }}
+  </h1>
+
+  @if (profileResource.isLoading()) {
+    <div class="flex h-64 items-center justify-center">
+      <p class="text-muted-foreground animate-pulse">
+        {{ 'profile.loading' | transloco }}
+      </p>
+    </div>
+  } @else if (profileResource.value(); as profile) {
+    <div class="grid gap-8">
+      <app-personal-info
+        [profile]="profile"
+        [(editData)]="editData"
+        [isEditing]="editingSection() === 'personal'"
+        [isSaving]="savingSection() === 'personal'"
+        [disabled]="isPersonalDisabled()"
+        (edit)="editSection('personal', profile)"
+        (cancelEdit)="cancelEdit()"
+        (save)="saveSection('personal', $event)"
+      />
+
+      <app-contact-info
+        [profile]="profile"
+        [(editData)]="editData"
+        [isEditing]="editingSection() === 'contact'"
+        [isSaving]="savingSection() === 'contact'"
+        [disabled]="isContactDisabled()"
+        (edit)="editSection('contact', profile)"
+        (cancelEdit)="cancelEdit()"
+        (save)="saveSection('contact', $event)"
+      />
+
+      <app-skill-manager
+        [profile]="profile"
+        [disabled]="isAnySectionEditing() || isCareerPreferenceSaving()"
+        (saveStateChanged)="onSkillManagerSaveStateChange($event)"
+      ></app-skill-manager>
+
+      <app-career-preference
+        [profile]="profile"
+        [disabled]="isAnySectionEditing() || isSkillManagerSaving()"
+        (saveStateChanged)="onCareerPreferenceSaveStateChange($event)"
+      />
+    </div>
+  }
+</div>

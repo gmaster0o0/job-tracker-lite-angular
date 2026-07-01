@@ -1,0 +1,10 @@
+<button
+  hlmBtn
+  size="sm"
+  type="button"
+  [disabled]="disabled()"
+  (click)="edit.emit()"
+>
+  <ng-icon hlm name="lucidePencil" size="sm" class="mr-2" />
+  {{ editLabel() }}
+</button>

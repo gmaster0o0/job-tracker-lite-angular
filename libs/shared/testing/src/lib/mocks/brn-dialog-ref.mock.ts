@@ -1,11 +1,7 @@
-import { BrnDialogRef } from '@spartan-ng/brain/dialog';
-
-export const dialogRefMock: Partial<BrnDialogRef> = {
+export const dialogRefMock = {
   close: () => void 0,
-  setAriaLabelledBy: () => void 0,
-  setAriaDescribedBy: () => void 0,
 };
 
-export function createBrnDialogRefMock(): Partial<BrnDialogRef> {
+export function createBrnDialogRefMock() {
   return { ...dialogRefMock };
 }

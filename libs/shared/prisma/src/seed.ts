@@ -12,6 +12,7 @@ import {
   SeedContactTemplate,
   getSeedNotesForJob,
   SeedNoteTemplate,
+  userProfileFixtures,
 } from '@job-tracker-lite-angular/testing';
 
 const envPath = path.join(process.cwd(), '.env');
@@ -89,6 +90,36 @@ async function main() {
       providerId: 'credential',
       userId: seedUser.id,
       password: seedUserPasswordHash,
+    },
+  });
+
+  console.log('Seeding User Profile...');
+
+  const {
+    id: _id,
+    userId: _userId,
+    ...profileFixture
+  } = userProfileFixtures.johnDoe;
+  await prisma.userProfile.upsert({
+    where: { userId: seedUser.id },
+    update: {
+      ...profileFixture,
+      name: 'Demo User', // Keeping the name consistent with the seed user
+      isPublic: true,
+      personalVisibility: true,
+      contactVisibility: true,
+      skillsVisibility: true,
+      preferenceVisibility: true,
+    },
+    create: {
+      ...profileFixture,
+      userId: seedUser.id,
+      name: 'Demo User',
+      isPublic: true,
+      personalVisibility: true,
+      contactVisibility: true,
+      skillsVisibility: true,
+      preferenceVisibility: true,
     },
   });
 

@@ -1,0 +1,36 @@
+@if (!isEditing()) {
+  <div
+    class="flex h-10 w-full items-center gap-2 rounded-md border border-transparent px-3 py-2 text-sm text-foreground bg-transparent cursor-pointer select-none"
+  >
+    @if (icon()) {
+      <div
+        class="pl-0 pr-1 text-muted-foreground flex items-center justify-center shrink-0"
+      >
+        <ng-icon [name]="icon()" class="h-4 w-4" />
+      </div>
+    }
+    <span class="truncate py-[2px]">
+      {{ fallbackValue() || placeholder() }}
+    </span>
+  </div>
+} @else {
+  <hlm-input-group
+    class="w-full flex h-10 items-center bg-secondary border-input shadow-sm"
+  >
+    @if (icon()) {
+      <hlm-input-group-addon
+        align="inline-start"
+        class="pl-3 pr-1 text-muted-foreground shrink-0"
+      >
+        <ng-icon [name]="icon()" class="h-4 w-4" />
+      </hlm-input-group-addon>
+    }
+    <input
+      hlmInputGroupInput
+      [(ngModel)]="value"
+      (ngModelChange)="onInputChange($event)"
+      [placeholder]="placeholder()"
+      class="flex-1 text-sm bg-transparent focus-visible:outline-none h-full"
+    />
+  </hlm-input-group>
+}

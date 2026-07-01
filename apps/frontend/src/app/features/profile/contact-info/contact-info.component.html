@@ -1,0 +1,96 @@
+<section hlmCard>
+  <div
+    hlmCardHeader
+    class="flex flex-row items-center justify-between space-y-0"
+  >
+    <div>
+      <h2 hlmCardTitle>{{ 'profile.contact.title' | transloco }}</h2>
+      <p hlmCardDescription>
+        {{ 'profile.contact.description' | transloco }}
+      </p>
+    </div>
+    <div class="flex gap-2">
+      @if (!isEditing()) {
+        <app-edit-button
+          (edit)="edit.emit()"
+          editLabel="{{ 'common.edit' | transloco }}"
+          [disabled]="disabled()"
+        />
+      } @else {
+        <app-cancel-button
+          (clicked)="cancelEdit.emit()"
+          cancelLabel="{{ 'common.cancel' | transloco }}"
+        />
+        <app-save-button
+          formId="contact"
+          [isSubmitting]="isSaving()"
+          idleLabel="{{ 'common.saveChanges' | transloco }}"
+          (click)="onSave()"
+        />
+      }
+    </div>
+  </div>
+  <div hlmCardContent>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div class="grid gap-2">
+        <label hlmLabel for="email">{{
+          'profile.contact.emailLabel' | transloco
+        }}</label>
+        <app-inline-input
+          id="email"
+          icon="lucideMail"
+          [isEditing]="isEditing()"
+          [placeholder]="'profile.contact.emailPlaceholder' | transloco"
+          [fallbackValue]="profile().email"
+          [value]="editData().email"
+          (valueChange)="updateField('email', $event)"
+        />
+      </div>
+
+      <div class="grid gap-2">
+        <label hlmLabel for="linkedin">{{
+          'profile.contact.linkedinLabel' | transloco
+        }}</label>
+        <app-inline-input
+          id="linkedin"
+          icon="lucideLinkedin"
+          [isEditing]="isEditing()"
+          [placeholder]="'profile.contact.linkedinPlaceholder' | transloco"
+          [fallbackValue]="profile().linkedin"
+          [value]="editData().linkedin"
+          (valueChange)="updateField('linkedin', $event)"
+        />
+      </div>
+
+      <div class="grid gap-2">
+        <label hlmLabel for="github">{{
+          'profile.contact.githubLabel' | transloco
+        }}</label>
+        <app-inline-input
+          id="github"
+          icon="lucideGithub"
+          [isEditing]="isEditing()"
+          [placeholder]="'profile.contact.githubPlaceholder' | transloco"
+          [fallbackValue]="profile().github"
+          [value]="editData().github"
+          (valueChange)="updateField('github', $event)"
+        />
+      </div>
+
+      <div class="grid gap-2">
+        <label hlmLabel for="website">{{
+          'profile.contact.websiteLabel' | transloco
+        }}</label>
+        <app-inline-input
+          id="website"
+          icon="lucideGlobe"
+          [isEditing]="isEditing()"
+          [placeholder]="'profile.contact.websitePlaceholder' | transloco"
+          [fallbackValue]="profile().webpage"
+          [value]="editData().webpage"
+          (valueChange)="updateField('webpage', $event)"
+        />
+      </div>
+    </div>
+  </div>
+</section>

@@ -31,6 +31,7 @@ model User {
   contacts      Contact[]
   notes         Note[]
   emailChangeTokens EmailChangeToken[]
+  profile       UserProfile?
 
   @@map("user")
 }
@@ -132,6 +133,61 @@ model Contact {
   updatedAt   DateTime @updatedAt
 
   @@index([userId])
+}
+
+enum ExperienceLevel {
+  INTERN
+  JUNIOR
+  MID
+  SENIOR
+  LEAD
+  EXPERT
+}
+
+enum WorkingStyle {
+  REMOTE
+  HYBRID
+  ON_SITE
+}
+
+enum CareerPreferenceType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+}
+
+model UserProfile {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name             String?
+  title            String?
+  city             String?
+  bio              String?
+  
+  // Contact info
+  email            String?
+  linkedin         String?
+  github           String?
+  webpage          String?
+  
+  coreSkills       String[]
+  experienceLevel  ExperienceLevel?
+  
+  workingStyle     WorkingStyle?
+  careerType       CareerPreferenceType?
+  
+  isPublic         Boolean  @default(false)
+  personalVisibility   Boolean  @default(true)
+  contactVisibility    Boolean  @default(true)
+  skillsVisibility     Boolean  @default(true)
+  preferenceVisibility Boolean  @default(true)
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("user_profile")
 }
 
 model Note {

@@ -3,7 +3,6 @@ import { classes } from '@spartan-ng/helm/utils';
 import { injectHlmSidebarConfig } from './hlm-sidebar.token';
 
 @Directive({
-  standalone: true,
   selector: '[hlmSidebarWrapper],hlm-sidebar-wrapper',
   host: {
     'data-slot': 'sidebar-wrapper',
@@ -22,7 +21,7 @@ export class HlmSidebarWrapper {
   constructor() {
     classes(
       () =>
-        'group/sidebar-wrapper has-[[data-variant=inset]]:bg-sidebar flex min-h-svh w-full',
+        'group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full',
     );
   }
 }
