@@ -36,30 +36,28 @@ import {
   templateUrl: './personal-info.component.html',
 })
 export class PersonalInfoComponent {
-  // Az aktuális, elmentett profil (a szülő resource-ából jön)
+  // current profile data from the parent component
   profile = input.required<UserProfileDto>();
 
-  // Szerkesztés alatt lévő, még nem mentett adatok - kétirányú kötés a szülővel
+  // Not saved data. Two-way bound to the form inputs. The parent component will provide the initial data and will be updated when the user edits the form.
   editData = model.required<Partial<UserProfileDto>>();
 
-  // A szülő dönti el, hogy épp ez a szekció van-e szerkesztés/mentés alatt
+  // The parent component decides whether this section is currently being edited/saved
   isEditing = input(false);
   isSaving = input(false);
-
-  // Pl. mert egy másik szekció épp szerkesztés/mentés alatt van
   disabled = input(false);
-
+  // Event emitters to notify the parent component of user actions
   edit = output<void>();
   cancelEdit = output<void>();
   save = output<UpdateUserProfileDto>();
-
+  // Updates the editData model when an input field changes. This allows for two-way binding between the form inputs and the editData model.
   updateField<K extends keyof UserProfileDto>(
     field: K,
     value: UserProfileDto[K],
   ) {
     this.editData.update((data) => ({ ...data, [field]: value }));
   }
-
+  // Called when the user clicks the save button. It emits the current editData as an UpdateUserProfileDto to the parent component for saving.
   onSave() {
     const data = this.editData();
     const updateDto: UpdateUserProfileDto = {

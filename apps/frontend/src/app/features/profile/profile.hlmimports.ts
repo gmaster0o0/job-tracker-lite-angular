@@ -27,6 +27,16 @@ import {
   lucideCheck,
 } from '@ng-icons/lucide';
 
+/**
+ * This file serves as a centralized location for importing and exporting commonly used components,
+ * icons, and utilities related to forms, layout, and interactive elements in the profile feature of the application.
+ * It helps maintain a clean and organized codebase by grouping related imports together.
+ */
+
+/**
+ * Form Imports: This array contains imports for form-related components
+ * such as input fields, labels, textareas, selects, input groups, and field components.
+ */
 export const formImports = [
   HlmInputImports,
   HlmLabelImports,
@@ -35,14 +45,23 @@ export const formImports = [
   HlmInputGroupImports,
   HlmFieldImports,
 ];
+/**
+ * Layout Imports: This array contains imports for layout-related components
+ * such as cards and separators, which are used to structure the UI.
+ */
 export const layoutImports = [HlmCardImports, HlmSeparatorImports];
-
+/**
+ * Interactive Imports: This array contains imports for interactive components
+ * such as buttons, badges, and icons, which enhance user interaction within the application.
+ */
 export const interactiveImports = [
   HlmButtonImports,
   HlmBadgeImports,
   HlmIconImports,
 ];
-
+/**
+ * Profile Icons: This object contains a collection of commonly used icons in the profile feature,
+ */
 export const profileIcons = {
   lucidePencil,
   lucideSave,

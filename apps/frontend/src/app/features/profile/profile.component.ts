@@ -17,7 +17,7 @@ import {
   UpdateUserProfileDto,
 } from '@job-tracker-lite-angular/schemas';
 
-type SectionName = 'personal' | 'contact' | 'skills';
+type SectionName = 'personal' | 'contact' | 'skills' | 'career-preference';
 
 @Component({
   standalone: true,
@@ -45,7 +45,8 @@ export class ProfileComponent {
   isCareerPreferenceSaving = signal(false);
   isSkillManagerSaving = signal(false);
 
-  // egyszerre csak egy szekció szerkeszthető
+  // Computed properties to determine if any section is being edited or
+  // if specific sections should be disabled based on the current state of editing and saving.
   isAnySectionEditing = computed(() => this.editingSection() !== null);
 
   isPersonalDisabled = computed(
