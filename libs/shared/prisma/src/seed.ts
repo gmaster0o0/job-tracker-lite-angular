@@ -105,21 +105,21 @@ async function main() {
     update: {
       ...profileFixture,
       name: 'Demo User', // Keeping the name consistent with the seed user
-      isPublic: true,
-      personalVisibility: true,
-      contactVisibility: true,
-      skillsVisibility: true,
-      preferenceVisibility: true,
+      isPublic: 30,
+      personalVisibility: 30,
+      contactVisibility: 30,
+      skillsVisibility: 30,
+      preferenceVisibility: 30,
     },
     create: {
       ...profileFixture,
       userId: seedUser.id,
       name: 'Demo User',
-      isPublic: true,
-      personalVisibility: true,
-      contactVisibility: true,
-      skillsVisibility: true,
-      preferenceVisibility: true,
+      isPublic: 30,
+      personalVisibility: 30,
+      contactVisibility: 30,
+      skillsVisibility: 30,
+      preferenceVisibility: 30,
     },
   });
 
