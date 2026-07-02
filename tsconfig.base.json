@@ -125,6 +125,9 @@
       ],
       "@spartan-ng/helm/combobox": [
         "./libs/shared-ui/combobox/src/index.ts"
+      ],
+      "@spartan-ng/helm/accordion": [
+        "./libs/shared-ui/accordion/src/index.ts"
       ]
     }
   },
