@@ -109,7 +109,12 @@
     },
     "test": {
       "executor": "@angular/build:unit-test",
-      "options": {}
+      "options": {
+        "setupFiles": [
+          "libs/shared/testing/src/lib/setup/resize-observer.setup.ts"
+        ],
+        "providersFile": "libs/shared/testing/src/lib/setup/setup-icons.providers.ts"
+      }
     },
     "serve-static": {
       "continuous": true,

@@ -5,5 +5,5 @@
     "declaration": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "libs/shared/testing/src/lib/setup/resize-observer.setup.ts"]
 }
