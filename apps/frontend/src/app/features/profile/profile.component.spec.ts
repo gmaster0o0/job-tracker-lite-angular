@@ -88,13 +88,13 @@ describe('ProfileComponent', () => {
   it('should send contact visibility when saving contact section', async () => {
     const updateDto = {
       ...userProfileFixtures.johnDoe,
-      contactVisibility: false,
+      contactVisibility: 0,
     };
     await component.saveSection('contact', updateDto);
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({
-        contactVisibility: false,
+        contactVisibility: 0,
       }),
     );
   });

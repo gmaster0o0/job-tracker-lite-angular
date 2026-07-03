@@ -11,14 +11,16 @@
   "common": {
     "back": "Back",
     "cancel": "Cancel",
-    "discard": "Discard",
     "saveChanges": "Save Changes",
     "create": "Create",
-    "edit": "Edit",
-    "save": "Save",
-    "add": "Add",
-    "remove": "Remove",
     "logout": "Logout",
+    "discard": "Discard",
+    "save": "Save",
+    "saving": "Saving...",
+    "saved": "Saved",
+    "error": "Error",
+    "remove": "Remove",
+    "edit": "Edit",
     "overview": "Overview",
     "contacts": "Contacts",
     "notes": "Notes",
@@ -28,9 +30,7 @@
     "about": "About",
     "login": "Login",
     "register": "Register",
-    "saving": "Saving...",
-    "saved": "Saved",
-    "error": "Error"
+    "add": "Add"
   },
   "jobs": {
     "progression": {
@@ -363,6 +363,83 @@
       "unknown": "Authentication failed. Please try again."
     }
   },
+  "profile": {
+    "title": "User Profile",
+    "loading": "Loading profile...",
+    "skills": {
+      "title": "Core Skills",
+      "description": "Your technical expertise and tools.",
+      "empty": "No skills added yet.",
+      "placeholder": "Add a technical skill...",
+      "addNewElement": "Add new element"
+    },
+    "personal": {
+      "title": "Personal Information",
+      "description": "Your basic identification and bio.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Your Name",
+      "titleLabel": "Professional Title",
+      "titlePlaceholder": "Professional Title",
+      "locationLabel": "Location",
+      "locationPlaceholder": "e.g. New York, USA",
+      "bioLabel": "Bio",
+      "bioPlaceholder": "Tell us about yourself...",
+      "visibilityLabel": "profile.personal.visibilityLabel",
+      "publicLabel": "Make Profile Public"
+    },
+    "contact": {
+      "title": "Contact & Links",
+      "description": "How recruiters and peers can find you.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "email@example.com",
+      "linkedinLabel": "LinkedIn",
+      "linkedinPlaceholder": "LinkedIn URL",
+      "githubLabel": "GitHub",
+      "githubPlaceholder": "GitHub URL",
+      "websiteLabel": "Portfolio / Website",
+      "websitePlaceholder": "Portfolio URL",
+      "visibilityLabel": "profile.contact.visibilityLabel"
+    },
+    "preferences": {
+      "title": "Professional Preferences",
+      "description": "Your career path and preferred environment.",
+      "experienceLabel": "Experience",
+      "notSet": "Not set",
+      "workingStyleLabel": "Working Style",
+      "careerTypeLabel": "Contract"
+    },
+    "visibilitySettings": {
+      "public": "Public (Anyone)",
+      "registered": "Registered (Logged-in members)",
+      "recruiter": "Recruiter (Verified recruiters)",
+      "private": "Private (Only you)",
+      "tooltip": {
+        "public": "Click here to make your profile public",
+        "registered": "Click here to make your profile visible to registered members",
+        "recruiter": "Click here to make your profile visible to recruiters",
+        "private": "Click here to make your profile private"
+      },
+      "label": "Profile Visibility"
+    },
+    "experienceLevels": {
+      "INTERN": "Intern",
+      "JUNIOR": "Junior",
+      "MID": "Mid-level",
+      "SENIOR": "Senior",
+      "LEAD": "Lead",
+      "EXPERT": "Expert"
+    },
+    "workingStyles": {
+      "REMOTE": "Remote",
+      "HYBRID": "Hybrid",
+      "ON_SITE": "On-site"
+    },
+    "careerTypes": {
+      "FULL_TIME": "Full-time",
+      "PART_TIME": "Part-time",
+      "CONTRACT": "Contract"
+    }
+  },
   "contacts": {
     "edit": {
       "title": "Edit Contact",
@@ -451,67 +528,5 @@
     "statusTooltip": "View application health status",
     "appTitleTooltip": "Open the Job Tracker Lite GitHub page",
     "notImplementedTooltip": "This function not implemented yet"
-  },
-  "profile": {
-    "title": "User Profile",
-    "loading": "Loading profile...",
-    "personal": {
-      "title": "Personal Information",
-      "description": "Your basic identification and bio.",
-      "nameLabel": "Name",
-      "namePlaceholder": "Your Name",
-      "titleLabel": "Professional Title",
-      "titlePlaceholder": "Professional Title",
-      "locationLabel": "Location",
-      "locationPlaceholder": "e.g. New York, USA",
-      "bioLabel": "Bio",
-      "bioPlaceholder": "Tell us about yourself...",
-      "publicLabel": "Make Profile Public"
-    },
-    "contact": {
-      "title": "Contact & Links",
-      "description": "How recruiters and peers can find you.",
-      "emailLabel": "Email",
-      "emailPlaceholder": "email@example.com",
-      "linkedinLabel": "LinkedIn",
-      "linkedinPlaceholder": "LinkedIn URL",
-      "githubLabel": "GitHub",
-      "githubPlaceholder": "GitHub URL",
-      "websiteLabel": "Portfolio / Website",
-      "websitePlaceholder": "Portfolio URL"
-    },
-    "skills": {
-      "title": "Core Skills",
-      "description": "Your technical expertise and tools.",
-      "empty": "No skills added yet.",
-      "placeholder": "Add a technical skill...",
-      "addNewElement": "Add new element"
-    },
-    "preferences": {
-      "title": "Professional Preferences",
-      "description": "Your career path and preferred environment.",
-      "experienceLabel": "Experience",
-      "workingStyleLabel": "Working Style",
-      "careerTypeLabel": "Contract",
-      "notSet": "Not set"
-    },
-    "experienceLevels": {
-      "INTERN": "Intern",
-      "JUNIOR": "Junior",
-      "MID": "Mid-level",
-      "SENIOR": "Senior",
-      "LEAD": "Lead",
-      "EXPERT": "Expert"
-    },
-    "workingStyles": {
-      "REMOTE": "Remote",
-      "HYBRID": "Hybrid",
-      "ON_SITE": "On-site"
-    },
-    "careerTypes": {
-      "FULL_TIME": "Full-time",
-      "PART_TIME": "Part-time",
-      "CONTRACT": "Contract"
-    }
   }
 }

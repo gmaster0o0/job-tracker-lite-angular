@@ -16,6 +16,7 @@ import {
   UserProfileDto,
   UpdateUserProfileDto,
 } from '@job-tracker-lite-angular/schemas';
+import { ProfileVisibilitySettingsComponent } from '../visibility-settings/visibility-settings.component';
 
 @Component({
   standalone: true,
@@ -30,6 +31,7 @@ import {
     TranslocoModule,
     CommonModule,
     InlineInputComponent,
+    ProfileVisibilitySettingsComponent,
   ],
   templateUrl: './contact-info.component.html',
 })
@@ -61,6 +63,7 @@ export class ContactInfoComponent {
       webpage: data.webpage,
       contactVisibility: data.contactVisibility,
     };
+
     this.save.emit(updateDto);
   }
 }

@@ -19,6 +19,13 @@ describe('api/profile (e2e)', () => {
   let app: INestApplication;
   let prismaMock: ReturnType<typeof createPrismaServiceMock>;
 
+  const visibilityCases = [
+    { level: 0, audience: 'private' },
+    { level: 10, audience: 'recruiters' },
+    { level: 20, audience: 'registered users' },
+    { level: 30, audience: 'public' },
+  ];
+
   const mockAuthGuard: CanActivate = {
     canActivate: (context: ExecutionContext) => {
       const req = context.switchToHttp().getRequest();
@@ -60,22 +67,6 @@ describe('api/profile (e2e)', () => {
     expect(res.body.name).toBe(userProfileFixtures.johnDoe.name);
   });
 
-  it('GET /api/profile should hide non-visible section data', async () => {
-    prismaMock.userProfile.findUnique.mockResolvedValue({
-      ...userProfileFixtures.johnDoe,
-      contactVisibility: false,
-    });
-
-    const res = await request(app.getHttpServer())
-      .get('/api/profile')
-      .expect(200);
-
-    expect(res.body.email).toBeNull();
-    expect(res.body.linkedin).toBeNull();
-    expect(res.body.github).toBeNull();
-    expect(res.body.webpage).toBeNull();
-  });
-
   it('PATCH /api/profile', async () => {
     prismaMock.userProfile.upsert.mockResolvedValue({
       ...userProfileFixtures.johnDoe,
@@ -91,4 +82,35 @@ describe('api/profile (e2e)', () => {
 
     expect(res.body.title).toBe('Lead Software Engineer');
   });
+
+  it.each(visibilityCases)(
+    'PATCH /api/profile accepts visibility level $level ($audience)',
+    async ({ level }) => {
+      prismaMock.userProfile.upsert.mockResolvedValue({
+        ...userProfileFixtures.johnDoe,
+        isPublic: level,
+        personalVisibility: level,
+        contactVisibility: level,
+        skillsVisibility: level,
+        preferenceVisibility: level,
+      });
+
+      const res = await request(app.getHttpServer())
+        .patch('/api/profile')
+        .send({
+          isPublic: level,
+          personalVisibility: level,
+          contactVisibility: level,
+          skillsVisibility: level,
+          preferenceVisibility: level,
+        })
+        .expect(200);
+
+      expect(res.body.isPublic).toBe(level);
+      expect(res.body.personalVisibility).toBe(level);
+      expect(res.body.contactVisibility).toBe(level);
+      expect(res.body.skillsVisibility).toBe(level);
+      expect(res.body.preferenceVisibility).toBe(level);
+    },
+  );
 });

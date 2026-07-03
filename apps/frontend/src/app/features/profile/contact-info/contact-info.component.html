@@ -93,4 +93,20 @@
       </div>
     </div>
   </div>
+  <div hlmCardFooter class="w-full flex justify-end">
+    <hlm-accordion class="w-full">
+      <hlm-accordion-item [isOpened]="isEditing()">
+        <hlm-accordion-content>
+          <div class="pt-2 flex justify-start">
+            <app-profile-visibility-settings
+              class="w-full block"
+              [(visibilityLevel)]="profile().contactVisibility"
+              [visibilityLabel]="'profile.contact.visibilityLabel' | transloco"
+              (visibilityLevelChange)="updateField('contactVisibility', $event)"
+            />
+          </div>
+        </hlm-accordion-content>
+      </hlm-accordion-item>
+    </hlm-accordion>
+  </div>
 </section>

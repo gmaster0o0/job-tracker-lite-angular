@@ -11,7 +11,7 @@
   </div>
 } @else {
   <div
-    class="flex min-h-[100px] w-full items-start gap-2 border border-input rounded-md bg-secondary px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-ring"
+    class="flex min-h-[100px] w-full items-start gap-2 border border-input rounded-md bg-secondary shadow-sm focus-within:ring-1 focus-within:ring-ring"
   >
     @if (icon()) {
       <ng-icon [name]="icon()" class="h-4 w-4 text-muted-foreground shrink-0" />
@@ -21,7 +21,7 @@
       [(ngModel)]="value"
       (ngModelChange)="onInputChange($event)"
       [placeholder]="placeholder()"
-      class="min-h-[80px] w-full resize-none bg-transparent text-sm outline-none border-none p-0"
+      class="min-h-[100px] w-full resize-none bg-transparent text-sm outline-none border-none"
       rows="4"
     ></textarea>
   </div>
