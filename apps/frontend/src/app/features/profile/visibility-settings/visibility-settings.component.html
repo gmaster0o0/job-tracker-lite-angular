@@ -30,10 +30,11 @@
   <div class="grid grid-cols-3 gap-1.5 w-full h-2">
     @for (step of [10, 20, 30]; track step) {
       <button
-        [hlmTooltip]="getTooltipText(step)"
-        position="bottom"
+        [hlmTooltip]="tooltipDisabled() ? '' : getTooltipText(step)"
+        [position]="tooltipPosition()"
+        type="button"
         data-testid="visibility-step-bar"
-        class="h-full rounded-sm transition-all duration-300 cursor-pointer hover:opacity-80"
+        class="h-full rounded-sm transition-all duration-300 cursor-pointer hover:opacity-80 relative"
         [class.bg-primary]="visibilityLevel() >= step"
         [class.bg-secondary]="visibilityLevel() < step"
         (click)="visibilityLevel.set(step)"

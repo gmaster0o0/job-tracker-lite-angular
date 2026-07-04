@@ -24,6 +24,7 @@ import {
   layoutImports,
 } from '../profile.hlmimports';
 import { HlmSpinner } from '@spartan-ng/helm/spinner';
+import { ProfileVisibilitySettingsComponent } from '../visibility-settings/visibility-settings.component';
 
 export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -38,6 +39,7 @@ export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
     interactiveImports,
     layoutImports,
     HlmSpinner,
+    ProfileVisibilitySettingsComponent,
   ],
   providers: [
     provideIcons({
@@ -58,6 +60,15 @@ export class CareerPreferenceComponent {
   experienceLevel = linkedSignal(() => this.profile().experienceLevel ?? null);
   workingStyle = linkedSignal(() => this.profile().workingStyle ?? null);
   careerType = linkedSignal(() => this.profile().careerType ?? null);
+
+  preferenceVisibility = linkedSignal(
+    () => this.profile().preferenceVisibility ?? null,
+  );
+
+  onVisibilityChange(value: any) {
+    this.preferenceVisibility.set(value);
+    this.debounceAndSave();
+  }
 
   // SaveState
   saveState = signal<SaveState>('idle');
@@ -116,6 +127,7 @@ export class CareerPreferenceComponent {
         experienceLevel: this.experienceLevel(),
         workingStyle: this.workingStyle(),
         careerType: this.careerType(),
+        preferenceVisibility: this.preferenceVisibility(),
       });
       this.saveState.set('saved');
       this.saveStateChanged.emit('saved');

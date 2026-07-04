@@ -371,7 +371,8 @@
       "description": "Your technical expertise and tools.",
       "empty": "No skills added yet.",
       "placeholder": "Add a technical skill...",
-      "addNewElement": "Add new element"
+      "addNewElement": "Add new element",
+      "visibilityLabel": "You can setup who can see your skills here."
     },
     "personal": {
       "title": "Personal Information",
@@ -384,7 +385,7 @@
       "locationPlaceholder": "e.g. New York, USA",
       "bioLabel": "Bio",
       "bioPlaceholder": "Tell us about yourself...",
-      "visibilityLabel": "profile.personal.visibilityLabel",
+      "visibilityLabel": "You can setup who can see your profile here.",
       "publicLabel": "Make Profile Public"
     },
     "contact": {
@@ -398,7 +399,7 @@
       "githubPlaceholder": "GitHub URL",
       "websiteLabel": "Portfolio / Website",
       "websitePlaceholder": "Portfolio URL",
-      "visibilityLabel": "profile.contact.visibilityLabel"
+      "visibilityLabel": "You can setup who can see your contact information here."
     },
     "preferences": {
       "title": "Professional Preferences",
@@ -406,7 +407,8 @@
       "experienceLabel": "Experience",
       "notSet": "Not set",
       "workingStyleLabel": "Working Style",
-      "careerTypeLabel": "Contract"
+      "careerTypeLabel": "Contract",
+      "visibilityLabel": "You can setup who can see your professional preferences here."
     },
     "visibilitySettings": {
       "public": "Public (Anyone)",

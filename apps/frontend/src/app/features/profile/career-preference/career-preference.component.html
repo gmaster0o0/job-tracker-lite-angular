@@ -139,4 +139,15 @@
       </hlm-field>
     </div>
   </div>
+  <!-- career-preference.component.html -->
+  <div hlmCardFooter class="w-full flex justify-end border-t">
+    <div class="flex justify-start w-full">
+      <app-profile-visibility-settings
+        class="w-full block"
+        [visibilityLevel]="preferenceVisibility()"
+        [visibilityLabel]="'profile.contact.visibilityLabel' | transloco"
+        (visibilityLevelChange)="onVisibilityChange($event)"
+      />
+    </div>
+  </div>
 </section>

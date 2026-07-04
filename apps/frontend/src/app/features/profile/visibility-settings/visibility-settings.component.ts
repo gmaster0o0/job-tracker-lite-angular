@@ -25,6 +25,10 @@ export class ProfileVisibilitySettingsComponent {
 
   readonly visibilityLevel = model<number>(0);
   readonly visibilityLabel = input<string>('');
+  readonly tooltipPosition = input<'top' | 'bottom' | 'left' | 'right'>(
+    'bottom',
+  );
+  readonly tooltipDisabled = input<boolean>(false);
   // Computed property to determine the visibility level key for translation based on the current visibility level
   //this solution only for keyextratror
   protected readonly publicLabel = translateSignal(

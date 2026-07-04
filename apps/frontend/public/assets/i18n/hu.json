@@ -368,7 +368,8 @@
       "description": "Technikai szakértelem és eszközök.",
       "empty": "Még nincsenek hozzáadott készségek.",
       "placeholder": "Adjon hozzá technikai készséget...",
-      "addNewElement": "Új elem hozzáadása"
+      "addNewElement": "Új elem hozzáadása",
+      "visibilityLabel": "Itt tudod beállítani, hogy kik láthassák a készségeidet."
     },
     "personal": {
       "title": "Személyes információk",
@@ -381,7 +382,7 @@
       "locationPlaceholder": "pl. Budapest, Magyarország",
       "bioLabel": "Bio",
       "bioPlaceholder": "Meséljen magáról...",
-      "visibilityLabel": "Személyes információk láthatósága",
+      "visibilityLabel": "Itt tudod beállítani, hogy kik láthassák a profilodat.",
       "publicLabel": "Profil publikussá tétele"
     },
     "contact": {
@@ -395,7 +396,7 @@
       "githubPlaceholder": "GitHub URL",
       "websiteLabel": "Portfólió / Weboldal",
       "websitePlaceholder": "Portfólió URL",
-      "visibilityLabel": "Kapcsolat láthatósága"
+      "visibilityLabel": "Itt tudod beállítani, hogy kik láthassák a kapcsolati adataidat."
     },
     "preferences": {
       "title": "Szakmai preferenciák",
@@ -403,7 +404,8 @@
       "experienceLabel": "Tapasztalat",
       "notSet": "Nincs beállítva",
       "workingStyleLabel": "Munkavégzés módja",
-      "careerTypeLabel": "Szerződés típusa"
+      "careerTypeLabel": "Szerződés típusa",
+      "visibilityLabel": "Itt tudod beállítani, hogy kik láthassák a szakmai preferenciáidat."
     },
     "visibilitySettings": {
       "public": "Nyilvános (Bárki)",

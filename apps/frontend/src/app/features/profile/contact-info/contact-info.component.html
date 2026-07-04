@@ -93,9 +93,9 @@
       </div>
     </div>
   </div>
-  <div hlmCardFooter class="w-full flex justify-end">
+  <div hlmCardFooter class="w-full flex justify-end border-t">
     @if (isEditing()) {
-      <div class="pt-2 flex justify-start w-full">
+      <div class="flex justify-start w-full">
         <app-profile-visibility-settings
           class="w-full block"
           [(visibilityLevel)]="profile().contactVisibility"

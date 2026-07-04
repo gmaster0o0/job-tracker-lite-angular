@@ -153,11 +153,11 @@
 
   <div hlmCardFooter class="w-full flex justify-end">
     @if (isDirty()) {
-      <div class="pt-2 flex justify-start w-full">
+      <div class="flex justify-start w-full">
         <app-profile-visibility-settings
           class="w-full block"
-          [(visibilityLevel)]="profile().contactVisibility"
-          [visibilityLabel]="'profile.contact.visibilityLabel' | transloco"
+          [(visibilityLevel)]="profile().skillsVisibility"
+          [visibilityLabel]="'profile.skills.visibilityLabel' | transloco"
           (visibilityLevelChange)="onVisibilityChange($event)"
         />
       </div>
