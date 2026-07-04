@@ -46,8 +46,6 @@ describe('ProfileComponent', () => {
   it('should update name on save', async () => {
     await harness.clickEditPersonal();
     await harness.setName('Jane Doe');
-
-    await fixture.whenStable();
     await harness.savePersonal();
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
@@ -60,8 +58,6 @@ describe('ProfileComponent', () => {
   it('should update bio on save', async () => {
     await harness.clickEditPersonal();
     await harness.setBio('Short bio\nwith two lines');
-
-    await fixture.whenStable();
     await harness.savePersonal();
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
@@ -74,8 +70,6 @@ describe('ProfileComponent', () => {
   it('should update contact info on save', async () => {
     await harness.clickEditContact();
     await harness.setEmail('new-email@example.com');
-
-    await fixture.whenStable();
     await harness.saveContact();
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(

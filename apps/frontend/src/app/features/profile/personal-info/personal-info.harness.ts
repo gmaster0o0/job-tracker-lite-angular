@@ -1,6 +1,9 @@
 import { ComponentHarness } from '@angular/cdk/testing';
 import { InlineInputHarness } from '../../../shared/inline-edit/input/input.harness';
 import { InlineTextareaHarness } from '../../../shared/inline-edit/textarea/textarea.harness';
+import { EditButtonHarness } from '../../../shared/edit-button/edit-button.harness';
+import { CancelButtonHarness } from '../../../shared/cancel-button/cancel-button.harness';
+import { ProfileVisibilitySettingsHarness } from '../visibility-settings/visibility-settings.harness';
 
 export class PersonalInfoHarness extends ComponentHarness {
   static hostSelector = 'app-personal-info';
@@ -17,9 +20,13 @@ export class PersonalInfoHarness extends ComponentHarness {
   private readonly bioTextareaLocator = this.locatorFor(
     InlineTextareaHarness.with({ id: 'bio' }),
   );
-  private readonly buttonsLocator = this.locatorForAll('button');
-  private readonly editButtonLocator = this.locatorFor(
-    'app-edit-button button',
+  private readonly editButtonLocator = this.locatorFor(EditButtonHarness);
+  private readonly cancelButtonLocator = this.locatorFor(CancelButtonHarness);
+  private readonly saveButtonLocator = this.locatorFor(
+    'app-save-button button[type="submit"]',
+  );
+  private readonly visibilitySettingsLocator = this.locatorForOptional(
+    ProfileVisibilitySettingsHarness,
   );
 
   async getName(): Promise<string> {
@@ -64,39 +71,30 @@ export class PersonalInfoHarness extends ComponentHarness {
 
   async isEditDisabled(): Promise<boolean> {
     const button = await this.editButtonLocator();
-    return button.getProperty('disabled');
+    return button.isDisabled();
   }
 
   async clickEdit(): Promise<void> {
-    const buttons = await this.buttonsLocator();
-    for (const button of buttons) {
-      const text = await button.text();
-      if (text.toLowerCase().includes('edit')) {
-        return button.click();
-      }
-    }
-    throw new Error('Edit button not found');
+    const button = await this.editButtonLocator();
+    await button.click();
   }
 
   async clickSave(): Promise<void> {
-    const buttons = await this.buttonsLocator();
-    for (const button of buttons) {
-      const text = await button.text();
-      if (text.toLowerCase().includes('save')) {
-        return button.click();
-      }
-    }
-    throw new Error('Save button not found');
+    const button = await this.saveButtonLocator();
+    await button.click();
   }
 
   async clickCancel(): Promise<void> {
-    const buttons = await this.buttonsLocator();
-    for (const button of buttons) {
-      const text = await button.text();
-      if (text.toLowerCase().includes('cancel')) {
-        return button.click();
-      }
+    const button = await this.cancelButtonLocator();
+    await button.click();
+  }
+
+  async clickVisibilityStep(index: number): Promise<void> {
+    const visibility = await this.visibilitySettingsLocator();
+    if (!visibility) {
+      throw new Error('Visibility settings not found');
     }
-    throw new Error('Cancel button not found');
+
+    await visibility.clickStep(index);
   }
 }

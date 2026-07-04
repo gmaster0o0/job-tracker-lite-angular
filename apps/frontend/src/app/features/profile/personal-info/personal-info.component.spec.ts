@@ -5,6 +5,7 @@ import { PersonalInfoHarness } from './personal-info.harness';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { userProfileFixtures } from '@job-tracker-lite-angular/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { VisibilityLevel } from '../visibility-settings/visibility-settings.component';
 
 describe('PersonalInfoComponent', () => {
   let harness: PersonalInfoHarness;
@@ -59,6 +60,7 @@ describe('PersonalInfoComponent', () => {
     await harness.setTitle('Senior Engineer');
     await harness.setCity('New York');
     await harness.setBio('New bio');
+    await harness.clickVisibilityStep(0);
 
     await harness.clickSave();
 
@@ -68,6 +70,7 @@ describe('PersonalInfoComponent', () => {
         title: 'Senior Engineer',
         city: 'New York',
         bio: 'New bio',
+        personalVisibility: VisibilityLevel.RECRUITER,
       }),
     );
   });

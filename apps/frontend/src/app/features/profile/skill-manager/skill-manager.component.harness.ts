@@ -1,28 +1,26 @@
 import { ComponentHarness } from '@angular/cdk/testing';
+import { ProfileVisibilitySettingsHarness } from '../visibility-settings/visibility-settings.harness';
 
 export class SkillManagerHarness extends ComponentHarness {
   static hostSelector = 'app-skill-manager';
 
   private readonly inputLocator = this.locatorFor('input#newSkill');
-  private readonly buttonsLocator = this.locatorForAll('button');
   private readonly badgesLocator = this.locatorForAll('hlm-badge');
   private readonly removeButtonsLocator = this.locatorForAll(
     'hlm-badge button[aria-label]',
   );
-
-  private async findButtonByText(
-    needle: string,
-  ): Promise<import('@angular/cdk/testing').TestElement | null> {
-    const buttons = await this.buttonsLocator();
-    for (const button of buttons) {
-      const text = (await button.text()).toLowerCase();
-      if (text.includes(needle.toLowerCase())) {
-        return button;
-      }
-    }
-
-    return null;
-  }
+  private readonly saveButtonLocator = this.locatorForOptional(
+    '[data-testid="save-skills-btn"]',
+  );
+  private readonly discardButtonLocator = this.locatorForOptional(
+    '[data-testid="discard-skills-btn"]',
+  );
+  private readonly addNewSkillButtonLocator = this.locatorForOptional(
+    '[data-testid="add-new-skill-btn"]',
+  );
+  private readonly visibilitySettingsLocator = this.locatorForOptional(
+    ProfileVisibilitySettingsHarness,
+  );
 
   async enterSkill(value: string): Promise<void> {
     const input = await this.inputLocator();
@@ -50,35 +48,25 @@ export class SkillManagerHarness extends ComponentHarness {
   }
 
   async clickAddNewElement(): Promise<void> {
-    // We look for the button that doesn't have brnComboboxItem (which are the suggestions)
-    // and is inside the combobox content. Or simpler, search for the text.
-    const buttons = await this.buttonsLocator();
-    for (const button of buttons) {
-      const text = await button.text();
-      // The text is localized but we can check if it contains the plus icon or specific classes
-      // or just use the findButtonByText helper if it's broad enough.
-      // But let's look for a button with the specific class "hover:bg-accent" that isn't a suggestion.
-      if (
-        text.includes('Add new element') ||
-        text.includes('elem hozzáadása')
-      ) {
-        await button.click();
-        return;
-      }
+    const button = await this.addNewSkillButtonLocator();
+    if (button) {
+      await button.click();
+      return;
     }
+
     throw new Error('Add new element button not found');
   }
 
   async hasSaveButton(): Promise<boolean> {
-    return !!(await this.findButtonByText('save'));
+    return !!(await this.saveButtonLocator());
   }
 
   async hasDiscardButton(): Promise<boolean> {
-    return !!(await this.findButtonByText('discard'));
+    return !!(await this.discardButtonLocator());
   }
 
   async clickSave(): Promise<void> {
-    const saveButton = await this.findButtonByText('save');
+    const saveButton = await this.saveButtonLocator();
     if (!saveButton) {
       throw new Error('Save button not found');
     }
@@ -86,10 +74,19 @@ export class SkillManagerHarness extends ComponentHarness {
   }
 
   async clickDiscard(): Promise<void> {
-    const discardButton = await this.findButtonByText('discard');
+    const discardButton = await this.discardButtonLocator();
     if (!discardButton) {
       throw new Error('Discard button not found');
     }
     await discardButton.click();
+  }
+
+  async clickVisibilityStep(index: number): Promise<void> {
+    const visibility = await this.visibilitySettingsLocator();
+    if (!visibility) {
+      throw new Error('Visibility settings not found');
+    }
+
+    await visibility.clickStep(index);
   }
 }

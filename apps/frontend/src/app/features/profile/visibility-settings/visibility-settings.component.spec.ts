@@ -27,7 +27,6 @@ describe('ProfileVisibilitySettingsComponent', () => {
       fixture,
       ProfileVisibilitySettingsHarness,
     );
-    await fixture.whenStable();
   });
 
   it('should initialize with default private visibility', async () => {
