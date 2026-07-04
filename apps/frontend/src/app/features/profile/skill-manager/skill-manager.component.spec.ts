@@ -7,6 +7,7 @@ import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-dat
 import { userProfileFixtures } from '@job-tracker-lite-angular/testing';
 import { SkillManagerComponent } from './skill-manager.component';
 import { SkillManagerHarness } from './skill-manager.component.harness';
+import { VisibilityLevel } from '../visibility-settings/visibility-settings.component';
 
 @Component({
   standalone: true,
@@ -75,9 +76,10 @@ describe('SkillManagerComponent', () => {
   });
 
   it('should save modified skills', async () => {
-    await harness.enterSkill('Playwright');
+    await harness.enterSkill('Playwright Plus');
 
     await harness.clickAddNewElement();
+    await harness.clickVisibilityStep(0);
 
     const saveButton = await harness.hasSaveButton();
     expect(saveButton).toBe(true);
@@ -86,7 +88,8 @@ describe('SkillManagerComponent', () => {
 
     expect(updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({
-        coreSkills: expect.arrayContaining(['Playwright']),
+        coreSkills: expect.arrayContaining(['Playwright Plus']),
+        skillsVisibility: VisibilityLevel.RECRUITER,
       }),
     );
   });

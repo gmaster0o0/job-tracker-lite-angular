@@ -17,6 +17,8 @@ export const careerPreferenceTypeSchema = z.enum([
   'CONTRACT',
 ]);
 
+const visibilityLevelSchema = z.int().nonnegative().multipleOf(10);
+
 export const userProfileSchema = z.object({
   id: z.string().optional(),
   userId: z.string(),
@@ -32,11 +34,16 @@ export const userProfileSchema = z.object({
   experienceLevel: experienceLevelSchema.nullable().optional(),
   workingStyle: workingStyleSchema.nullable().optional(),
   careerType: careerPreferenceTypeSchema.nullable().optional(),
-  isPublic: z.boolean().default(false),
-  personalVisibility: z.boolean().default(true),
-  contactVisibility: z.boolean().default(true),
-  skillsVisibility: z.boolean().default(true),
-  preferenceVisibility: z.boolean().default(true),
+  /**
+   * @deprecated - isPublic is deprecated,
+   * use personalVisibility, contactVisibility, skillsVisibility, preferenceVisibility together.
+   * This field will be removed in a future version.
+   */
+  isPublic: visibilityLevelSchema.default(0),
+  personalVisibility: visibilityLevelSchema.default(0),
+  contactVisibility: visibilityLevelSchema.default(0),
+  skillsVisibility: visibilityLevelSchema.default(0),
+  preferenceVisibility: visibilityLevelSchema.default(0),
 });
 
 export const updateUserProfileSchema = userProfileSchema

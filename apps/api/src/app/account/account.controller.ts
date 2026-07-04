@@ -6,8 +6,8 @@ import {
 } from '@job-tracker-lite-angular/schemas';
 import { ZodBody } from '@job-tracker-lite-angular/core-utils';
 import {
+  AllowAnonymous,
   AuthGuard,
-  Public,
   Session,
   type UserSession,
 } from '@thallesp/nestjs-better-auth';
@@ -40,7 +40,7 @@ export class AccountController {
   }
 
   @Get('verify-email-change')
-  @Public()
+  @AllowAnonymous()
   async verifyEmailChange(
     @Query('token') token: string,
     @Res() response: Response,
@@ -50,7 +50,7 @@ export class AccountController {
   }
 
   @Get('restore-email')
-  @Public()
+  @AllowAnonymous()
   async restoreEmail(
     @Query('token') token: string,
     @Res() response: Response,

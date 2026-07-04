@@ -24,6 +24,7 @@ import {
   layoutImports,
 } from '../profile.hlmimports';
 import { HlmSpinner } from '@spartan-ng/helm/spinner';
+import { ProfileVisibilitySettingsComponent } from '../visibility-settings/visibility-settings.component';
 
 export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -38,6 +39,7 @@ export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
     interactiveImports,
     layoutImports,
     HlmSpinner,
+    ProfileVisibilitySettingsComponent,
   ],
   providers: [
     provideIcons({
@@ -59,9 +61,43 @@ export class CareerPreferenceComponent {
   workingStyle = linkedSignal(() => this.profile().workingStyle ?? null);
   careerType = linkedSignal(() => this.profile().careerType ?? null);
 
+  preferenceVisibility = linkedSignal(
+    () => this.profile().preferenceVisibility ?? null,
+  );
+
+  onVisibilityChange(value: number) {
+    this.preferenceVisibility.set(value);
+    this.markActive();
+    this.debounceAndSave();
+  }
+
   // SaveState
   saveState = signal<SaveState>('idle');
   saveStateChanged = output<SaveState>();
+
+  // Visibility gadget display: appears immediately on any interaction,
+  // and only starts to disappear after a while if no new interaction occurs
+  // (in idle/saved state), with hysteresis to prevent flickering.
+  showVisibilityGadget = signal(false);
+  private readonly hideDelayMs = 4000;
+  private hideTimer: ReturnType<typeof setTimeout> | null = null;
+
+  private markActive() {
+    if (this.hideTimer) {
+      clearTimeout(this.hideTimer);
+      this.hideTimer = null;
+    }
+    this.showVisibilityGadget.set(true);
+  }
+
+  private scheduleHide() {
+    if (this.hideTimer) {
+      clearTimeout(this.hideTimer);
+    }
+    this.hideTimer = setTimeout(() => {
+      this.showVisibilityGadget.set(false);
+    }, this.hideDelayMs);
+  }
 
   // Enums
   experienceLevels: ExperienceLevel[] = [
@@ -83,16 +119,19 @@ export class CareerPreferenceComponent {
 
   onExperienceLevelChange(value: ExperienceLevel | null | undefined) {
     this.experienceLevel.set(value ?? null);
+    this.markActive();
     this.debounceAndSave();
   }
 
   onWorkingStyleChange(value: WorkingStyle | null | undefined) {
     this.workingStyle.set(value ?? null);
+    this.markActive();
     this.debounceAndSave();
   }
 
   onCareerTypeChange(value: CareerPreferenceType | null | undefined) {
     this.careerType.set(value ?? null);
+    this.markActive();
     this.debounceAndSave();
   }
 
@@ -116,21 +155,26 @@ export class CareerPreferenceComponent {
         experienceLevel: this.experienceLevel(),
         workingStyle: this.workingStyle(),
         careerType: this.careerType(),
+        preferenceVisibility: this.preferenceVisibility(),
       });
       this.saveState.set('saved');
       this.saveStateChanged.emit('saved');
 
-      // Reset to idle after 2s
+      // Reset to idle after 2s, and only now start the countdown to hide
+      // the visibility gadget (a successful save ends the "active" cycle)
       setTimeout(() => {
         this.saveState.set('idle');
         this.saveStateChanged.emit('idle');
+        this.scheduleHide();
       }, 2000);
     } catch (error) {
       console.error('Failed to save preferences', error);
       this.saveState.set('error');
       this.saveStateChanged.emit('error');
 
-      // Reset to idle after 2s
+      // In case of an error, we intentionally do NOT call scheduleHide(): as long
+      // as we are in an error state, the widget remains visible so the user can
+      // see what was set and try again.
       setTimeout(() => {
         this.saveState.set('idle');
         this.saveStateChanged.emit('idle');

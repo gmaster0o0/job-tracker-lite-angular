@@ -38,7 +38,7 @@
   <div hlmCardContent>
     <div class="grid gap-6 sm:grid-cols-3">
       <!-- Experience Level-->
-      <hlm-field class="grid gap-2">
+      <hlm-field>
         <label hlmFieldLabel for="experience">{{
           'profile.preferences.experienceLabel' | transloco
         }}</label>
@@ -71,7 +71,7 @@
         </hlm-select>
       </hlm-field>
       <!-- Working Style -->
-      <hlm-field class="grid gap-2">
+      <hlm-field>
         <label hlmFieldLabel for="workingStyle">{{
           'profile.preferences.workingStyleLabel' | transloco
         }}</label>
@@ -103,7 +103,7 @@
         </hlm-select>
       </hlm-field>
       <!-- Career Type -->
-      <hlm-field class="grid gap-2">
+      <hlm-field>
         <label hlmFieldLabel for="careerType">
           {{ 'profile.preferences.careerTypeLabel' | transloco }}</label
         >
@@ -137,6 +137,18 @@
           </hlm-select-content>
         </hlm-select>
       </hlm-field>
+    </div>
+  </div>
+  <!-- career-preference.component.html -->
+  <div hlmCardFooter class="w-full flex justify-end border-t">
+    <div class="flex justify-start w-full">
+      <app-profile-visibility-settings
+        class="w-full block"
+        [visibilityLevel]="preferenceVisibility()"
+        [visibilityHint]="'profile.preferences.visibilityLabel' | transloco"
+        [interactive]="showVisibilityGadget()"
+        (visibilityLevelChange)="onVisibilityChange($event)"
+      />
     </div>
   </div>
 </section>

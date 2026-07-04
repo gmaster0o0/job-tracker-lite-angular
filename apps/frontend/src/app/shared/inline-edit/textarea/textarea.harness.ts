@@ -22,24 +22,24 @@ export class InlineTextareaHarness extends ComponentHarness {
     );
   }
 
-  protected getReadOnlyText = this.locatorForOptional(
-    'span.whitespace-pre-wrap',
-  );
   protected getTextareaElement = this.locatorForOptional('textarea');
   protected getIcon = this.locatorForOptional('ng-icon');
+  protected getCharactersLeftElement = this.locatorForOptional(
+    '[data-testid="characters-left"]',
+  );
 
   async isEditing(): Promise<boolean> {
-    return (await this.getTextareaElement()) !== null;
+    const textarea = await this.getTextareaElement();
+    if (!textarea) {
+      return false;
+    }
+
+    return (await textarea.getAttribute('readonly')) === null;
   }
 
   async getValue(): Promise<string> {
-    if (await this.isEditing()) {
-      const textarea = await this.getTextareaElement();
-      return (await textarea?.getProperty('value')) ?? '';
-    }
-
-    const span = await this.getReadOnlyText();
-    return (await span?.text()) ?? '';
+    const textarea = await this.getTextareaElement();
+    return (await textarea?.getProperty('value')) ?? '';
   }
 
   async setValue(value: string): Promise<void> {
@@ -63,5 +63,17 @@ export class InlineTextareaHarness extends ComponentHarness {
 
   async hasIcon(): Promise<boolean> {
     return (await this.getIcon()) !== null;
+  }
+
+  async getMaxLength(): Promise<number | null> {
+    const textarea = await this.getTextareaElement();
+    if (!textarea) return null;
+    const maxLength = await textarea.getAttribute('maxlength');
+    return maxLength ? parseInt(maxLength, 10) : null;
+  }
+
+  async getCharactersLeftText(): Promise<string | null> {
+    const element = await this.getCharactersLeftElement();
+    return element ? await element.text() : null;
   }
 }

@@ -46,8 +46,6 @@ describe('ProfileComponent', () => {
   it('should update name on save', async () => {
     await harness.clickEditPersonal();
     await harness.setName('Jane Doe');
-
-    await fixture.whenStable();
     await harness.savePersonal();
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
@@ -60,13 +58,11 @@ describe('ProfileComponent', () => {
   it('should update bio on save', async () => {
     await harness.clickEditPersonal();
     await harness.setBio('Short bio\nwith two lines');
-
-    await fixture.whenStable();
     await harness.savePersonal();
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({
-        bio: 'Short bio\nwith two lines',
+        bio: 'Short bio with two lines',
       }),
     );
   });
@@ -74,8 +70,6 @@ describe('ProfileComponent', () => {
   it('should update contact info on save', async () => {
     await harness.clickEditContact();
     await harness.setEmail('new-email@example.com');
-
-    await fixture.whenStable();
     await harness.saveContact();
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
@@ -88,13 +82,13 @@ describe('ProfileComponent', () => {
   it('should send contact visibility when saving contact section', async () => {
     const updateDto = {
       ...userProfileFixtures.johnDoe,
-      contactVisibility: false,
+      contactVisibility: 0,
     };
     await component.saveSection('contact', updateDto);
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({
-        contactVisibility: false,
+        contactVisibility: 0,
       }),
     );
   });

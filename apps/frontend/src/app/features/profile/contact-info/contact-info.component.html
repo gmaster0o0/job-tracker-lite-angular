@@ -32,7 +32,7 @@
   </div>
   <div hlmCardContent>
     <div class="grid gap-4 sm:grid-cols-2">
-      <div class="grid gap-2">
+      <div hlmField>
         <label hlmLabel for="email">{{
           'profile.contact.emailLabel' | transloco
         }}</label>
@@ -47,7 +47,7 @@
         />
       </div>
 
-      <div class="grid gap-2">
+      <div hlmField>
         <label hlmLabel for="linkedin">{{
           'profile.contact.linkedinLabel' | transloco
         }}</label>
@@ -62,7 +62,7 @@
         />
       </div>
 
-      <div class="grid gap-2">
+      <div hlmField>
         <label hlmLabel for="github">{{
           'profile.contact.githubLabel' | transloco
         }}</label>
@@ -77,7 +77,7 @@
         />
       </div>
 
-      <div class="grid gap-2">
+      <div hlmField>
         <label hlmLabel for="website">{{
           'profile.contact.websiteLabel' | transloco
         }}</label>
@@ -91,6 +91,17 @@
           (valueChange)="updateField('webpage', $event)"
         />
       </div>
+    </div>
+  </div>
+  <div hlmCardFooter class="w-full flex justify-end border-t">
+    <div class="flex justify-start w-full">
+      <app-profile-visibility-settings
+        class="w-full block"
+        [(visibilityLevel)]="profile().contactVisibility"
+        [visibilityHint]="'profile.contact.visibilityLabel' | transloco"
+        [interactive]="isEditing()"
+        (visibilityLevelChange)="updateField('contactVisibility', $event)"
+      />
     </div>
   </div>
 </section>

@@ -15,6 +15,7 @@
         <button
           hlmBtn
           variant="outline"
+          data-testid="discard-skills-btn"
           (click)="discardChanges()"
           [disabled]="disabled() || saveState() === 'saving'"
         >
@@ -22,6 +23,7 @@
         </button>
         <button
           hlmBtn
+          data-testid="save-skills-btn"
           (click)="saveChanges()"
           [disabled]="disabled() || saveState() === 'saving'"
         >
@@ -55,15 +57,15 @@
   <div hlmCardContent>
     <div class="grid gap-4 min-h-[120px]">
       <div class="flex flex-wrap items-start gap-2 content-start">
-        @for (skill of draftSkills(); track skill) {
+        @for (skill of displaySkills(); track skill.value) {
           <hlm-badge variant="secondary" class="gap-1 px-3 py-1">
-            <span>{{ skill }}</span>
+            <span>{{ skill.label }}</span>
             <button
               type="button"
               class="ml-1 font-semibold leading-none text-muted-foreground transition-colors hover:text-destructive"
               aria-label="{{ 'common.remove' | transloco }}"
               [disabled]="disabled() || saveState() === 'saving'"
-              (click)="removeSkill(skill)"
+              (click)="removeSkill(skill.value)"
             >
               &times;
             </button>
@@ -75,7 +77,7 @@
         }
       </div>
 
-      <div class="grid gap-2">
+      <div hlmField>
         <label hlmLabel for="newSkill">
           {{ 'profile.skills.placeholder' | transloco }}
         </label>
@@ -114,14 +116,17 @@
                   {{ 'jobs.menu.noResults' | transloco }}
                 </p>
                 <div brnComboboxList>
-                  @for (suggestion of filteredSuggestions(); track suggestion) {
+                  @for (
+                    suggestion of filteredSuggestions();
+                    track suggestion.value
+                  ) {
                     <button
                       type="button"
                       brnComboboxItem
-                      [value]="suggestion"
+                      [value]="suggestion.value"
                       class="w-full rounded-sm px-2 py-1 text-left text-sm hover:bg-accent"
                     >
-                      {{ suggestion }}
+                      {{ suggestion.label }}
                     </button>
                   }
 
@@ -129,6 +134,7 @@
                     <div class="my-1 border-t"></div>
                     <button
                       type="button"
+                      data-testid="add-new-skill-btn"
                       class="flex w-full items-center gap-2 rounded-sm px-2 py-1 text-left text-sm hover:bg-accent"
                       (click)="addSkillFromInput()"
                     >
@@ -148,6 +154,18 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div hlmCardFooter class="w-full flex justify-end">
+    <div class="flex justify-start w-full">
+      <app-profile-visibility-settings
+        class="w-full block"
+        [(visibilityLevel)]="profile().skillsVisibility"
+        [visibilityHint]="'profile.skills.visibilityLabel' | transloco"
+        (visibilityLevelChange)="onVisibilityChange($event)"
+        [interactive]="isDirty()"
+      />
     </div>
   </div>
 </section>

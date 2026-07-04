@@ -1,4 +1,4 @@
-import { Component, input, model } from '@angular/core';
+import { Component, input, model, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIconComponent } from '@ng-icons/core';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
@@ -42,6 +42,12 @@ export class InlineInputComponent {
    * Handle changes to the input value. This method is called whenever the user types in the input field.
    * @param newValue The new value entered by the user.
    */
+  displayValue = computed(() => {
+    return this.isEditing()
+      ? (this.value() ?? '')
+      : (this.fallbackValue() ?? '');
+  });
+
   onInputChange(newValue: string): void {
     const processedValue = this.autoTrim()
       ? newValue.replace(/\s+/g, ' ').trim()

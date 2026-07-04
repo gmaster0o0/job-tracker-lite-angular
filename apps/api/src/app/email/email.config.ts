@@ -1,8 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { MailerOptions } from '@nestjs-modules/mailer';
 
-export type EmailProviderName = 'mailtrap';
-
 interface MailtrapConfig {
   host: string;
   port: number;
@@ -12,7 +10,7 @@ interface MailtrapConfig {
 }
 
 export interface EmailConfig {
-  provider: EmailProviderName;
+  provider: string;
   from: string;
   mailtrap: MailtrapConfig;
 }
@@ -30,8 +28,7 @@ function getRequiredValue(configService: ConfigService, key: string): string {
 export function getEmailConfig(configService: ConfigService): EmailConfig {
   return {
     provider:
-      (configService.get<string>('EMAIL_PROVIDER') as EmailProviderName) ??
-      'mailtrap',
+      (configService.get<string>('EMAIL_PROVIDER') as string) ?? 'mailtrap',
     from: configService.get<string>('SMTP_FROM') ?? 'no-reply@example.com',
     mailtrap: {
       host: getRequiredValue(configService, 'SMTP_HOST'),

@@ -10,15 +10,20 @@
   },
   "common": {
     "back": "Vissza",
+    "textarea": {
+      "charactersLeft": "karakter maradt"
+    },
     "cancel": "Mégse",
-    "discard": "Elvetés",
     "saveChanges": "Mentés",
     "create": "Létrehozás",
-    "edit": "Szerkesztés",
-    "save": "Mentés",
-    "add": "Hozzáadás",
-    "remove": "Eltávolítás",
     "logout": "Kijelentkezés",
+    "discard": "Elvetés",
+    "save": "Mentés",
+    "saving": "Mentés...",
+    "saved": "Mentve",
+    "error": "Hiba",
+    "remove": "Eltávolítás",
+    "edit": "Szerkesztés",
     "overview": "Áttekintés",
     "contacts": "Kapcsolatok",
     "notes": "Jegyzetek",
@@ -28,9 +33,7 @@
     "about": "Az alkalmazásról",
     "login": "Bejelentkezés",
     "register": "Regisztráció",
-    "saving": "Mentés...",
-    "saved": "Mentve",
-    "error": "Hiba"
+    "add": "Hozzáadás"
   },
   "jobs": {
     "progression": {
@@ -360,6 +363,85 @@
       }
     }
   },
+  "profile": {
+    "title": "Felhasználói profil",
+    "loading": "Profil betöltése...",
+    "skills": {
+      "title": "Főbb készségek",
+      "description": "Technikai szakértelem és eszközök.",
+      "empty": "Még nincsenek hozzáadott készségek.",
+      "placeholder": "Adjon hozzá technikai készséget...",
+      "addNewElement": "Új elem hozzáadása",
+      "visibilityLabel": "Itt tudod beállítani, hogy kik láthassák a készségeidet."
+    },
+    "personal": {
+      "title": "Személyes információk",
+      "description": "Alapvető azonosítás és bemutatkozás.",
+      "nameLabel": "Név",
+      "namePlaceholder": "Az Ön neve",
+      "titleLabel": "Szakmai megnevezés",
+      "titlePlaceholder": "Szakmai megnevezés",
+      "locationLabel": "Helyszín",
+      "locationPlaceholder": "pl. Budapest, Magyarország",
+      "bioLabel": "Rövid bemutatkozás",
+      "bioPlaceholder": "Meséljen magáról...",
+      "visibilityLabel": "Itt tudod beállítani, hogy kik láthassák a profilodat.",
+      "publicLabel": "Profil publikussá tétele"
+    },
+    "contact": {
+      "title": "Kapcsolat és linkek",
+      "description": "Hogyan találhatják meg a toborzók és munkatársak.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "email@pelda.hu...",
+      "linkedinLabel": "LinkedIn",
+      "linkedinPlaceholder": "LinkedIn URL...",
+      "githubLabel": "GitHub",
+      "githubPlaceholder": "GitHub URL...",
+      "websiteLabel": "Portfólió / Weboldal",
+      "websitePlaceholder": "Portfólió URL...",
+      "visibilityLabel": "Itt tudod beállítani, hogy kik láthassák a kapcsolati adataidat."
+    },
+    "preferences": {
+      "title": "Szakmai preferenciák",
+      "description": "Karrierút és preferált munkakörnyezet.",
+      "experienceLabel": "Tapasztalat",
+      "notSet": "Nincs beállítva",
+      "workingStyleLabel": "Munkavégzés módja",
+      "careerTypeLabel": "Szerződés típusa",
+      "visibilityLabel": "Itt tudod beállítani, hogy kik láthassák a szakmai preferenciáidat."
+    },
+    "visibilitySettings": {
+      "public": "Nyilvános (Bárki)",
+      "registered": "Regisztrált (Bejelentkezett tagok)",
+      "recruiter": "Toborzó (Ellenőrzött toborzók)",
+      "private": "Privát (Csak Ön)",
+      "tooltip": {
+        "public": "Kattintson ide, ha nyilvánossá szeretné tenni a profilját",
+        "registered": "Kattintson ide, ha a profilját csak regisztrált tagok számára szeretné láthatóvá tenni",
+        "recruiter": "Kattintson ide, ha a profilját csak toborzók számára szeretné láthatóvá tenni",
+        "private": "Kattintson ide, ha a profilját priváttá szeretné tenni"
+      },
+      "label": "Profil láthatósága"
+    },
+    "experienceLevels": {
+      "INTERN": "Gyakornok",
+      "JUNIOR": "Junior",
+      "MID": "Középszintű",
+      "SENIOR": "Szenior",
+      "LEAD": "Vezető",
+      "EXPERT": "Szakértő"
+    },
+    "workingStyles": {
+      "REMOTE": "Távmunka",
+      "HYBRID": "Hibrid",
+      "ON_SITE": "Helyszíni"
+    },
+    "careerTypes": {
+      "FULL_TIME": "Teljes munkaidő",
+      "PART_TIME": "Részmunkaidő",
+      "CONTRACT": "Szerződéses"
+    }
+  },
   "contacts": {
     "edit": {
       "title": "Kapcsolat szerkesztése",
@@ -445,67 +527,5 @@
     "statusTooltip": "Az alkalmazás állapotának megtekintése",
     "appTitleTooltip": "Nyissa meg a Job Tracker Lite GitHub oldalát",
     "notImplementedTooltip": "Ez a funkció még nincs megvalósítva"
-  },
-  "profile": {
-    "title": "Felhasználói profil",
-    "loading": "Profil betöltése...",
-    "personal": {
-      "title": "Személyes információk",
-      "description": "Alapvető azonosítás és bemutatkozás.",
-      "nameLabel": "Név",
-      "namePlaceholder": "Az Ön neve",
-      "titleLabel": "Szakmai megnevezés",
-      "titlePlaceholder": "Szakmai megnevezés",
-      "locationLabel": "Helyszín",
-      "locationPlaceholder": "pl. Budapest, Magyarország",
-      "bioLabel": "Bio",
-      "bioPlaceholder": "Meséljen magáról...",
-      "publicLabel": "Profil publikussá tétele"
-    },
-    "contact": {
-      "title": "Kapcsolat és linkek",
-      "description": "Hogyan találhatják meg a toborzók és munkatársak.",
-      "emailLabel": "Email",
-      "emailPlaceholder": "email@pelda.hu",
-      "linkedinLabel": "LinkedIn",
-      "linkedinPlaceholder": "LinkedIn URL",
-      "githubLabel": "GitHub",
-      "githubPlaceholder": "GitHub URL",
-      "websiteLabel": "Portfólió / Weboldal",
-      "websitePlaceholder": "Portfólió URL"
-    },
-    "skills": {
-      "title": "Főbb készségek",
-      "description": "Technikai szakértelem és eszközök.",
-      "empty": "Még nincsenek hozzáadott készségek.",
-      "placeholder": "Adjon hozzá technikai készséget...",
-      "addNewElement": "Új elem hozzáadása"
-    },
-    "preferences": {
-      "title": "Szakmai preferenciák",
-      "description": "Karrierút és preferált munkakörnyezet.",
-      "experienceLabel": "Tapasztalat",
-      "workingStyleLabel": "Munkavégzés módja",
-      "careerTypeLabel": "Szerződés típusa",
-      "notSet": "Nincs beállítva"
-    },
-    "experienceLevels": {
-      "INTERN": "Gyakornok",
-      "JUNIOR": "Junior",
-      "MID": "Középszintű",
-      "SENIOR": "Szenior",
-      "LEAD": "Vezető",
-      "EXPERT": "Szakértő"
-    },
-    "workingStyles": {
-      "REMOTE": "Távmunka",
-      "HYBRID": "Hibrid",
-      "ON_SITE": "Helyszíni"
-    },
-    "careerTypes": {
-      "FULL_TIME": "Teljes munkaidő",
-      "PART_TIME": "Részmunkaidő",
-      "CONTRACT": "Szerződéses"
-    }
   }
 }

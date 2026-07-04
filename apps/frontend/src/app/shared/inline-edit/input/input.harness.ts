@@ -22,21 +22,22 @@ export class InlineInputHarness extends ComponentHarness {
     );
   }
 
-  protected getReadOnlyText = this.locatorForOptional('span.truncate');
   protected getInputElement = this.locatorForOptional('input');
   protected getIcon = this.locatorForOptional('ng-icon');
 
   async isEditing(): Promise<boolean> {
-    return (await this.getInputElement()) !== null;
+    const input = await this.getInputElement();
+    if (!input) {
+      return false;
+    }
+
+    const className = (await input.getAttribute('class')) ?? '';
+    return !className.includes('pointer-events-none');
   }
 
   async getValue(): Promise<string> {
-    if (await this.isEditing()) {
-      const input = await this.getInputElement();
-      return (await input?.getProperty('value')) ?? '';
-    }
-    const span = await this.getReadOnlyText();
-    return (await span?.text()) ?? '';
+    const input = await this.getInputElement();
+    return (await input?.getProperty('value')) ?? '';
   }
 
   async setValue(value: string): Promise<void> {

@@ -10,6 +10,7 @@ import { HlmSelectImports } from '@spartan-ng/helm/select';
 
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
+import { HlmAccordionImports } from '@spartan-ng/helm/accordion';
 
 import {
   lucidePencil,
@@ -26,6 +27,7 @@ import {
   lucideGlobe,
   lucideCheck,
 } from '@ng-icons/lucide';
+import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 
 /**
  * This file serves as a centralized location for importing and exporting commonly used components,
@@ -49,7 +51,11 @@ export const formImports = [
  * Layout Imports: This array contains imports for layout-related components
  * such as cards and separators, which are used to structure the UI.
  */
-export const layoutImports = [HlmCardImports, HlmSeparatorImports];
+export const layoutImports = [
+  HlmCardImports,
+  HlmSeparatorImports,
+  HlmAccordionImports,
+];
 /**
  * Interactive Imports: This array contains imports for interactive components
  * such as buttons, badges, and icons, which enhance user interaction within the application.
@@ -58,6 +64,7 @@ export const interactiveImports = [
   HlmButtonImports,
   HlmBadgeImports,
   HlmIconImports,
+  HlmTooltipImports,
 ];
 /**
  * Profile Icons: This object contains a collection of commonly used icons in the profile feature,

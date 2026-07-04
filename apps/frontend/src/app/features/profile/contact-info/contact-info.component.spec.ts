@@ -5,6 +5,7 @@ import { ContactInfoHarness } from './contact-info.harness';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { userProfileFixtures } from '@job-tracker-lite-angular/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { VisibilityLevel } from '../visibility-settings/visibility-settings.component';
 
 describe('ContactInfoComponent', () => {
   let harness: ContactInfoHarness;
@@ -63,6 +64,7 @@ describe('ContactInfoComponent', () => {
     await harness.setLinkedin('new-linkedin');
     await harness.setGithub('new-github');
     await harness.setWebsite('new-website.com');
+    await harness.clickVisibilityStep(1);
 
     await harness.clickSave();
 
@@ -72,6 +74,7 @@ describe('ContactInfoComponent', () => {
         linkedin: 'new-linkedin',
         github: 'new-github',
         webpage: 'new-website.com',
+        contactVisibility: VisibilityLevel.REGISTERED,
       }),
     );
   });

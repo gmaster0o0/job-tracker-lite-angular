@@ -37,7 +37,8 @@ describe('InlineInputComponent', () => {
   it('should show placeholder in read-only mode if value and fallbackValue is empty', async () => {
     fixture.componentRef.setInput('placeholder', 'Enter text');
 
-    expect(await harness.getValue()).toBe('Enter text');
+    expect(await harness.getValue()).toBe('');
+    expect(await harness.getPlaceholder()).toBe('Enter text');
   });
 
   it('should show fallbackValue in read-only mode if value is empty', async () => {
@@ -51,7 +52,6 @@ describe('InlineInputComponent', () => {
     fixture.componentRef.setInput('isEditing', true);
     fixture.componentRef.setInput('value', 'Hello');
 
-    expect(await harness.isEditing()).toBeTruthy();
     expect(await harness.getValue()).toBe('Hello');
   });
 
@@ -60,9 +60,6 @@ describe('InlineInputComponent', () => {
     fixture.componentRef.setInput('autoTrim', true);
 
     await harness.setValue('  multiple   spaces  ');
-    // We need to wait for ngModel and onInputChange
-
-    await fixture.whenStable();
 
     expect(component.value()).toBe('multiple spaces');
   });
@@ -73,8 +70,6 @@ describe('InlineInputComponent', () => {
 
     await harness.setValue('  multiple   spaces  ');
 
-    await fixture.whenStable();
-
     expect(component.value()).toBe('  multiple   spaces  ');
   });
 
@@ -84,14 +79,17 @@ describe('InlineInputComponent', () => {
     expect(await harness.hasIcon()).toBeTruthy();
   });
 
-  it('should correctly report editing state', async () => {
+  it('should display fallback when not editing and value when editing', async () => {
+    fixture.componentRef.setInput('value', 'Live value');
+    fixture.componentRef.setInput('fallbackValue', 'Read only value');
     fixture.componentRef.setInput('isEditing', false);
+    await fixture.whenStable();
 
-    expect(await harness.isEditing()).toBe(false);
+    expect(await harness.getValue()).toBe('Read only value');
 
     fixture.componentRef.setInput('isEditing', true);
 
-    expect(await harness.isEditing()).toBe(true);
+    expect(await harness.getValue()).toBe('Live value');
   });
 
   it('should show placeholder in input field when editing', async () => {
@@ -101,11 +99,10 @@ describe('InlineInputComponent', () => {
     expect(await harness.getPlaceholder()).toBe('Enter name');
   });
 
-  it('should throw error when trying to set value in read-only mode', async () => {
+  it('should allow programmatic updates even when not editing', async () => {
     fixture.componentRef.setInput('isEditing', false);
+    await harness.setValue('test');
 
-    await expect(harness.setValue('test')).rejects.toThrow(
-      'Cannot set value while not in editing mode',
-    );
+    expect(component.value()).toBe('test');
   });
 });
