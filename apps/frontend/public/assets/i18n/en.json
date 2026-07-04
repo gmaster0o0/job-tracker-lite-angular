@@ -10,6 +10,9 @@
   },
   "common": {
     "back": "Back",
+    "textarea": {
+      "charactersLeft": "characters left"
+    },
     "cancel": "Cancel",
     "saveChanges": "Save Changes",
     "create": "Create",
@@ -383,7 +386,7 @@
       "titlePlaceholder": "Professional Title",
       "locationLabel": "Location",
       "locationPlaceholder": "e.g. New York, USA",
-      "bioLabel": "Bio",
+      "bioLabel": "Short Bio",
       "bioPlaceholder": "Tell us about yourself...",
       "visibilityLabel": "You can setup who can see your profile here.",
       "publicLabel": "Make Profile Public"
@@ -392,13 +395,13 @@
       "title": "Contact & Links",
       "description": "How recruiters and peers can find you.",
       "emailLabel": "Email",
-      "emailPlaceholder": "email@example.com",
+      "emailPlaceholder": "email@example.com...",
       "linkedinLabel": "LinkedIn",
-      "linkedinPlaceholder": "LinkedIn URL",
+      "linkedinPlaceholder": "LinkedIn URL...",
       "githubLabel": "GitHub",
-      "githubPlaceholder": "GitHub URL",
+      "githubPlaceholder": "GitHub URL...",
       "websiteLabel": "Portfolio / Website",
-      "websitePlaceholder": "Portfolio URL",
+      "websitePlaceholder": "Portfolio URL...",
       "visibilityLabel": "You can setup who can see your contact information here."
     },
     "preferences": {

@@ -24,6 +24,9 @@ export class InlineTextareaHarness extends ComponentHarness {
 
   protected getTextareaElement = this.locatorForOptional('textarea');
   protected getIcon = this.locatorForOptional('ng-icon');
+  protected getCharactersLeftElement = this.locatorForOptional(
+    '[data-testid="characters-left"]',
+  );
 
   async isEditing(): Promise<boolean> {
     const textarea = await this.getTextareaElement();
@@ -60,5 +63,17 @@ export class InlineTextareaHarness extends ComponentHarness {
 
   async hasIcon(): Promise<boolean> {
     return (await this.getIcon()) !== null;
+  }
+
+  async getMaxLength(): Promise<number | null> {
+    const textarea = await this.getTextareaElement();
+    if (!textarea) return null;
+    const maxLength = await textarea.getAttribute('maxlength');
+    return maxLength ? parseInt(maxLength, 10) : null;
+  }
+
+  async getCharactersLeftText(): Promise<string | null> {
+    const element = await this.getCharactersLeftElement();
+    return element ? await element.text() : null;
   }
 }

@@ -39,7 +39,7 @@
           {{ profile().name?.charAt(0) || '?' }}
         </div>
         <div class="grid gap-2 flex-1">
-          <div class="grid gap-2">
+          <div hlmField>
             <label hlmLabel for="name">{{
               'profile.personal.nameLabel' | transloco
             }}</label>
@@ -54,7 +54,7 @@
             />
           </div>
 
-          <div class="grid gap-2">
+          <div hlmField>
             <label hlmLabel for="title">{{
               'profile.personal.titleLabel' | transloco
             }}</label>
@@ -71,7 +71,7 @@
         </div>
       </div>
 
-      <div class="grid gap-2">
+      <div hlmField>
         <label hlmLabel for="city">{{
           'profile.personal.locationLabel' | transloco
         }}</label>
@@ -86,12 +86,13 @@
         />
       </div>
 
-      <div class="grid gap-2">
+      <div hlmField>
         <label hlmLabel for="bio">{{
           'profile.personal.bioLabel' | transloco
         }}</label>
         <app-inline-textarea
           id="bio"
+          maxLength="512"
           [isEditing]="isEditing()"
           [placeholder]="'profile.personal.bioPlaceholder' | transloco"
           [fallbackValue]="profile().bio"

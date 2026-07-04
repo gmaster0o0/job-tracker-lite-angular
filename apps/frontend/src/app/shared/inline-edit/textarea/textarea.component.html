@@ -16,14 +16,24 @@
       <ng-icon [name]="icon()" class="h-4 w-4" />
     </hlm-input-group-addon>
   }
-
   <textarea
     hlmInputGroupTextarea
     [ngModel]="displayValue()"
     (ngModelChange)="onInputChange($event)"
     [placeholder]="placeholder()"
+    [attr.maxlength]="maxLength()"
     [readonly]="!isEditing()"
     class="flex-1 text-sm bg-transparent focus-visible:outline-none min-h-20"
     [class.cursor-pointer]="!isEditing()"
   ></textarea>
+  @if (maxLength()) {
+    <hlm-input-group-addon align="block-end">
+      <hlm-input-group-text
+        data-testid="characters-left"
+        class="text-muted-foreground text-xs"
+        >{{ charactersLeft() }}
+        {{ 'common.textarea.charactersLeft' | transloco }}</hlm-input-group-text
+      >
+    </hlm-input-group-addon>
+  }
 </hlm-input-group>

@@ -4,6 +4,8 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { InlineTextareaHarness } from './textarea.harness';
 import { provideIcons } from '@ng-icons/core';
 import { lucideUser } from '@ng-icons/lucide';
+import { longTextFixture } from '@job-tracker-lite-angular/testing';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('InlineTextareaComponent', () => {
   let component: InlineTextareaComponent;
@@ -12,7 +14,7 @@ describe('InlineTextareaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InlineTextareaComponent],
+      imports: [InlineTextareaComponent, getTranslocoModule()],
       providers: [provideIcons({ lucideUser })],
     }).compileComponents();
 
@@ -23,7 +25,6 @@ describe('InlineTextareaComponent', () => {
       InlineTextareaHarness,
     );
     fixture.componentRef.setInput('value', '');
-    await fixture.whenStable();
   });
 
   it('should create', () => {
@@ -59,10 +60,7 @@ describe('InlineTextareaComponent', () => {
   it('should trim value changes when autoTrim is true', async () => {
     fixture.componentRef.setInput('isEditing', true);
     fixture.componentRef.setInput('autoTrim', true);
-
     await harness.setValue('  multiple lines\nwith spaces  ');
-
-    await fixture.whenStable();
 
     expect(component.value()).toBe('multiple lines with spaces');
   });
@@ -70,10 +68,7 @@ describe('InlineTextareaComponent', () => {
   it('should not trim value changes when autoTrim is false', async () => {
     fixture.componentRef.setInput('isEditing', true);
     fixture.componentRef.setInput('autoTrim', false);
-
     await harness.setValue('  multiple lines\nwith spaces  ');
-
-    await fixture.whenStable();
 
     expect(component.value()).toBe('  multiple lines\nwith spaces  ');
   });
@@ -86,11 +81,9 @@ describe('InlineTextareaComponent', () => {
 
   it('should correctly report editing state', async () => {
     fixture.componentRef.setInput('isEditing', false);
-
     expect(await harness.isEditing()).toBe(false);
 
     fixture.componentRef.setInput('isEditing', true);
-
     expect(await harness.isEditing()).toBe(true);
   });
 
@@ -103,11 +96,48 @@ describe('InlineTextareaComponent', () => {
 
   it('should allow programmatic updates even when not editing', async () => {
     fixture.componentRef.setInput('isEditing', false);
-    await fixture.whenStable();
 
     await harness.setValue('test');
-    await fixture.whenStable();
-
     expect(component.value()).toBe('test');
+  });
+
+  it('should apply maxlength attribute to textarea when provided', async () => {
+    fixture.componentRef.setInput('maxLength', '100');
+
+    expect(await harness.getMaxLength()).toBe(100);
+  });
+
+  it('should show characters left when maxLength is provided', async () => {
+    fixture.componentRef.setInput('maxLength', '100');
+    fixture.componentRef.setInput('isEditing', true);
+    fixture.componentRef.setInput('value', 'ABC');
+
+    const text = await harness.getCharactersLeftText();
+    expect(text).toContain('97');
+  });
+
+  it('should not show characters left when maxLength is NOT provided', async () => {
+    fixture.componentRef.setInput('maxLength', null);
+
+    const text = await harness.getCharactersLeftText();
+    expect(text).toBeNull();
+  });
+
+  it('should update characters left as value changes', async () => {
+    fixture.componentRef.setInput('isEditing', true);
+    fixture.componentRef.setInput('maxLength', '10');
+    fixture.componentRef.setInput('value', 'soft');
+
+    expect(await harness.getCharactersLeftText()).toContain('6');
+    await harness.setValue('software');
+    expect(await harness.getCharactersLeftText()).toContain('2');
+  });
+
+  it('should handle long text correctly', async () => {
+    fixture.componentRef.setInput('isEditing', true);
+    fixture.componentRef.setInput('maxLength', '600');
+    fixture.componentRef.setInput('value', longTextFixture);
+
+    expect(await harness.getCharactersLeftText()).toContain('100');
   });
 });

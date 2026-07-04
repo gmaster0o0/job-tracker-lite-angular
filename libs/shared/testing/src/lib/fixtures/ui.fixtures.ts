@@ -18,3 +18,5 @@ export const jobStepperLabels = [
 
 export const jobOverviewMarkdown =
   '# Job Description\n\nThis is **important** for the role.';
+
+export const longTextFixture = 'A'.repeat(500);

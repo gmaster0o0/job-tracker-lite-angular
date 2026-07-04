@@ -10,6 +10,9 @@
   },
   "common": {
     "back": "Vissza",
+    "textarea": {
+      "charactersLeft": "karakter maradt"
+    },
     "cancel": "Mégse",
     "saveChanges": "Mentés",
     "create": "Létrehozás",
@@ -380,7 +383,7 @@
       "titlePlaceholder": "Szakmai megnevezés",
       "locationLabel": "Helyszín",
       "locationPlaceholder": "pl. Budapest, Magyarország",
-      "bioLabel": "Bio",
+      "bioLabel": "Rövid bemutatkozás",
       "bioPlaceholder": "Meséljen magáról...",
       "visibilityLabel": "Itt tudod beállítani, hogy kik láthassák a profilodat.",
       "publicLabel": "Profil publikussá tétele"
@@ -389,13 +392,13 @@
       "title": "Kapcsolat és linkek",
       "description": "Hogyan találhatják meg a toborzók és munkatársak.",
       "emailLabel": "Email",
-      "emailPlaceholder": "email@pelda.hu",
+      "emailPlaceholder": "email@pelda.hu...",
       "linkedinLabel": "LinkedIn",
-      "linkedinPlaceholder": "LinkedIn URL",
+      "linkedinPlaceholder": "LinkedIn URL...",
       "githubLabel": "GitHub",
-      "githubPlaceholder": "GitHub URL",
+      "githubPlaceholder": "GitHub URL...",
       "websiteLabel": "Portfólió / Weboldal",
-      "websitePlaceholder": "Portfólió URL",
+      "websitePlaceholder": "Portfólió URL...",
       "visibilityLabel": "Itt tudod beállítani, hogy kik láthassák a kapcsolati adataidat."
     },
     "preferences": {

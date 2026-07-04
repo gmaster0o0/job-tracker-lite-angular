@@ -2,13 +2,19 @@ import { Component, input, model, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIconComponent } from '@ng-icons/core';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
+import { TranslocoModule } from '@jsverse/transloco';
 
 type InputType = string | null | undefined;
 
 @Component({
   selector: 'app-inline-textarea',
   standalone: true,
-  imports: [FormsModule, NgIconComponent, HlmInputGroupImports],
+  imports: [
+    FormsModule,
+    NgIconComponent,
+    TranslocoModule,
+    HlmInputGroupImports,
+  ],
   templateUrl: './textarea.component.html',
 })
 export class InlineTextareaComponent {
@@ -42,7 +48,16 @@ export class InlineTextareaComponent {
    * Handle changes to the input value. This method is called whenever the user types in the input field.
    * @param newValue The new value entered by the user.
    */
-  displayValue = computed(() => {
+  maxLength = input<string | null>(null);
+
+  readonly charactersLeft = computed(() => {
+    const max = Number(this.maxLength()) || 300;
+    const currentLength = this.displayValue()?.length || 0;
+
+    return max - currentLength;
+  });
+
+  readonly displayValue = computed(() => {
     return this.isEditing()
       ? (this.value() ?? '')
       : (this.fallbackValue() ?? '');
