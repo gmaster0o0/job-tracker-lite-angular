@@ -85,4 +85,19 @@ describe('ProfileVisibilitySettingsComponent', () => {
     expect(await harness.getLevelText()).toBe(publicVisibilityText);
     expect(component.visibilityLevel()).toBe(VisibilityLevel.PUBLIC);
   });
+
+  it('should decrease visibility when clicking the already active step bar', async () => {
+    // Start at REGISTERED (20)
+    component.visibilityLevel.set(VisibilityLevel.REGISTERED);
+
+    // Click REGISTERED bar (index 1) again
+    await harness.clickStep(1);
+    expect(component.visibilityLevel()).toBe(VisibilityLevel.RECRUITER);
+    expect(await harness.getLevelText()).toBe(recruiterVisibilityText);
+
+    // Click RECRUITER bar (index 0) again
+    await harness.clickStep(0);
+    expect(component.visibilityLevel()).toBe(VisibilityLevel.PRIVATE);
+    expect(await harness.getLevelText()).toBe(privateVisibilityText);
+  });
 });

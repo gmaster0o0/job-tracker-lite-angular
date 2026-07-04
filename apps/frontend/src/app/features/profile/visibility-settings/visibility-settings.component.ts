@@ -1,6 +1,12 @@
 import { Component, computed, input, model } from '@angular/core';
 import { provideIcons } from '@ng-icons/core';
-import { lucideEye, lucideMinus, lucidePlus } from '@ng-icons/lucide';
+import {
+  lucideMinus,
+  lucidePlus,
+  lucideUserCheck,
+  lucideLock,
+  lucideBriefcase,
+} from '@ng-icons/lucide';
 import { interactiveImports } from '../profile.hlmimports';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 
@@ -15,7 +21,15 @@ export enum VisibilityLevel {
   selector: 'app-profile-visibility-settings',
   standalone: true,
   imports: [interactiveImports, TranslocoModule],
-  providers: [provideIcons({ lucideEye, lucideMinus, lucidePlus })],
+  providers: [
+    provideIcons({
+      lucideMinus,
+      lucidePlus,
+      lucideBriefcase,
+      lucideUserCheck,
+      lucideLock,
+    }),
+  ],
   templateUrl: './visibility-settings.component.html',
 })
 export class ProfileVisibilitySettingsComponent {
@@ -28,7 +42,7 @@ export class ProfileVisibilitySettingsComponent {
   readonly tooltipPosition = input<'top' | 'bottom' | 'left' | 'right'>(
     'bottom',
   );
-  readonly tooltipDisabled = input<boolean>(false);
+  readonly tooltipDisabled = input<boolean>(true);
 
   // If false, the widget only displays the compact row (icon + current
   // visibility level), hiding the hint text and the slider (+/- buttons, bars).
@@ -83,14 +97,22 @@ export class ProfileVisibilitySettingsComponent {
   getTooltipText(step: number): string {
     switch (step) {
       case VisibilityLevel.PUBLIC:
-        return this.publicLabel();
+        return this.publicToolTip();
       case VisibilityLevel.REGISTERED:
-        return this.registeredLabel();
+        return this.registeredToolTip();
       case VisibilityLevel.RECRUITER:
-        return this.recruiterLabel();
+        return this.recruiterToolTip();
       default:
-        return this.privateLabel();
+        return this.privateToolTip();
     }
+  }
+
+  onStepClick(step: number) {
+    if (step === this.visibilityLevel() && step !== VisibilityLevel.PRIVATE) {
+      this.decreaseVisibility();
+      return;
+    }
+    this.visibilityLevel.set(step);
   }
 
   decreaseVisibility(): void {

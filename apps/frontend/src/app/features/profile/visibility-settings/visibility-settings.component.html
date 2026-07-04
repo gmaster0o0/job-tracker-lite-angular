@@ -3,13 +3,26 @@
     data-testid="visibility-level-text"
     class="text-sm font-bold text-primary flex items-center gap-1.5"
   >
-    <ng-icon name="lucideEye" class="w-3.5 h-3.5" />
+    @switch (visibilityLevel()) {
+      @case (30) {
+        <ng-icon name="lucideGlobe" class="w-3.5 h-3.5" />
+      }
+      @case (20) {
+        <ng-icon name="lucideUser" class="w-3.5 h-3.5" />
+      }
+      @case (10) {
+        <ng-icon name="lucideBriefcase" class="w-3.5 h-3.5" />
+      }
+      @default {
+        <ng-icon name="lucideLock" class="w-3.5 h-3.5" />
+      }
+    }
     {{ visibilityLevelText() }}
   </span>
   @if (interactive()) {
     <span
       data-testid="visibility-label"
-      class="text-sm font-medium text-muted-foreground flex items-center gap-1.5 ms-auto"
+      class="text-xs font-medium text-muted-foreground flex items-center gap-1.5 ms-auto"
     >
       {{ visibilityHint() }}
     </span>
@@ -42,7 +55,7 @@
           [class.border-primary]="visibilityLevel() >= step"
           [class.bg-muted]="visibilityLevel() < step"
           [class.border-input]="visibilityLevel() < step"
-          (click)="visibilityLevel.set(step)"
+          (click)="onStepClick(step)"
         >
           <span class="sr-only">{{ getTooltipText(step) }}</span>
         </button>
