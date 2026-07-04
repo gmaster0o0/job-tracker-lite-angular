@@ -1,28 +1,29 @@
-@if (!isEditing()) {
-  <div
-    class="flex min-h-10 w-full items-center gap-2 border border-transparent px-3 py-2 text-sm cursor-pointer select-none"
-  >
-    @if (icon()) {
-      <ng-icon [name]="icon()" class="h-4 w-4 text-muted-foreground shrink-0" />
-    }
-    <span class="whitespace-pre-wrap break-words text-foreground">
-      {{ fallbackValue() || placeholder() }}
-    </span>
-  </div>
-} @else {
-  <div
-    class="flex min-h-[100px] w-full items-start gap-2 border border-input rounded-md bg-secondary shadow-sm focus-within:ring-1 focus-within:ring-ring"
-  >
-    @if (icon()) {
-      <ng-icon [name]="icon()" class="h-4 w-4 text-muted-foreground shrink-0" />
-    }
-    <textarea
-      hlmTextarea
-      [(ngModel)]="value"
-      (ngModelChange)="onInputChange($event)"
-      [placeholder]="placeholder()"
-      class="min-h-[100px] w-full resize-none bg-transparent text-sm outline-none border-none"
-      rows="4"
-    ></textarea>
-  </div>
-}
+<hlm-input-group
+  class="w-full flex h-10 items-center transition-all duration-200"
+  [class.bg-secondary]="isEditing()"
+  [class.border-input]="isEditing()"
+  [class.shadow-sm]="isEditing()"
+  [class.bg-transparent]="!isEditing()"
+  [class.border-transparent]="!isEditing()"
+  [class.shadow-none]="!isEditing()"
+  [class.pointer-events-none]="!isEditing()"
+>
+  @if (icon()) {
+    <hlm-input-group-addon
+      align="inline-start"
+      class="pl-3 pr-1 text-muted-foreground shrink-0"
+    >
+      <ng-icon [name]="icon()" class="h-4 w-4" />
+    </hlm-input-group-addon>
+  }
+
+  <textarea
+    hlmInputGroupTextarea
+    [ngModel]="displayValue()"
+    (ngModelChange)="onInputChange($event)"
+    [placeholder]="placeholder()"
+    [readonly]="!isEditing()"
+    class="flex-1 text-sm bg-transparent focus-visible:outline-none min-h-20"
+    [class.cursor-pointer]="!isEditing()"
+  ></textarea>
+</hlm-input-group>
