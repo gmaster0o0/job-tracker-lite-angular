@@ -67,12 +67,37 @@ export class CareerPreferenceComponent {
 
   onVisibilityChange(value: any) {
     this.preferenceVisibility.set(value);
+    this.markActive();
     this.debounceAndSave();
   }
 
   // SaveState
   saveState = signal<SaveState>('idle');
   saveStateChanged = output<SaveState>();
+
+  // Visibility gadget megjelenítése: azonnal előjön bármilyen interakcióra,
+  // és csak akkor kezd el eltűnni, ha egy ideig nem történik újabb interakció
+  // (idle/saved állapotban), hiszterézissel, hogy ne pattogjon.
+  showVisibilityGadget = signal(false);
+  private readonly hideDelayMs = 4000;
+  private hideTimer: ReturnType<typeof setTimeout> | null = null;
+
+  private markActive() {
+    if (this.hideTimer) {
+      clearTimeout(this.hideTimer);
+      this.hideTimer = null;
+    }
+    this.showVisibilityGadget.set(true);
+  }
+
+  private scheduleHide() {
+    if (this.hideTimer) {
+      clearTimeout(this.hideTimer);
+    }
+    this.hideTimer = setTimeout(() => {
+      this.showVisibilityGadget.set(false);
+    }, this.hideDelayMs);
+  }
 
   // Enums
   experienceLevels: ExperienceLevel[] = [
@@ -94,16 +119,19 @@ export class CareerPreferenceComponent {
 
   onExperienceLevelChange(value: ExperienceLevel | null | undefined) {
     this.experienceLevel.set(value ?? null);
+    this.markActive();
     this.debounceAndSave();
   }
 
   onWorkingStyleChange(value: WorkingStyle | null | undefined) {
     this.workingStyle.set(value ?? null);
+    this.markActive();
     this.debounceAndSave();
   }
 
   onCareerTypeChange(value: CareerPreferenceType | null | undefined) {
     this.careerType.set(value ?? null);
+    this.markActive();
     this.debounceAndSave();
   }
 
@@ -132,17 +160,21 @@ export class CareerPreferenceComponent {
       this.saveState.set('saved');
       this.saveStateChanged.emit('saved');
 
-      // Reset to idle after 2s
+      // Reset to idle after 2s, and only now start the countdown to hide
+      // the visibility gadget (a sikeres mentés lezárja az "aktív" ciklust)
       setTimeout(() => {
         this.saveState.set('idle');
         this.saveStateChanged.emit('idle');
+        this.scheduleHide();
       }, 2000);
     } catch (error) {
       console.error('Failed to save preferences', error);
       this.saveState.set('error');
       this.saveStateChanged.emit('error');
 
-      // Reset to idle after 2s
+      // Hiba esetén szándékosan NEM hívjuk a scheduleHide()-ot: amíg
+      // hibaállapotban vagyunk, a widget marad látható, hogy a user lássa,
+      // mit állított be, és tudjon újra próbálkozni.
       setTimeout(() => {
         this.saveState.set('idle');
         this.saveStateChanged.emit('idle');

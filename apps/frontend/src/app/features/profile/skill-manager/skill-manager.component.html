@@ -155,15 +155,14 @@
   </div>
 
   <div hlmCardFooter class="w-full flex justify-end">
-    @if (isDirty()) {
-      <div class="flex justify-start w-full">
-        <app-profile-visibility-settings
-          class="w-full block"
-          [(visibilityLevel)]="profile().skillsVisibility"
-          [visibilityLabel]="'profile.skills.visibilityLabel' | transloco"
-          (visibilityLevelChange)="onVisibilityChange($event)"
-        />
-      </div>
-    }
+    <div class="flex justify-start w-full">
+      <app-profile-visibility-settings
+        class="w-full block"
+        [(visibilityLevel)]="profile().skillsVisibility"
+        [visibilityHint]="'profile.skills.visibilityLabel' | transloco"
+        (visibilityLevelChange)="onVisibilityChange($event)"
+        [interactive]="isDirty()"
+      />
+    </div>
   </div>
 </section>

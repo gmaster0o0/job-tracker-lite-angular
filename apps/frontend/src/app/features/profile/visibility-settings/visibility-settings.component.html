@@ -1,58 +1,64 @@
-<div class="flex items-center justify-between w-full py-1.5 px-3">
-  <span
-    data-testid="visibility-label"
-    class="text-sm font-medium text-muted-foreground flex items-center gap-1.5"
-  >
-    <ng-icon name="lucideEye" class="w-3.5 h-3.5" />
-    {{ visibilityLabel() }}
-  </span>
+<div class="flex items-center justify-between w-full gap-2">
   <span
     data-testid="visibility-level-text"
-    class="text-sm font-bold text-primary"
+    class="text-sm font-bold text-primary flex items-center gap-1.5"
   >
+    <ng-icon name="lucideEye" class="w-3.5 h-3.5" />
     {{ visibilityLevelText() }}
   </span>
+  @if (interactive()) {
+    <span
+      data-testid="visibility-label"
+      class="text-sm font-medium text-muted-foreground flex items-center gap-1.5 ms-auto"
+    >
+      {{ visibilityHint() }}
+    </span>
+  }
 </div>
 
-<div class="flex items-center gap-3 w-full">
-  <button
-    hlmBtn
-    variant="outline"
-    size="icon"
-    data-testid="decrease-visibility-btn"
-    class="h-8 w-8 shrink-0 rounded-md"
-    [disabled]="visibilityLevel() === 0"
-    (click)="decreaseVisibility()"
-  >
-    <ng-icon name="lucideMinus" class="w-4 h-4" />
-  </button>
+@if (interactive()) {
+  <div class="flex items-center gap-3 w-full">
+    <button
+      hlmBtn
+      variant="outline"
+      size="icon"
+      data-testid="decrease-visibility-btn"
+      class="h-8 w-8 shrink-0 rounded-md"
+      [disabled]="visibilityLevel() === 0"
+      (click)="decreaseVisibility()"
+    >
+      <ng-icon name="lucideMinus" class="w-4 h-4" />
+    </button>
 
-  <div class="grid grid-cols-3 gap-1.5 w-full h-2">
-    @for (step of [10, 20, 30]; track step) {
-      <button
-        [hlmTooltip]="tooltipDisabled() ? '' : getTooltipText(step)"
-        [position]="tooltipPosition()"
-        type="button"
-        data-testid="visibility-step-bar"
-        class="h-full rounded-sm transition-all duration-300 cursor-pointer hover:opacity-80 relative"
-        [class.bg-primary]="visibilityLevel() >= step"
-        [class.bg-secondary]="visibilityLevel() < step"
-        (click)="visibilityLevel.set(step)"
-      >
-        <span class="sr-only">{{ getTooltipText(step) }}</span>
-      </button>
-    }
+    <div class="grid grid-cols-3 gap-1.5 w-full h-2">
+      @for (step of [10, 20, 30]; track step) {
+        <button
+          [hlmTooltip]="tooltipDisabled() ? '' : getTooltipText(step)"
+          [position]="tooltipPosition()"
+          type="button"
+          data-testid="visibility-step-bar"
+          class="h-full rounded-sm transition-all duration-300 cursor-pointer hover:opacity-80 relative border"
+          [class.bg-primary]="visibilityLevel() >= step"
+          [class.border-primary]="visibilityLevel() >= step"
+          [class.bg-muted]="visibilityLevel() < step"
+          [class.border-input]="visibilityLevel() < step"
+          (click)="visibilityLevel.set(step)"
+        >
+          <span class="sr-only">{{ getTooltipText(step) }}</span>
+        </button>
+      }
+    </div>
+
+    <button
+      hlmBtn
+      variant="outline"
+      size="icon"
+      data-testid="increase-visibility-btn"
+      class="h-8 w-8 shrink-0 rounded-md"
+      [disabled]="visibilityLevel() === 30"
+      (click)="increaseVisibility()"
+    >
+      <ng-icon name="lucidePlus" class="w-4 h-4" />
+    </button>
   </div>
-
-  <button
-    hlmBtn
-    variant="outline"
-    size="icon"
-    data-testid="increase-visibility-btn"
-    class="h-8 w-8 shrink-0 rounded-md"
-    [disabled]="visibilityLevel() === 30"
-    (click)="increaseVisibility()"
-  >
-    <ng-icon name="lucidePlus" class="w-4 h-4" />
-  </button>
-</div>
+}

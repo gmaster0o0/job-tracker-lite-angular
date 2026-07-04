@@ -145,7 +145,8 @@
       <app-profile-visibility-settings
         class="w-full block"
         [visibilityLevel]="preferenceVisibility()"
-        [visibilityLabel]="'profile.contact.visibilityLabel' | transloco"
+        [visibilityHint]="'profile.contact.visibilityLabel' | transloco"
+        [interactive]="showVisibilityGadget()"
         (visibilityLevelChange)="onVisibilityChange($event)"
       />
     </div>

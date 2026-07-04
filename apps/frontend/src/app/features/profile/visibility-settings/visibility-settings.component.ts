@@ -24,11 +24,18 @@ export class ProfileVisibilitySettingsComponent {
   readonly visibilityStep = 10;
 
   readonly visibilityLevel = model<number>(0);
-  readonly visibilityLabel = input<string>('');
+  readonly visibilityHint = input<string>('');
   readonly tooltipPosition = input<'top' | 'bottom' | 'left' | 'right'>(
     'bottom',
   );
   readonly tooltipDisabled = input<boolean>(false);
+
+  // If false, the widget only displays the compact row (icon + current
+  // visibility level), hiding the hint text and the slider (+/- buttons, bars).
+  // This allows the parent component to "collapse" the widget when it's not
+  // needed (e.g., no active editing).
+  readonly interactive = input<boolean>(true);
+
   // Computed property to determine the visibility level key for translation based on the current visibility level
   //this solution only for keyextratror
   protected readonly publicLabel = translateSignal(

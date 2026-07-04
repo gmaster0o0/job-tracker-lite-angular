@@ -102,15 +102,14 @@
     </div>
   </div>
   <div hlmCardFooter class="w-full flex justify-end border-t">
-    @if (isEditing()) {
-      <div class="flex justify-start w-full">
-        <app-profile-visibility-settings
-          class="w-full block"
-          [(visibilityLevel)]="profile().personalVisibility"
-          [visibilityLabel]="'profile.personal.visibilityLabel' | transloco"
-          (visibilityLevelChange)="updateField('personalVisibility', $event)"
-        />
-      </div>
-    }
+    <div class="flex justify-start w-full">
+      <app-profile-visibility-settings
+        class="w-full block"
+        [(visibilityLevel)]="profile().personalVisibility"
+        [visibilityHint]="'profile.personal.visibilityLabel' | transloco"
+        [interactive]="isEditing()"
+        (visibilityLevelChange)="updateField('personalVisibility', $event)"
+      />
+    </div>
   </div>
 </section>
