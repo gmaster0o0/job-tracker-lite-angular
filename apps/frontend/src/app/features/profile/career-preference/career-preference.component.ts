@@ -65,7 +65,7 @@ export class CareerPreferenceComponent {
     () => this.profile().preferenceVisibility ?? null,
   );
 
-  onVisibilityChange(value: any) {
+  onVisibilityChange(value: number) {
     this.preferenceVisibility.set(value);
     this.markActive();
     this.debounceAndSave();
@@ -75,9 +75,9 @@ export class CareerPreferenceComponent {
   saveState = signal<SaveState>('idle');
   saveStateChanged = output<SaveState>();
 
-  // Visibility gadget megjelenítése: azonnal előjön bármilyen interakcióra,
-  // és csak akkor kezd el eltűnni, ha egy ideig nem történik újabb interakció
-  // (idle/saved állapotban), hiszterézissel, hogy ne pattogjon.
+  // Visibility gadget display: appears immediately on any interaction,
+  // and only starts to disappear after a while if no new interaction occurs
+  // (in idle/saved state), with hysteresis to prevent flickering.
   showVisibilityGadget = signal(false);
   private readonly hideDelayMs = 4000;
   private hideTimer: ReturnType<typeof setTimeout> | null = null;
@@ -161,7 +161,7 @@ export class CareerPreferenceComponent {
       this.saveStateChanged.emit('saved');
 
       // Reset to idle after 2s, and only now start the countdown to hide
-      // the visibility gadget (a sikeres mentés lezárja az "aktív" ciklust)
+      // the visibility gadget (a successful save ends the "active" cycle)
       setTimeout(() => {
         this.saveState.set('idle');
         this.saveStateChanged.emit('idle');
@@ -172,9 +172,9 @@ export class CareerPreferenceComponent {
       this.saveState.set('error');
       this.saveStateChanged.emit('error');
 
-      // Hiba esetén szándékosan NEM hívjuk a scheduleHide()-ot: amíg
-      // hibaállapotban vagyunk, a widget marad látható, hogy a user lássa,
-      // mit állított be, és tudjon újra próbálkozni.
+      // In case of an error, we intentionally do NOT call scheduleHide(): as long
+      // as we are in an error state, the widget remains visible so the user can
+      // see what was set and try again.
       setTimeout(() => {
         this.saveState.set('idle');
         this.saveStateChanged.emit('idle');

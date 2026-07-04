@@ -36,7 +36,10 @@ import {
 } from '../profile.hlmimports';
 import { ProfileVisibilitySettingsComponent } from '../visibility-settings/visibility-settings.component';
 
+import baseSkillSuggestions from '../../../../../public/assets/baseSkillSuggestions.json';
+
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
+type Suggestion = { value: string; label: string };
 
 @Component({
   standalone: true,
@@ -80,26 +83,13 @@ export class SkillManagerComponent {
   protected readonly newSkill = signal('');
   protected readonly selectedSuggestion = signal<string[]>([]);
 
-  protected readonly baseSkillSuggestions = [
-    'Angular',
-    'TypeScript',
-    'JavaScript',
-    'NestJS',
-    'Node.js',
-    'RxJS',
-    'Prisma',
-    'PostgreSQL',
-    'TailwindCSS',
-    'HTML',
-    'CSS',
-  ];
+  protected readonly baseSkillSuggestions: Suggestion[] = baseSkillSuggestions;
 
   protected readonly draftVisibility = linkedSignal(
     () => this.profile().skillsVisibility ?? 0,
   );
 
-  protected onVisibilityChange(level: any) {
-    // cseréld a pontos típusra, pl. VisibilityLevel
+  protected onVisibilityChange(level: number) {
     this.draftVisibility.set(level);
   }
 
@@ -110,21 +100,46 @@ export class SkillManagerComponent {
     ...this.profile().coreSkills,
   ]);
 
+  protected readonly displaySkills = computed(() =>
+    this.draftSkills().map((skillValue) => {
+      const matchedSuggestion = this.baseSkillSuggestions.find(
+        (suggestion) =>
+          suggestion.value.toLowerCase() === skillValue.toLowerCase(),
+      );
+      return {
+        value: skillValue,
+        label: matchedSuggestion ? matchedSuggestion.label : skillValue,
+      };
+    }),
+  );
+
   protected readonly isDirty = computed(
     () =>
       !this.areSkillsEqual(this.savedSkills(), this.draftSkills()) ||
       this.profile().skillsVisibility !== this.draftVisibility(),
   );
 
-  protected readonly autocompleteSuggestions = computed(() =>
-    Array.from(
-      new Set([
-        ...this.baseSkillSuggestions,
-        ...this.savedSkills(),
-        ...this.draftSkills(),
-      ]),
-    ),
-  );
+  protected readonly autocompleteSuggestions = computed(() => {
+    const suggestionsFromBase = this.baseSkillSuggestions.map((suggestion) => ({
+      value: suggestion.value,
+      label: suggestion.label,
+    }));
+
+    const suggestionsFromExisting = [
+      ...this.savedSkills(),
+      ...this.draftSkills(),
+    ]
+      .filter(
+        (skillValue) =>
+          !this.baseSkillSuggestions.some(
+            (suggestion) =>
+              suggestion.value.toLowerCase() === skillValue.toLowerCase(),
+          ),
+      )
+      .map((skillValue) => ({ value: skillValue, label: skillValue }));
+
+    return [...suggestionsFromBase, ...suggestionsFromExisting];
+  });
 
   protected readonly filteredSuggestions = computed(() => {
     const query = this.newSkill().trim().toLowerCase();
@@ -134,8 +149,11 @@ export class SkillManagerComponent {
 
     return this.autocompleteSuggestions().filter(
       (suggestion) =>
-        suggestion.toLowerCase().includes(query) &&
-        !this.draftSkills().includes(suggestion),
+        suggestion.label.toLowerCase().includes(query) &&
+        !this.draftSkills().some(
+          (draftSkill) =>
+            draftSkill.toLowerCase() === suggestion.value.toLowerCase(),
+        ),
     );
   });
 
@@ -151,7 +169,9 @@ export class SkillManagerComponent {
       (skill) => skill.toLowerCase() === candidateLower,
     );
     const existsAsSuggestion = this.autocompleteSuggestions().some(
-      (suggestion) => suggestion.toLowerCase() === candidateLower,
+      (suggestion) =>
+        suggestion.value.toLowerCase() === candidateLower ||
+        suggestion.label.toLowerCase() === candidateLower,
     );
 
     return !existsInDraft && !existsAsSuggestion;
@@ -168,7 +188,10 @@ export class SkillManagerComponent {
   protected onSuggestionSelected(skills: string[] | null | undefined) {
     const pickedSkills = skills ?? [];
     const addedSkill = pickedSkills.find(
-      (skill) => !this.draftSkills().includes(skill),
+      (skill) =>
+        !this.draftSkills().some(
+          (draftSkill) => draftSkill.toLowerCase() === skill.toLowerCase(),
+        ),
     );
 
     if (addedSkill) {
@@ -229,7 +252,12 @@ export class SkillManagerComponent {
 
   private addSkill(skillValue: string) {
     const trimmedSkill = skillValue.trim();
-    if (!trimmedSkill || this.draftSkills().includes(trimmedSkill)) {
+    if (
+      !trimmedSkill ||
+      this.draftSkills().some(
+        (skill) => skill.toLowerCase() === trimmedSkill.toLowerCase(),
+      )
+    ) {
       return;
     }
 

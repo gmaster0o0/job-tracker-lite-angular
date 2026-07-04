@@ -76,7 +76,7 @@ describe('SkillManagerComponent', () => {
   });
 
   it('should save modified skills', async () => {
-    await harness.enterSkill('Playwright');
+    await harness.enterSkill('Playwright Plus');
 
     await harness.clickAddNewElement();
     await harness.clickVisibilityStep(0);
@@ -88,7 +88,7 @@ describe('SkillManagerComponent', () => {
 
     expect(updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({
-        coreSkills: expect.arrayContaining(['Playwright']),
+        coreSkills: expect.arrayContaining(['Playwright Plus']),
         skillsVisibility: VisibilityLevel.RECRUITER,
       }),
     );

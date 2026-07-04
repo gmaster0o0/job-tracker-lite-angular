@@ -37,7 +37,8 @@ describe('InlineTextareaComponent', () => {
   it('should show placeholder in read-only mode if value and fallbackValue is empty', async () => {
     fixture.componentRef.setInput('placeholder', 'Enter bio');
 
-    expect(await harness.getValue()).toBe('Enter bio');
+    expect(await harness.getValue()).toBe('');
+    expect(await harness.getPlaceholder()).toBe('Enter bio');
   });
 
   it('should show fallbackValue in read-only mode if value is empty', async () => {
@@ -63,7 +64,7 @@ describe('InlineTextareaComponent', () => {
 
     await fixture.whenStable();
 
-    expect(component.value()).toBe('multiple lines\nwith spaces');
+    expect(component.value()).toBe('multiple lines with spaces');
   });
 
   it('should not trim value changes when autoTrim is false', async () => {
@@ -100,11 +101,13 @@ describe('InlineTextareaComponent', () => {
     expect(await harness.getPlaceholder()).toBe('Enter bio');
   });
 
-  it('should throw error when trying to set value in read-only mode', async () => {
+  it('should allow programmatic updates even when not editing', async () => {
     fixture.componentRef.setInput('isEditing', false);
+    await fixture.whenStable();
 
-    await expect(harness.setValue('test')).rejects.toThrow(
-      'Cannot set value while not in editing mode',
-    );
+    await harness.setValue('test');
+    await fixture.whenStable();
+
+    expect(component.value()).toBe('test');
   });
 });

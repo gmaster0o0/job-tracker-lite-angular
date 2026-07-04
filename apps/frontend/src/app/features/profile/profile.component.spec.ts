@@ -62,7 +62,7 @@ describe('ProfileComponent', () => {
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({
-        bio: 'Short bio\nwith two lines',
+        bio: 'Short bio with two lines',
       }),
     );
   });

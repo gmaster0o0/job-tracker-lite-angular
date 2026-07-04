@@ -22,24 +22,21 @@ export class InlineTextareaHarness extends ComponentHarness {
     );
   }
 
-  protected getReadOnlyText = this.locatorForOptional(
-    'span.whitespace-pre-wrap',
-  );
   protected getTextareaElement = this.locatorForOptional('textarea');
   protected getIcon = this.locatorForOptional('ng-icon');
 
   async isEditing(): Promise<boolean> {
-    return (await this.getTextareaElement()) !== null;
+    const textarea = await this.getTextareaElement();
+    if (!textarea) {
+      return false;
+    }
+
+    return (await textarea.getAttribute('readonly')) === null;
   }
 
   async getValue(): Promise<string> {
-    if (await this.isEditing()) {
-      const textarea = await this.getTextareaElement();
-      return (await textarea?.getProperty('value')) ?? '';
-    }
-
-    const span = await this.getReadOnlyText();
-    return (await span?.text()) ?? '';
+    const textarea = await this.getTextareaElement();
+    return (await textarea?.getProperty('value')) ?? '';
   }
 
   async setValue(value: string): Promise<void> {
