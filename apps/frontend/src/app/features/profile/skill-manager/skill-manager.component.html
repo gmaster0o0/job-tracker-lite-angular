@@ -150,4 +150,17 @@
       </div>
     </div>
   </div>
+
+  <div hlmCardFooter class="w-full flex justify-end">
+    @if (isDirty()) {
+      <div class="pt-2 flex justify-start w-full">
+        <app-profile-visibility-settings
+          class="w-full block"
+          [(visibilityLevel)]="profile().contactVisibility"
+          [visibilityLabel]="'profile.contact.visibilityLabel' | transloco"
+          (visibilityLevelChange)="onVisibilityChange($event)"
+        />
+      </div>
+    }
+  </div>
 </section>

@@ -34,6 +34,7 @@ import {
   interactiveImports,
   layoutImports,
 } from '../profile.hlmimports';
+import { ProfileVisibilitySettingsComponent } from '../visibility-settings/visibility-settings.component';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -55,6 +56,7 @@ type SaveState = 'idle' | 'saving' | 'saved' | 'error';
     BrnComboboxEmpty,
     BrnComboboxList,
     BrnComboboxItem,
+    ProfileVisibilitySettingsComponent,
   ],
   providers: [
     provideIcons({
@@ -92,6 +94,15 @@ export class SkillManagerComponent {
     'CSS',
   ];
 
+  protected readonly draftVisibility = linkedSignal(
+    () => this.profile().skillsVisibility ?? 0,
+  );
+
+  protected onVisibilityChange(level: any) {
+    // cseréld a pontos típusra, pl. VisibilityLevel
+    this.draftVisibility.set(level);
+  }
+
   private readonly savedSkills = linkedSignal(() => [
     ...this.profile().coreSkills,
   ]);
@@ -100,7 +111,9 @@ export class SkillManagerComponent {
   ]);
 
   protected readonly isDirty = computed(
-    () => !this.areSkillsEqual(this.savedSkills(), this.draftSkills()),
+    () =>
+      !this.areSkillsEqual(this.savedSkills(), this.draftSkills()) ||
+      this.profile().skillsVisibility !== this.draftVisibility(),
   );
 
   protected readonly autocompleteSuggestions = computed(() =>
@@ -178,6 +191,7 @@ export class SkillManagerComponent {
 
   protected discardChanges() {
     this.draftSkills.set([...this.savedSkills()]);
+    this.draftVisibility.set(this.profile().skillsVisibility ?? 0);
     this.newSkill.set('');
     this.setSaveState('idle');
   }
@@ -191,7 +205,12 @@ export class SkillManagerComponent {
 
     try {
       const nextSkills = [...this.draftSkills()];
-      await this.profileData.updateProfile({ coreSkills: nextSkills });
+      const nextVisibility = this.draftVisibility();
+
+      await this.profileData.updateProfile({
+        coreSkills: nextSkills,
+        skillsVisibility: nextVisibility,
+      });
       this.savedSkills.set(nextSkills);
       this.setSaveState('saved');
 
