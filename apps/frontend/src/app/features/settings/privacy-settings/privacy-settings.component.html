@@ -1,0 +1,28 @@
+<div class="max-w-4xl mx-auto p-8 flex flex-col gap-8">
+  <div>
+    <h1 hlmH1>
+      {{ 'privacySettings.title' | transloco }}
+    </h1>
+    <p hlmLead>
+      {{ 'privacySettings.description' | transloco }}
+    </p>
+  </div>
+  <app-visibility-management></app-visibility-management>
+  <app-data-management></app-data-management>
+  <app-cookie-management></app-cookie-management>
+  <hlm-separator />
+  <hlm-alert variant="destructive" class="border-red-500/30 bg-red-500/5">
+    <ng-icon class="text-[length:--spacing(12)]" name="lucideTrash2" />
+    <h4 hlmAlertTitle class="text-[length:--spacing(6)]">
+      {{ 'privacySettings.deleteAccount.title' | transloco }}
+    </h4>
+    <p hlmAlertDescription>
+      {{ 'privacySettings.deleteAccount.description' | transloco }}
+    </p>
+    <div hlmAlertAction>
+      <button hlmBtn size="sm" class="border-red-500/30" variant="destructive">
+        {{ 'privacySettings.deleteAccount.button' | transloco }}
+      </button>
+    </div>
+  </hlm-alert>
+</div>

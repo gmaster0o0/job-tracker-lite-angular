@@ -176,6 +176,15 @@
       }
     }
   },
+  "privacySettings": {
+    "title": "privacySettings.title",
+    "description": "privacySettings.description",
+    "deleteAccount": {
+      "title": "privacySettings.deleteAccount.title",
+      "description": "privacySettings.deleteAccount.description",
+      "button": "privacySettings.deleteAccount.button"
+    }
+  },
   "preferences": {
     "preferences": "Preferences",
     "preferencesDescription": "Customize your experience with the app.",

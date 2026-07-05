@@ -95,6 +95,14 @@ export const appRoutes: Route[] = [
                 './features/settings/account-settings/account-settings.component'
               ).then((m) => m.AccountSettingsComponent),
           },
+          {
+            path: 'privacy',
+            canActivate: [authGuard],
+            loadComponent: () =>
+              import(
+                './features/settings/privacy-settings/privacy-settings.component'
+              ).then((m) => m.PrivacySettingsComponent),
+          },
         ],
       },
       {
