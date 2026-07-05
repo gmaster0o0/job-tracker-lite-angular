@@ -131,6 +131,9 @@
       ],
       "@spartan-ng/helm/item": [
         "./libs/shared-ui/item/src/index.ts"
+      ],
+      "@spartan-ng/helm/typography": [
+        "./libs/shared-ui/typography/src/index.ts"
       ]
     }
   },
