@@ -1,7 +1,7 @@
 {
-  "name": "item",
+  "name": "typography",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/shared-ui/item/src",
+  "sourceRoot": "libs/shared-ui/typography/src",
   "prefix": "hlm",
   "projectType": "library",
   "tags": [],
