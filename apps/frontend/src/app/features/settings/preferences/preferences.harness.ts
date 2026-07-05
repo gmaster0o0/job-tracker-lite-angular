@@ -1,5 +1,5 @@
 import { ComponentHarness } from '@angular/cdk/testing';
-import { AppearanceHarness } from '../appearance/appearance.harness';
+import { AppearanceHarness } from './appearance/appearance.harness';
 
 export class PreferencesHarness extends ComponentHarness {
   static hostSelector = 'app-preferences';
