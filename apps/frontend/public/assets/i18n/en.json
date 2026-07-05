@@ -178,6 +178,15 @@
       }
     }
   },
+  "privacySettings": {
+    "title": "privacySettings.title",
+    "description": "privacySettings.description",
+    "deleteAccount": {
+      "title": "privacySettings.deleteAccount.title",
+      "description": "privacySettings.deleteAccount.description",
+      "button": "privacySettings.deleteAccount.button"
+    }
+  },
   "preferences": {
     "preferences": "Preferences",
     "preferencesDescription": "Customize your experience with the app.",
@@ -349,7 +358,8 @@
         "unknown": "Unable to sign in right now. Please try again.",
         "invalid_email_or_password": "Invalid email or password.",
         "user_not_found": "No user found with this email.",
-        "email_not_verified": "Email address has not been verified. Check your inbox."
+        "email_not_verified": "Email address has not been verified. Check your inbox.",
+        "internal_server_error": "Internal server error. Please try again later."
       }
     },
     "forgotPassword": {
