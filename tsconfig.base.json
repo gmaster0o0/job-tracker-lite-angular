@@ -128,6 +128,9 @@
       ],
       "@spartan-ng/helm/accordion": [
         "./libs/shared-ui/accordion/src/index.ts"
+      ],
+      "@spartan-ng/helm/item": [
+        "./libs/shared-ui/item/src/index.ts"
       ]
     }
   },
