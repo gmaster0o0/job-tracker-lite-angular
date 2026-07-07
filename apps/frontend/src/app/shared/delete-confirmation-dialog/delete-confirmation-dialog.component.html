@@ -15,7 +15,8 @@
       {{ cancelLabel }}
     </button>
     <button
-      hlmBtn
+      hlmAlertDialogAction
+      [variant]="variant"
       type="button"
       [disabled]="effectiveIsBusy"
       (click)="onConfirm()"

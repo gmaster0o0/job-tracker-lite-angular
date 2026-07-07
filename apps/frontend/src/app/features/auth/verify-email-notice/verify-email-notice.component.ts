@@ -22,7 +22,7 @@ import {
   ZodNgControlBridgeDirective,
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
-import { ServerErrorAlertComponent } from '../../../shared/server-error-alert/server-error-alert.component';
+import { ServerErrorAlertComponent } from '@job-tracker-lite-angular/frontend-shared';
 import {
   sendVerificationEmailSchema,
   type SendVerificationEmailDto,

@@ -5,8 +5,12 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
-import { AccountSettingsDto } from '@job-tracker-lite-angular/schemas';
-import { EmailChangeTokenType } from '@prisma/client';
+import {
+  AccountDeletionStatusDto,
+  AccountSettingsDto,
+  SupportLang,
+} from '@job-tracker-lite-angular/schemas';
+import { AccountStatus, EmailChangeTokenType } from '@prisma/client';
 import { EmailService } from '../email/email.service';
 import { randomUUID } from 'crypto';
 
@@ -16,6 +20,8 @@ export class AccountService {
   private readonly defaultAuthApiUrl = 'http://localhost:3000/api/auth';
   private readonly defaultEmailVerificationExpiresIn = 60 * 60 * 24; // 24 hours
   private readonly defaultEmailRestoreExpiresIn = 60 * 60 * 24 * 7; // 7 days
+  private readonly defaultDeleteVerificationExpiresIn = 60 * 60 * 24; // 24 hours
+  private readonly defaultDeletionGracePeriodDays = 7;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -259,6 +265,149 @@ export class AccountService {
     return this.buildFrontendLoginUrl('restored');
   }
 
+  async requestAccountDeletion(
+    userId: string,
+    language: SupportLang,
+  ): Promise<void> {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        status: true,
+      },
+    });
+
+    if (user.status === AccountStatus.PENDING_DELETION) {
+      return;
+    }
+
+    const token = randomUUID();
+    const expiresAt = this.addSeconds(this.getDeleteVerificationExpiresIn());
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.accountDeletionToken.deleteMany({
+        where: { userId: user.id },
+      });
+
+      await tx.accountDeletionToken.create({
+        data: {
+          token,
+          userId: user.id,
+          expiresAt,
+        },
+      });
+    });
+
+    const verifyUrl = `${this.getApiBaseUrl()}/account/confirm-delete?token=${encodeURIComponent(
+      token,
+    )}`;
+
+    await this.emailService.sendDeleteAccountVerificationEmail(
+      user.email,
+      verifyUrl,
+      language,
+      this.getDeletionGracePeriodDays(),
+    );
+  }
+
+  async confirmAccountDeletion(token: string): Promise<string> {
+    if (!token || token.trim().length === 0) {
+      return this.buildFrontendLoginDeletionUrl('missing_token');
+    }
+
+    const deletionToken = await this.prisma.accountDeletionToken.findUnique({
+      where: { token },
+    });
+
+    if (!deletionToken) {
+      return this.buildFrontendLoginDeletionUrl('invalid_token');
+    }
+
+    if (deletionToken.expiresAt <= new Date()) {
+      await this.prisma.accountDeletionToken.delete({
+        where: { token: deletionToken.token },
+      });
+      return this.buildFrontendLoginDeletionUrl('token_expired');
+    }
+
+    const gracePeriodRequestedAt = new Date();
+    const gracePeriodDays = this.getDeletionGracePeriodDays();
+    const scheduledDeletionAt = this.addDays(
+      gracePeriodRequestedAt,
+      gracePeriodDays,
+    );
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.user.update({
+        where: { id: deletionToken.userId },
+        data: {
+          status: AccountStatus.PENDING_DELETION,
+          gracePeriodRequestedAt,
+          scheduledDeletionAt,
+          gracePeriodDays,
+        },
+      });
+
+      await tx.accountDeletionToken.delete({
+        where: { token: deletionToken.token },
+      });
+    });
+
+    return this.buildFrontendDeletePendingUrl('confirmed');
+  }
+
+  async getAccountDeletionStatus(
+    userId: string,
+  ): Promise<AccountDeletionStatusDto> {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: {
+        status: true,
+        gracePeriodRequestedAt: true,
+        scheduledDeletionAt: true,
+        gracePeriodDays: true,
+      },
+    });
+
+    return {
+      status: this.mapAccountStatus(user.status),
+      gracePeriodRequestedAt: user.gracePeriodRequestedAt,
+      scheduledDeletionAt: user.scheduledDeletionAt,
+      gracePeriodDays: user.gracePeriodDays,
+    };
+  }
+
+  async recoverAccountDeletion(userId: string): Promise<void> {
+    await this.prisma.$transaction(async (tx) => {
+      await tx.user.update({
+        where: { id: userId },
+        data: {
+          status: AccountStatus.ACTIVE,
+          gracePeriodRequestedAt: null,
+          scheduledDeletionAt: null,
+        },
+      });
+
+      await tx.accountDeletionToken.deleteMany({
+        where: { userId },
+      });
+    });
+  }
+
+  async executeScheduledDeletion(): Promise<number> {
+    const result = await this.prisma.user.deleteMany({
+      where: {
+        status: AccountStatus.PENDING_DELETION,
+        scheduledDeletionAt: {
+          lte: new Date(),
+        },
+      },
+    });
+
+    return result.count;
+  }
+
   private getApiBaseUrl(): string {
     const authApiUrl =
       this.configService.get<string>('BETTER_AUTH_URL') ??
@@ -293,6 +442,18 @@ export class AccountService {
     )}`;
   }
 
+  private buildFrontendLoginDeletionUrl(status: string): string {
+    return `${this.getFrontendOrigin()}/auth/login?accountDeletion=${encodeURIComponent(
+      status,
+    )}`;
+  }
+
+  private buildFrontendDeletePendingUrl(status: string): string {
+    return `${this.getFrontendOrigin()}/privacy/delete-pending?accountDeletion=${encodeURIComponent(
+      status,
+    )}`;
+  }
+
   private getEmailVerificationExpiresInSeconds(): number {
     return (
       this.configService.get<number>('EMAIL_VERIFICATION_EXPIRES_IN_SECONDS') ??
@@ -307,7 +468,39 @@ export class AccountService {
     );
   }
 
+  private getDeleteVerificationExpiresIn(): number {
+    return (
+      this.configService.get<number>(
+        'ACCOUNT_DELETION_CONFIRM_EXPIRES_IN_SECONDS',
+      ) ?? this.defaultDeleteVerificationExpiresIn
+    );
+  }
+
+  private getDeletionGracePeriodDays(): number {
+    const raw =
+      this.configService.get<number>('ACCOUNT_DELETION_GRACE_PERIOD_DAYS') ??
+      this.defaultDeletionGracePeriodDays;
+
+    return Number.isFinite(raw) && raw > 0
+      ? Math.floor(raw)
+      : this.defaultDeletionGracePeriodDays;
+  }
+
+  private mapAccountStatus(
+    status: AccountStatus,
+  ): 'active' | 'pending_deletion' {
+    return status === AccountStatus.PENDING_DELETION
+      ? 'pending_deletion'
+      : 'active';
+  }
+
   private addSeconds(seconds: number): Date {
     return new Date(Date.now() + seconds * 1000);
+  }
+
+  private addDays(date: Date, days: number): Date {
+    const next = new Date(date);
+    next.setDate(next.getDate() + days);
+    return next;
   }
 }

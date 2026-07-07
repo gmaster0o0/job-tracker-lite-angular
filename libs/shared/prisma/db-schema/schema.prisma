@@ -22,6 +22,10 @@ model User {
   email         String    @unique
   pendingEmail  String?
   emailVerified Boolean   @default(false)
+  status        AccountStatus @default(ACTIVE)
+  gracePeriodRequestedAt DateTime?
+  scheduledDeletionAt DateTime?
+  gracePeriodDays Int @default(7)
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -31,6 +35,7 @@ model User {
   contacts      Contact[]
   notes         Note[]
   emailChangeTokens EmailChangeToken[]
+  accountDeletionTokens AccountDeletionToken[]
   profile       UserProfile?
 
   @@map("user")
@@ -39,6 +44,11 @@ model User {
 enum EmailChangeTokenType {
   VERIFY
   RESTORE
+}
+
+enum AccountStatus {
+  ACTIVE
+  PENDING_DELETION
 }
 
 model EmailChangeToken {
@@ -89,6 +99,18 @@ model Account {
 
   @@index([userId])
   @@map("account")
+}
+
+model AccountDeletionToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Verification {

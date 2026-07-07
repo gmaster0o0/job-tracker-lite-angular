@@ -177,12 +177,33 @@
     }
   },
   "privacySettings": {
-    "title": "privacySettings.title",
-    "description": "privacySettings.description",
+    "title": "Privacy Settings",
+    "description": "Manage your data and account privacy controls.",
     "deleteAccount": {
-      "title": "privacySettings.deleteAccount.title",
-      "description": "privacySettings.deleteAccount.description",
-      "button": "privacySettings.deleteAccount.button"
+      "title": "Delete Account",
+      "description": "Request account deletion. You will receive a confirmation email first, then a grace period starts before permanent deletion.",
+      "button": "Delete Account",
+      "dialogTitle": "Confirm Account Deletion",
+      "dialogDescription": "Do you want to request account deletion? We will send a confirmation email and start the grace period only after confirmation.",
+      "verificationEmailSent": "A confirmation email has been sent. Please open the link in the email to start the deletion grace period.",
+      "error": {
+        "title": "Account Deletion Request Failed",
+        "unknown": "Unable to request account deletion right now. Please try again."
+      }
+    },
+    "deletePending": {
+      "title": "Account Deletion Is Pending",
+      "description": "Your account is marked for deletion. You can recover it before the timer reaches zero.",
+      "loading": "Loading deletion status...",
+      "countdownLabel": "Time remaining before permanent deletion",
+      "recoverButton": "Recover Account",
+      "recoverDialogTitle": "Recover Account",
+      "recoverDialogDescription": "Do you want to cancel the pending account deletion and restore your account to active status?",
+      "backToPrivacy": "Back to Privacy Settings",
+      "error": {
+        "title": "Recovery Failed",
+        "unknown": "Unable to process account recovery right now. Please try again."
+      }
     }
   },
   "preferences": {

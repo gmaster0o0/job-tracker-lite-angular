@@ -132,6 +132,30 @@ describe('EmailService', () => {
     },
   );
 
+  it.each<[SupportLang, string]>([
+    ['en', 'Confirm your account deletion - Job Tracker Lite'],
+    ['hu', 'Fioktorles megerositese - Job Tracker Lite'],
+  ])(
+    'should send the account deletion verification email in %s',
+    async (lang, subject) => {
+      await service.sendDeleteAccountVerificationEmail(
+        testVerificationRecipient,
+        testVerificationUrl,
+        lang,
+        7,
+      );
+
+      expect(emailProvider.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          to: testVerificationRecipient,
+          subject,
+          text: expect.stringContaining(testVerificationUrl),
+          html: expect.stringContaining(testVerificationUrl),
+        }),
+      );
+    },
+  );
+
   it('should wrap provider errors in a backend-style exception', async () => {
     emailProvider.send.mockRejectedValueOnce(new Error('smtp failed'));
 

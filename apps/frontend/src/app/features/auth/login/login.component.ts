@@ -14,6 +14,7 @@ import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import {
+  AccountDataAccessService,
   AuthDataAccessService,
   AuthSessionService,
   ZodNgControlBridgeDirective,
@@ -43,6 +44,7 @@ import { loginSchema } from '@job-tracker-lite-angular/schemas';
 })
 export class LoginComponent {
   private readonly authDataAccess = inject(AuthDataAccessService);
+  private readonly accountDataAccess = inject(AccountDataAccessService);
   private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
 
@@ -75,7 +77,7 @@ export class LoginComponent {
           try {
             const session = await this.authDataAccess.signIn(data().value());
             this.authSession.setSession(session);
-            await this.router.navigateByUrl('/jobs');
+            await this.redirectAfterLogin();
           } catch (error) {
             if (this.shouldRedirectToVerifyEmail(error)) {
               await this.router.navigateByUrl(
@@ -103,5 +105,20 @@ export class LoginComponent {
     }
 
     return error.errorCode.toUpperCase() === 'EMAIL_NOT_VERIFIED';
+  }
+
+  private async redirectAfterLogin(): Promise<void> {
+    try {
+      const deletionStatus = await this.accountDataAccess.getDeletionStatus();
+
+      if (deletionStatus.status === 'pending_deletion') {
+        await this.router.navigateByUrl('/privacy/delete-pending');
+        return;
+      }
+    } catch {
+      // If deletion status endpoint fails, do not block regular login flow.
+    }
+
+    await this.router.navigateByUrl('/jobs');
   }
 }

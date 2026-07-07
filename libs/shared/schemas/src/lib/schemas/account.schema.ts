@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { basicPasswordSchema } from './auth.schema';
+import { basicPasswordSchema, supportLangSchema } from './auth.schema';
 import { errorCodes } from '../error-codes';
 import { required } from '../validators/required';
 
@@ -35,3 +35,23 @@ export const changePasswordSchema = z
   });
 
 export type ChangePasswordDto = z.infer<typeof changePasswordSchema>;
+
+export const deleteAccountSchema = z.object({
+  language: supportLangSchema,
+});
+
+export type DeleteAccountDto = z.infer<typeof deleteAccountSchema>;
+
+export const accountStatusSchema = z.enum(['active', 'pending_deletion']);
+export type AccountStatusDto = z.infer<typeof accountStatusSchema>;
+
+export const accountDeletionStatusSchema = z.object({
+  status: accountStatusSchema,
+  gracePeriodRequestedAt: z.coerce.date().nullable(),
+  scheduledDeletionAt: z.coerce.date().nullable(),
+  gracePeriodDays: z.number().int().positive(),
+});
+
+export type AccountDeletionStatusDto = z.infer<
+  typeof accountDeletionStatusSchema
+>;

@@ -1,8 +1,11 @@
 import { Controller, Get, Post, Query, Res, UseGuards } from '@nestjs/common';
 import {
+  AccountDeletionStatusDto,
   AccountSettingsDto,
   ChangeEmailRequestDto,
+  DeleteAccountDto,
   changeEmailRequestSchema,
+  deleteAccountSchema,
 } from '@job-tracker-lite-angular/schemas';
 import { ZodBody } from '@job-tracker-lite-angular/core-utils';
 import {
@@ -57,5 +60,45 @@ export class AccountController {
   ): Promise<void> {
     const redirectUrl = await this.accountService.restoreEmail(token);
     response.redirect(redirectUrl);
+  }
+
+  @Post('delete/request')
+  @UseGuards(AuthGuard)
+  async requestAccountDeletion(
+    @Session() session: UserSession,
+    @ZodBody(deleteAccountSchema) body: DeleteAccountDto,
+  ): Promise<{ status: true }> {
+    await this.accountService.requestAccountDeletion(
+      session.user.id,
+      body.language,
+    );
+    return { status: true };
+  }
+
+  @Get('confirm-delete')
+  @AllowAnonymous()
+  async confirmAccountDeletion(
+    @Query('token') token: string,
+    @Res() response: Response,
+  ): Promise<void> {
+    const redirectUrl = await this.accountService.confirmAccountDeletion(token);
+    response.redirect(redirectUrl);
+  }
+
+  @Get('delete/status')
+  @UseGuards(AuthGuard)
+  async getDeletionStatus(
+    @Session() session: UserSession,
+  ): Promise<AccountDeletionStatusDto> {
+    return this.accountService.getAccountDeletionStatus(session.user.id);
+  }
+
+  @Post('delete/recover')
+  @UseGuards(AuthGuard)
+  async recoverDeletion(
+    @Session() session: UserSession,
+  ): Promise<{ status: true }> {
+    await this.accountService.recoverAccountDeletion(session.user.id);
+    return { status: true };
   }
 }

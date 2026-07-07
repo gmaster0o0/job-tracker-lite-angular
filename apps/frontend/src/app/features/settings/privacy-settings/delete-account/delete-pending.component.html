@@ -1,0 +1,43 @@
+<div class="mx-auto max-w-2xl p-8">
+  <hlm-card class="space-y-6 p-8">
+    <div class="space-y-2">
+      <h1 class="text-2xl font-semibold">
+        {{ 'privacySettings.deletePending.title' | transloco }}
+      </h1>
+      <p class="text-muted-foreground">
+        {{ 'privacySettings.deletePending.description' | transloco }}
+      </p>
+    </div>
+
+    @if (isLoading()) {
+      <p class="text-sm text-muted-foreground">
+        {{ 'privacySettings.deletePending.loading' | transloco }}
+      </p>
+    } @else {
+      <div class="rounded-md border border-border bg-muted/30 p-4">
+        <p class="text-sm text-muted-foreground">
+          {{ 'privacySettings.deletePending.countdownLabel' | transloco }}
+        </p>
+        <p class="mt-2 text-3xl font-semibold tracking-tight">
+          {{ remainingDays() }}d {{ remainingHours() }}h
+          {{ remainingMinutes() }}m
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button hlmBtn (click)="onRecover()" [disabled]="isRecovering()">
+          {{ 'privacySettings.deletePending.recoverButton' | transloco }}
+        </button>
+        <a hlmBtn variant="outline" routerLink="/settings/privacy">
+          {{ 'privacySettings.deletePending.backToPrivacy' | transloco }}
+        </a>
+      </div>
+    }
+
+    <app-server-error-alert
+      [errorMessage]="error()"
+      translationPrefix="privacySettings.deletePending"
+      cssClass="w-full"
+    />
+  </hlm-card>
+</div>

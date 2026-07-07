@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaModule } from '@job-tracker-lite-angular/prisma';
 import { JobsModule } from './jobs/jobs.module';
 import { HealthModule } from './healthcheck/healthcheck.module';
@@ -13,6 +14,7 @@ import { ProfileModule } from './profile/profile.module';
       isGlobal: true,
       cache: true,
     }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     JobsModule,
     HealthModule,

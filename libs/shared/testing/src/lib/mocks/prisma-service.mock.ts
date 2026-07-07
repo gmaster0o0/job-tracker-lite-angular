@@ -32,6 +32,7 @@ export function createPrismaServiceMock(mockFactory: () => any) {
       findUniqueOrThrow: mockFactory(),
       findFirst: mockFactory(),
       update: mockFactory(),
+      deleteMany: mockFactory(),
     },
     userProfile: {
       findUnique: mockFactory(),
@@ -43,6 +44,12 @@ export function createPrismaServiceMock(mockFactory: () => any) {
       deleteMany: mockFactory(),
     },
     emailChangeToken: {
+      findUnique: mockFactory(),
+      delete: mockFactory(),
+      deleteMany: mockFactory(),
+      create: mockFactory(),
+    },
+    accountDeletionToken: {
       findUnique: mockFactory(),
       delete: mockFactory(),
       deleteMany: mockFactory(),

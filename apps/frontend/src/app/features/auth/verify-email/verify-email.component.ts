@@ -4,7 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
-import { ServerErrorAlertComponent } from '../../../shared/server-error-alert/server-error-alert.component';
+import { ServerErrorAlertComponent } from '@job-tracker-lite-angular/frontend-shared';
 
 @Component({
   standalone: true,
