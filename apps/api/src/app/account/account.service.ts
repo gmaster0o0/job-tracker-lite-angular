@@ -20,7 +20,7 @@ export class AccountService {
   private readonly defaultAuthApiUrl = 'http://localhost:3000/api/auth';
   private readonly defaultEmailVerificationExpiresIn = 60 * 60 * 24; // 24 hours
   private readonly defaultEmailRestoreExpiresIn = 60 * 60 * 24 * 7; // 7 days
-  private readonly defaultDeleteVerificationExpiresIn = 60 * 60 * 24; // 24 hours
+  private readonly defaultDeleteVerificationExpiresIn = 60 * 30; // 30 minutes
   private readonly defaultDeletionGracePeriodDays = 7;
 
   constructor(
@@ -194,6 +194,12 @@ export class AccountService {
           expiresAt: restoreTokenExpiresAt,
         },
       });
+
+      await tx.session.deleteMany({
+        where: {
+          userId: verifyToken.userId,
+        },
+      });
     });
 
     const restoreUrl = `${this.getApiBaseUrl()}/account/restore-email?token=${encodeURIComponent(
@@ -278,7 +284,7 @@ export class AccountService {
       },
     });
 
-    if (user.status === AccountStatus.PENDING_DELETION) {
+    if (this.isPendingDeletionStatus(user.status)) {
       return;
     }
 
@@ -333,7 +339,7 @@ export class AccountService {
 
     const gracePeriodRequestedAt = new Date();
     const gracePeriodDays = this.getDeletionGracePeriodDays();
-    const scheduledDeletionAt = this.addDays(
+    const scheduledDeletionAt = this.calculateScheduledDeletionAt(
       gracePeriodRequestedAt,
       gracePeriodDays,
     );
@@ -352,9 +358,15 @@ export class AccountService {
       await tx.accountDeletionToken.delete({
         where: { token: deletionToken.token },
       });
+
+      await tx.session.deleteMany({
+        where: {
+          userId: deletionToken.userId,
+        },
+      });
     });
 
-    return this.buildFrontendDeletePendingUrl('confirmed');
+    return this.buildFrontendLoginDeletionUrl('confirmed');
   }
 
   async getAccountDeletionStatus(
@@ -469,29 +481,36 @@ export class AccountService {
   }
 
   private getDeleteVerificationExpiresIn(): number {
-    return (
-      this.configService.get<number>(
-        'ACCOUNT_DELETION_CONFIRM_EXPIRES_IN_SECONDS',
-      ) ?? this.defaultDeleteVerificationExpiresIn
+    const raw = this.configService.get<string | number>(
+      'ACCOUNT_DELETION_CONFIRM_EXPIRES_IN_SECONDS',
     );
+    const parsed = Number(raw ?? this.defaultDeleteVerificationExpiresIn);
+
+    return Number.isFinite(parsed) && parsed > 0
+      ? Math.floor(parsed)
+      : this.defaultDeleteVerificationExpiresIn;
   }
 
   private getDeletionGracePeriodDays(): number {
-    const raw =
-      this.configService.get<number>('ACCOUNT_DELETION_GRACE_PERIOD_DAYS') ??
-      this.defaultDeletionGracePeriodDays;
+    const raw = this.configService.get<string | number>(
+      'ACCOUNT_DELETION_GRACE_PERIOD_DAYS',
+    );
+    const parsed = Number(raw ?? this.defaultDeletionGracePeriodDays);
 
-    return Number.isFinite(raw) && raw > 0
-      ? Math.floor(raw)
+    return Number.isFinite(parsed) &&
+      parsed >= this.defaultDeletionGracePeriodDays
+      ? Math.floor(parsed)
       : this.defaultDeletionGracePeriodDays;
   }
 
   private mapAccountStatus(
     status: AccountStatus,
   ): 'active' | 'pending_deletion' {
-    return status === AccountStatus.PENDING_DELETION
-      ? 'pending_deletion'
-      : 'active';
+    return this.isPendingDeletionStatus(status) ? 'pending_deletion' : 'active';
+  }
+
+  private isPendingDeletionStatus(status: AccountStatus): boolean {
+    return status === AccountStatus.PENDING_DELETION;
   }
 
   private addSeconds(seconds: number): Date {
@@ -502,5 +521,19 @@ export class AccountService {
     const next = new Date(date);
     next.setDate(next.getDate() + days);
     return next;
+  }
+
+  private calculateScheduledDeletionAt(
+    requestedAt: Date,
+    gracePeriodDays: number,
+  ): Date {
+    const graceThreshold = this.addDays(requestedAt, gracePeriodDays);
+
+    // Deletion jobs run at midnight, so align to the first midnight after threshold.
+    const scheduled = new Date(graceThreshold);
+    scheduled.setHours(0, 0, 0, 0);
+    scheduled.setDate(scheduled.getDate() + 1);
+
+    return scheduled;
   }
 }

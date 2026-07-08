@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { AccountStatus } from '@prisma/client';
 import { errorCodes } from '../error-codes';
 import { required } from '../validators/required';
 
@@ -108,6 +109,7 @@ export const authUserSchema = z.object({
   name: z.string(),
   email: z.email(),
   emailVerified: z.boolean(),
+  status: z.nativeEnum(AccountStatus).optional().default(AccountStatus.ACTIVE),
   image: z.string().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),

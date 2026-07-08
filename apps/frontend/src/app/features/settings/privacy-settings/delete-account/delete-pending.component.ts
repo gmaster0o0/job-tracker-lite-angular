@@ -114,7 +114,7 @@ export class DeletePendingComponent {
       const status = await this.accountDataAccess.getDeletionStatus();
 
       if (status.status !== 'pending_deletion' || !status.scheduledDeletionAt) {
-        await this.router.navigate(['/settings/privacy']);
+        // Guard will handle route blocking for non-pending users; leave component to render or be unused.
         return;
       }
 

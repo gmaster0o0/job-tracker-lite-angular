@@ -8,7 +8,7 @@ export class AccountDeletionScheduler {
 
   constructor(private readonly accountService: AccountService) {}
 
-  @Cron(CronExpression.EVERY_HOUR)
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async handleDeletionJob(): Promise<void> {
     const deletedUsers = await this.accountService.executeScheduledDeletion();
 

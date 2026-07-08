@@ -7,12 +7,6 @@
     {{ 'privacySettings.deleteAccount.description' | transloco }}
   </p>
 
-  @if (confirmationSent()) {
-    <p class="w-full text-sm text-green-700">
-      {{ 'privacySettings.deleteAccount.verificationEmailSent' | transloco }}
-    </p>
-  }
-
   <div hlmAlertAction>
     <button
       hlmBtn
@@ -30,3 +24,9 @@
     cssClass="w-full"
   />
 </hlm-alert>
+
+@if (confirmationSent()) {
+  <p class="w-full text-sm text-green-700">
+    {{ 'privacySettings.deleteAccount.verificationEmailSent' | transloco }}
+  </p>
+}

@@ -45,6 +45,11 @@ export class AuthConfigFactory {
       trustedOrigins: this.getTrustedOrigins(this.configService),
       emailAndPassword: this.getEmailAndPasswordConfig(),
       emailVerification: this.getEmailVerificationConfig(),
+      user: {
+        fields: {
+          status: 'status',
+        },
+      },
     });
   }
 
