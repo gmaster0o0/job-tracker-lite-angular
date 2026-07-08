@@ -1,4 +1,4 @@
-import { ComponentHarness, TestElement } from '@angular/cdk/testing';
+import { ComponentHarness } from '@angular/cdk/testing';
 import { ServerErrorAlertHarness } from '@job-tracker-lite-angular/frontend-shared';
 
 export class DeletePendingHarness extends ComponentHarness {

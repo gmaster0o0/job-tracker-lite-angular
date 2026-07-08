@@ -15,6 +15,7 @@ export * from './lib/fixtures/profile.fixtures';
 export * from './lib/mocks/jobs-data-access.mock';
 export * from './lib/mocks/contacts-data-access.mock';
 export * from './lib/mocks/notes-data-access.mock';
+export * from './lib/mocks/account-data-access.mock';
 export * from './lib/mocks/prisma-service.mock';
 export * from './lib/mocks/brn-dialog-ref.mock';
 export * from './lib/mocks/data-access.mock';

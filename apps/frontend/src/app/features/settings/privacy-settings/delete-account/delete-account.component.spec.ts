@@ -62,7 +62,6 @@ describe('DeleteAccountComponent', () => {
     };
 
     await dialogOptions.context.onConfirm();
-    fixture.detectChanges();
 
     expect(accountDataAccessMock.requestAccountDeletion).toHaveBeenCalledWith({
       language: 'en',
@@ -89,7 +88,6 @@ describe('DeleteAccountComponent', () => {
     };
 
     await dialogOptions.context.onConfirm();
-    fixture.detectChanges();
 
     const alert = await harness.getErrorAlert();
     expect(alert).not.toBeNull();

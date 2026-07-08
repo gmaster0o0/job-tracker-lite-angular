@@ -5,34 +5,30 @@ import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import {
   createBackendError,
   accountDeletionStatusFixtures,
+  createAccountDataAccessMock,
 } from '@job-tracker-lite-angular/testing';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { vi } from 'vitest';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { DeletePendingComponent } from './delete-pending.component';
 import { DeletePendingHarness } from './delete-pending.harness';
 
 describe('DeletePendingComponent', () => {
   async function setup(statusFixture = accountDeletionStatusFixtures.pending) {
-    const accountDataAccessMock = {
-      getDeletionStatus: vi.fn().mockResolvedValue(statusFixture),
-      recoverAccountDeletion: vi.fn().mockResolvedValue(undefined),
-    };
+    const accountDataAccessMock = createAccountDataAccessMock({
+      deletionStatus: statusFixture,
+    });
 
     const dialogServiceMock = {
       open: vi.fn(),
     };
 
-    const routerMock = {
-      navigate: vi.fn().mockResolvedValue(true),
-    };
-
     await TestBed.configureTestingModule({
       imports: [DeletePendingComponent, getTranslocoModule()],
       providers: [
+        provideRouter([]),
         { provide: AccountDataAccessService, useValue: accountDataAccessMock },
         { provide: HlmDialogService, useValue: dialogServiceMock },
-        { provide: Router, useValue: routerMock },
       ],
     }).compileComponents();
 
@@ -42,19 +38,20 @@ describe('DeletePendingComponent', () => {
       DeletePendingHarness,
     );
 
+    const router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true as never);
+
     return {
       fixture,
       harness,
       accountDataAccessMock,
       dialogServiceMock,
-      routerMock,
+      router,
     };
   }
 
   it('displays countdown when pending', async () => {
-    const { fixture, harness } = await setup();
-
-    fixture.detectChanges();
+    const { harness } = await setup();
 
     const text = await harness.getCountdownText();
     expect(text).toContain('d');
@@ -63,13 +60,8 @@ describe('DeletePendingComponent', () => {
   });
 
   it('opens recover dialog and recovers account on confirm', async () => {
-    const {
-      fixture,
-      harness,
-      dialogServiceMock,
-      accountDataAccessMock,
-      routerMock,
-    } = await setup();
+    const { harness, dialogServiceMock, accountDataAccessMock, router } =
+      await setup();
 
     await harness.clickRecoverButton();
 
@@ -79,21 +71,23 @@ describe('DeletePendingComponent', () => {
       context: { onConfirm: () => Promise<void> };
     };
 
-    await dialogOptions.context.onConfirm();
-    fixture.detectChanges();
+    const recoverSpy = vi
+      .spyOn(accountDataAccessMock, 'recoverAccountDeletion')
+      .mockResolvedValue(undefined as unknown as void);
 
-    expect(accountDataAccessMock.recoverAccountDeletion).toHaveBeenCalled();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/settings/privacy'], {
+    await dialogOptions.context.onConfirm();
+
+    expect(recoverSpy).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledWith(['/settings/privacy'], {
       queryParams: { accountDeletion: 'recovered' },
     });
   });
 
   it('shows backend error when recover fails', async () => {
-    const { fixture, harness, dialogServiceMock, accountDataAccessMock } =
-      await setup();
+    const { harness, dialogServiceMock, accountDataAccessMock } = await setup();
 
-    accountDataAccessMock.recoverAccountDeletion.mockRejectedValue(
-      createBackendError('unknown', 500),
+    vi.spyOn(accountDataAccessMock, 'recoverAccountDeletion').mockRejectedValue(
+      createBackendError('unknown', 500) as unknown as Error,
     );
 
     await harness.clickRecoverButton();
@@ -103,7 +97,6 @@ describe('DeletePendingComponent', () => {
     };
 
     await dialogOptions.context.onConfirm();
-    fixture.detectChanges();
 
     const alert = await harness.getErrorAlert();
     expect(alert).not.toBeNull();
