@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { EmailService } from '../email/email.service';
 import { getLanguageFromResetUrl } from '../email/email.utils';
 import { Injectable } from '@nestjs/common';
+import { AccountStatus } from '@prisma/client';
 
 type EmailAndPasswordConfig = NonNullable<
   BetterAuthOptions['emailAndPassword']
@@ -46,8 +47,13 @@ export class AuthConfigFactory {
       emailAndPassword: this.getEmailAndPasswordConfig(),
       emailVerification: this.getEmailVerificationConfig(),
       user: {
-        fields: {
-          status: 'status',
+        additionalFields: {
+          status: {
+            type: 'string',
+            required: false,
+            input: false,
+            defaultValue: AccountStatus.ACTIVE,
+          },
         },
       },
     });

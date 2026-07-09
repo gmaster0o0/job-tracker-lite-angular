@@ -23,6 +23,5 @@ import { ProfileModule } from './profile/profile.module';
     ProfileModule,
   ],
   controllers: [],
-  providers: [],
 })
 export class AppModule {}

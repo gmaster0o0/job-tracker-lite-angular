@@ -63,7 +63,11 @@ describe('authGuard', () => {
       authGuard({} as never, { url: '/privacy/delete-pending' } as never),
     );
 
-    expect(allowResult).toBe(true);
+    // Guard redirects pending sessions to the delete-pending page
+    expect(allowResult instanceof UrlTree).toBe(true);
+    expect(router.serializeUrl(allowResult as UrlTree)).toBe(
+      '/privacy/delete-pending',
+    );
 
     // Active user should be prevented from visiting delete-pending
     authSessionServiceMock.loadSession.mockResolvedValue(
