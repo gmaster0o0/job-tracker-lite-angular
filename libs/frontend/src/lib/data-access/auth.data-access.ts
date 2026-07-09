@@ -139,6 +139,7 @@ export class AuthDataAccessService {
         '/api/account/change-email',
         {
           newEmail: dto.newEmail,
+          language: dto.language,
         },
         {
           withCredentials: true,

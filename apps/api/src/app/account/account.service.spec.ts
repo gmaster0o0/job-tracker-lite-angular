@@ -79,6 +79,7 @@ describe('AccountService', () => {
     await service.requestEmailChange(
       accountUserFixtures.primary.id,
       changeEmailRequestFixtures.valid.newEmail,
+      changeEmailRequestFixtures.valid.language,
     );
 
     expect(prismaMock.user.update).toHaveBeenCalledWith(
@@ -117,6 +118,7 @@ describe('AccountService', () => {
 
     const redirectUrl = await service.verifyEmailChange(
       emailChangeTokenFixtures.verify.token,
+      changeEmailRequestFixtures.valid.language,
     );
 
     expect(prismaMock.user.update).toHaveBeenCalledWith(
@@ -235,6 +237,7 @@ describe('AccountService', () => {
     try {
       const redirect = await service.confirmAccountDeletion(
         accountDeletionTokenFixtures.valid.token,
+        deleteAccountRequestFixtures.english.language,
       );
 
       expect(prismaMock.user.update).toHaveBeenCalledWith(
@@ -276,6 +279,9 @@ describe('AccountService', () => {
     prismaMock.accountDeletionToken.findUnique.mockResolvedValue(
       accountDeletionTokenFixtures.valid,
     );
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue(
+      accountUserFixtures.primary,
+    );
 
     jest.useFakeTimers();
     jest.setSystemTime(accountDeletionTimingFixtures.confirmAt);
@@ -283,6 +289,7 @@ describe('AccountService', () => {
     try {
       await service.confirmAccountDeletion(
         accountDeletionTokenFixtures.valid.token,
+        deleteAccountRequestFixtures.english.language,
       );
 
       expect(prismaMock.user.update).toHaveBeenCalledWith(

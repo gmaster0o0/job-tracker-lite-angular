@@ -200,11 +200,10 @@ model UserProfile {
   workingStyle     WorkingStyle?
   careerType       CareerPreferenceType?
   
-  isPublic             Int      @default(0)
-  personalVisibility   Int      @default(30)
-  contactVisibility    Int      @default(30)
-  skillsVisibility     Int      @default(30)
-  preferenceVisibility Int      @default(30)
+  personalVisibility   Int      @default(0)
+  contactVisibility    Int      @default(0)
+  skillsVisibility     Int      @default(0)
+  preferenceVisibility Int      @default(0)
   
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt

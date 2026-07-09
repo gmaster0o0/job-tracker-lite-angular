@@ -27,6 +27,7 @@ export const changeEmailRequestFixtures: {
 } = {
   valid: {
     newEmail: 'new-admin@example.com',
+    language: 'en',
   },
 };
 

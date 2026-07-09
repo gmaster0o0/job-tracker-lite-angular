@@ -71,6 +71,7 @@ describe('AccountController', () => {
     expect(serviceMock.requestEmailChange).toHaveBeenCalledWith(
       authSessionFixtures.authenticated?.user.id,
       changeEmailRequestFixtures.valid.newEmail,
+      changeEmailRequestFixtures.valid.language,
     );
   });
 
@@ -78,7 +79,12 @@ describe('AccountController', () => {
     serviceMock.verifyEmailChange.mockResolvedValue(
       accountRedirectFixtures.emailChangeVerified,
     );
-    const response = { redirect: jest.fn() } as any;
+    const response = {
+      redirect: jest.fn(),
+      req: {
+        url: 'http://localhost:3000/api/account/verify-email-change?token=verify-token&language=en',
+      },
+    } as any;
 
     await controller.verifyEmailChange('verify-token', response);
 
@@ -120,7 +126,12 @@ describe('AccountController', () => {
     serviceMock.confirmAccountDeletion.mockResolvedValue(
       accountRedirectFixtures.accountDeletionConfirmed,
     );
-    const response = { redirect: jest.fn() } as any;
+    const response = {
+      redirect: jest.fn(),
+      req: {
+        url: 'http://localhost:3000/api/account/confirm-delete?token=delete-token&language=en',
+      },
+    } as any;
 
     await controller.confirmAccountDeletion('delete-token', response);
 

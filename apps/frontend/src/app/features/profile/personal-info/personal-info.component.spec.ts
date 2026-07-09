@@ -75,6 +75,21 @@ describe('PersonalInfoComponent', () => {
     );
   });
 
+  it('should only emit fields managed by this section on save', () => {
+    fixture.componentRef.setInput('isEditing', true);
+    const saveSpy = vi.spyOn(component.save, 'emit');
+
+    component.onSave();
+
+    expect(saveSpy).toHaveBeenCalledWith({
+      name: userProfileFixtures.johnDoe.name,
+      title: userProfileFixtures.johnDoe.title,
+      city: userProfileFixtures.johnDoe.city,
+      bio: userProfileFixtures.johnDoe.bio,
+      personalVisibility: userProfileFixtures.johnDoe.personalVisibility,
+    });
+  });
+
   it('should be disabled when disabled input is true', async () => {
     fixture.componentRef.setInput('disabled', true);
     expect(await harness.isEditDisabled()).toBe(true);

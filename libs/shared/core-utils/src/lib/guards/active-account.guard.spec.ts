@@ -7,7 +7,7 @@ describe('ActiveAccountGuard', () => {
   let guard: ActiveAccountGuard;
   let reflector: Reflector;
 
-  const createMockContext = (session: {
+  const createMockContext = (session?: {
     user?: { id: string; status: AccountStatus };
   }): ExecutionContext => {
     return {
