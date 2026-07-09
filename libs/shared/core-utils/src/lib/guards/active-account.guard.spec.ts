@@ -1,15 +1,15 @@
-// active-account.guard.spec.ts
 import { Reflector } from '@nestjs/core';
 import { ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { AccountStatus } from '@prisma/client';
 import { ActiveAccountGuard } from './active-account.guard';
-import { ALLOW_PENDING_KEY } from '../decorators';
 
 describe('ActiveAccountGuard', () => {
   let guard: ActiveAccountGuard;
   let reflector: Reflector;
 
-  const createMockContext = (session: any): ExecutionContext => {
+  const createMockContext = (session: {
+    user?: { id: string; status: AccountStatus };
+  }): ExecutionContext => {
     return {
       switchToHttp: () => ({
         getRequest: () => ({ session }),

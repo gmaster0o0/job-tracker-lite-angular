@@ -221,12 +221,15 @@ describe('AccountService', () => {
     }
   });
 
-  it('confirms account deletion and returns pending redirect', async () => {
+  it('confirms account deletion, sends notification, and returns pending redirect', async () => {
     jest.useFakeTimers();
     jest.setSystemTime(accountDeletionTimingFixtures.confirmAt);
 
     prismaMock.accountDeletionToken.findUnique.mockResolvedValue(
       accountDeletionTokenFixtures.valid,
+    );
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue(
+      accountUserFixtures.primary,
     );
 
     try {
@@ -250,6 +253,16 @@ describe('AccountService', () => {
           userId: accountUserFixtures.primary.id,
         },
       });
+
+      expect(
+        emailServiceMock.sendDeleteAccountNotificationEmail,
+      ).toHaveBeenCalledWith(
+        accountUserFixtures.primary.email,
+        accountDeletionTimingFixtures.expectedScheduledDeletionAt,
+        'http://localhost:4200/settings/account/recover',
+        deleteAccountRequestFixtures.english.language,
+      );
+
       expect(redirect).toContain(
         accountRedirectFixtures.accountDeletionConfirmed,
       );

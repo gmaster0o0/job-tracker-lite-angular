@@ -12,6 +12,7 @@ import {
   getEmailChangeConfirmationTemplate,
   getRestoreEmailTemplate,
   getVerificationEmailTemplate,
+  getDeleteAccountNotificationTemplate,
 } from './templates';
 
 @Injectable()
@@ -98,6 +99,26 @@ export class EmailService {
     const template = getDeleteAccountVerificationTemplate(
       verificationUrl,
       graceDays,
+      lang,
+    );
+
+    await this.send({
+      to,
+      subject: template.subject,
+      text: template.text,
+      html: template.html,
+    });
+  }
+
+  async sendDeleteAccountNotificationEmail(
+    to: string,
+    scheduledDeletionAt: Date,
+    recoverUrl: string,
+    lang: SupportLang = 'en',
+  ): Promise<void> {
+    const template = getDeleteAccountNotificationTemplate(
+      scheduledDeletionAt,
+      recoverUrl,
       lang,
     );
 

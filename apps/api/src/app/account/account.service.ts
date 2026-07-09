@@ -341,6 +341,11 @@ export class AccountService {
       gracePeriodDays,
     );
 
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { id: deletionToken.userId },
+      select: { email: true, language: true },
+    });
+
     await this.prisma.$transaction(async (tx) => {
       await tx.user.update({
         where: { id: deletionToken.userId },
@@ -362,6 +367,14 @@ export class AccountService {
         },
       });
     });
+
+    const recoverUrl = this.buildFrontendRecoverUrl();
+    await this.emailService.sendDeleteAccountNotificationEmail(
+      user.email,
+      scheduledDeletionAt,
+      recoverUrl,
+      user.language,
+    );
 
     return this.buildFrontendLoginDeletionUrl('confirmed');
   }
@@ -455,6 +468,10 @@ export class AccountService {
     return `${this.getFrontendOrigin()}/auth/login?accountDeletion=${encodeURIComponent(
       status,
     )}`;
+  }
+
+  private buildFrontendRecoverUrl(): string {
+    return `${this.getFrontendOrigin()}/settings/account/recover`;
   }
 
   private buildFrontendDeletePendingUrl(status: string): string {
