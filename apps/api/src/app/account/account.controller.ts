@@ -7,7 +7,10 @@ import {
   changeEmailRequestSchema,
   deleteAccountSchema,
 } from '@job-tracker-lite-angular/schemas';
-import { ZodBody } from '@job-tracker-lite-angular/core-utils';
+import {
+  getLanguageFromUrl,
+  ZodBody,
+} from '@job-tracker-lite-angular/core-utils';
 import {
   AllowAnonymous,
   AuthGuard,
@@ -38,6 +41,7 @@ export class AccountController {
     await this.accountService.requestEmailChange(
       session.user.id,
       body.newEmail,
+      body.language,
     );
     return { status: true };
   }
@@ -48,7 +52,11 @@ export class AccountController {
     @Query('token') token: string,
     @Res() response: Response,
   ): Promise<void> {
-    const redirectUrl = await this.accountService.verifyEmailChange(token);
+    const language = getLanguageFromUrl(response.req.url);
+    const redirectUrl = await this.accountService.verifyEmailChange(
+      token,
+      language,
+    );
     response.redirect(redirectUrl);
   }
 
@@ -81,7 +89,11 @@ export class AccountController {
     @Query('token') token: string,
     @Res() response: Response,
   ): Promise<void> {
-    const redirectUrl = await this.accountService.confirmAccountDeletion(token);
+    const language = getLanguageFromUrl(response.req.url);
+    const redirectUrl = await this.accountService.confirmAccountDeletion(
+      token,
+      language,
+    );
     response.redirect(redirectUrl);
   }
 

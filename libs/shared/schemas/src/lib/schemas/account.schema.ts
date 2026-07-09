@@ -13,6 +13,7 @@ export type AccountSettingsDto = z.infer<typeof accountSettingsSchema>;
 
 export const changeEmailRequestSchema = z.object({
   newEmail: required.pipe(z.email()),
+  language: supportLangSchema,
 });
 
 export type ChangeEmailRequestDto = z.infer<typeof changeEmailRequestSchema>;

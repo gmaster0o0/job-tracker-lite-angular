@@ -4,7 +4,7 @@ import type { BetterAuthOptions } from 'better-auth';
 import { prismaAdapter } from '@better-auth/prisma-adapter';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from '../email/email.service';
-import { getLanguageFromResetUrl } from '../email/email.utils';
+import { getLanguageFromUrl } from '@job-tracker-lite-angular/core-utils';
 import { Injectable } from '@nestjs/common';
 import { AccountStatus } from '@prisma/client';
 
@@ -63,7 +63,7 @@ export class AuthConfigFactory {
       autoSignIn: true,
       requireEmailVerification: true,
       sendResetPassword: async ({ user, url }) => {
-        const language = getLanguageFromResetUrl(url);
+        const language = getLanguageFromUrl(url);
         await this.emailService.sendResetPasswordEmail(
           user.email,
           url,
@@ -86,7 +86,7 @@ export class AuthConfigFactory {
           'callbackURL',
           `${frontendOrigin}/auth/verify-email`,
         );
-        const language = getLanguageFromResetUrl(url);
+        const language = getLanguageFromUrl(url);
         await this.emailService.sendVerificationEmail(
           user.email,
           verifyUrl.toString(),

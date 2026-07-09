@@ -72,8 +72,7 @@ describe('DeleteAccountComponent', () => {
   });
 
   it('shows backend error when deletion request fails', async () => {
-    const { fixture, harness, accountDataAccessMock, dialogServiceMock } =
-      await setup();
+    const { harness, accountDataAccessMock, dialogServiceMock } = await setup();
 
     accountDataAccessMock.requestAccountDeletion.mockRejectedValue(
       createBackendError('unknown', 500),

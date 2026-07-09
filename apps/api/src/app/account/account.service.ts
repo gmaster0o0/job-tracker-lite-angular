@@ -46,7 +46,11 @@ export class AccountService {
     };
   }
 
-  async requestEmailChange(userId: string, newEmailRaw: string): Promise<void> {
+  async requestEmailChange(
+    userId: string,
+    newEmailRaw: string,
+    language: SupportLang,
+  ): Promise<void> {
     const newEmail = newEmailRaw.trim().toLowerCase();
     const currentUser = await this.prisma.user.findUniqueOrThrow({
       where: { id: userId },
@@ -119,11 +123,14 @@ export class AccountService {
     await this.emailService.sendEmailChangeConfirmationEmail(
       newEmail,
       verifyUrl,
-      'en',
+      language,
     );
   }
 
-  async verifyEmailChange(token: string): Promise<string> {
+  async verifyEmailChange(
+    token: string,
+    language: SupportLang,
+  ): Promise<string> {
     if (!token || token.trim().length === 0) {
       return this.buildFrontendAccountUrl('missing_token');
     }
@@ -209,7 +216,7 @@ export class AccountService {
     await this.emailService.sendEmailRestoreEmail(
       verifyToken.oldEmail,
       restoreUrl,
-      'en',
+      language,
     );
 
     return this.buildFrontendAccountUrl('verified');
@@ -317,7 +324,10 @@ export class AccountService {
     );
   }
 
-  async confirmAccountDeletion(token: string): Promise<string> {
+  async confirmAccountDeletion(
+    token: string,
+    language: SupportLang,
+  ): Promise<string> {
     if (!token || token.trim().length === 0) {
       return this.buildFrontendLoginDeletionUrl('missing_token');
     }
@@ -343,7 +353,7 @@ export class AccountService {
 
     const user = await this.prisma.user.findUniqueOrThrow({
       where: { id: deletionToken.userId },
-      select: { email: true, language: true },
+      select: { email: true },
     });
 
     await this.prisma.$transaction(async (tx) => {
@@ -373,7 +383,7 @@ export class AccountService {
       user.email,
       scheduledDeletionAt,
       recoverUrl,
-      user.language,
+      language,
     );
 
     return this.buildFrontendLoginDeletionUrl('confirmed');
@@ -472,12 +482,6 @@ export class AccountService {
 
   private buildFrontendRecoverUrl(): string {
     return `${this.getFrontendOrigin()}/settings/account/recover`;
-  }
-
-  private buildFrontendDeletePendingUrl(status: string): string {
-    return `${this.getFrontendOrigin()}/privacy/delete-pending?accountDeletion=${encodeURIComponent(
-      status,
-    )}`;
   }
 
   private getEmailVerificationExpiresInSeconds(): number {
