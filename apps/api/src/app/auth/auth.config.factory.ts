@@ -15,8 +15,6 @@ type EmailVerificationConfig = NonNullable<
   BetterAuthOptions['emailVerification']
 >;
 
-type DeleteUserConfig = NonNullable<BetterAuthOptions['user']>['deleteUser'];
-
 @Injectable()
 export class AuthConfigFactory {
   private defaultBaseUrl = 'http://localhost:3000/api/auth';
@@ -116,23 +114,6 @@ export class AuthConfigFactory {
       .split(',')
       .map((origin) => origin.trim())
       .filter((origin) => origin.length > 0);
-  }
-  /**
-   *
-   * @returns
-   */
-  private getDeleteUserConfig(): DeleteUserConfig {
-    return {
-      enabled: true,
-      sendDeleteAccountVerification: async (data, request) => {
-        const language = getLanguageFromResetUrl(data.url);
-        await this.emailService.sendDeleteAccountVerificationEmail(
-          data.user.email,
-          data.url,
-          language,
-        );
-      },
-    };
   }
 
   private isProduction(): boolean {

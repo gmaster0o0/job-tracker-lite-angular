@@ -113,7 +113,7 @@ describe('EmailService', () => {
 
   it.each<[SupportLang, string]>([
     ['en', 'Confirm your email change - Job Tracker Lite'],
-    ['hu', 'Email-cim valtozas megerositese - Job Tracker Lite'],
+    ['hu', 'Email-cím változtatás megerősítése - Job Tracker Lite'],
   ])(
     'should send the email change confirmation email in %s',
     async (lang, subject) => {
@@ -134,7 +134,7 @@ describe('EmailService', () => {
 
   it.each<[SupportLang, string]>([
     ['en', 'Confirm your account deletion - Job Tracker Lite'],
-    ['hu', 'Fioktorles megerositese - Job Tracker Lite'],
+    ['hu', 'Fióktörlés megerősítése - Job Tracker Lite'],
   ])(
     'should send the account deletion verification email in %s',
     async (lang, subject) => {

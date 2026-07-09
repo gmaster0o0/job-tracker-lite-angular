@@ -15,14 +15,15 @@ const templates: Record<
   }
 > = {
   hu: {
-    subject: 'Fioktorles megerositese - Job Tracker Lite',
+    subject: 'Fióktörlés megerősítése - Job Tracker Lite',
     text: (url: string, graceDays: number) =>
-      `Kerted a Job Tracker Lite fiokod torleset. A torlest ezen a linken erositsd meg: ${url}. A megerosites utan ${graceDays} napos turelmi ido indul, amely alatt visszavonhatod a torlest.`,
+      `Kérted a Job Tracker Lite fiókod törlését. A törlést ezen a linken erősítsd meg: ${url}. A megerősítés után ${graceDays} napos türelmi idő indul, amely alatt visszavonhatod a törlést.`,
     html: (url: string, graceDays: number) => `
       <p>Szia!</p>
-      <p>Kerted a Job Tracker Lite fiokod torleset.</p>
-      <p>A torlest ezen a linken erositsd meg: <a href="${url}">${url}</a></p>
-      <p>A megerosites utan ${graceDays} napos turelmi ido indul, amely alatt visszavonhatod a torlest.</p>
+      <p>Kérted a Job Tracker Lite fiókod törlését.</p>
+      <p>Kattints az alábbi linkre a törlés megerősítéséhez:</p>
+      <p><a href="${url}">Fiók törlésének megerősítése</a></p>
+      <p>A megerősítés után ${graceDays} napos türelmi idő indul, amely alatt visszavonhatod a törlést.</p>
     `,
   },
   en: {
@@ -32,7 +33,7 @@ const templates: Record<
     html: (url: string, graceDays: number) => `
       <p>Hello!</p>
       <p>You requested account deletion for your Job Tracker Lite account.</p>
-      <p>Confirm deletion using this link: <a href="${url}">${url}</a></p>
+      <p><a href="${url}">Confirm Account Deletion</a></p>
       <p>After confirmation, a ${graceDays}-day grace period starts and you can still recover the account during that time.</p>
     `,
   },

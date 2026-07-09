@@ -331,9 +331,6 @@ export class AccountService {
     }
 
     if (deletionToken.expiresAt <= new Date()) {
-      await this.prisma.accountDeletionToken.delete({
-        where: { token: deletionToken.token },
-      });
       return this.buildFrontendLoginDeletionUrl('token_expired');
     }
 
