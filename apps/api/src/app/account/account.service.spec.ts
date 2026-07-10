@@ -196,7 +196,7 @@ describe('AccountService', () => {
       accountUserFixtures.primary.email,
       expect.stringMatching(/\/account\/confirm-delete\?token=.*&language=en/),
       deleteAccountRequestFixtures.english.language,
-      7,
+      10, // grace period days from config override
     );
   });
 
@@ -248,9 +248,9 @@ describe('AccountService', () => {
           where: { id: accountUserFixtures.primary.id },
           data: expect.objectContaining({
             status: 'PENDING_DELETION',
-            gracePeriodDays: 7,
+            gracePeriodDays: 10, // from config override
             scheduledDeletionAt:
-              accountDeletionTimingFixtures.expectedScheduledDeletionAt,
+              accountDeletionTimingFixtures.expectedScheduledDeletionAfter10Days,
           }),
         }),
       );
@@ -264,7 +264,7 @@ describe('AccountService', () => {
         emailServiceMock.sendDeleteAccountNotificationEmail,
       ).toHaveBeenCalledWith(
         accountUserFixtures.primary.email,
-        accountDeletionTimingFixtures.expectedScheduledDeletionAt,
+        accountDeletionTimingFixtures.expectedScheduledDeletionAfter10Days,
         'http://localhost:4200/privacy/delete-pending?language=en',
         deleteAccountRequestFixtures.english.language,
       );

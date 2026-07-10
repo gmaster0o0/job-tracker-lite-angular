@@ -86,7 +86,7 @@ describe('AccountController', () => {
       },
     } as any;
 
-    await controller.verifyEmailChange('verify-token', response);
+    await controller.verifyEmailChange('verify-token', 'en', response);
 
     expect(response.redirect).toHaveBeenCalledWith(
       accountRedirectFixtures.emailChangeVerified,
@@ -133,7 +133,7 @@ describe('AccountController', () => {
       },
     } as any;
 
-    await controller.confirmAccountDeletion('delete-token', response);
+    await controller.confirmAccountDeletion('delete-token', 'en', response);
 
     expect(response.redirect).toHaveBeenCalledWith(
       accountRedirectFixtures.accountDeletionConfirmed,
