@@ -104,7 +104,9 @@ describe('AccountService', () => {
       emailServiceMock.sendEmailChangeConfirmationEmail,
     ).toHaveBeenCalledWith(
       changeEmailRequestFixtures.valid.newEmail,
-      expect.stringContaining('/account/verify-email-change?token='),
+      expect.stringMatching(
+        /\/account\/verify-email-change\?token=.*&language=en/,
+      ),
       'en',
     );
   });
@@ -132,7 +134,7 @@ describe('AccountService', () => {
     );
     expect(emailServiceMock.sendEmailRestoreEmail).toHaveBeenCalledWith(
       emailChangeTokenFixtures.verify.oldEmail,
-      expect.stringContaining('/account/restore-email?token='),
+      expect.stringMatching(/\/account\/restore-email\?token=.*&language=en/),
       'en',
     );
     expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
@@ -141,6 +143,7 @@ describe('AccountService', () => {
       },
     });
     expect(redirectUrl).toContain('/settings/account?emailChange=verified');
+    expect(redirectUrl).toContain('language=en');
   });
 
   it('restores old email and clears all sessions', async () => {
@@ -191,7 +194,7 @@ describe('AccountService', () => {
       emailServiceMock.sendDeleteAccountVerificationEmail,
     ).toHaveBeenCalledWith(
       accountUserFixtures.primary.email,
-      expect.stringContaining('/account/confirm-delete?token='),
+      expect.stringMatching(/\/account\/confirm-delete\?token=.*&language=en/),
       deleteAccountRequestFixtures.english.language,
       7,
     );
@@ -262,7 +265,7 @@ describe('AccountService', () => {
       ).toHaveBeenCalledWith(
         accountUserFixtures.primary.email,
         accountDeletionTimingFixtures.expectedScheduledDeletionAt,
-        'http://localhost:4200/settings/account/recover',
+        'http://localhost:4200/privacy/delete-pending?language=en',
         deleteAccountRequestFixtures.english.language,
       );
 

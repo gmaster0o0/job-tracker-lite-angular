@@ -123,7 +123,7 @@ export const accountDeletionTimingFixtures = {
   requestAt: new Date('2026-01-01T10:00:00.000Z'),
   confirmAt: new Date('2026-01-01T10:15:00.000Z'),
   expectedTokenExpiresAt: new Date('2026-01-01T10:30:00.000Z'),
-  expectedScheduledDeletionAt: new Date(2026, 0, 9, 0, 0, 0, 0),
+  expectedScheduledDeletionAt: new Date('2026-01-08T10:15:00.000Z'),
 };
 
 export const accountRedirectFixtures = {

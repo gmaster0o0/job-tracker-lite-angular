@@ -4,7 +4,10 @@ import type { BetterAuthOptions } from 'better-auth';
 import { prismaAdapter } from '@better-auth/prisma-adapter';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from '../email/email.service';
-import { getLanguageFromUrl } from '@job-tracker-lite-angular/core-utils';
+import {
+  getLanguageFromUrl,
+  setLanguageOnUrl,
+} from '@job-tracker-lite-angular/core-utils';
 import { Injectable } from '@nestjs/common';
 import { AccountStatus } from '@prisma/client';
 
@@ -81,12 +84,19 @@ export class AuthConfigFactory {
           this.configService.get<string>('FRONTEND_URL') ??
           'http://localhost:4200';
         const verifyUrl = new URL(url);
-
-        verifyUrl.searchParams.set(
-          'callbackURL',
-          `${frontendOrigin}/auth/verify-email`,
+        const callbackUrl = new URL(
+          verifyUrl.searchParams.get('callbackURL') ?? '/auth/verify-email',
+          frontendOrigin,
         );
-        const language = getLanguageFromUrl(url);
+        const language = getLanguageFromUrl(
+          callbackUrl.toString(),
+          'language',
+          getLanguageFromUrl(url),
+        );
+
+        setLanguageOnUrl(callbackUrl, language);
+        verifyUrl.searchParams.set('callbackURL', callbackUrl.toString());
+
         await this.emailService.sendVerificationEmail(
           user.email,
           verifyUrl.toString(),

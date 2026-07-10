@@ -52,17 +52,36 @@ export class DeletePendingComponent {
     return Math.max(scheduled.getTime() - this.now().getTime(), 0);
   });
 
+  protected readonly remainingTotalMinutes = computed(() =>
+    Math.floor(this.remainingMs() / (1000 * 60)),
+  );
+
   protected readonly remainingDays = computed(() =>
-    Math.floor(this.remainingMs() / (1000 * 60 * 60 * 24)),
+    Math.floor(this.remainingTotalMinutes() / (60 * 24)),
   );
 
   protected readonly remainingHours = computed(() =>
-    Math.floor((this.remainingMs() % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+    Math.floor((this.remainingTotalMinutes() % (60 * 24)) / 60),
   );
 
-  protected readonly remainingMinutes = computed(() =>
-    Math.floor((this.remainingMs() % (1000 * 60 * 60)) / (1000 * 60)),
+  protected readonly remainingMinutes = computed(
+    () => this.remainingTotalMinutes() % 60,
   );
+
+  protected readonly formattedDeletionAt = computed(() => {
+    const scheduled = this.scheduledDeletionAt();
+    if (!scheduled) {
+      return null;
+    }
+
+    const locale =
+      this.translocoService.getActiveLang() === 'hu' ? 'hu-HU' : 'en-US';
+
+    return new Intl.DateTimeFormat(locale, {
+      dateStyle: 'long',
+      timeStyle: 'short',
+    }).format(scheduled);
+  });
 
   constructor() {
     this.refreshStatus();
@@ -120,8 +139,7 @@ export class DeletePendingComponent {
         // Guard will handle route blocking for non-pending users; leave component to render or be unused.
         return;
       }
-
-      this.scheduledDeletionAt.set(new Date(status.scheduledDeletionAt));
+      this.scheduledDeletionAt.set(status.scheduledDeletionAt);
     } catch (apiError) {
       this.error.set(isBackendError(apiError) ? apiError.errorCode : 'unknown');
     } finally {

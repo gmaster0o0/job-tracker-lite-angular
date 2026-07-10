@@ -63,9 +63,14 @@ describe('authGuard', () => {
       authGuard({} as never, { url: '/privacy/delete-pending' } as never),
     );
 
-    // Guard redirects pending sessions to the delete-pending page
-    expect(allowResult instanceof UrlTree).toBe(true);
-    expect(router.serializeUrl(allowResult as UrlTree)).toBe(
+    expect(allowResult).toBe(true);
+
+    const redirectPendingResult = await TestBed.runInInjectionContext(() =>
+      authGuard({} as never, { url: '/settings/account' } as never),
+    );
+
+    expect(redirectPendingResult instanceof UrlTree).toBe(true);
+    expect(router.serializeUrl(redirectPendingResult as UrlTree)).toBe(
       '/privacy/delete-pending',
     );
 

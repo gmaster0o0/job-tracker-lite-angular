@@ -13,7 +13,10 @@ import {
 import { AccountStatus, EmailChangeTokenType } from '@prisma/client';
 import { EmailService } from '../email/email.service';
 import { randomUUID } from 'crypto';
-import { parseEnvValue } from '@job-tracker-lite-angular/core-utils';
+import {
+  parseEnvValue,
+  setLanguageOnUrl,
+} from '@job-tracker-lite-angular/core-utils';
 
 @Injectable()
 export class AccountService {
@@ -117,13 +120,15 @@ export class AccountService {
       });
     });
 
-    const verifyUrl = `${this.getApiBaseUrl()}/account/verify-email-change?token=${encodeURIComponent(
-      verifyToken,
-    )}`;
+    const verifyUrl = new URL(
+      `${this.getApiBaseUrl()}/account/verify-email-change`,
+    );
+    verifyUrl.searchParams.set('token', verifyToken);
+    setLanguageOnUrl(verifyUrl, language);
 
     await this.emailService.sendEmailChangeConfirmationEmail(
       newEmail,
-      verifyUrl,
+      verifyUrl.toString(),
       language,
     );
   }
@@ -133,7 +138,7 @@ export class AccountService {
     language: SupportLang,
   ): Promise<string> {
     if (!token || token.trim().length === 0) {
-      return this.buildFrontendAccountUrl('missing_token');
+      return this.buildFrontendAccountUrl('missing_token', language);
     }
 
     const verifyToken = await this.prisma.emailChangeToken.findUnique({
@@ -141,14 +146,14 @@ export class AccountService {
     });
 
     if (!verifyToken || verifyToken.type !== EmailChangeTokenType.VERIFY) {
-      return this.buildFrontendAccountUrl('invalid_token');
+      return this.buildFrontendAccountUrl('invalid_token', language);
     }
 
     if (verifyToken.expiresAt <= new Date()) {
       await this.prisma.emailChangeToken.delete({
         where: { token: verifyToken.token },
       });
-      return this.buildFrontendAccountUrl('token_expired');
+      return this.buildFrontendAccountUrl('token_expired', language);
     }
 
     const existingOwner = await this.prisma.user.findFirst({
@@ -163,7 +168,7 @@ export class AccountService {
       await this.prisma.emailChangeToken.delete({
         where: { token: verifyToken.token },
       });
-      return this.buildFrontendAccountUrl('email_taken');
+      return this.buildFrontendAccountUrl('email_taken', language);
     }
 
     const restoreToken = randomUUID();
@@ -210,17 +215,17 @@ export class AccountService {
       });
     });
 
-    const restoreUrl = `${this.getApiBaseUrl()}/account/restore-email?token=${encodeURIComponent(
-      restoreToken,
-    )}`;
+    const restoreUrl = new URL(`${this.getApiBaseUrl()}/account/restore-email`);
+    restoreUrl.searchParams.set('token', restoreToken);
+    setLanguageOnUrl(restoreUrl, language);
 
     await this.emailService.sendEmailRestoreEmail(
       verifyToken.oldEmail,
-      restoreUrl,
+      restoreUrl.toString(),
       language,
     );
 
-    return this.buildFrontendAccountUrl('verified');
+    return this.buildFrontendAccountUrl('verified', language);
   }
 
   async restoreEmail(token: string): Promise<string> {
@@ -313,13 +318,13 @@ export class AccountService {
       });
     });
 
-    const verifyUrl = `${this.getApiBaseUrl()}/account/confirm-delete?token=${encodeURIComponent(
-      token,
-    )}`;
+    const verifyUrl = new URL(`${this.getApiBaseUrl()}/account/confirm-delete`);
+    verifyUrl.searchParams.set('token', token);
+    setLanguageOnUrl(verifyUrl, language);
 
     await this.emailService.sendDeleteAccountVerificationEmail(
       user.email,
-      verifyUrl,
+      verifyUrl.toString(),
       language,
       this.getDeletionGracePeriodDays(),
     );
@@ -330,19 +335,18 @@ export class AccountService {
     language: SupportLang,
   ): Promise<string> {
     if (!token || token.trim().length === 0) {
-      return this.buildFrontendLoginDeletionUrl('missing_token');
+      return this.buildFrontendLoginDeletionUrl('missing_token', language);
     }
-
     const deletionToken = await this.prisma.accountDeletionToken.findUnique({
       where: { token },
     });
 
     if (!deletionToken) {
-      return this.buildFrontendLoginDeletionUrl('invalid_token');
+      return this.buildFrontendLoginDeletionUrl('invalid_token', language);
     }
 
     if (deletionToken.expiresAt <= new Date()) {
-      return this.buildFrontendLoginDeletionUrl('token_expired');
+      return this.buildFrontendLoginDeletionUrl('token_expired', language);
     }
 
     const gracePeriodRequestedAt = new Date();
@@ -379,7 +383,7 @@ export class AccountService {
       });
     });
 
-    const recoverUrl = this.buildFrontendRecoverUrl();
+    const recoverUrl = this.buildFrontendRecoverUrl(language);
     await this.emailService.sendDeleteAccountNotificationEmail(
       user.email,
       scheduledDeletionAt,
@@ -387,7 +391,7 @@ export class AccountService {
       language,
     );
 
-    return this.buildFrontendLoginDeletionUrl('confirmed');
+    return this.buildFrontendLoginDeletionUrl('confirmed', language);
   }
 
   async getAccountDeletionStatus(
@@ -463,26 +467,46 @@ export class AccountService {
     ).replace(/\/$/, '');
   }
 
-  private buildFrontendAccountUrl(status: string): string {
-    return `${this.getFrontendOrigin()}/settings/account?emailChange=${encodeURIComponent(
-      status,
-    )}`;
+  private buildFrontendAccountUrl(
+    status: string,
+    language?: SupportLang,
+  ): string {
+    const url = new URL('/settings/account', this.getFrontendOrigin());
+    url.searchParams.set('emailChange', status);
+    if (language) {
+      setLanguageOnUrl(url, language);
+    }
+    return url.toString();
   }
 
-  private buildFrontendLoginUrl(status: string): string {
-    return `${this.getFrontendOrigin()}/auth/login?emailRestore=${encodeURIComponent(
-      status,
-    )}`;
+  private buildFrontendLoginUrl(
+    status: string,
+    language?: SupportLang,
+  ): string {
+    const url = new URL('/auth/login', this.getFrontendOrigin());
+    url.searchParams.set('emailRestore', status);
+    if (language) {
+      setLanguageOnUrl(url, language);
+    }
+    return url.toString();
   }
 
-  private buildFrontendLoginDeletionUrl(status: string): string {
-    return `${this.getFrontendOrigin()}/auth/login?accountDeletion=${encodeURIComponent(
-      status,
-    )}`;
+  private buildFrontendLoginDeletionUrl(
+    status: string,
+    language?: SupportLang,
+  ): string {
+    const url = new URL('/auth/login', this.getFrontendOrigin());
+    url.searchParams.set('accountDeletion', status);
+    if (language) {
+      setLanguageOnUrl(url, language);
+    }
+    return url.toString();
   }
 
-  private buildFrontendRecoverUrl(): string {
-    return `${this.getFrontendOrigin()}/settings/account/recover`;
+  private buildFrontendRecoverUrl(language: SupportLang): string {
+    const url = new URL('/privacy/delete-pending', this.getFrontendOrigin());
+    setLanguageOnUrl(url, language);
+    return url.toString();
   }
 
   private getEmailVerificationExpiresInSeconds(): number {
@@ -539,13 +563,6 @@ export class AccountService {
     requestedAt: Date,
     gracePeriodDays: number,
   ): Date {
-    const graceThreshold = this.addDays(requestedAt, gracePeriodDays);
-
-    // Deletion jobs run at midnight, so align to the first midnight after threshold.
-    const scheduled = new Date(graceThreshold);
-    scheduled.setHours(0, 0, 0, 0);
-    scheduled.setDate(scheduled.getDate() + 1);
-
-    return scheduled;
+    return this.addDays(requestedAt, gracePeriodDays);
   }
 }

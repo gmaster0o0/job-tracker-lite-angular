@@ -112,11 +112,15 @@ export class AuthDataAccessService {
   }
 
   async sendVerificationEmail(dto: SendVerificationEmailDto): Promise<void> {
+    const callbackURL = new URL('/auth/verify-email', window.location.origin);
+    callbackURL.searchParams.set('language', dto.language);
+
     await firstValueFrom(
       this.http.post(
         '/api/auth/send-verification-email',
         {
           email: dto.email,
+          callbackURL: callbackURL.toString(),
         },
         {
           withCredentials: true,

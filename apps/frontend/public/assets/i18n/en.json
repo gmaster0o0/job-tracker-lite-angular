@@ -184,6 +184,7 @@
       "description": "Your account is marked for deletion. You can recover it before the timer reaches zero.",
       "loading": "Loading deletion status...",
       "countdownLabel": "Time remaining before permanent deletion",
+      "scheduledAtLabel": "Scheduled deletion time",
       "recoverButton": "Recover Account",
       "backToHome": "Back to the Homepage",
       "recoverDialogTitle": "Recover Account",

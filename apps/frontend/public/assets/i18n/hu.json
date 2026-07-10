@@ -182,6 +182,7 @@
       "description": "A fiókod törlésre jelölve. A visszaszámláló lejárta előtt még visszaállíthatod.",
       "loading": "Törlési állapot betöltése...",
       "countdownLabel": "Hátralévő idő a végleges törlésig",
+      "scheduledAtLabel": "Ütemezett végleges törlés időpontja",
       "recoverButton": "Fiók visszaállítása",
       "backToHome": "Vissza a kezdőlapra",
       "recoverDialogTitle": "Fiók visszaállítása",

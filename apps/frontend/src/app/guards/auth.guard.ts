@@ -6,24 +6,19 @@ export const authGuard: CanActivateFn = async (_route, state) => {
   const authSession = inject(AuthSessionService);
   const router = inject(Router);
   const session = await authSession.loadSession();
+  const target = state?.url ?? '';
 
   if (!session) {
     return router.createUrlTree(['/auth/login']);
+  }
+
+  if (target.startsWith('/privacy/delete-pending')) {
+    return authSession.isPendingDeletion() ? true : router.createUrlTree(['/']);
   }
 
   if (authSession.isPendingDeletion()) {
     return router.createUrlTree(['/privacy/delete-pending']);
   }
 
-  // If user is trying to access the delete-pending page, only allow when session indicates pending deletion
-  const target = state?.url ?? '';
-  if (target.startsWith('/privacy/delete-pending')) {
-    if (!authSession.isPendingDeletion()) {
-      return router.createUrlTree(['/']);
-    }
-    return true;
-  }
-
-  // Otherwise allow navigation (component handles UI and any further checks)
   return true;
 };

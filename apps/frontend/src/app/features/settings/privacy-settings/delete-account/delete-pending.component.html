@@ -22,6 +22,12 @@
           {{ remainingDays() }}d {{ remainingHours() }}h
           {{ remainingMinutes() }}m
         </p>
+        @if (formattedDeletionAt()) {
+          <p class="mt-2 text-sm text-muted-foreground">
+            {{ 'privacySettings.deletePending.scheduledAtLabel' | transloco }}:
+            {{ formattedDeletionAt() }}
+          </p>
+        }
       </div>
 
       <div class="flex flex-wrap gap-3">

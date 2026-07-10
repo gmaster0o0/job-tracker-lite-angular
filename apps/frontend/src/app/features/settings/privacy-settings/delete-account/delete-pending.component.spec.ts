@@ -59,6 +59,24 @@ describe('DeletePendingComponent', () => {
     expect(text).toContain('m');
   });
 
+  it('renders the remaining time from the scheduled deletion date', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-01-01T09:49:00.000Z'));
+
+    try {
+      const { harness } = await setup({
+        status: 'pending_deletion',
+        gracePeriodRequestedAt: new Date('2026-01-01T00:00:00.000Z'),
+        scheduledDeletionAt: new Date('2026-01-02T12:00:00.000Z'),
+        gracePeriodDays: 7,
+      });
+
+      expect(await harness.getCountdownText()).toContain('1d 2h 11m');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('opens recover dialog and recovers account on confirm', async () => {
     const { harness, dialogServiceMock, accountDataAccessMock, router } =
       await setup();
