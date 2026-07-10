@@ -50,8 +50,7 @@ describe('DeleteAccountComponent', () => {
   });
 
   it('shows confirmation info after successful deletion request', async () => {
-    const { fixture, harness, accountDataAccessMock, dialogServiceMock } =
-      await setup();
+    const { harness, accountDataAccessMock, dialogServiceMock } = await setup();
 
     await harness.clickDeleteButton();
 

@@ -13,6 +13,7 @@ import {
 import { AccountStatus, EmailChangeTokenType } from '@prisma/client';
 import { EmailService } from '../email/email.service';
 import { randomUUID } from 'crypto';
+import { parseEnvValue } from '@job-tracker-lite-angular/core-utils';
 
 @Injectable()
 export class AccountService {
@@ -21,7 +22,7 @@ export class AccountService {
   private readonly defaultEmailVerificationExpiresIn = 60 * 60 * 24; // 24 hours
   private readonly defaultEmailRestoreExpiresIn = 60 * 60 * 24 * 7; // 7 days
   private readonly defaultDeleteVerificationExpiresIn = 60 * 30; // 30 minutes
-  private readonly defaultDeletionGracePeriodDays = 7;
+  private readonly defaultDeletionGracePeriodDays = 7; // 7 days;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -485,40 +486,31 @@ export class AccountService {
   }
 
   private getEmailVerificationExpiresInSeconds(): number {
-    return (
-      this.configService.get<number>('EMAIL_VERIFICATION_EXPIRES_IN_SECONDS') ??
-      this.defaultEmailVerificationExpiresIn
+    return parseEnvValue(
+      this.configService.get('EMAIL_VERIFICATION_EXPIRES_IN_SECONDS'),
+      this.defaultEmailVerificationExpiresIn,
     );
   }
 
   private getEmailRestoreExpiresInSeconds(): number {
-    return (
-      this.configService.get<number>('EMAIL_RESTORE_EXPIRES_IN_SECONDS') ??
-      this.defaultEmailRestoreExpiresIn
+    return parseEnvValue(
+      this.configService.get('EMAIL_RESTORE_EXPIRES_IN_SECONDS'),
+      this.defaultEmailRestoreExpiresIn,
     );
   }
 
   private getDeleteVerificationExpiresIn(): number {
-    const raw = this.configService.get<string | number>(
-      'ACCOUNT_DELETION_CONFIRM_EXPIRES_IN_SECONDS',
+    return parseEnvValue(
+      this.configService.get('ACCOUNT_DELETION_CONFIRM_EXPIRES_IN_SECONDS'),
+      this.defaultDeleteVerificationExpiresIn,
     );
-    const parsed = Number(raw ?? this.defaultDeleteVerificationExpiresIn);
-
-    return Number.isFinite(parsed) && parsed > 0
-      ? Math.floor(parsed)
-      : this.defaultDeleteVerificationExpiresIn;
   }
 
   private getDeletionGracePeriodDays(): number {
-    const raw = this.configService.get<string | number>(
-      'ACCOUNT_DELETION_GRACE_PERIOD_DAYS',
+    return parseEnvValue(
+      this.configService.get('ACCOUNT_DELETION_GRACE_PERIOD_DAYS'),
+      this.defaultDeletionGracePeriodDays,
     );
-    const parsed = Number(raw ?? this.defaultDeletionGracePeriodDays);
-
-    return Number.isFinite(parsed) &&
-      parsed >= this.defaultDeletionGracePeriodDays
-      ? Math.floor(parsed)
-      : this.defaultDeletionGracePeriodDays;
   }
 
   private mapAccountStatus(
