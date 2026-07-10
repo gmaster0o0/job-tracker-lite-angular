@@ -7,8 +7,9 @@ export class DeleteAccountHarness extends ComponentHarness {
   private readonly deleteButtonLocator = this.locatorFor(
     'button[variant="destructive"]',
   );
-  private readonly successTextLocator =
-    this.locatorForOptional('.text-green-700');
+  private readonly successTextLocator = this.locatorForOptional(
+    'hlm-alert.bg-green-50 [hlmAlertDescription]',
+  );
   private readonly errorAlertLocator = this.locatorForOptional(
     ServerErrorAlertHarness,
   );

@@ -507,10 +507,12 @@ export class AccountService {
   }
 
   private getDeletionGracePeriodDays(): number {
-    return parseEnvValue(
+    const configuredDays = parseEnvValue(
       this.configService.get('ACCOUNT_DELETION_GRACE_PERIOD_DAYS'),
       this.defaultDeletionGracePeriodDays,
     );
+    const minDays = this.defaultDeletionGracePeriodDays;
+    return configuredDays < minDays ? minDays : configuredDays;
   }
 
   private mapAccountStatus(

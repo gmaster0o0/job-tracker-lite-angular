@@ -162,7 +162,7 @@ describe('AccountController', () => {
 
     await expect(
       controller.recoverDeletion(authSessionFixtures.authenticated as never),
-    ).resolves.toEqual({ status: true });
+    ).resolves.toBeUndefined();
 
     expect(serviceMock.recoverAccountDeletion).toHaveBeenCalledWith(
       authSessionFixtures.authenticated?.user.id,
