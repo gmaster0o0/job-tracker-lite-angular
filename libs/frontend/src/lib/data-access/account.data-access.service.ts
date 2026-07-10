@@ -14,7 +14,7 @@ export class AccountDataAccessService {
 
   async requestAccountDeletion(dto: DeleteAccountDto): Promise<void> {
     await firstValueFrom(
-      this.http.post('/api/account/delete/request', dto, {
+      this.http.post<void>('/api/account/delete/request', dto, {
         withCredentials: true,
       }),
     );
@@ -30,7 +30,7 @@ export class AccountDataAccessService {
 
   async recoverAccountDeletion(): Promise<void> {
     await firstValueFrom(
-      this.http.post(
+      this.http.post<void>(
         '/api/account/delete/recover',
         {},
         {

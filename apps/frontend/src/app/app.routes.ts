@@ -107,6 +107,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'privacy/delete-pending',
+        canActivate: [authGuard],
         loadComponent: () =>
           import(
             './features/settings/privacy-settings/delete-account/delete-pending.component'

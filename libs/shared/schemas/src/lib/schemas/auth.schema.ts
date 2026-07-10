@@ -109,7 +109,7 @@ export const authUserSchema = z.object({
   name: z.string(),
   email: z.email(),
   emailVerified: z.boolean(),
-  status: z.nativeEnum(AccountStatus).optional().default(AccountStatus.ACTIVE),
+  status: z.enum(AccountStatus).optional().default(AccountStatus.ACTIVE),
   image: z.string().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),

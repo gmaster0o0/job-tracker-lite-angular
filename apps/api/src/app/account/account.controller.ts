@@ -107,10 +107,7 @@ export class AccountController {
 
   @Post('delete/recover')
   @UseGuards(AuthGuard)
-  async recoverDeletion(
-    @Session() session: UserSession,
-  ): Promise<{ status: true }> {
+  async recoverDeletion(@Session() session: UserSession): Promise<void> {
     await this.accountService.recoverAccountDeletion(session.user.id);
-    return { status: true };
   }
 }
