@@ -193,10 +193,11 @@
       }
     },
     "deleteAccount": {
+      "verificationEmailSentTitle": "privacySettings.deleteAccount.verificationEmailSentTitle",
+      "verificationEmailSent": "Megerősítő email elküldve. A türelmi idő indításához nyisd meg az emailben kapott linket.",
       "title": "Fiók törlése",
       "description": "Fióktörlési kérelem indítása. Először megerősítő emailt küldünk, és csak utána indul a türelmi idő.",
       "button": "Fiók törlése",
-      "verificationEmailSent": "Megerősítő email elküldve. A türelmi idő indításához nyisd meg az emailben kapott linket.",
       "dialogTitle": "Fiók törlésének megerősítése",
       "dialogDescription": "Elindítod a fióktörlési kérelmet? A megerősítéshez emailt küldünk, és a türelmi idő csak a link megerősítése után indul.",
       "error": {

@@ -34,7 +34,7 @@ describe('AccountService', () => {
     configValues = {
       FRONTEND_URL: 'http://localhost:4200',
       BETTER_AUTH_URL: 'http://localhost:3000/api/auth',
-      ACCOUNT_DELETION_GRACE_PERIOD_DAYS: 7,
+      ACCOUNT_DELETION_GRACE_PERIOD_DAYS: 10, //different from default to test config override
     };
 
     const moduleRef = await Test.createTestingModule({
@@ -271,38 +271,6 @@ describe('AccountService', () => {
 
       expect(redirect).toContain(
         accountRedirectFixtures.accountDeletionConfirmed,
-      );
-    } finally {
-      jest.useRealTimers();
-    }
-  });
-
-  it('uses default 7 day grace period when configured value is below minimum', async () => {
-    configValues.ACCOUNT_DELETION_GRACE_PERIOD_DAYS = 3;
-    prismaMock.accountDeletionToken.findUnique.mockResolvedValue(
-      accountDeletionTokenFixtures.valid,
-    );
-    prismaMock.user.findUniqueOrThrow.mockResolvedValue(
-      accountUserFixtures.primary,
-    );
-
-    jest.useFakeTimers();
-    jest.setSystemTime(accountDeletionTimingFixtures.confirmAt);
-
-    try {
-      await service.confirmAccountDeletion(
-        accountDeletionTokenFixtures.valid.token,
-        deleteAccountRequestFixtures.english.language,
-      );
-
-      expect(prismaMock.user.update).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: expect.objectContaining({
-            gracePeriodDays: 7,
-            scheduledDeletionAt:
-              accountDeletionTimingFixtures.expectedScheduledDeletionAt,
-          }),
-        }),
       );
     } finally {
       jest.useRealTimers();

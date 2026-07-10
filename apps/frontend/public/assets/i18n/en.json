@@ -195,10 +195,11 @@
       }
     },
     "deleteAccount": {
+      "verificationEmailSentTitle": "privacySettings.deleteAccount.verificationEmailSentTitle",
+      "verificationEmailSent": "A confirmation email has been sent. Please open the link in the email to start the deletion grace period.",
       "title": "Delete Account",
       "description": "Request account deletion. You will receive a confirmation email first, then a grace period starts before permanent deletion.",
       "button": "Delete Account",
-      "verificationEmailSent": "A confirmation email has been sent. Please open the link in the email to start the deletion grace period.",
       "dialogTitle": "Confirm Account Deletion",
       "dialogDescription": "Do you want to request account deletion? We will send a confirmation email and start the grace period only after confirmation.",
       "error": {

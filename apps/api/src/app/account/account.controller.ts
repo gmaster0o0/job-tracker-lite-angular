@@ -4,6 +4,7 @@ import {
   AccountSettingsDto,
   ChangeEmailRequestDto,
   DeleteAccountDto,
+  SupportLang,
   changeEmailRequestSchema,
   deleteAccountSchema,
 } from '@job-tracker-lite-angular/schemas';
@@ -50,9 +51,9 @@ export class AccountController {
   @AllowAnonymous()
   async verifyEmailChange(
     @Query('token') token: string,
+    @Query('language') language: SupportLang,
     @Res() response: Response,
   ): Promise<void> {
-    const language = getLanguageFromUrl(response.req.url);
     const redirectUrl = await this.accountService.verifyEmailChange(
       token,
       language,
@@ -87,9 +88,9 @@ export class AccountController {
   @AllowAnonymous()
   async confirmAccountDeletion(
     @Query('token') token: string,
+    @Query('language') language: SupportLang,
     @Res() response: Response,
   ): Promise<void> {
-    const language = getLanguageFromUrl(response.req.url);
     const redirectUrl = await this.accountService.confirmAccountDeletion(
       token,
       language,
