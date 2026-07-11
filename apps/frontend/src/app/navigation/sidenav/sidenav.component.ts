@@ -5,7 +5,7 @@ import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { provideIcons } from '@ng-icons/core';
-import { lucideLogOut, lucideArrowLeft } from '@ng-icons/lucide';
+import { lucideLogOut, lucideUndo2 } from '@ng-icons/lucide';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
 import { version as appVersion } from '../../../environments/version';
@@ -19,7 +19,7 @@ import { AuthService } from '../../features/auth/auth.service';
   providers: [
     provideIcons({
       lucideLogOut,
-      lucideArrowLeft,
+      lucideUndo2,
     }),
   ],
   imports: [
