@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { createJobsDataAccessMock } from '@job-tracker-lite-angular/testing';
 import { AppHarness } from './app.harness';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 @Component({
   standalone: true,
@@ -22,7 +23,7 @@ class DummyContentComponent {}
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [AppComponent, getTranslocoModule()],
       providers: [
         provideRouter([
           {

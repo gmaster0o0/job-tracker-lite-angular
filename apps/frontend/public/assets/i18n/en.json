@@ -16,6 +16,8 @@
     "cancel": "Cancel",
     "saveChanges": "Save Changes",
     "create": "Create",
+    "reject": "Reject",
+    "accept": "Accept",
     "logout": "Logout",
     "discard": "Discard",
     "save": "Save",
@@ -175,6 +177,12 @@
         "not_unique": "A job with a same link already exists. Please check your job list."
       }
     }
+  },
+  "cookieBanner": {
+    "title": "We use cookies",
+    "description": "We use cookies to ensure you get the best experience on our website. For more information on how we use cookies, please see our cookie policy.",
+    "detailedSettings": "By clicking \"Accept\", you agree to our use of cookies.",
+    "cookiePreferences": "Cookie preferences"
   },
   "privacySettings": {
     "title": "Privacy Settings",

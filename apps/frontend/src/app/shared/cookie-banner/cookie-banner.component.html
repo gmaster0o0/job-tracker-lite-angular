@@ -1,0 +1,47 @@
+@if (cookieService.showBanner()) {
+  <hlm-card
+    size="sm"
+    class="fixed bottom-4 right-4 z-50 max-w-md rounded-lg border border-border bg-background p-4 shadow-lg animate-in slide-in-from-bottom-2 duration-300"
+  >
+    <hlm-card-header>
+      <h3 hlmCardTitle>
+        <span class="text-lg">🍪</span>{{ 'cookieBanner.title' | transloco }}
+      </h3>
+      <p hlmCardDescription>
+        {{ 'cookieBanner.description' | transloco }}
+      </p>
+    </hlm-card-header>
+    <div hlmCardContent class="text-xs text-muted-foreground pb-3">
+      {{ 'cookieBanner.detailedSettings' | transloco }}
+    </div>
+    <hlm-card-footer class="flex justify-end gap-2 border-t border-border pt-3">
+      <button
+        hlmBtn
+        size="xs"
+        variant="link"
+        (click)="openDetailedSettings()"
+        class="cursor-pointer underline text-foreground hover:text-primary px-0 h-auto"
+      >
+        {{ 'cookieBanner.cookiePreferences' | transloco }}</button
+      >.
+      <button
+        hlmBtn
+        variant="outline"
+        size="sm"
+        class="text-xs"
+        (click)="rejectCookies()"
+      >
+        {{ 'common.reject' | transloco }}
+      </button>
+      <button
+        hlmBtn
+        variant="default"
+        size="sm"
+        class="text-xs"
+        (click)="acceptCookies()"
+      >
+        {{ 'common.accept' | transloco }}
+      </button>
+    </hlm-card-footer>
+  </hlm-card>
+}
