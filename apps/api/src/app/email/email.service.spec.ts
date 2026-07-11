@@ -113,7 +113,7 @@ describe('EmailService', () => {
 
   it.each<[SupportLang, string]>([
     ['en', 'Confirm your email change - Job Tracker Lite'],
-    ['hu', 'Email-cim valtozas megerositese - Job Tracker Lite'],
+    ['hu', 'Email-cím változtatás megerősítése - Job Tracker Lite'],
   ])(
     'should send the email change confirmation email in %s',
     async (lang, subject) => {
@@ -127,6 +127,57 @@ describe('EmailService', () => {
         expect.objectContaining({
           to: testVerificationRecipient,
           subject,
+        }),
+      );
+    },
+  );
+
+  it.each<[SupportLang, string]>([
+    ['en', 'Confirm your account deletion - Job Tracker Lite'],
+    ['hu', 'Fióktörlés megerősítése - Job Tracker Lite'],
+  ])(
+    'should send the account deletion verification email in %s',
+    async (lang, subject) => {
+      await service.sendDeleteAccountVerificationEmail(
+        testVerificationRecipient,
+        testVerificationUrl,
+        lang,
+        7,
+      );
+
+      expect(emailProvider.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          to: testVerificationRecipient,
+          subject,
+          text: expect.stringContaining(testVerificationUrl),
+          html: expect.stringContaining(testVerificationUrl),
+        }),
+      );
+    },
+  );
+
+  it.each<[SupportLang, string]>([
+    ['en', 'Your account is scheduled for deletion - Job Tracker Lite'],
+    ['hu', 'Fiókod törlése ütemezve lett - Job Tracker Lite'],
+  ])(
+    'should send the account deletion notification email in %s',
+    async (lang, subject) => {
+      const scheduledDeletionAt = new Date('2024-01-01T00:00:00Z');
+      const recoverUrl = 'https://example.com/recover';
+
+      await service.sendDeleteAccountNotificationEmail(
+        testVerificationRecipient,
+        scheduledDeletionAt,
+        recoverUrl,
+        lang,
+      );
+
+      expect(emailProvider.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          to: testVerificationRecipient,
+          subject,
+          text: expect.stringContaining(recoverUrl),
+          html: expect.stringContaining(recoverUrl),
         }),
       );
     },

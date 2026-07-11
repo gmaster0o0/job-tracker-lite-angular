@@ -88,7 +88,6 @@ describe('api/profile (e2e)', () => {
     async ({ level }) => {
       prismaMock.userProfile.upsert.mockResolvedValue({
         ...userProfileFixtures.johnDoe,
-        isPublic: level,
         personalVisibility: level,
         contactVisibility: level,
         skillsVisibility: level,
@@ -98,7 +97,6 @@ describe('api/profile (e2e)', () => {
       const res = await request(app.getHttpServer())
         .patch('/api/profile')
         .send({
-          isPublic: level,
           personalVisibility: level,
           contactVisibility: level,
           skillsVisibility: level,
@@ -106,7 +104,6 @@ describe('api/profile (e2e)', () => {
         })
         .expect(200);
 
-      expect(res.body.isPublic).toBe(level);
       expect(res.body.personalVisibility).toBe(level);
       expect(res.body.contactVisibility).toBe(level);
       expect(res.body.skillsVisibility).toBe(level);

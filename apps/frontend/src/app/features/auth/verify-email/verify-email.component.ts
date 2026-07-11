@@ -1,10 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { TranslocoModule, translateSignal } from '@jsverse/transloco';
+import {
+  TranslocoModule,
+  TranslocoService,
+  translateSignal,
+} from '@jsverse/transloco';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
-import { ServerErrorAlertComponent } from '../../../shared/server-error-alert/server-error-alert.component';
+import { ServerErrorAlertComponent } from '@job-tracker-lite-angular/frontend-shared';
+import { supportLangSchema } from '@job-tracker-lite-angular/schemas';
 
 @Component({
   standalone: true,
@@ -21,6 +26,7 @@ import { ServerErrorAlertComponent } from '../../../shared/server-error-alert/se
 })
 export class VerifyEmailComponent {
   private readonly route = inject(ActivatedRoute);
+  private readonly translocoService = inject(TranslocoService);
 
   protected readonly title = translateSignal('auth.verifyEmail.title');
   protected readonly subtitle = translateSignal('auth.verifyEmail.subtitle');
@@ -28,4 +34,14 @@ export class VerifyEmailComponent {
   protected readonly errorCode = signal<string | null>(
     this.route.snapshot.queryParamMap.get('error')?.toLowerCase() ?? null,
   );
+
+  constructor() {
+    const language = supportLangSchema.safeParse(
+      this.route.snapshot.queryParamMap.get('language'),
+    );
+
+    if (language.success) {
+      this.translocoService.setActiveLang(language.data);
+    }
+  }
 }

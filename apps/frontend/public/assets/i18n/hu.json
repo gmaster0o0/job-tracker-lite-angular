@@ -175,12 +175,35 @@
     }
   },
   "privacySettings": {
-    "title": "privacySettings.title",
-    "description": "privacySettings.description",
+    "title": "Adatvédelmi beállítások",
+    "description": "Az adatvédelmi beállítások kezelése.",
+    "deletePending": {
+      "title": "A fiók törlése folyamatban",
+      "description": "A fiókod törlésre jelölve. A visszaszámláló lejárta előtt még visszaállíthatod.",
+      "loading": "Törlési állapot betöltése...",
+      "countdownLabel": "Hátralévő idő a végleges törlésig",
+      "scheduledAtLabel": "Ütemezett végleges törlés időpontja",
+      "recoverButton": "Fiók visszaállítása",
+      "backToHome": "Vissza a kezdőlapra",
+      "recoverDialogTitle": "Fiók visszaállítása",
+      "recoverDialogDescription": "Biztosan megszakítod a törlési folyamatot, és újra aktívra állítod a fiókot?",
+      "error": {
+        "title": "Visszaállítás sikertelen",
+        "unknown": "Most nem sikerült visszaállítani a fiókot. Próbáld újra."
+      }
+    },
     "deleteAccount": {
-      "title": "privacySettings.deleteAccount.title",
-      "description": "privacySettings.deleteAccount.description",
-      "button": "privacySettings.deleteAccount.button"
+      "verificationEmailSentTitle": "privacySettings.deleteAccount.verificationEmailSentTitle",
+      "verificationEmailSent": "Megerősítő email elküldve. A türelmi idő indításához nyisd meg az emailben kapott linket.",
+      "title": "Fiók törlése",
+      "description": "Fióktörlési kérelem indítása. Először megerősítő emailt küldünk, és csak utána indul a türelmi idő.",
+      "button": "Fiók törlése",
+      "dialogTitle": "Fiók törlésének megerősítése",
+      "dialogDescription": "Elindítod a fióktörlési kérelmet? A megerősítéshez emailt küldünk, és a türelmi idő csak a link megerősítése után indul.",
+      "error": {
+        "title": "Fióktörlési kérelem sikertelen",
+        "unknown": "Most nem sikerült elindítani a fióktörlést. Próbáld újra."
+      }
     }
   },
   "preferences": {

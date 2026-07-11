@@ -67,7 +67,6 @@ export class PersonalInfoComponent {
       title: data.title,
       city: data.city,
       bio: data.bio,
-      isPublic: data.isPublic,
       personalVisibility: data.personalVisibility,
     };
     this.save.emit(updateDto);
