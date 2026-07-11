@@ -34,7 +34,7 @@ describe('authGuard', () => {
     );
 
     const result = await TestBed.runInInjectionContext(() =>
-      authGuard({} as never, {} as never),
+      authGuard({} as never, { url: '/jobs' } as never),
     );
 
     expect(result).toBe(true);
@@ -51,5 +51,40 @@ describe('authGuard', () => {
 
     expect(result instanceof UrlTree).toBe(true);
     expect(router.serializeUrl(result as UrlTree)).toBe('/auth/login');
+  });
+
+  it('should redirect pending deletion users to delete pending page', async () => {
+    authSessionServiceMock.loadSession.mockResolvedValue(
+      authSessionFixtures.pendingDeletion,
+    );
+    authSessionServiceMock.isPendingDeletion.mockReturnValue(true);
+
+    const allowResult = await TestBed.runInInjectionContext(() =>
+      authGuard({} as never, { url: '/privacy/delete-pending' } as never),
+    );
+
+    expect(allowResult).toBe(true);
+
+    const redirectPendingResult = await TestBed.runInInjectionContext(() =>
+      authGuard({} as never, { url: '/settings/account' } as never),
+    );
+
+    expect(redirectPendingResult instanceof UrlTree).toBe(true);
+    expect(router.serializeUrl(redirectPendingResult as UrlTree)).toBe(
+      '/privacy/delete-pending',
+    );
+
+    // Active user should be prevented from visiting delete-pending
+    authSessionServiceMock.loadSession.mockResolvedValue(
+      authSessionFixtures.authenticated,
+    );
+    authSessionServiceMock.isPendingDeletion.mockReturnValue(false);
+
+    const redirectResult = await TestBed.runInInjectionContext(() =>
+      authGuard({} as never, { url: '/privacy/delete-pending' } as never),
+    );
+
+    expect(redirectResult instanceof UrlTree).toBe(true);
+    expect(router.serializeUrl(redirectResult as UrlTree)).toBe('/');
   });
 });

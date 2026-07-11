@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DataManagementComponent } from './data-management.component';
 
-describe('DataManagemantComponent', () => {
+describe('DataManagementComponent', () => {
   let component: DataManagementComponent;
   let fixture: ComponentFixture<DataManagementComponent>;
 

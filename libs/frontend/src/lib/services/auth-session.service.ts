@@ -10,6 +10,9 @@ export class AuthSessionService {
   readonly session = this.sessionState.asReadonly();
   readonly isAuthenticated = computed(() => this.sessionState() !== null);
   readonly userId = computed(() => this.sessionState()?.user.id ?? null);
+  readonly isPendingDeletion = computed(
+    () => this.sessionState()?.user.status === 'PENDING_DELETION',
+  );
 
   async loadSession(): Promise<AuthSessionDto> {
     try {

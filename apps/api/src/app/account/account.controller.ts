@@ -1,10 +1,17 @@
 import { Controller, Get, Post, Query, Res, UseGuards } from '@nestjs/common';
 import {
+  AccountDeletionStatusDto,
   AccountSettingsDto,
   ChangeEmailRequestDto,
+  DeleteAccountDto,
+  SupportLang,
   changeEmailRequestSchema,
+  deleteAccountSchema,
 } from '@job-tracker-lite-angular/schemas';
-import { ZodBody } from '@job-tracker-lite-angular/core-utils';
+import {
+  getLanguageFromUrl,
+  ZodBody,
+} from '@job-tracker-lite-angular/core-utils';
 import {
   AllowAnonymous,
   AuthGuard,
@@ -35,6 +42,7 @@ export class AccountController {
     await this.accountService.requestEmailChange(
       session.user.id,
       body.newEmail,
+      body.language,
     );
     return { status: true };
   }
@@ -43,9 +51,13 @@ export class AccountController {
   @AllowAnonymous()
   async verifyEmailChange(
     @Query('token') token: string,
+    @Query('language') language: SupportLang,
     @Res() response: Response,
   ): Promise<void> {
-    const redirectUrl = await this.accountService.verifyEmailChange(token);
+    const redirectUrl = await this.accountService.verifyEmailChange(
+      token,
+      language,
+    );
     response.redirect(redirectUrl);
   }
 
@@ -57,5 +69,46 @@ export class AccountController {
   ): Promise<void> {
     const redirectUrl = await this.accountService.restoreEmail(token);
     response.redirect(redirectUrl);
+  }
+
+  @Post('delete/request')
+  @UseGuards(AuthGuard)
+  async requestAccountDeletion(
+    @Session() session: UserSession,
+    @ZodBody(deleteAccountSchema) body: DeleteAccountDto,
+  ): Promise<{ status: true }> {
+    await this.accountService.requestAccountDeletion(
+      session.user.id,
+      body.language,
+    );
+    return { status: true };
+  }
+
+  @Get('confirm-delete')
+  @AllowAnonymous()
+  async confirmAccountDeletion(
+    @Query('token') token: string,
+    @Query('language') language: SupportLang,
+    @Res() response: Response,
+  ): Promise<void> {
+    const redirectUrl = await this.accountService.confirmAccountDeletion(
+      token,
+      language,
+    );
+    response.redirect(redirectUrl);
+  }
+
+  @Get('delete/status')
+  @UseGuards(AuthGuard)
+  async getDeletionStatus(
+    @Session() session: UserSession,
+  ): Promise<AccountDeletionStatusDto> {
+    return this.accountService.getAccountDeletionStatus(session.user.id);
+  }
+
+  @Post('delete/recover')
+  @UseGuards(AuthGuard)
+  async recoverDeletion(@Session() session: UserSession): Promise<void> {
+    await this.accountService.recoverAccountDeletion(session.user.id);
   }
 }

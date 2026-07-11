@@ -179,12 +179,35 @@
     }
   },
   "privacySettings": {
-    "title": "privacySettings.title",
-    "description": "privacySettings.description",
+    "title": "Privacy Settings",
+    "description": "Manage your data and account privacy controls.",
+    "deletePending": {
+      "title": "Account Deletion Is Pending",
+      "description": "Your account is marked for deletion. You can recover it before the timer reaches zero.",
+      "loading": "Loading deletion status...",
+      "countdownLabel": "Time remaining before permanent deletion",
+      "scheduledAtLabel": "Scheduled deletion time",
+      "recoverButton": "Recover Account",
+      "backToHome": "Back to the Homepage",
+      "recoverDialogTitle": "Recover Account",
+      "recoverDialogDescription": "Do you want to cancel the pending account deletion and restore your account to active status?",
+      "error": {
+        "title": "Recovery Failed",
+        "unknown": "Unable to process account recovery right now. Please try again."
+      }
+    },
     "deleteAccount": {
-      "title": "privacySettings.deleteAccount.title",
-      "description": "privacySettings.deleteAccount.description",
-      "button": "privacySettings.deleteAccount.button"
+      "verificationEmailSentTitle": "privacySettings.deleteAccount.verificationEmailSentTitle",
+      "verificationEmailSent": "A confirmation email has been sent. Please open the link in the email to start the deletion grace period.",
+      "title": "Delete Account",
+      "description": "Request account deletion. You will receive a confirmation email first, then a grace period starts before permanent deletion.",
+      "button": "Delete Account",
+      "dialogTitle": "Confirm Account Deletion",
+      "dialogDescription": "Do you want to request account deletion? We will send a confirmation email and start the grace period only after confirmation.",
+      "error": {
+        "title": "Account Deletion Request Failed",
+        "unknown": "Unable to request account deletion right now. Please try again."
+      }
     }
   },
   "preferences": {
