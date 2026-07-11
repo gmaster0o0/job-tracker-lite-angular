@@ -19,6 +19,7 @@
     "reject": "Elutasítás",
     "accept": "Elfogadás",
     "logout": "Kijelentkezés",
+    "comingSoon": "Hamarosan érkezik",
     "discard": "Elvetés",
     "save": "Mentés",
     "saving": "Mentés...",
@@ -211,6 +212,27 @@
       "error": {
         "title": "Fióktörlési kérelem sikertelen",
         "unknown": "Most nem sikerült elindítani a fióktörlést. Próbáld újra."
+      }
+    },
+    "cookieConsent": {
+      "title": "Sütibeállítások",
+      "description": "Sütiket használunk a megjelenítési beállítások (például sötét/világos mód és nyelv) mentéséhez. Ezek a sütik elengedhetetlenek ahhoz, hogy az alkalmazás megjegyezze a választásait.",
+      "essential": {
+        "title": "Alapvető sütik",
+        "description": "Engedélyezze az alkalmazás alapvető működéséhez szükséges sütiket."
+      },
+      "statistical": {
+        "title": "Statisztikai sütik",
+        "description": "Engedélyezze a statisztikai célú sütiket. Ezek segítenek megérteni, hogyan használják az alkalmazásunkat, és hogyan javíthatjuk annak teljesítményét."
+      },
+      "notFunctional": "Ez a kategória még nem funkcionál — jelenleg semmi sem tárolódik alatta.",
+      "marketing": {
+        "title": "Marketing sütik",
+        "description": "Engedélyezze a marketing célú sütiket. Ezek segítenek személyre szabott hirdetéseket megjeleníteni és mérni marketingkampányaink hatékonyságát."
+      },
+      "preferences": {
+        "title": "Preferencia sütik",
+        "description": "Engedélyezze a beállításokhoz kapcsolódó sütiket. Ezek segítenek megjegyezni a beállításait és preferenciáit a személyre szabottabb élmény érdekében."
       }
     }
   },

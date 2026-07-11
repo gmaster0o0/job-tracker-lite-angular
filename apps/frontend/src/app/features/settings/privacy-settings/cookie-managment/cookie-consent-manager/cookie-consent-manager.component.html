@@ -1,12 +1,10 @@
 <hlm-dialog-header>
   <h2 hlmH2 hlmDialogTitle class="flex items-center gap-2">
     <ng-icon name="lucideCookie" />
-    <span>Cookie Settings</span>
+    <span>{{ 'privacySettings.cookieConsent.title' | transloco }}</span>
   </h2>
   <p hlmDialogDescription>
-    We use cookies to save your display preferences, such as your dark/light
-    mode and language settings. These cookies are essential for the application
-    to remember your choices.
+    {{ 'privacySettings.cookieConsent.description' | transloco }}
   </p>
 </hlm-dialog-header>
 
@@ -15,10 +13,15 @@
     <label hlmFieldLabel for="cookie-essential">
       <div hlmField orientation="horizontal">
         <div hlmFieldContent>
-          <div hlmFieldTitle>Essential Cookies</div>
+          <div hlmFieldTitle>
+            {{ 'privacySettings.cookieConsent.essential.title' | transloco }}
+          </div>
           <div hlmFieldDescription>
-            Enable essential cookies necessary for the basic functioning of the
-            application.
+            {{
+              'privacySettings.cookieConsent.essential.description'
+                | transloco
+                | transloco
+            }}
           </div>
         </div>
         <hlm-switch
@@ -33,18 +36,19 @@
       <div hlmField orientation="horizontal">
         <div hlmFieldContent>
           <div hlmFieldTitle class="flex items-center gap-2">
-            Statistical Cookies
+            {{ 'privacySettings.cookieConsent.statistical.title' | transloco }}
             <span hlmBadge variant="secondary" class="text-xs font-normal">
-              Coming soon
+              {{ 'common.comingSoon' | transloco }}
             </span>
           </div>
           <div hlmFieldDescription>
-            Enable cookies for statistical purposes. These cookies help us
-            understand how our application is used and improve its performance.
+            {{
+              'privacySettings.cookieConsent.statistical.description'
+                | transloco
+            }}
           </div>
           <div hlmFieldDescription class="italic">
-            This category isn't functional yet — nothing is stored under it
-            right now.
+            {{ 'privacySettings.cookieConsent.notFunctional' | transloco }}
           </div>
         </div>
         <hlm-switch
@@ -59,19 +63,18 @@
       <div hlmField orientation="horizontal">
         <div hlmFieldContent>
           <div hlmFieldTitle class="flex items-center gap-2">
-            Marketing Cookies
+            {{ 'privacySettings.cookieConsent.marketing.title' | transloco }}
             <span hlmBadge variant="secondary" class="text-xs font-normal">
-              Coming soon
+              {{ 'common.comingSoon' | transloco }}
             </span>
           </div>
           <div hlmFieldDescription>
-            Enable cookies for marketing purposes. These cookies help us deliver
-            personalized advertisements and track the effectiveness of our
-            marketing campaigns.
+            {{
+              'privacySettings.cookieConsent.marketing.description' | transloco
+            }}
           </div>
           <div hlmFieldDescription class="italic">
-            This category isn't functional yet — nothing is stored under it
-            right now.
+            {{ 'privacySettings.cookieConsent.notFunctional' | transloco }}
           </div>
         </div>
         <hlm-switch
@@ -86,19 +89,19 @@
       <div hlmField orientation="horizontal">
         <div hlmFieldContent>
           <div hlmFieldTitle class="flex items-center gap-2">
-            Preferences Cookies
+            {{ 'privacySettings.cookieConsent.preferences.title' | transloco }}
             <span hlmBadge variant="secondary" class="text-xs font-normal">
-              Coming soon
+              {{ 'common.comingSoon' | transloco }}
             </span>
           </div>
           <div hlmFieldDescription>
-            Enable cookies for preferences purposes. These cookies help us
-            remember your settings and preferences to provide a more
-            personalized experience.
+            {{
+              'privacySettings.cookieConsent.preferences.description'
+                | transloco
+            }}
           </div>
           <div hlmFieldDescription class="italic">
-            This category isn't functional yet — nothing is stored under it
-            right now.
+            {{ 'privacySettings.cookieConsent.notFunctional' | transloco }}
           </div>
         </div>
         <hlm-switch
@@ -112,6 +115,12 @@
 </fieldset>
 
 <hlm-dialog-footer>
-  <button hlmBtn variant="outline" hlmDialogClose>Cancel</button>
-  <button hlmBtn (click)="save()">Save</button>
+  <app-cancel-button
+    cancelLabel="{{ 'common.cancel' | transloco }}"
+  ></app-cancel-button>
+  <app-save-button
+    idleLabel="{{ 'common.saveChanges' | transloco }}"
+    formId="cookieConsent"
+    (click)="save()"
+  ></app-save-button>
 </hlm-dialog-footer>

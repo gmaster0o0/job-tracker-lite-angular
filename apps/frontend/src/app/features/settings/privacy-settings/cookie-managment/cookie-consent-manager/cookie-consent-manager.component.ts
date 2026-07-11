@@ -10,6 +10,11 @@ import { provideIcons } from '@ng-icons/core';
 import { lucideCookie } from '@ng-icons/lucide';
 import { CookiePreferences } from '../cookie-consent.types';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
+import {
+  CancelButtonComponent,
+  SaveButtonComponent,
+} from '@job-tracker-lite-angular/frontend-shared';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-cookie-consent-manager',
@@ -21,6 +26,9 @@ import { HlmBadgeImports } from '@spartan-ng/helm/badge';
     HlmFieldImports,
     HlmIconImports,
     HlmBadgeImports,
+    CancelButtonComponent,
+    SaveButtonComponent,
+    TranslocoModule,
   ],
   providers: [provideIcons({ lucideCookie })],
   standalone: true,
