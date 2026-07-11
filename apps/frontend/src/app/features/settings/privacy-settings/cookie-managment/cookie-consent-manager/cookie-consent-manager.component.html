@@ -1,0 +1,117 @@
+<hlm-dialog-header>
+  <h2 hlmH2 hlmDialogTitle class="flex items-center gap-2">
+    <ng-icon name="lucideCookie" />
+    <span>Cookie Settings</span>
+  </h2>
+  <p hlmDialogDescription>
+    We use cookies to save your display preferences, such as your dark/light
+    mode and language settings. These cookies are essential for the application
+    to remember your choices.
+  </p>
+</hlm-dialog-header>
+
+<fieldset hlmFieldSet>
+  <div hlmFieldGroup class="gap-3">
+    <label hlmFieldLabel for="cookie-essential">
+      <div hlmField orientation="horizontal">
+        <div hlmFieldContent>
+          <div hlmFieldTitle>Essential Cookies</div>
+          <div hlmFieldDescription>
+            Enable essential cookies necessary for the basic functioning of the
+            application.
+          </div>
+        </div>
+        <hlm-switch
+          inputId="cookie-essential"
+          [checked]="true"
+          [disabled]="true"
+        />
+      </div>
+    </label>
+
+    <label hlmFieldLabel for="cookie-statistical">
+      <div hlmField orientation="horizontal">
+        <div hlmFieldContent>
+          <div hlmFieldTitle class="flex items-center gap-2">
+            Statistical Cookies
+            <span hlmBadge variant="secondary" class="text-xs font-normal">
+              Coming soon
+            </span>
+          </div>
+          <div hlmFieldDescription>
+            Enable cookies for statistical purposes. These cookies help us
+            understand how our application is used and improve its performance.
+          </div>
+          <div hlmFieldDescription class="italic">
+            This category isn't functional yet — nothing is stored under it
+            right now.
+          </div>
+        </div>
+        <hlm-switch
+          inputId="cookie-statistical"
+          [checked]="false"
+          [disabled]="true"
+        />
+      </div>
+    </label>
+
+    <label hlmFieldLabel for="cookie-marketing">
+      <div hlmField orientation="horizontal">
+        <div hlmFieldContent>
+          <div hlmFieldTitle class="flex items-center gap-2">
+            Marketing Cookies
+            <span hlmBadge variant="secondary" class="text-xs font-normal">
+              Coming soon
+            </span>
+          </div>
+          <div hlmFieldDescription>
+            Enable cookies for marketing purposes. These cookies help us deliver
+            personalized advertisements and track the effectiveness of our
+            marketing campaigns.
+          </div>
+          <div hlmFieldDescription class="italic">
+            This category isn't functional yet — nothing is stored under it
+            right now.
+          </div>
+        </div>
+        <hlm-switch
+          inputId="cookie-marketing"
+          [checked]="false"
+          [disabled]="true"
+        />
+      </div>
+    </label>
+
+    <label hlmFieldLabel for="cookie-preferences">
+      <div hlmField orientation="horizontal">
+        <div hlmFieldContent>
+          <div hlmFieldTitle class="flex items-center gap-2">
+            Preferences Cookies
+            <span hlmBadge variant="secondary" class="text-xs font-normal">
+              Coming soon
+            </span>
+          </div>
+          <div hlmFieldDescription>
+            Enable cookies for preferences purposes. These cookies help us
+            remember your settings and preferences to provide a more
+            personalized experience.
+          </div>
+          <div hlmFieldDescription class="italic">
+            This category isn't functional yet — nothing is stored under it
+            right now.
+          </div>
+        </div>
+        <hlm-switch
+          inputId="cookie-preferences"
+          [checked]="false"
+          [disabled]="true"
+        />
+      </div>
+    </label>
+  </div>
+</fieldset>
+
+<hlm-dialog-footer>
+  <button hlmBtn variant="outline" hlmDialogClose>Cancel</button>
+  <button hlmBtn (click)="save()">Save</button>
+</hlm-dialog-footer>

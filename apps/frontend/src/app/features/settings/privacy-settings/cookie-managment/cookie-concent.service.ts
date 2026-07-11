@@ -1,21 +1,56 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { HlmDialogService } from '@spartan-ng/helm/dialog';
+import { CookieConsentManager } from './cookie-consent-manager/cookie-consent-manager.component';
 
-@Injectable({
-  providedIn: 'root',
-})
-// cookie-consent.service.ts
+import {
+  CookiePreferences,
+  DEFAULT_COOKIE_PREFERENCES,
+} from './cookie-consent.types';
+
+const STORAGE_KEY = 'cookieConsent';
+
 @Injectable({ providedIn: 'root' })
 export class CookieConsentService {
-  showBanner = signal<boolean>(localStorage.getItem('cookieConsent') === null);
+  private readonly dialog = inject(HlmDialogService);
 
-  openDetailedSettings() {
-    // Implement the logic to open the detailed settings dialog
-    console.log('Opening detailed settings dialog...');
-    // You can use a dialog service or any other method to open the dialog here
+  showBanner = signal<boolean>(localStorage.getItem(STORAGE_KEY) === null);
+
+  getConsent(): CookiePreferences {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return DEFAULT_COOKIE_PREFERENCES;
+
+    try {
+      const parsed = JSON.parse(raw) as Partial<CookiePreferences>;
+      return { ...DEFAULT_COOKIE_PREFERENCES, ...parsed, essential: true };
+    } catch {
+      return DEFAULT_COOKIE_PREFERENCES;
+    }
   }
 
+  openDetailedSettings() {
+    const dialogRef = this.dialog.open(CookieConsentManager, {
+      contentClass: 'sm:max-w-2xl w-[95vw]',
+      context: {
+        consent: this.getConsent(),
+      },
+    });
+
+    dialogRef.closed$.subscribe((result) => {
+      if (result) {
+        this.savePreferences(result as CookiePreferences);
+      }
+    });
+  }
+  // status will be need for future use
   saveConsent(status: 'accepted' | 'rejected') {
-    localStorage.setItem('cookieConsent', status);
+    const consent: CookiePreferences = {
+      essential: true,
+    };
+    this.savePreferences(consent);
+  }
+
+  private savePreferences(consent: CookiePreferences) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(consent));
     this.showBanner.set(false);
   }
 }
