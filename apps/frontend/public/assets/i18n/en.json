@@ -19,6 +19,7 @@
     "reject": "Reject",
     "accept": "Accept",
     "logout": "Logout",
+    "comingSoon": "common.comingSoon",
     "discard": "Discard",
     "save": "Save",
     "saving": "Saving...",
@@ -205,7 +206,7 @@
       }
     },
     "deleteAccount": {
-      "verificationEmailSentTitle": "privacySettings.deleteAccount.verificationEmailSentTitle",
+      "verificationEmailSentTitle": "Verification Email Sent",
       "verificationEmailSent": "A confirmation email has been sent. Please open the link in the email to start the deletion grace period.",
       "title": "Delete Account",
       "description": "Request account deletion. You will receive a confirmation email first, then a grace period starts before permanent deletion.",
@@ -215,6 +216,32 @@
       "error": {
         "title": "Account Deletion Request Failed",
         "unknown": "Unable to request account deletion right now. Please try again."
+      }
+    },
+    "cookieManagement": {
+      "title": "Cookie Management",
+      "description": "View or update your cookie preferences and settings at any time.",
+      "openPreferences": "Cookie Preferences"
+    },
+    "cookieConsent": {
+      "title": "Cookie Settings",
+      "description": "We use cookies to save your display preferences, such as your dark/light mode and language settings. These cookies are essential for the application to remember your choices.",
+      "essential": {
+        "title": "Essential Cookies",
+        "description": "Enable essential cookies necessary for the basic functioning of the application."
+      },
+      "statistical": {
+        "title": "Statistical Cookies",
+        "description": "Enable cookies for statistical purposes. These cookies help us understand how our application is used and improve its performance."
+      },
+      "notFunctional": "This category isn't functional yet — nothing is stored under it right now.",
+      "marketing": {
+        "title": "Marketing Cookies",
+        "description": "Enable cookies for marketing purposes. These cookies help us deliver personalized advertisements and track the effectiveness of our marketing campaigns."
+      },
+      "preferences": {
+        "title": "Preference Cookies",
+        "description": "Enable cookies for preferences purposes. These cookies help us remember your settings and preferences to provide a more personalized experience."
       }
     }
   },

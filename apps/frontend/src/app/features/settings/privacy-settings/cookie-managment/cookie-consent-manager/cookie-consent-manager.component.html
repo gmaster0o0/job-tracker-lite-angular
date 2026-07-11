@@ -1,0 +1,125 @@
+<hlm-dialog-header>
+  <h2 hlmH2 hlmDialogTitle class="flex items-center gap-2">
+    <ng-icon name="lucideCookie" />
+    <span>{{ 'privacySettings.cookieConsent.title' | transloco }}</span>
+  </h2>
+  <p hlmDialogDescription>
+    {{ 'privacySettings.cookieConsent.description' | transloco }}
+  </p>
+</hlm-dialog-header>
+
+<fieldset hlmFieldSet>
+  <div hlmFieldGroup class="gap-3">
+    <label hlmFieldLabel for="cookie-essential">
+      <div hlmField orientation="horizontal">
+        <div hlmFieldContent>
+          <div hlmFieldTitle>
+            {{ 'privacySettings.cookieConsent.essential.title' | transloco }}
+          </div>
+          <div hlmFieldDescription>
+            {{
+              'privacySettings.cookieConsent.essential.description' | transloco
+            }}
+          </div>
+        </div>
+        <hlm-switch
+          inputId="cookie-essential"
+          [checked]="true"
+          [disabled]="true"
+        />
+      </div>
+    </label>
+
+    <label hlmFieldLabel for="cookie-statistical">
+      <div hlmField orientation="horizontal">
+        <div hlmFieldContent>
+          <div hlmFieldTitle class="flex items-center gap-2">
+            {{ 'privacySettings.cookieConsent.statistical.title' | transloco }}
+            <span hlmBadge variant="secondary" class="text-xs font-normal">
+              {{ 'common.comingSoon' | transloco }}
+            </span>
+          </div>
+          <div hlmFieldDescription>
+            {{
+              'privacySettings.cookieConsent.statistical.description'
+                | transloco
+            }}
+          </div>
+          <div hlmFieldDescription class="italic">
+            {{ 'privacySettings.cookieConsent.notFunctional' | transloco }}
+          </div>
+        </div>
+        <hlm-switch
+          inputId="cookie-statistical"
+          [checked]="false"
+          [disabled]="true"
+        />
+      </div>
+    </label>
+
+    <label hlmFieldLabel for="cookie-marketing">
+      <div hlmField orientation="horizontal">
+        <div hlmFieldContent>
+          <div hlmFieldTitle class="flex items-center gap-2">
+            {{ 'privacySettings.cookieConsent.marketing.title' | transloco }}
+            <span hlmBadge variant="secondary" class="text-xs font-normal">
+              {{ 'common.comingSoon' | transloco }}
+            </span>
+          </div>
+          <div hlmFieldDescription>
+            {{
+              'privacySettings.cookieConsent.marketing.description' | transloco
+            }}
+          </div>
+          <div hlmFieldDescription class="italic">
+            {{ 'privacySettings.cookieConsent.notFunctional' | transloco }}
+          </div>
+        </div>
+        <hlm-switch
+          inputId="cookie-marketing"
+          [checked]="false"
+          [disabled]="true"
+        />
+      </div>
+    </label>
+
+    <label hlmFieldLabel for="cookie-preferences">
+      <div hlmField orientation="horizontal">
+        <div hlmFieldContent>
+          <div hlmFieldTitle class="flex items-center gap-2">
+            {{ 'privacySettings.cookieConsent.preferences.title' | transloco }}
+            <span hlmBadge variant="secondary" class="text-xs font-normal">
+              {{ 'common.comingSoon' | transloco }}
+            </span>
+          </div>
+          <div hlmFieldDescription>
+            {{
+              'privacySettings.cookieConsent.preferences.description'
+                | transloco
+            }}
+          </div>
+          <div hlmFieldDescription class="italic">
+            {{ 'privacySettings.cookieConsent.notFunctional' | transloco }}
+          </div>
+        </div>
+        <hlm-switch
+          inputId="cookie-preferences"
+          [checked]="false"
+          [disabled]="true"
+        />
+      </div>
+    </label>
+  </div>
+</fieldset>
+
+<hlm-dialog-footer>
+  <app-cancel-button
+    cancelLabel="{{ 'common.cancel' | transloco }}"
+    (click)="cancel()"
+  ></app-cancel-button>
+  <app-save-button
+    idleLabel="{{ 'common.saveChanges' | transloco }}"
+    formId="cookieConsent"
+    (click)="save()"
+  ></app-save-button>
+</hlm-dialog-footer>
