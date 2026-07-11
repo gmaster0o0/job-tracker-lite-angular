@@ -156,6 +156,33 @@ describe('EmailService', () => {
     },
   );
 
+  it.each<[SupportLang, string]>([
+    ['en', 'Your account is scheduled for deletion - Job Tracker Lite'],
+    ['hu', 'Fiókod törlése ütemezve lett - Job Tracker Lite'],
+  ])(
+    'should send the account deletion notification email in %s',
+    async (lang, subject) => {
+      const scheduledDeletionAt = new Date('2024-01-01T00:00:00Z');
+      const recoverUrl = 'https://example.com/recover';
+
+      await service.sendDeleteAccountNotificationEmail(
+        testVerificationRecipient,
+        scheduledDeletionAt,
+        recoverUrl,
+        lang,
+      );
+
+      expect(emailProvider.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          to: testVerificationRecipient,
+          subject,
+          text: expect.stringContaining(recoverUrl),
+          html: expect.stringContaining(recoverUrl),
+        }),
+      );
+    },
+  );
+
   it('should wrap provider errors in a backend-style exception', async () => {
     emailProvider.send.mockRejectedValueOnce(new Error('smtp failed'));
 
