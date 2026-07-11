@@ -11,18 +11,5 @@
   <app-data-management></app-data-management>
   <app-cookie-management></app-cookie-management>
   <hlm-separator />
-  <hlm-alert variant="destructive" class="border-red-500/30 bg-red-500/5">
-    <ng-icon class="text-[length:--spacing(12)]" name="lucideTrash2" />
-    <h4 hlmAlertTitle class="text-[length:--spacing(6)]">
-      {{ 'privacySettings.deleteAccount.title' | transloco }}
-    </h4>
-    <p hlmAlertDescription>
-      {{ 'privacySettings.deleteAccount.description' | transloco }}
-    </p>
-    <div hlmAlertAction>
-      <button hlmBtn size="sm" class="border-red-500/30" variant="destructive">
-        {{ 'privacySettings.deleteAccount.button' | transloco }}
-      </button>
-    </div>
-  </hlm-alert>
+  <app-delete-account></app-delete-account>
 </div>

@@ -3,6 +3,8 @@ import {
   allPrismaJobFixtures,
 } from '../fixtures/prisma.fixtures';
 
+export type MockAccountStatus = 'ACTIVE' | 'PENDING_DELETION' | 'SUSPENDED';
+
 export function createPrismaServiceMock(mockFactory: () => any) {
   return {
     testConnection: mockFactory(),
@@ -32,6 +34,7 @@ export function createPrismaServiceMock(mockFactory: () => any) {
       findUniqueOrThrow: mockFactory(),
       findFirst: mockFactory(),
       update: mockFactory(),
+      deleteMany: mockFactory(),
     },
     userProfile: {
       findUnique: mockFactory(),
@@ -43,6 +46,12 @@ export function createPrismaServiceMock(mockFactory: () => any) {
       deleteMany: mockFactory(),
     },
     emailChangeToken: {
+      findUnique: mockFactory(),
+      delete: mockFactory(),
+      deleteMany: mockFactory(),
+      create: mockFactory(),
+    },
+    accountDeletionToken: {
       findUnique: mockFactory(),
       delete: mockFactory(),
       deleteMany: mockFactory(),

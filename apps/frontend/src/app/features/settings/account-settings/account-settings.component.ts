@@ -6,7 +6,11 @@ import {
   form,
   validateStandardSchema,
 } from '@angular/forms/signals';
-import { TranslocoModule, translateSignal } from '@jsverse/transloco';
+import {
+  TranslocoModule,
+  TranslocoService,
+  translateSignal,
+} from '@jsverse/transloco';
 import {
   AuthDataAccessService,
   ZodNgControlBridgeDirective,
@@ -58,6 +62,7 @@ import { AuthService } from '../../auth/auth.service';
 export class AccountSettingsComponent {
   private readonly authDataAccess = inject(AuthDataAccessService);
   private readonly authService = inject(AuthService);
+  private readonly translocoService = inject(TranslocoService);
 
   protected readonly title = translateSignal('settings.accountSettings.title');
   protected readonly subtitle = translateSignal(
@@ -83,6 +88,7 @@ export class AccountSettingsComponent {
 
   protected readonly emailModel = signal({
     newEmail: '',
+    language: 'en' as const,
   });
 
   protected readonly passwordModel = signal({
@@ -101,8 +107,14 @@ export class AccountSettingsComponent {
           this.changeEmailError.set(null);
           this.changeEmailSuccess.set(false);
 
+          const language =
+            this.translocoService.getActiveLang() === 'hu' ? 'hu' : 'en';
+
           try {
-            await this.authDataAccess.requestEmailChange(data().value());
+            await this.authDataAccess.requestEmailChange({
+              ...data().value(),
+              language,
+            });
             this.changeEmailSuccess.set(true);
 
             const current = this.accountSettings();
