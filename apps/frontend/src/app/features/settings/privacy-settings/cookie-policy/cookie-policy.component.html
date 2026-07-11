@@ -1,0 +1,97 @@
+<h2 hlmH2>Cookie Policy</h2>
+<p hlmP>
+  This Cookie Policy explains how we use cookies and similar technologies on our
+  website. By using our website, you consent to the use of cookies as described
+  in this policy.
+</p>
+
+<hlm-dialog>
+  <button hlmDialogTrigger hlmBtn variant="outline">
+    <ng-icon name="lucideScrollText" />
+    Open Cookie Policy
+  </button>
+  <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-4xl w-[95vw]">
+    <hlm-dialog-header>
+      <h1 hlmH1 hlmDialogTitle>Cookie Policy</h1>
+      <p hlmDialogDescription>
+        Weboldalunk "sütiket" (cookie-kat) használ annak érdekében, hogy a
+        felhasználói élményt javítsuk, és biztosítsuk az oldal alapvető
+        funkcióinak működését. Ez a tájékoztató bemutatja, milyen sütiket
+        használunk, és mi a szerepük.
+      </p>
+    </hlm-dialog-header>
+    <div class="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4">
+      <h2 hlmH2>1. Mik azok a sütik?</h2>
+      <p hlmP>
+        A sütik kisméretű adatfájlok, amelyeket a webböngésződ tárol a
+        számítógépeden vagy mobileszközödön, amikor meglátogatod weboldalunkat.
+        Ezek segítenek minket abban, hogy megjegyezzük a beállításaidat és
+        biztosítsuk az alkalmazás biztonságos működését.
+      </p>
+
+      <h2 hlmH2>2. Az általunk használt sütik</h2>
+      <p hlmP>
+        Jelenleg oldalunk kizárólag feltétlenül szükséges sütiket használ. Ezek
+        elengedhetetlenek az alkalmazás alapvető biztonsági és működési
+        funkcióihoz (pl. munkamenet-kezelés, hitelesítés).
+      </p>
+      <h4 hlmH4>Technikai sütik listája:</h4>
+
+      <div hlmTableContainer>
+        <table hlmTable>
+          <thead hlmTableHeader>
+            <tr hlmTableRow>
+              <th hlmTableHead>Süti neve</th>
+              <th hlmTableHead>Leírás</th>
+              <th hlmTableHead class="text-right">Élettartam</th>
+            </tr>
+          </thead>
+          <tbody hlmTableBody>
+            @for (cookie of cookies | slice: 0 : 3; track cookie.name) {
+              <tr hlmTableRow>
+                <td hlmTableCell class="font-small">{{ cookie.name }}</td>
+                <td
+                  hlmTableCell
+                  class="whitespace-normal break-words max-w-[200px]"
+                >
+                  {{ cookie.description }}
+                </td>
+                <td hlmTableCell class="text-right">{{ cookie.duration }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p hlmMuted>
+        Megjegyzés: A statisztikai, marketing és egyéb preferencia sütik
+        jelenleg inaktívak, ezekhez nem tárolunk adatot.
+      </p>
+      <blockquote hlmBlockquote>
+        A sütik listája időről időre változhat, ezért javasoljuk, hogy
+        rendszeresen ellenőrizd ezt a tájékoztatót.
+      </blockquote>
+
+      <h2 hlmH2>3. Sütik kezelése és törlése</h2>
+      <p hlmP>
+        Bármikor módosíthatod a böngésződ beállításait, hogy töröld vagy
+        blokkold a sütiket. Kérjük, vedd figyelembe, hogy a "feltétlenül
+        szükséges" sütik letiltása esetén weboldalunk egyes funkciói nem fognak
+        megfelelően működni (pl. nem tudsz bejelentkezni).
+      </p>
+      <h2 hlmH2>4. Kapcsolat</h2>
+      <p hlmP>
+        Amennyiben kérdésed merülne fel a sütik kezelésével kapcsolatban,
+        kérjük, vedd fel velünk a kapcsolatot:
+      </p>
+      <ul hlmUl>
+        <li>Üzemeltető: Example Company</li>
+        <li>Email: support&#64;example.com</li>
+      </ul>
+    </div>
+    <hlm-dialog-footer>
+      <button hlmBtn variant="outline" hlmDialogClose>
+        {{ 'common.close' | transloco }}
+      </button>
+    </hlm-dialog-footer>
+  </hlm-dialog-content>
+</hlm-dialog>
