@@ -25,3 +25,4 @@ export * from './lib/mocks/auth-session-service.mock';
 export * from './lib/mocks/email-service.mock';
 export * from './lib/mocks/browser.mocks';
 export * from './lib/mocks/auth-guard.mock';
+export * from './lib/mocks/cookie-consent-service.mock';
