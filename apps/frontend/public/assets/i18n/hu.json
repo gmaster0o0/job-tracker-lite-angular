@@ -16,6 +16,8 @@
     "cancel": "Mégse",
     "saveChanges": "Mentés",
     "create": "Létrehozás",
+    "reject": "Elutasítás",
+    "accept": "Elfogadás",
     "logout": "Kijelentkezés",
     "discard": "Elvetés",
     "save": "Mentés",
@@ -173,6 +175,12 @@
         "not_unique": "Egy ugyanazzal a linkkel rendelkező munka már létezik. Kérjük, ellenőrizze a munkalistáját."
       }
     }
+  },
+  "cookieBanner": {
+    "title": "Az oldal sütiket használ",
+    "description": "A legjobb élmény biztosítása érdekében sütiket használunk. További információkért kérjük, tekintse meg a sütikre vonatkozó irányelveinket.",
+    "detailedSettings": "A \"Elfogadás\" gombra kattintva hozzájárulsz a sütik használatához.",
+    "cookiePreferences": "Süti testreszabása"
   },
   "privacySettings": {
     "title": "Adatvédelmi beállítások",
