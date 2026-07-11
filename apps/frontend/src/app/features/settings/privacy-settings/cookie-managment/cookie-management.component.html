@@ -1,8 +1,12 @@
 <div class="flex flex-col gap-4">
   <div>
-    <h3 class="text-lg font-semibold tracking-tight">Süti beállítások</h3>
-    <p class="text-sm text-muted-foreground mt-1">
-      Weboldalunk sütiket használ a jobb felhasználói élmény érdekében.
+    <h2 hlmH2>{{ 'privacySettings.cookieManagement.title' | transloco }}</h2>
+    <p hlmP>
+      {{ 'privacySettings.cookieManagement.description' | transloco }}
     </p>
+    <button hlmBtn variant="outline" (click)="onOpenCookieSettings()">
+      <ng-icon name="lucide:settings-2" />
+      {{ 'privacySettings.cookieManagement.openPreferences' | transloco }}
+    </button>
   </div>
 </div>
