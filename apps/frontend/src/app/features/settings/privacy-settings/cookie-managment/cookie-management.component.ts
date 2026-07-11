@@ -5,11 +5,17 @@ import { lucideSettings2 } from '@ng-icons/lucide';
 import { provideIcons } from '@ng-icons/core';
 import { CookieConsentService } from './cookie-concent.service';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-cookie-management',
   standalone: true,
-  imports: [HlmTypographyImports, HlmButtonImports, HlmIconImports],
+  imports: [
+    HlmTypographyImports,
+    HlmButtonImports,
+    HlmIconImports,
+    TranslocoModule,
+  ],
   providers: [provideIcons({ lucideSettings2 })],
   templateUrl: './cookie-management.component.html',
 })

@@ -214,6 +214,11 @@
         "unknown": "Most nem sikerült elindítani a fióktörlést. Próbáld újra."
       }
     },
+    "cookieManagement": {
+      "title": "Süti kezelés",
+      "description": "Itt bármikor megtekintheti vagy módosíthatja a sütikre vonatkozó preferenciáit.",
+      "openPreferences": "Süti beállítások"
+    },
     "cookieConsent": {
       "title": "Sütibeállítások",
       "description": "Sütiket használunk a megjelenítési beállítások (például sötét/világos mód és nyelv) mentéséhez. Ezek a sütik elengedhetetlenek ahhoz, hogy az alkalmazás megjegyezze a választásait.",

@@ -1,14 +1,12 @@
 <div class="flex flex-col gap-4">
   <div>
-    <h2 hlmH2>Cookie Settings</h2>
+    <h2 hlmH2>{{ 'privacySettings.cookieManagement.title' | transloco }}</h2>
     <p hlmP>
-      In addition to the cookies necessary for the basic functioning of the
-      application, you can enable tracking for statistical purposes. You can
-      change your choices at any time.
+      {{ 'privacySettings.cookieManagement.description' | transloco }}
     </p>
     <button hlmBtn variant="outline" (click)="onOpenCookieSettings()">
       <ng-icon name="lucide:settings-2" />
-      Open Cookie Preferences
+      {{ 'privacySettings.cookieManagement.openPreferences' | transloco }}
     </button>
   </div>
 </div>
