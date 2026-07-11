@@ -9,6 +9,16 @@ export type EmailServiceMock = {
     url: string,
     locale: 'en' | 'hu',
   ) => Promise<void>;
+  sendDeleteAccountVerificationEmail: (
+    email: string,
+    url: string,
+    locale: 'en' | 'hu',
+    graceDays?: number,
+  ) => Promise<void>;
+  sendDeleteAccountNotificationEmail: (
+    email: string,
+    locale: 'en' | 'hu',
+  ) => Promise<void>;
 };
 
 export function createEmailServiceMock(
@@ -19,5 +29,7 @@ export function createEmailServiceMock(
   return {
     sendEmailChangeConfirmationEmail: createMock(async () => undefined),
     sendEmailRestoreEmail: createMock(async () => undefined),
+    sendDeleteAccountVerificationEmail: createMock(async () => undefined),
+    sendDeleteAccountNotificationEmail: createMock(async () => undefined),
   };
 }

@@ -4,6 +4,7 @@ import { provideRouter, Router } from '@angular/router';
 import { AuthDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import {
+  authSessionFixtures,
   createAuthDataAccessMock,
   validLoginCredentials,
   createBackendError,
@@ -59,6 +60,20 @@ describe('LoginComponent', () => {
       validLoginCredentials,
     );
     expect(router.navigateByUrl).toHaveBeenCalledWith('/jobs');
+  });
+
+  it('should redirect to delete pending page for pending deletion accounts', async () => {
+    vi.mocked(authDataAccessMock.signIn).mockResolvedValue(
+      authSessionFixtures.pendingDeletion,
+    );
+
+    await harness.setEmail(validLoginCredentials.email);
+    await harness.setPassword(validLoginCredentials.password);
+    await harness.submit();
+
+    expect(router.navigateByUrl).toHaveBeenCalledWith(
+      '/privacy/delete-pending',
+    );
   });
 
   it('should show error message on failure', async () => {

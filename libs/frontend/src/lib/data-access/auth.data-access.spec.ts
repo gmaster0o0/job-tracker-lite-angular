@@ -99,6 +99,7 @@ describe('AuthDataAccessService', () => {
     expect(verificationReq.request.withCredentials).toBe(true);
     expect(verificationReq.request.body).toEqual({
       email: validVerificationEmailCredentials.email,
+      callbackURL: `${window.location.origin}/auth/verify-email?language=${validVerificationEmailCredentials.language}`,
     });
     verificationReq.flush({ status: true });
 

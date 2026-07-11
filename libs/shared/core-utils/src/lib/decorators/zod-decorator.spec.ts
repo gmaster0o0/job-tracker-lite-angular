@@ -1,6 +1,6 @@
 jest.mock('@nestjs/common', () => ({
-  Body: jest.fn((pipe: unknown) => 'bodyDecorator'),
-  Param: jest.fn((pipe: unknown) => 'paramDecorator'),
+  Body: jest.fn(() => 'bodyDecorator'),
+  Param: jest.fn(() => 'paramDecorator'),
 }));
 
 jest.mock('../pipes', () => ({

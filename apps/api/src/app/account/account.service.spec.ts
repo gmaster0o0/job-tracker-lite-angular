@@ -4,11 +4,16 @@ import { ConfigService } from '@nestjs/config';
 import { EmailService } from '../email/email.service';
 import { AccountService } from './account.service';
 import {
+  accountDeletionTimingFixtures,
+  accountDeletionTokenFixtures,
+  accountDeletionStatusPrismaFixtures,
+  accountRedirectFixtures,
   accountSettingsFixtures,
   accountUserFixtures,
   changeEmailRequestFixtures,
   createEmailServiceMock,
   createPrismaServiceMock,
+  deleteAccountRequestFixtures,
   emailChangeTokenFixtures,
 } from '@job-tracker-lite-angular/testing';
 import { EmailChangeTokenType } from '@prisma/client';
@@ -17,6 +22,7 @@ describe('AccountService', () => {
   let service: AccountService;
   let prismaMock: ReturnType<typeof createPrismaServiceMock>;
   let emailServiceMock: ReturnType<typeof createEmailServiceMock>;
+  let configValues: Record<string, unknown>;
 
   beforeEach(async () => {
     prismaMock = createPrismaServiceMock(jest.fn);
@@ -25,6 +31,11 @@ describe('AccountService', () => {
     );
 
     emailServiceMock = createEmailServiceMock((fn) => jest.fn(fn));
+    configValues = {
+      FRONTEND_URL: 'http://localhost:4200',
+      BETTER_AUTH_URL: 'http://localhost:3000/api/auth',
+      ACCOUNT_DELETION_GRACE_PERIOD_DAYS: 10, //different from default to test config override
+    };
 
     const moduleRef = await Test.createTestingModule({
       providers: [
@@ -36,15 +47,7 @@ describe('AccountService', () => {
         {
           provide: ConfigService,
           useValue: {
-            get: (key: string) => {
-              if (key === 'FRONTEND_URL') {
-                return 'http://localhost:4200';
-              }
-              if (key === 'BETTER_AUTH_URL') {
-                return 'http://localhost:3000/api/auth';
-              }
-              return undefined;
-            },
+            get: (key: string) => configValues[key],
           },
         },
         {
@@ -76,6 +79,7 @@ describe('AccountService', () => {
     await service.requestEmailChange(
       accountUserFixtures.primary.id,
       changeEmailRequestFixtures.valid.newEmail,
+      changeEmailRequestFixtures.valid.language,
     );
 
     expect(prismaMock.user.update).toHaveBeenCalledWith(
@@ -100,7 +104,9 @@ describe('AccountService', () => {
       emailServiceMock.sendEmailChangeConfirmationEmail,
     ).toHaveBeenCalledWith(
       changeEmailRequestFixtures.valid.newEmail,
-      expect.stringContaining('/account/verify-email-change?token='),
+      expect.stringMatching(
+        /\/account\/verify-email-change\?token=.*&language=en/,
+      ),
       'en',
     );
   });
@@ -114,6 +120,7 @@ describe('AccountService', () => {
 
     const redirectUrl = await service.verifyEmailChange(
       emailChangeTokenFixtures.verify.token,
+      changeEmailRequestFixtures.valid.language,
     );
 
     expect(prismaMock.user.update).toHaveBeenCalledWith(
@@ -127,10 +134,16 @@ describe('AccountService', () => {
     );
     expect(emailServiceMock.sendEmailRestoreEmail).toHaveBeenCalledWith(
       emailChangeTokenFixtures.verify.oldEmail,
-      expect.stringContaining('/account/restore-email?token='),
+      expect.stringMatching(/\/account\/restore-email\?token=.*&language=en/),
       'en',
     );
+    expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
+      where: {
+        userId: emailChangeTokenFixtures.verify.userId,
+      },
+    });
     expect(redirectUrl).toContain('/settings/account?emailChange=verified');
+    expect(redirectUrl).toContain('language=en');
   });
 
   it('restores old email and clears all sessions', async () => {
@@ -153,5 +166,158 @@ describe('AccountService', () => {
       where: { token: emailChangeTokenFixtures.restore.token },
     });
     expect(redirectUrl).toContain('/auth/login?emailRestore=restored');
+  });
+
+  it('creates account deletion token and sends verification email', async () => {
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue(
+      accountUserFixtures.primary,
+    );
+
+    await service.requestAccountDeletion(
+      accountUserFixtures.primary.id,
+      deleteAccountRequestFixtures.english.language,
+    );
+
+    expect(prismaMock.accountDeletionToken.deleteMany).toHaveBeenCalledWith({
+      where: { userId: accountUserFixtures.primary.id },
+    });
+    expect(prismaMock.accountDeletionToken.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          userId: accountUserFixtures.primary.id,
+          token: expect.any(String),
+          expiresAt: expect.any(Date),
+        }),
+      }),
+    );
+    expect(
+      emailServiceMock.sendDeleteAccountVerificationEmail,
+    ).toHaveBeenCalledWith(
+      accountUserFixtures.primary.email,
+      expect.stringMatching(/\/account\/confirm-delete\?token=.*&language=en/),
+      deleteAccountRequestFixtures.english.language,
+      10, // grace period days from config override
+    );
+  });
+
+  it('uses a 30 minute default expiration for deletion confirmation tokens', async () => {
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue(
+      accountUserFixtures.primary,
+    );
+
+    jest.useFakeTimers();
+    jest.setSystemTime(accountDeletionTimingFixtures.requestAt);
+
+    try {
+      await service.requestAccountDeletion(
+        accountUserFixtures.primary.id,
+        deleteAccountRequestFixtures.english.language,
+      );
+
+      const createCall =
+        prismaMock.accountDeletionToken.create.mock.calls[0]?.[0];
+      const expiresAt = createCall?.data?.expiresAt as Date;
+
+      expect(expiresAt).toEqual(
+        accountDeletionTimingFixtures.expectedTokenExpiresAt,
+      );
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('confirms account deletion, sends notification, and returns pending redirect', async () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(accountDeletionTimingFixtures.confirmAt);
+
+    prismaMock.accountDeletionToken.findUnique.mockResolvedValue(
+      accountDeletionTokenFixtures.valid,
+    );
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue(
+      accountUserFixtures.primary,
+    );
+
+    try {
+      const redirect = await service.confirmAccountDeletion(
+        accountDeletionTokenFixtures.valid.token,
+        deleteAccountRequestFixtures.english.language,
+      );
+
+      expect(prismaMock.user.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: accountUserFixtures.primary.id },
+          data: expect.objectContaining({
+            status: 'PENDING_DELETION',
+            gracePeriodDays: 10, // from config override
+            scheduledDeletionAt:
+              accountDeletionTimingFixtures.expectedScheduledDeletionAfter10Days,
+          }),
+        }),
+      );
+      expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
+        where: {
+          userId: accountUserFixtures.primary.id,
+        },
+      });
+
+      expect(
+        emailServiceMock.sendDeleteAccountNotificationEmail,
+      ).toHaveBeenCalledWith(
+        accountUserFixtures.primary.email,
+        accountDeletionTimingFixtures.expectedScheduledDeletionAfter10Days,
+        'http://localhost:4200/privacy/delete-pending?language=en',
+        deleteAccountRequestFixtures.english.language,
+      );
+
+      expect(redirect).toContain(
+        accountRedirectFixtures.accountDeletionConfirmed,
+      );
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('returns account deletion status for user', async () => {
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue(
+      accountDeletionStatusPrismaFixtures.pending,
+    );
+
+    await expect(
+      service.getAccountDeletionStatus(accountUserFixtures.primary.id),
+    ).resolves.toMatchObject({
+      status: 'pending_deletion',
+      gracePeriodDays: 7,
+    });
+  });
+
+  it('recovers account by resetting pending deletion fields', async () => {
+    await service.recoverAccountDeletion(accountUserFixtures.primary.id);
+
+    expect(prismaMock.user.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: accountUserFixtures.primary.id },
+        data: expect.objectContaining({
+          status: 'ACTIVE',
+          gracePeriodRequestedAt: null,
+          scheduledDeletionAt: null,
+        }),
+      }),
+    );
+    expect(prismaMock.accountDeletionToken.deleteMany).toHaveBeenCalledWith({
+      where: { userId: accountUserFixtures.primary.id },
+    });
+  });
+
+  it('hard deletes accounts that passed grace period', async () => {
+    prismaMock.user.deleteMany.mockResolvedValue({ count: 2 });
+
+    await expect(service.executeScheduledDeletion()).resolves.toBe(2);
+    expect(prismaMock.user.deleteMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          status: 'PENDING_DELETION',
+        }),
+      }),
+    );
   });
 });

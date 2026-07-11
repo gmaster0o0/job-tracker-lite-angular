@@ -15,6 +15,7 @@ type DeleteConfirmationDialogContext = {
   cancelLabel?: string;
   description?: string;
   isBusy?: boolean;
+  variant?: 'default' | 'outline' | 'secondary' | 'ghost' | 'destructive';
 };
 
 @Component({
@@ -38,6 +39,7 @@ export class DeleteConfirmationDialogComponent {
   protected readonly busyLabel = this.context.busyLabel ?? 'Deleting...';
   protected readonly cancelLabel = this.context.cancelLabel ?? 'Cancel';
   protected readonly description = this.context.description ?? null;
+  protected readonly variant = this.context.variant ?? 'default';
   protected readonly effectiveIsBusy =
     this.isBusy() || (this.context.isBusy ?? false);
   readonly confirm = output<void>();

@@ -5,10 +5,12 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
+    "@job-tracker-lite-angular/schemas": "0.0.1",
     "@nestjs/common": "^11.0.0",
     "express": "5.2.1",
     "tslib": "^2.3.0",
     "zod": "^4.4.3",
-    "@nestjs/core": "^11.0.0"
+    "@nestjs/core": "^11.0.0",
+    "@prisma/client": "^7.8.0"
   }
 }

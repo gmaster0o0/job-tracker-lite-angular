@@ -75,7 +75,7 @@ export class LoginComponent {
           try {
             const session = await this.authDataAccess.signIn(data().value());
             this.authSession.setSession(session);
-            await this.router.navigateByUrl('/jobs');
+            await this.redirectAfterLogin();
           } catch (error) {
             if (this.shouldRedirectToVerifyEmail(error)) {
               await this.router.navigateByUrl(
@@ -103,5 +103,14 @@ export class LoginComponent {
     }
 
     return error.errorCode.toUpperCase() === 'EMAIL_NOT_VERIFIED';
+  }
+
+  private async redirectAfterLogin(): Promise<void> {
+    if (this.authSession.isPendingDeletion()) {
+      await this.router.navigateByUrl('/privacy/delete-pending');
+      return;
+    }
+
+    await this.router.navigateByUrl('/jobs');
   }
 }

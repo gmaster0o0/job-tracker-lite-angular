@@ -34,12 +34,6 @@ export const userProfileSchema = z.object({
   experienceLevel: experienceLevelSchema.nullable().optional(),
   workingStyle: workingStyleSchema.nullable().optional(),
   careerType: careerPreferenceTypeSchema.nullable().optional(),
-  /**
-   * @deprecated - isPublic is deprecated,
-   * use personalVisibility, contactVisibility, skillsVisibility, preferenceVisibility together.
-   * This field will be removed in a future version.
-   */
-  isPublic: visibilityLevelSchema.default(0),
   personalVisibility: visibilityLevelSchema.default(0),
   contactVisibility: visibilityLevelSchema.default(0),
   skillsVisibility: visibilityLevelSchema.default(0),

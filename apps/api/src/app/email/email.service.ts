@@ -7,10 +7,12 @@ import {
   type SendEmailOptions,
 } from './providers/email-provider.interface';
 import {
+  getDeleteAccountVerificationTemplate,
   getResetPasswordEmailTemplate,
   getEmailChangeConfirmationTemplate,
   getRestoreEmailTemplate,
   getVerificationEmailTemplate,
+  getDeleteAccountNotificationTemplate,
 } from './templates';
 
 @Injectable()
@@ -79,6 +81,46 @@ export class EmailService {
     lang: SupportLang = 'en',
   ): Promise<void> {
     const template = getEmailChangeConfirmationTemplate(confirmationUrl, lang);
+
+    await this.send({
+      to,
+      subject: template.subject,
+      text: template.text,
+      html: template.html,
+    });
+  }
+
+  async sendDeleteAccountVerificationEmail(
+    to: string,
+    verificationUrl: string,
+    lang: SupportLang = 'en',
+    graceDays = 7,
+  ): Promise<void> {
+    const template = getDeleteAccountVerificationTemplate(
+      verificationUrl,
+      graceDays,
+      lang,
+    );
+
+    await this.send({
+      to,
+      subject: template.subject,
+      text: template.text,
+      html: template.html,
+    });
+  }
+
+  async sendDeleteAccountNotificationEmail(
+    to: string,
+    scheduledDeletionAt: Date,
+    recoverUrl: string,
+    lang: SupportLang = 'en',
+  ): Promise<void> {
+    const template = getDeleteAccountNotificationTemplate(
+      scheduledDeletionAt,
+      recoverUrl,
+      lang,
+    );
 
     await this.send({
       to,

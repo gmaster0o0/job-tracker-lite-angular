@@ -15,15 +15,15 @@ const templates: Record<
   }
 > = {
   hu: {
-    subject: 'Email-cim valtozas megerositese - Job Tracker Lite',
+    subject: 'Email-cím változtatás megerősítése - Job Tracker Lite',
     text: (url: string) =>
-      `Kerted, hogy megvaltoztasd a Job Tracker Lite fiokod email cimet. A valtozast ezen a linken erositsd meg: ${url}`,
+      `Kérted, hogy megváltoztasd a Job Tracker Lite fiókod email címét. A változtatást ezen a linken erősítsd meg: ${url}`,
     html: (url: string) => `
       <p>Szia!</p>
-      <p>Kerted, hogy megvaltoztasd a Job Tracker Lite fiokod email cimet.</p>
-      <p>Kattints az alabbi linkre a valtozas megerositesehez:</p>
-      <p><a href="${url}">Email-cim valtozas megerositese</a></p>
-      <p>Ha nem te kerted, hagyd figyelmen kivul ezt az emailt.</p>
+      <p>Kérted, hogy megváltoztasd a Job Tracker Lite fiókod email címét.</p>
+      <p>Kattints az alábbi linkre a változtatás megerősítéséhez:</p>
+      <p><a href="${url}">Email-cím változtatás megerősítése</a></p>
+      <p>Ha nem te kérted, hagyd figyelmen kívül ezt az emailt.</p>
     `,
   },
   en: {

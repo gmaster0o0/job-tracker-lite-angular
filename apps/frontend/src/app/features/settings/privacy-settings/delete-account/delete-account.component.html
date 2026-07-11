@@ -1,0 +1,42 @@
+@if (confirmationSent()) {
+  <hlm-alert
+    class="max-w-md border-green-200 bg-green-50 text-green-900 dark:border-green-900 dark:bg-green-950 dark:text-green-50"
+  >
+    <ng-icon name="lucideAlertTriangle" />
+    <h4 hlmAlertTitle>
+      {{
+        'privacySettings.deleteAccount.verificationEmailSentTitle' | transloco
+      }}
+    </h4>
+    <p hlmAlertDescription>
+      {{ 'privacySettings.deleteAccount.verificationEmailSent' | transloco }}
+    </p>
+  </hlm-alert>
+} @else {
+  <hlm-alert variant="destructive" class="border-red-500/30 bg-red-500/5">
+    <ng-icon class="text-[length:--spacing(12)]" name="lucideTrash2" />
+    <h4 hlmAlertTitle class="text-[length:--spacing(6)]">
+      {{ 'privacySettings.deleteAccount.title' | transloco }}
+    </h4>
+    <p hlmAlertDescription>
+      {{ 'privacySettings.deleteAccount.description' | transloco }}
+    </p>
+
+    <div hlmAlertAction>
+      <button
+        hlmBtn
+        size="sm"
+        class="border-red-500/30"
+        variant="destructive"
+        (click)="onDeleteAccount()"
+      >
+        {{ 'privacySettings.deleteAccount.button' | transloco }}
+      </button>
+    </div>
+    <app-server-error-alert
+      [errorMessage]="deleteError()"
+      translationPrefix="privacySettings.deleteAccount"
+      cssClass="w-full"
+    />
+  </hlm-alert>
+}

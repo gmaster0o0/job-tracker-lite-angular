@@ -4,8 +4,12 @@ import type { BetterAuthOptions } from 'better-auth';
 import { prismaAdapter } from '@better-auth/prisma-adapter';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from '../email/email.service';
-import { getLanguageFromResetUrl } from '../email/email.utils';
+import {
+  getLanguageFromUrl,
+  setLanguageOnUrl,
+} from '@job-tracker-lite-angular/core-utils';
 import { Injectable } from '@nestjs/common';
+import { AccountStatus } from '@prisma/client';
 
 type EmailAndPasswordConfig = NonNullable<
   BetterAuthOptions['emailAndPassword']
@@ -43,6 +47,16 @@ export class AuthConfigFactory {
       trustedOrigins: this.getTrustedOrigins(this.configService),
       emailAndPassword: this.getEmailAndPasswordConfig(),
       emailVerification: this.getEmailVerificationConfig(),
+      user: {
+        additionalFields: {
+          status: {
+            type: 'string',
+            required: false,
+            input: false,
+            defaultValue: AccountStatus.ACTIVE,
+          },
+        },
+      },
     });
   }
 
@@ -52,7 +66,7 @@ export class AuthConfigFactory {
       autoSignIn: true,
       requireEmailVerification: true,
       sendResetPassword: async ({ user, url }) => {
-        const language = getLanguageFromResetUrl(url);
+        const language = getLanguageFromUrl(url);
         await this.emailService.sendResetPasswordEmail(
           user.email,
           url,
@@ -70,12 +84,19 @@ export class AuthConfigFactory {
           this.configService.get<string>('FRONTEND_URL') ??
           'http://localhost:4200';
         const verifyUrl = new URL(url);
-
-        verifyUrl.searchParams.set(
-          'callbackURL',
-          `${frontendOrigin}/auth/verify-email`,
+        const callbackUrl = new URL(
+          verifyUrl.searchParams.get('callbackURL') ?? '/auth/verify-email',
+          frontendOrigin,
         );
-        const language = getLanguageFromResetUrl(url);
+        const language = getLanguageFromUrl(
+          callbackUrl.toString(),
+          'language',
+          getLanguageFromUrl(url),
+        );
+
+        setLanguageOnUrl(callbackUrl, language);
+        verifyUrl.searchParams.set('callbackURL', callbackUrl.toString());
+
         await this.emailService.sendVerificationEmail(
           user.email,
           verifyUrl.toString(),
