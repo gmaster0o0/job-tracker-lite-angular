@@ -117,6 +117,7 @@
 <hlm-dialog-footer>
   <app-cancel-button
     cancelLabel="{{ 'common.cancel' | transloco }}"
+    (click)="cancel()"
   ></app-cancel-button>
   <app-save-button
     idleLabel="{{ 'common.saveChanges' | transloco }}"
