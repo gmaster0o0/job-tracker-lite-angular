@@ -3,6 +3,8 @@ import {
   allPrismaJobFixtures,
 } from '../fixtures/prisma.fixtures';
 
+export type MockAccountStatus = 'ACTIVE' | 'PENDING_DELETION' | 'SUSPENDED';
+
 export function createPrismaServiceMock(mockFactory: () => any) {
   return {
     testConnection: mockFactory(),
