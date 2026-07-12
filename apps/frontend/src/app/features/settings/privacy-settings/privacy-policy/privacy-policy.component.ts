@@ -1,24 +1,45 @@
-import { Component } from '@angular/core';
+import { Component, effect, input, output, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
-import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
-import { HlmIconImports } from '@spartan-ng/helm/icon';
-import { HlmTableImports } from '@spartan-ng/helm/table';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
+import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideShieldCheck } from '@ng-icons/lucide';
-import { provideIcons } from '@ng-icons/core';
 
 @Component({
   selector: 'app-privacy-policy',
+  standalone: true,
   imports: [
-    HlmTypographyImports,
+    TranslocoModule,
     HlmDialogImports,
     HlmButtonImports,
-    HlmTableImports,
-    TranslocoModule,
-    HlmIconImports,
+    HlmTypographyImports,
+    NgIcon,
   ],
   providers: [provideIcons({ lucideShieldCheck })],
   templateUrl: './privacy-policy.component.html',
 })
-export class PrivacyPolicyComponent {}
+export class PrivacyPolicyComponent {
+  // route-vezérelt input: true, ha az URL szerint nyitva kell lennie
+  open = input<boolean>(false);
+  // kifelé jelezzük, ha bezárult (hogy a szülő tudja frissíteni az URL-t)
+  closed = output<void>();
+
+  // belső, "single source of truth" state a dialógusnak
+  protected readonly state = signal<'open' | 'closed'>('closed');
+
+  constructor() {
+    // amikor a route input változik, szinkronban tartjuk a belső state-et
+    effect(() => {
+      console.log(this.open());
+      this.state.set(this.open() ? 'open' : 'closed');
+    });
+  }
+
+  protected onStateChanged(newState: 'open' | 'closed'): void {
+    this.state.set(newState);
+    if (newState === 'closed') {
+      this.closed.emit();
+    }
+  }
+}

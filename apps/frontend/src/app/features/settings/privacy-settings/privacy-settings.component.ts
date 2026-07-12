@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
 import { CookieManagementComponent } from './cookie-managment/cookie-management.component';
@@ -8,6 +8,9 @@ import { VisibilityManagementComponent } from './visbility-managment/visibility-
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 import { CookiePolicyComponent } from './cookie-policy/cookie-policy.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-privacy-settings',
@@ -25,4 +28,23 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
   ],
   templateUrl: './privacy-settings.component.html',
 })
-export class PrivacySettingsComponent {}
+export class PrivacySettingsComponent {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
+  protected readonly policyType = toSignal(
+    this.route.url.pipe(map((segments) => segments[0]?.path ?? null)),
+    { initialValue: null },
+  );
+
+  protected readonly isPrivacyOpen = computed(
+    () => this.policyType() === 'privacy-policy',
+  );
+  protected readonly isCookieOpen = computed(
+    () => this.policyType() === 'cookie-policy',
+  );
+
+  protected onPolicyClosed(): void {
+    this.router.navigate(['../'], { relativeTo: this.route, replaceUrl: true });
+  }
+}

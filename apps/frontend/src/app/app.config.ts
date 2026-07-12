@@ -1,11 +1,11 @@
 import {
-  APP_INITIALIZER,
   ApplicationConfig,
   isDevMode,
+  provideAppInitializer,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withDebugTracing } from '@angular/router';
 import {
   provideHttpClient,
   withFetch,
@@ -26,7 +26,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(appRoutes),
     provideHttpClient(withFetch(), withInterceptors([backendErrorInterceptor])),
     {
-      provide: APP_INITIALIZER,
+      provide: provideAppInitializer,
       multi: true,
       deps: [AuthSessionService],
       useFactory: (authSession: AuthSessionService) => () =>

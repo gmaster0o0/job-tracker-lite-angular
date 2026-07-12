@@ -3,7 +3,7 @@
   {{ 'settings.privacyPolicy.description' | transloco }}
 </p>
 
-<hlm-dialog>
+<hlm-dialog [state]="state()" (stateChanged)="onStateChanged($event)">
   <button hlmDialogTrigger hlmBtn variant="outline">
     <ng-icon name="lucideShieldCheck" />
     {{ 'settings.privacyPolicy.open' | transloco }}
