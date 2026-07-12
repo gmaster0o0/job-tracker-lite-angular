@@ -32,13 +32,30 @@
       <p hlmP>
         {{ 'settings.cookiePolicy.section2.description' | transloco }}
       </p>
-      <h4 hlmH4>
+      <h4 hlmH4 class="mt-4 mb-2">
         {{ 'settings.cookiePolicy.section2.technicalCookiesTitle' | transloco }}
       </h4>
+      <div class="md:hidden space-y-4">
+        @for (cookie of cookies | slice: 0 : 3; track cookie.name) {
+          <div class="p-4 border border-border rounded-lg bg-card shadow-sm">
+            <p hlmLarge>
+              {{ cookie.name }}
+            </p>
 
-      <div hlmTableContainer>
+            <p hlmP>
+              {{ cookie.description() }}
+            </p>
+
+            <p hlmSmall>
+              {{ 'settings.cookiePolicy.section2.table.duration' | transloco }}:
+              {{ cookie.duration() }}
+            </p>
+          </div>
+        }
+      </div>
+      <div hlmTableContainer class="hidden md:block">
         <table hlmTable>
-          <thead hlmTableHeader>
+          <thead hlmTableHeader class="bg-muted">
             <tr hlmTableRow>
               <th hlmTableHead>
                 {{ 'settings.cookiePolicy.section2.table.name' | transloco }}
@@ -74,7 +91,7 @@
       <p hlmMuted>
         {{ 'settings.cookiePolicy.section2.note' | transloco }}
       </p>
-      <blockquote hlmBlockquote>
+      <blockquote hlmBlockquote class="m-2">
         {{ 'settings.cookiePolicy.section2.warning' | transloco }}
       </blockquote>
 
