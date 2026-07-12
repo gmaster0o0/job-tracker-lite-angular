@@ -9,6 +9,7 @@
     variant="outline"
     routerLink="privacy-policy"
     routerLinkActive="hidden"
+    data-testid="privacy-policy-trigger"
   >
     <ng-icon name="lucideShieldCheck" />
     {{ 'settings.privacyPolicy.open' | transloco }}
@@ -54,7 +55,12 @@
       <p hlmP class="flex justify-start w-full">
         {{ 'settings.privacyPolicy.lastUpdated' | transloco }}: 2026. 07. 12.
       </p>
-      <button hlmBtn variant="outline" hlmDialogClose>
+      <button
+        hlmBtn
+        variant="outline"
+        hlmDialogClose
+        data-testid="privacy-policy-close"
+      >
         {{ 'common.close' | transloco }}
       </button>
     </hlm-dialog-footer>

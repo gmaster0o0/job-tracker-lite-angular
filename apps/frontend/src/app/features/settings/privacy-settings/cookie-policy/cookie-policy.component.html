@@ -8,6 +8,7 @@
     variant="outline"
     routerLink="cookie-policy"
     routerLinkActive="hidden"
+    data-testid="cookie-policy-trigger"
   >
     <ng-icon name="lucideScrollText" />
     {{ 'settings.cookiePolicy.open' | transloco }}
@@ -119,7 +120,12 @@
       <p hlmP class="flex justify-start w-full">
         {{ 'settings.cookiePolicy.lastUpdated' | transloco }}: 2026. 07. 12.
       </p>
-      <button hlmBtn variant="outline" hlmDialogClose>
+      <button
+        hlmBtn
+        variant="outline"
+        hlmDialogClose
+        data-testid="cookie-policy-close"
+      >
         {{ 'common.close' | transloco }}
       </button>
     </hlm-dialog-footer>
