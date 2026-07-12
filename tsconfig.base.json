@@ -140,6 +140,9 @@
       ],
       "@spartan-ng/helm/switch": [
         "./libs/shared-ui/switch/src/index.ts"
+      ],
+      "@spartan-ng/helm/table": [
+        "./libs/shared-ui/table/src/index.ts"
       ]
     }
   },
