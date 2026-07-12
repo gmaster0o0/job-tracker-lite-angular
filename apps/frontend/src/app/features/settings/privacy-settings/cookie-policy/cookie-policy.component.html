@@ -3,7 +3,12 @@
   {{ 'settings.cookiePolicy.description' | transloco }}
 </p>
 <hlm-dialog [state]="state()" (stateChanged)="onStateChanged($event)">
-  <button hlmDialogTrigger hlmBtn variant="outline">
+  <button
+    hlmBtn
+    variant="outline"
+    routerLink="cookie-policy"
+    routerLinkActive="hidden"
+  >
     <ng-icon name="lucideScrollText" />
     {{ 'settings.cookiePolicy.open' | transloco }}
   </button>

@@ -6,8 +6,8 @@ import { SlicePipe } from '@angular/common';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import { lucideScrollText } from '@ng-icons/lucide';
-import { provideIcons } from '@ng-icons/core';
-import { HlmIconImports } from '@spartan-ng/helm/icon';
+import { provideIcons, NgIcon } from '@ng-icons/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-cookie-policy',
@@ -19,7 +19,8 @@ import { HlmIconImports } from '@spartan-ng/helm/icon';
     HlmTableImports,
     SlicePipe,
     TranslocoModule,
-    HlmIconImports,
+    NgIcon,
+    RouterLink,
   ],
   providers: [provideIcons({ lucideScrollText })],
   templateUrl: './cookie-policy.component.html',

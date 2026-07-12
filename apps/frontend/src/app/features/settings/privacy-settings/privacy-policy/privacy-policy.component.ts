@@ -3,8 +3,9 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
-import { provideIcons } from '@ng-icons/core';
+import { provideIcons, NgIcon } from '@ng-icons/core';
 import { lucideShieldCheck } from '@ng-icons/lucide';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-privacy-policy',
@@ -14,6 +15,8 @@ import { lucideShieldCheck } from '@ng-icons/lucide';
     HlmDialogImports,
     HlmButtonImports,
     HlmTypographyImports,
+    NgIcon,
+    RouterLink,
   ],
   providers: [provideIcons({ lucideShieldCheck })],
   templateUrl: './privacy-policy.component.html',

@@ -37,12 +37,10 @@ export class PrivacySettingsComponent {
     { initialValue: null },
   );
 
-  protected readonly isPrivacyOpen = computed(
-    () => this.policyType() === 'privacy-policy',
-  );
-  protected readonly isCookieOpen = computed(
-    () => this.policyType() === 'cookie-policy',
-  );
+  protected readonly activePolicy = computed(() => {
+    const type = this.policyType();
+    return type === 'privacy-policy' || type === 'cookie-policy' ? type : null;
+  });
 
   protected onPolicyClosed(): void {
     this.router.navigate(['../'], { relativeTo: this.route, replaceUrl: true });

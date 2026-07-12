@@ -4,7 +4,12 @@
 </p>
 
 <hlm-dialog [state]="state()" (stateChanged)="onStateChanged($event)">
-  <button hlmDialogTrigger hlmBtn variant="outline">
+  <button
+    hlmBtn
+    variant="outline"
+    routerLink="privacy-policy"
+    routerLinkActive="hidden"
+  >
     <ng-icon name="lucideShieldCheck" />
     {{ 'settings.privacyPolicy.open' | transloco }}
   </button>
