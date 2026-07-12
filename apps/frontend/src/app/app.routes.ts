@@ -113,6 +113,13 @@ export const appRoutes: Route[] = [
                     './features/settings/privacy-settings/privacy-settings.component'
                   ).then((m) => m.PrivacySettingsComponent),
               },
+              {
+                path: 'cookie-policy',
+                loadComponent: () =>
+                  import(
+                    './features/settings/privacy-settings/privacy-settings.component'
+                  ).then((m) => m.PrivacySettingsComponent),
+              },
             ],
           },
         ],

@@ -11,7 +11,7 @@
   <app-data-management></app-data-management>
   <app-cookie-management></app-cookie-management>
   <app-privacy-policy [open]="isPrivacyOpen()" (closed)="onPolicyClosed()" />
-  <app-cookie-policy />
+  <app-cookie-policy [open]="isCookieOpen()" (closed)="onPolicyClosed()" />
   <hlm-separator />
   <app-delete-account></app-delete-account>
 </div>

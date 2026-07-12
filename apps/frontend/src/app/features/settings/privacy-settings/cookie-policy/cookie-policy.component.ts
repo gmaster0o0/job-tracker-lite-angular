@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect, input, output, signal } from '@angular/core';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -8,8 +8,10 @@ import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import { lucideScrollText } from '@ng-icons/lucide';
 import { provideIcons } from '@ng-icons/core';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
+
 @Component({
   selector: 'app-cookie-policy',
+  standalone: true,
   imports: [
     HlmTypographyImports,
     HlmDialogImports,
@@ -23,6 +25,24 @@ import { HlmIconImports } from '@spartan-ng/helm/icon';
   templateUrl: './cookie-policy.component.html',
 })
 export class CookiePolicyComponent {
+  open = input<boolean>(false);
+  closed = output<void>();
+
+  protected readonly state = signal<'open' | 'closed'>('closed');
+
+  constructor() {
+    effect(() => {
+      this.state.set(this.open() ? 'open' : 'closed');
+    });
+  }
+
+  protected onStateChanged(newState: 'open' | 'closed'): void {
+    this.state.set(newState);
+    if (newState === 'closed') {
+      this.closed.emit();
+    }
+  }
+
   protected readonly cookies = [
     {
       name: 'better-auth.session_token',

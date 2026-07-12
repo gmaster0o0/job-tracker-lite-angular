@@ -3,7 +3,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
-import { NgIcon, provideIcons } from '@ng-icons/core';
+import { provideIcons } from '@ng-icons/core';
 import { lucideShieldCheck } from '@ng-icons/lucide';
 
 @Component({
@@ -14,7 +14,6 @@ import { lucideShieldCheck } from '@ng-icons/lucide';
     HlmDialogImports,
     HlmButtonImports,
     HlmTypographyImports,
-    NgIcon,
   ],
   providers: [provideIcons({ lucideShieldCheck })],
   templateUrl: './privacy-policy.component.html',
