@@ -8,6 +8,7 @@ import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import { lucideScrollText } from '@ng-icons/lucide';
 import { provideIcons, NgIcon } from '@ng-icons/core';
 import { RouterLink } from '@angular/router';
+import { AppDatePipe } from '@job-tracker-lite-angular/frontend-data-access';
 
 @Component({
   selector: 'app-cookie-policy',
@@ -21,6 +22,7 @@ import { RouterLink } from '@angular/router';
     TranslocoModule,
     NgIcon,
     RouterLink,
+    AppDatePipe,
   ],
   providers: [provideIcons({ lucideScrollText })],
   templateUrl: './cookie-policy.component.html',
@@ -30,6 +32,8 @@ export class CookiePolicyComponent {
   closed = output<void>();
 
   protected readonly state = signal<'open' | 'closed'>('closed');
+  // The last updated date for the cookie policy
+  protected readonly lastUpdatedDate = '2026-07-12';
 
   constructor() {
     effect(() => {
