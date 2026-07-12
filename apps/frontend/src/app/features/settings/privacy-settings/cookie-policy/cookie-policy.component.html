@@ -4,46 +4,55 @@
   website. By using our website, you consent to the use of cookies as described
   in this policy.
 </p>
-
 <hlm-dialog>
   <button hlmDialogTrigger hlmBtn variant="outline">
     <ng-icon name="lucideScrollText" />
-    Open Cookie Policy
+    {{ 'settings.cookiePolicy.open' | transloco }}
   </button>
   <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-4xl w-[95vw]">
     <hlm-dialog-header>
-      <h1 hlmH1 hlmDialogTitle>Cookie Policy</h1>
+      <h1 hlmH1 hlmDialogTitle>
+        {{ 'settings.cookiePolicy.title' | transloco }}
+      </h1>
       <p hlmDialogDescription>
-        Weboldalunk "sütiket" (cookie-kat) használ annak érdekében, hogy a
-        felhasználói élményt javítsuk, és biztosítsuk az oldal alapvető
-        funkcióinak működését. Ez a tájékoztató bemutatja, milyen sütiket
-        használunk, és mi a szerepük.
+        {{ 'settings.cookiePolicy.description' | transloco }}
       </p>
     </hlm-dialog-header>
     <div class="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4">
-      <h2 hlmH2>1. Mik azok a sütik?</h2>
+      <h2 hlmH2>
+        {{ 'settings.cookiePolicy.section1.title' | transloco }}
+      </h2>
       <p hlmP>
-        A sütik kisméretű adatfájlok, amelyeket a webböngésződ tárol a
-        számítógépeden vagy mobileszközödön, amikor meglátogatod weboldalunkat.
-        Ezek segítenek minket abban, hogy megjegyezzük a beállításaidat és
-        biztosítsuk az alkalmazás biztonságos működését.
+        {{ 'settings.cookiePolicy.section1.description' | transloco }}
       </p>
 
-      <h2 hlmH2>2. Az általunk használt sütik</h2>
+      <h2 hlmH2>
+        {{ 'settings.cookiePolicy.section2.title' | transloco }}
+      </h2>
       <p hlmP>
-        Jelenleg oldalunk kizárólag feltétlenül szükséges sütiket használ. Ezek
-        elengedhetetlenek az alkalmazás alapvető biztonsági és működési
-        funkcióihoz (pl. munkamenet-kezelés, hitelesítés).
+        {{ 'settings.cookiePolicy.section2.description' | transloco }}
       </p>
-      <h4 hlmH4>Technikai sütik listája:</h4>
+      <h4 hlmH4>
+        {{ 'settings.cookiePolicy.section2.technicalCookiesTitle' | transloco }}
+      </h4>
 
       <div hlmTableContainer>
         <table hlmTable>
           <thead hlmTableHeader>
             <tr hlmTableRow>
-              <th hlmTableHead>Süti neve</th>
-              <th hlmTableHead>Leírás</th>
-              <th hlmTableHead class="text-right">Élettartam</th>
+              <th hlmTableHead>
+                {{ 'settings.cookiePolicy.section2.table.name' | transloco }}
+              </th>
+              <th hlmTableHead>
+                {{
+                  'settings.cookiePolicy.section2.table.description' | transloco
+                }}
+              </th>
+              <th hlmTableHead class="text-right">
+                {{
+                  'settings.cookiePolicy.section2.table.duration' | transloco
+                }}
+              </th>
             </tr>
           </thead>
           <tbody hlmTableBody>
@@ -63,29 +72,27 @@
         </table>
       </div>
       <p hlmMuted>
-        Megjegyzés: A statisztikai, marketing és egyéb preferencia sütik
-        jelenleg inaktívak, ezekhez nem tárolunk adatot.
+        {{ 'settings.cookiePolicy.section2.note' | transloco }}
       </p>
       <blockquote hlmBlockquote>
-        A sütik listája időről időre változhat, ezért javasoljuk, hogy
-        rendszeresen ellenőrizd ezt a tájékoztatót.
+        {{ 'settings.cookiePolicy.section2.warning' | transloco }}
       </blockquote>
 
-      <h2 hlmH2>3. Sütik kezelése és törlése</h2>
+      <h2 hlmH2>
+        {{ 'settings.cookiePolicy.section3.title' | transloco }}
+      </h2>
       <p hlmP>
-        Bármikor módosíthatod a böngésződ beállításait, hogy töröld vagy
-        blokkold a sütiket. Kérjük, vedd figyelembe, hogy a "feltétlenül
-        szükséges" sütik letiltása esetén weboldalunk egyes funkciói nem fognak
-        megfelelően működni (pl. nem tudsz bejelentkezni).
+        {{ 'settings.cookiePolicy.section3.description' | transloco }}
       </p>
-      <h2 hlmH2>4. Kapcsolat</h2>
+      <h2 hlmH2>
+        {{ 'settings.cookiePolicy.section4.title' | transloco }}
+      </h2>
       <p hlmP>
-        Amennyiben kérdésed merülne fel a sütik kezelésével kapcsolatban,
-        kérjük, vedd fel velünk a kapcsolatot:
+        {{ 'settings.cookiePolicy.section4.description' | transloco }}
       </p>
       <ul hlmUl>
-        <li>Üzemeltető: Example Company</li>
-        <li>Email: support&#64;example.com</li>
+        <li>{{ 'settings.cookiePolicy.section4.operator' | transloco }}:</li>
+        <li>{{ 'settings.cookiePolicy.section4.email' | transloco }}:</li>
       </ul>
     </div>
     <hlm-dialog-footer>

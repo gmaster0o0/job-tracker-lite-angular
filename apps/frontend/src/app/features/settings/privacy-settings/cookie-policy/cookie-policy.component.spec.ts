@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CookiePolicyComponent } from './cookie-policy.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('CookiePolicyComponent', () => {
   let component: CookiePolicyComponent;
@@ -7,7 +8,7 @@ describe('CookiePolicyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CookiePolicyComponent],
+      imports: [CookiePolicyComponent, getTranslocoModule()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CookiePolicyComponent);
