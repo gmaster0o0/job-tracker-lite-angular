@@ -16,3 +16,4 @@ export * from './server-error-alert/server-error-alert.component';
 export * from './server-error-alert/server-error-alert.harness';
 export * from './inline-edit';
 export * from './transloco-testing.module';
+export * from './empty-list/empty-list.component';

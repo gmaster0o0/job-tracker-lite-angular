@@ -92,6 +92,8 @@
     "detail": {
       "loadFailed": "Nem sikerült betölteni a részleteket",
       "notFound": "Munka nem található",
+      "noJobs": "Nincs elérhető munka",
+      "noJobsDescription": "Nincs elérhető munka a listában. Kérjük, adjon hozzá egy új munkát a kezdéshez.",
       "loading": "Munka betöltése...",
       "selectJob": "Nincs munka kiválasztva",
       "reject": "Elutasítás",
