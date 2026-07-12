@@ -1,0 +1,18 @@
+<div hlmEmpty class="bg-gradient-to-b from-gray-50 to-white p-8 rounded-xl">
+  <hlm-empty-header>
+    <hlm-empty-media variant="icon">
+      <ng-icon name="lucideBookAlert" />
+    </hlm-empty-media>
+    <div hlmEmptyTitle>{{ title() }}</div>
+    <div hlmEmptyDescription>
+      {{ description() }}
+    </div>
+  </hlm-empty-header>
+  <hlm-empty-content class="flex-row justify-center gap-2">
+    <button hlmBtn (click)="onCreateClick()">
+      <ng-icon hlm size="sm" name="lucidePlus" class="mr-2" />{{
+        createButtonLabel()
+      }}
+    </button>
+  </hlm-empty-content>
+</div>

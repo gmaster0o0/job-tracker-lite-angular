@@ -92,6 +92,8 @@
     "detail": {
       "loadFailed": "Failed to load job details. Please try again later.",
       "notFound": "Job not found.",
+      "noJobs": "No jobs available.",
+      "noJobsDescription": "There are no jobs available in the list. Please add a new job to get started.",
       "loading": "Loading job details...",
       "selectJob": "No Job Selected",
       "reject": "Reject",

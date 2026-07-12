@@ -23,6 +23,13 @@
     >
       {{ 'jobs.detail.loading' | transloco }}
     </div>
+  } @else if (jobsResource.value()?.length === 0) {
+    <app-empty-list
+      [title]="'jobs.detail.noJobs' | transloco"
+      [description]="'jobs.detail.noJobsDescription' | transloco"
+      [createButtonLabel]="'jobs.detail.addNew' | transloco"
+      (createButtonClick)="openCreateJobDialog()"
+    ></app-empty-list>
   } @else if (!selectedJobId()) {
     <div
       class="flex h-full items-center justify-center text-sm text-muted-foreground"
