@@ -63,9 +63,9 @@
                   hlmTableCell
                   class="whitespace-normal break-words max-w-[200px]"
                 >
-                  {{ cookie.description }}
+                  {{ cookie.description() }}
                 </td>
-                <td hlmTableCell class="text-right">{{ cookie.duration }}</td>
+                <td hlmTableCell class="text-right">{{ cookie.duration() }}</td>
               </tr>
             }
           </tbody>
