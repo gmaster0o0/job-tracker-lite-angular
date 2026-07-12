@@ -203,7 +203,7 @@
       }
     },
     "deleteAccount": {
-      "verificationEmailSentTitle": "privacySettings.deleteAccount.verificationEmailSentTitle",
+      "verificationEmailSentTitle": "Megerősítő email elküldve",
       "verificationEmailSent": "Megerősítő email elküldve. A türelmi idő indításához nyisd meg az emailben kapott linket.",
       "title": "Fiók törlése",
       "description": "Fióktörlési kérelem indítása. Először megerősítő emailt küldünk, és csak utána indul a türelmi idő.",
@@ -212,7 +212,8 @@
       "dialogDescription": "Elindítod a fióktörlési kérelmet? A megerősítéshez emailt küldünk, és a türelmi idő csak a link megerősítése után indul.",
       "error": {
         "title": "Fióktörlési kérelem sikertelen",
-        "unknown": "Most nem sikerült elindítani a fióktörlést. Próbáld újra."
+        "unknown": "Most nem sikerült elindítani a fióktörlést. Próbáld újra.",
+        "internal_server_error": "Belső szerverhiba történt. Próbáld újra később."
       }
     },
     "cookieManagement": {

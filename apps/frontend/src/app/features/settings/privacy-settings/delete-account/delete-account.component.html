@@ -14,29 +14,46 @@
   </hlm-alert>
 } @else {
   <hlm-alert variant="destructive" class="border-red-500/30 bg-red-500/5">
-    <ng-icon class="text-[length:--spacing(12)]" name="lucideTrash2" />
-    <h4 hlmAlertTitle class="text-[length:--spacing(6)]">
-      {{ 'privacySettings.deleteAccount.title' | transloco }}
-    </h4>
-    <p hlmAlertDescription>
-      {{ 'privacySettings.deleteAccount.description' | transloco }}
-    </p>
+    <div
+      class="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-4 items-center"
+    >
+      <div class="hidden md:block">
+        <ng-icon size="36" name="lucideTrash2" />
+      </div>
 
-    <div hlmAlertAction>
-      <button
-        hlmBtn
-        size="sm"
-        class="border-red-500/30"
-        variant="destructive"
-        (click)="onDeleteAccount()"
-      >
-        {{ 'privacySettings.deleteAccount.button' | transloco }}
-      </button>
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-3 md:hidden">
+          <ng-icon size="24" name="lucideTrash2" />
+          <h4 hlmH4 hlmAlertTitle class="!m-0">
+            {{ 'privacySettings.deleteAccount.title' | transloco }}
+          </h4>
+        </div>
+
+        <h4 hlmH4 hlmAlertTitle class="hidden md:block">
+          {{ 'privacySettings.deleteAccount.title' | transloco }}
+        </h4>
+
+        <p hlmAlertDescription>
+          {{ 'privacySettings.deleteAccount.description' | transloco }}
+        </p>
+      </div>
+
+      <div class="w-full md:w-auto">
+        <button
+          hlmBtn
+          size="sm"
+          variant="destructive"
+          class="w-full"
+          (click)="onDeleteAccount()"
+        >
+          {{ 'privacySettings.deleteAccount.button' | transloco }}
+        </button>
+      </div>
     </div>
-    <app-server-error-alert
-      [errorMessage]="deleteError()"
-      translationPrefix="privacySettings.deleteAccount"
-      cssClass="w-full"
-    />
   </hlm-alert>
+  <app-server-error-alert
+    [errorMessage]="deleteError()"
+    translationPrefix="privacySettings.deleteAccount"
+    cssClass="w-full"
+  />
 }

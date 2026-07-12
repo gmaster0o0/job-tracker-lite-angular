@@ -20,7 +20,7 @@
     "accept": "Accept",
     "logout": "Logout",
     "close": "Close",
-    "comingSoon": "common.comingSoon",
+    "comingSoon": "Coming Soon",
     "discard": "Discard",
     "save": "Save",
     "saving": "Saving...",
@@ -201,7 +201,8 @@
       "recoverDialogDescription": "Do you want to cancel the pending account deletion and restore your account to active status?",
       "error": {
         "title": "Recovery Failed",
-        "unknown": "Unable to process account recovery right now. Please try again."
+        "unknown": "Unable to process account recovery right now. Please try again.",
+        "internal_server_error": "An internal server error occurred. Please try again later."
       }
     },
     "deleteAccount": {
@@ -214,7 +215,8 @@
       "dialogDescription": "Do you want to request account deletion? We will send a confirmation email and start the grace period only after confirmation.",
       "error": {
         "title": "Account Deletion Request Failed",
-        "unknown": "Unable to request account deletion right now. Please try again."
+        "unknown": "Unable to request account deletion right now. Please try again.",
+        "internal_server_error": "An internal server error occurred. Please try again later."
       }
     },
     "cookieManagement": {
