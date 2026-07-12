@@ -1,0 +1,104 @@
+<h2 hlmH2>Cookie Policy</h2>
+<p hlmP>
+  This Cookie Policy explains how we use cookies and similar technologies on our
+  website. By using our website, you consent to the use of cookies as described
+  in this policy.
+</p>
+<hlm-dialog>
+  <button hlmDialogTrigger hlmBtn variant="outline">
+    <ng-icon name="lucideScrollText" />
+    {{ 'settings.cookiePolicy.open' | transloco }}
+  </button>
+  <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-4xl w-[95vw]">
+    <hlm-dialog-header>
+      <h1 hlmH1 hlmDialogTitle>
+        {{ 'settings.cookiePolicy.title' | transloco }}
+      </h1>
+      <p hlmDialogDescription>
+        {{ 'settings.cookiePolicy.description' | transloco }}
+      </p>
+    </hlm-dialog-header>
+    <div class="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4">
+      <h2 hlmH2>
+        {{ 'settings.cookiePolicy.section1.title' | transloco }}
+      </h2>
+      <p hlmP>
+        {{ 'settings.cookiePolicy.section1.description' | transloco }}
+      </p>
+
+      <h2 hlmH2>
+        {{ 'settings.cookiePolicy.section2.title' | transloco }}
+      </h2>
+      <p hlmP>
+        {{ 'settings.cookiePolicy.section2.description' | transloco }}
+      </p>
+      <h4 hlmH4>
+        {{ 'settings.cookiePolicy.section2.technicalCookiesTitle' | transloco }}
+      </h4>
+
+      <div hlmTableContainer>
+        <table hlmTable>
+          <thead hlmTableHeader>
+            <tr hlmTableRow>
+              <th hlmTableHead>
+                {{ 'settings.cookiePolicy.section2.table.name' | transloco }}
+              </th>
+              <th hlmTableHead>
+                {{
+                  'settings.cookiePolicy.section2.table.description' | transloco
+                }}
+              </th>
+              <th hlmTableHead class="text-right">
+                {{
+                  'settings.cookiePolicy.section2.table.duration' | transloco
+                }}
+              </th>
+            </tr>
+          </thead>
+          <tbody hlmTableBody>
+            @for (cookie of cookies | slice: 0 : 3; track cookie.name) {
+              <tr hlmTableRow>
+                <td hlmTableCell class="font-small">{{ cookie.name }}</td>
+                <td
+                  hlmTableCell
+                  class="whitespace-normal break-words max-w-[200px]"
+                >
+                  {{ cookie.description() }}
+                </td>
+                <td hlmTableCell class="text-right">{{ cookie.duration() }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p hlmMuted>
+        {{ 'settings.cookiePolicy.section2.note' | transloco }}
+      </p>
+      <blockquote hlmBlockquote>
+        {{ 'settings.cookiePolicy.section2.warning' | transloco }}
+      </blockquote>
+
+      <h2 hlmH2>
+        {{ 'settings.cookiePolicy.section3.title' | transloco }}
+      </h2>
+      <p hlmP>
+        {{ 'settings.cookiePolicy.section3.description' | transloco }}
+      </p>
+      <h2 hlmH2>
+        {{ 'settings.cookiePolicy.section4.title' | transloco }}
+      </h2>
+      <p hlmP>
+        {{ 'settings.cookiePolicy.section4.description' | transloco }}
+      </p>
+      <ul hlmUl>
+        <li>{{ 'settings.cookiePolicy.section4.operator' | transloco }}:</li>
+        <li>{{ 'settings.cookiePolicy.section4.email' | transloco }}:</li>
+      </ul>
+    </div>
+    <hlm-dialog-footer>
+      <button hlmBtn variant="outline" hlmDialogClose>
+        {{ 'common.close' | transloco }}
+      </button>
+    </hlm-dialog-footer>
+  </hlm-dialog-content>
+</hlm-dialog>
