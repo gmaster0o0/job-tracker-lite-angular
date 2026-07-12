@@ -1,35 +1,35 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { CookiePolicyHarness } from './cookie-policy.harness';
+import { PrivacyPolicyHarness } from './privacy-policy.harness';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CookiePolicyComponent } from './cookie-policy.component';
+import { PrivacyPolicyComponent } from './privacy-policy.component';
 import { provideRouter, Router } from '@angular/router';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
-describe('CookiePolicyComponent', () => {
-  let fixture: ComponentFixture<CookiePolicyComponent>;
-  let harness: CookiePolicyHarness;
+describe('PrivacyPolicyComponent', () => {
+  let fixture: ComponentFixture<PrivacyPolicyComponent>;
+  let harness: PrivacyPolicyHarness;
   let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CookiePolicyComponent, getTranslocoModule()],
+      imports: [PrivacyPolicyComponent, getTranslocoModule()],
       providers: [
-        provideRouter([{ path: 'cookie-policy', component: class {} }]),
+        provideRouter([{ path: 'privacy-policy', component: class {} }]),
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CookiePolicyComponent);
+    fixture = TestBed.createComponent(PrivacyPolicyComponent);
     router = TestBed.inject(Router);
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
-      CookiePolicyHarness,
+      PrivacyPolicyHarness,
     );
     fixture.detectChanges();
   });
 
-  it('should navigate to cookie-policy when the open button is clicked', async () => {
+  it('should navigate to privacy-policy when the open button is clicked', async () => {
     await harness.clickOpenButton();
-    expect(router.url).toBe('/cookie-policy');
+    expect(router.url).toBe('/privacy-policy');
   });
 
   it('should open the dialog when the open input is true', async () => {
