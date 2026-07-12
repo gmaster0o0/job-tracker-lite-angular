@@ -10,7 +10,14 @@
   <app-visibility-management></app-visibility-management>
   <app-data-management></app-data-management>
   <app-cookie-management></app-cookie-management>
-  <app-cookie-policy></app-cookie-policy>
+  <app-privacy-policy
+    [open]="activePolicy() === 'privacy-policy'"
+    (closed)="onPolicyClosed()"
+  />
+  <app-cookie-policy
+    [open]="activePolicy() === 'cookie-policy'"
+    (closed)="onPolicyClosed()"
+  />
   <hlm-separator />
   <app-delete-account></app-delete-account>
 </div>

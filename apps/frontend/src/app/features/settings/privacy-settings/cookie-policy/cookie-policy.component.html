@@ -1,11 +1,15 @@
-<h2 hlmH2>Cookie Policy</h2>
+<h2 hlmH2>{{ 'settings.cookiePolicy.title' | transloco }}</h2>
 <p hlmP>
-  This Cookie Policy explains how we use cookies and similar technologies on our
-  website. By using our website, you consent to the use of cookies as described
-  in this policy.
+  {{ 'settings.cookiePolicy.description' | transloco }}
 </p>
-<hlm-dialog>
-  <button hlmDialogTrigger hlmBtn variant="outline">
+<hlm-dialog [state]="state()" (stateChanged)="onStateChanged($event)">
+  <button
+    hlmBtn
+    variant="outline"
+    routerLink="cookie-policy"
+    routerLinkActive="hidden"
+    data-testid="cookie-policy-trigger"
+  >
     <ng-icon name="lucideScrollText" />
     {{ 'settings.cookiePolicy.open' | transloco }}
   </button>
@@ -15,7 +19,7 @@
         {{ 'settings.cookiePolicy.title' | transloco }}
       </h1>
       <p hlmDialogDescription>
-        {{ 'settings.cookiePolicy.description' | transloco }}
+        {{ 'settings.cookiePolicy.lead' | transloco }}
       </p>
     </hlm-dialog-header>
     <div class="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4">
@@ -32,13 +36,30 @@
       <p hlmP>
         {{ 'settings.cookiePolicy.section2.description' | transloco }}
       </p>
-      <h4 hlmH4>
+      <h4 hlmH4 class="mt-4 mb-2">
         {{ 'settings.cookiePolicy.section2.technicalCookiesTitle' | transloco }}
       </h4>
+      <div class="md:hidden space-y-4">
+        @for (cookie of cookies | slice: 0 : 3; track cookie.name) {
+          <div class="p-4 border border-border rounded-lg bg-card shadow-sm">
+            <p hlmLarge>
+              {{ cookie.name }}
+            </p>
 
-      <div hlmTableContainer>
+            <p hlmP>
+              {{ cookie.description() }}
+            </p>
+
+            <p hlmSmall>
+              {{ 'settings.cookiePolicy.section2.table.duration' | transloco }}:
+              {{ cookie.duration() }}
+            </p>
+          </div>
+        }
+      </div>
+      <div hlmTableContainer class="hidden md:block">
         <table hlmTable>
-          <thead hlmTableHeader>
+          <thead hlmTableHeader class="bg-muted">
             <tr hlmTableRow>
               <th hlmTableHead>
                 {{ 'settings.cookiePolicy.section2.table.name' | transloco }}
@@ -74,7 +95,7 @@
       <p hlmMuted>
         {{ 'settings.cookiePolicy.section2.note' | transloco }}
       </p>
-      <blockquote hlmBlockquote>
+      <blockquote hlmBlockquote class="m-2">
         {{ 'settings.cookiePolicy.section2.warning' | transloco }}
       </blockquote>
 
@@ -96,7 +117,16 @@
       </ul>
     </div>
     <hlm-dialog-footer>
-      <button hlmBtn variant="outline" hlmDialogClose>
+      <p hlmP class="flex justify-start w-full">
+        {{ 'settings.cookiePolicy.lastUpdated' | transloco }}:
+        {{ lastUpdatedDate | appDate }}
+      </p>
+      <button
+        hlmBtn
+        variant="outline"
+        hlmDialogClose
+        data-testid="cookie-policy-close"
+      >
         {{ 'common.close' | transloco }}
       </button>
     </hlm-dialog-footer>
