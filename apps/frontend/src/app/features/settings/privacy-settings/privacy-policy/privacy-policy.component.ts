@@ -22,18 +22,13 @@ import { RouterLink } from '@angular/router';
   templateUrl: './privacy-policy.component.html',
 })
 export class PrivacyPolicyComponent {
-  // route-vezérelt input: true, ha az URL szerint nyitva kell lennie
   open = input<boolean>(false);
-  // kifelé jelezzük, ha bezárult (hogy a szülő tudja frissíteni az URL-t)
   closed = output<void>();
 
-  // belső, "single source of truth" state a dialógusnak
   protected readonly state = signal<'open' | 'closed'>('closed');
 
   constructor() {
-    // amikor a route input változik, szinkronban tartjuk a belső state-et
     effect(() => {
-      console.log(this.open());
       this.state.set(this.open() ? 'open' : 'closed');
     });
   }
