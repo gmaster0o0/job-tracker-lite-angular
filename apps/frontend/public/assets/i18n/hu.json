@@ -19,6 +19,7 @@
     "reject": "Elutasítás",
     "accept": "Elfogadás",
     "logout": "Kijelentkezés",
+    "close": "Bezárás",
     "comingSoon": "Hamarosan érkezik",
     "discard": "Elvetés",
     "save": "Mentés",
@@ -243,32 +244,49 @@
       }
     }
   },
-  "preferences": {
-    "preferences": "Testreszabás",
-    "preferencesDescription": "Szabja személyre az alkalmazás használatát.",
-    "language": {
-      "title": "Nyelv",
-      "description": "Válassza ki az alapértelmezett nyelvet.",
-      "label": "Felület nyelve",
-      "select": "Válasszon nyelvet",
-      "languageNote": "Megjegyzés: A nyelvváltás a teljes kezelőfelületre vonatkozik."
-    },
-    "dateformat": {
-      "title": "Dátumformátum",
-      "description": "Válassza ki az alapértelmezett dátumformátumot.",
-      "label": "Dátumformátum",
-      "select": "Válasszon dátumformátumot",
-      "dateFormatNote": "Megjegyzés: A dátumformátum változtatása a teljes kezelőfelületre vonatkozik."
-    }
-  },
-  "appearance": {
-    "title": "Megjelenés",
-    "description": "Válassza ki, hogyan jelenjen meg az alkalmazás.",
-    "light": "Világos",
-    "dark": "Sötét",
-    "system": "Rendszer"
-  },
   "settings": {
+    "cookiePolicy": {
+      "open": "Cookie irányelvek megnyitása",
+      "title": "Süti kezelési irányelvek",
+      "description": "Weboldalunk \"sütiket\" (cookie-kat) használ annak érdekében, hogy a felhasználói élményt javítsuk, és biztosítsuk az oldal alapvető funkcióinak működését. Ez a tájékoztató bemutatja, milyen sütiket használunk, és mi a szerepük.",
+      "section1": {
+        "title": "1. Mik azok a sütik?",
+        "description": "A sütik kisméretű adatfájlok, amelyeket a webböngésződ tárol a számítógépeden vagy mobileszközödön, amikor meglátogatod weboldalunkat. Ezek segítenek minket abban, hogy megjegyezzük a beállításaidat és biztosítsuk az alkalmazás biztonságos működését."
+      },
+      "section2": {
+        "title": "2. Az általunk használt sütik",
+        "description": "Jelenleg oldalunk kizárólag feltétlenül szükséges sütiket használ. Ezek elengedhetetlenek az alkalmazás alapvető biztonsági és működési funkcióihoz (pl. munkamenet-kezelés, hitelesítés).",
+        "technicalCookiesTitle": "Technikai sütik listája:",
+        "table": {
+          "name": "Süti neve",
+          "description": "Leírás",
+          "duration": "Időtartam"
+        },
+        "note": "Megjegyzés: A statisztikai, marketing és egyéb preferencia sütik jelenleg inaktívak, ezekhez nem tárolunk adatot.",
+        "warning": "A sütik listája időről időre változhat, ezért javasoljuk, hogy rendszeresen ellenőrizd ezt a tájékoztatót."
+      },
+      "section3": {
+        "title": "3. Sütik kezelése és törlése",
+        "description": "Bármikor módosíthatod a böngésződ beállításait, hogy töröld vagy blokkold a sütiket. Kérjük, vedd figyelembe, hogy a \"feltétlenül szükséges\" sütik letiltása esetén weboldalunk egyes funkciói nem fognak megfelelően működni (pl. nem tudsz bejelentkezni)."
+      },
+      "section4": {
+        "title": "4. Kapcsolat",
+        "description": "Amennyiben kérdésed merülne fel a sütik kezelésével kapcsolatban, kérjük, vedd fel velünk a kapcsolatot:",
+        "operator": "Üzemeltető",
+        "email": "Email"
+      },
+      "cookies": {
+        "description": {
+          "sessionToken": "A felhasználói munkamenet azonosítására szolgál.",
+          "csrfToken": "Biztonsági süti, a CSRF-támadások megelőzésére szolgál.",
+          "xsrfToken": "Biztonsági süti, az XSRF-támadások megelőzésére szolgál.",
+          "callbackUrl": "A bejelentkezés utáni irányításhoz szükséges technikai adat."
+        },
+        "duration": {
+          "session": "Munkamenet függő"
+        }
+      }
+    },
     "accountSettings": {
       "changeEmail": {
         "title": "Email módosítása",
@@ -310,6 +328,31 @@
     "preferences": "Testreszabás",
     "account": "Fiókbeállítások",
     "privacy": "Adatvédelmi beállítások"
+  },
+  "preferences": {
+    "preferences": "Testreszabás",
+    "preferencesDescription": "Szabja személyre az alkalmazás használatát.",
+    "language": {
+      "title": "Nyelv",
+      "description": "Válassza ki az alapértelmezett nyelvet.",
+      "label": "Felület nyelve",
+      "select": "Válasszon nyelvet",
+      "languageNote": "Megjegyzés: A nyelvváltás a teljes kezelőfelületre vonatkozik."
+    },
+    "dateformat": {
+      "title": "Dátumformátum",
+      "description": "Válassza ki az alapértelmezett dátumformátumot.",
+      "label": "Dátumformátum",
+      "select": "Válasszon dátumformátumot",
+      "dateFormatNote": "Megjegyzés: A dátumformátum változtatása a teljes kezelőfelületre vonatkozik."
+    }
+  },
+  "appearance": {
+    "title": "Megjelenés",
+    "description": "Válassza ki, hogyan jelenjen meg az alkalmazás.",
+    "light": "Világos",
+    "dark": "Sötét",
+    "system": "Rendszer"
   },
   "auth": {
     "fields": {
