@@ -205,7 +205,7 @@
       }
     },
     "deleteAccount": {
-      "verificationEmailSentTitle": "privacySettings.deleteAccount.verificationEmailSentTitle",
+      "verificationEmailSentTitle": "Megerősítő email elküldve",
       "verificationEmailSent": "Megerősítő email elküldve. A türelmi idő indításához nyisd meg az emailben kapott linket.",
       "title": "Fiók törlése",
       "description": "Fióktörlési kérelem indítása. Először megerősítő emailt küldünk, és csak utána indul a türelmi idő.",
@@ -214,7 +214,8 @@
       "dialogDescription": "Elindítod a fióktörlési kérelmet? A megerősítéshez emailt küldünk, és a türelmi idő csak a link megerősítése után indul.",
       "error": {
         "title": "Fióktörlési kérelem sikertelen",
-        "unknown": "Most nem sikerült elindítani a fióktörlést. Próbáld újra."
+        "unknown": "Most nem sikerült elindítani a fióktörlést. Próbáld újra.",
+        "internal_server_error": "Belső szerverhiba történt. Próbáld újra később."
       }
     },
     "cookieManagement": {
@@ -245,10 +246,41 @@
     }
   },
   "settings": {
+    "privacyPolicy": {
+      "title": "Adatvédelmi tájékoztató",
+      "description": "Információk arról, hogyan kezeljük az adataidat.",
+      "open": "Adatvédelmi tájékoztató megnyitása",
+      "lastUpdated": "Utoljára frissítve",
+      "intro": {
+        "title": "Bevezetés",
+        "description": "Elkötelezettek vagyunk az adatvédelem mellett. Ez a tájékoztató leírja, hogyan gyűjtjük és kezeljük az információkat az álláskereső alkalmazásunkban."
+      },
+      "data": {
+        "title": "Gyűjtött információk",
+        "description": "Kizárólag azokat az adatokat gyűjtjük, amelyek az alkalmazás megfelelő működéséhez szükségesek:",
+        "identity": "Személyes azonosítás: Név és e-mail cím.",
+        "professional": "Szakmai adatok: Önéletrajz, linkek (GitHub, LinkedIn, weboldal).",
+        "jobTracker": "Álláskeresési adatok: Jelentkezések, jegyzetek és készségmátrixok."
+      },
+      "control": {
+        "title": "Az adataid feletti kontroll",
+        "description": "Teljes körű ellenőrzést gyakorolhatsz az adataid felett. Bármikor módosíthatod a láthatósági beállításokat, vagy törölheted a fiókodat és az ahhoz tartozó összes adatot az Adatvédelmi beállítások oldalon.",
+        "warning": "Kérjük, vedd figyelembe, hogy a fiók törlése végleges, és nem vonható vissza."
+      },
+      "security": {
+        "title": "Adatbiztonság",
+        "description": "Modern titkosítási szabványokat és biztonságos protokollokat alkalmazunk annak érdekében, hogy adataid biztonságban legyenek, és védve legyenek az illetéktelen hozzáféréstől."
+      },
+      "contact": {
+        "title": "Kapcsolat",
+        "description": "Ha bármilyen kérdésed merülne fel az adatvédelemmel kapcsolatban, kérjük, vedd fel a kapcsolatot a fejlesztő csapattal a repository issue trackerén keresztül."
+      }
+    },
     "cookiePolicy": {
-      "open": "Cookie irányelvek megnyitása",
       "title": "Süti kezelési irányelvek",
-      "description": "Weboldalunk \"sütiket\" (cookie-kat) használ annak érdekében, hogy a felhasználói élményt javítsuk, és biztosítsuk az oldal alapvető funkcióinak működését. Ez a tájékoztató bemutatja, milyen sütiket használunk, és mi a szerepük.",
+      "description": "A Süti Kezelési Irányelv bemutatja, hogyan használjuk a sütiket és hasonló technológiákat weboldalunkon. Weboldalunk használatával hozzájárulsz a sütik ezen irányelv szerinti használatához.",
+      "open": "Cookie irányelvek megnyitása",
+      "lead": "Weboldalunk \"sütiket\" (cookie-kat) használ annak érdekében, hogy a felhasználói élményt javítsuk, és biztosítsuk az oldal alapvető funkcióinak működését. Ez a tájékoztató bemutatja, milyen sütiket használunk, és mi a szerepük.",
       "section1": {
         "title": "1. Mik azok a sütik?",
         "description": "A sütik kisméretű adatfájlok, amelyeket a webböngésződ tárol a számítógépeden vagy mobileszközödön, amikor meglátogatod weboldalunkat. Ezek segítenek minket abban, hogy megjegyezzük a beállításaidat és biztosítsuk az alkalmazás biztonságos működését."
@@ -258,9 +290,9 @@
         "description": "Jelenleg oldalunk kizárólag feltétlenül szükséges sütiket használ. Ezek elengedhetetlenek az alkalmazás alapvető biztonsági és működési funkcióihoz (pl. munkamenet-kezelés, hitelesítés).",
         "technicalCookiesTitle": "Technikai sütik listája:",
         "table": {
+          "duration": "Időtartam",
           "name": "Süti neve",
-          "description": "Leírás",
-          "duration": "Időtartam"
+          "description": "Leírás"
         },
         "note": "Megjegyzés: A statisztikai, marketing és egyéb preferencia sütik jelenleg inaktívak, ezekhez nem tárolunk adatot.",
         "warning": "A sütik listája időről időre változhat, ezért javasoljuk, hogy rendszeresen ellenőrizd ezt a tájékoztatót."
@@ -275,6 +307,7 @@
         "operator": "Üzemeltető",
         "email": "Email"
       },
+      "lastUpdated": "Utolsó frissítés:",
       "cookies": {
         "description": {
           "sessionToken": "A felhasználói munkamenet azonosítására szolgál.",

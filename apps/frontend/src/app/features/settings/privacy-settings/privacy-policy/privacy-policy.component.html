@@ -1,0 +1,69 @@
+<h2 hlmH2>{{ 'settings.privacyPolicy.title' | transloco }}</h2>
+<p hlmP>
+  {{ 'settings.privacyPolicy.description' | transloco }}
+</p>
+
+<hlm-dialog [state]="state()" (stateChanged)="onStateChanged($event)">
+  <button
+    hlmBtn
+    variant="outline"
+    routerLink="privacy-policy"
+    routerLinkActive="hidden"
+    data-testid="privacy-policy-trigger"
+  >
+    <ng-icon name="lucideShieldCheck" />
+    {{ 'settings.privacyPolicy.open' | transloco }}
+  </button>
+
+  <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-4xl w-[95vw]">
+    <hlm-dialog-header>
+      <h1 hlmH1 hlmDialogTitle>
+        {{ 'settings.privacyPolicy.title' | transloco }}
+      </h1>
+      <p hlmDialogDescription></p>
+    </hlm-dialog-header>
+
+    <div class="no-scrollbar -mx-4 max-h-[60vh] overflow-y-auto px-4 space-y-4">
+      <h2 hlmH2>{{ 'settings.privacyPolicy.intro.title' | transloco }}</h2>
+      <p hlmP>{{ 'settings.privacyPolicy.intro.description' | transloco }}</p>
+
+      <h2 hlmH2>{{ 'settings.privacyPolicy.data.title' | transloco }}</h2>
+      <p hlmP>{{ 'settings.privacyPolicy.data.description' | transloco }}</p>
+      <ul hlmUl>
+        <li>{{ 'settings.privacyPolicy.data.identity' | transloco }}</li>
+        <li>{{ 'settings.privacyPolicy.data.professional' | transloco }}</li>
+        <li>{{ 'settings.privacyPolicy.data.jobTracker' | transloco }}</li>
+      </ul>
+
+      <h2 hlmH2>{{ 'settings.privacyPolicy.control.title' | transloco }}</h2>
+      <p hlmP>{{ 'settings.privacyPolicy.control.description' | transloco }}</p>
+
+      <blockquote hlmBlockquote class="m-2">
+        {{ 'settings.privacyPolicy.control.warning' | transloco }}
+      </blockquote>
+
+      <h2 hlmH2>{{ 'settings.privacyPolicy.security.title' | transloco }}</h2>
+      <p hlmP>
+        {{ 'settings.privacyPolicy.security.description' | transloco }}
+      </p>
+
+      <h2 hlmH2>{{ 'settings.privacyPolicy.contact.title' | transloco }}</h2>
+      <p hlmP>{{ 'settings.privacyPolicy.contact.description' | transloco }}</p>
+    </div>
+
+    <hlm-dialog-footer>
+      <p hlmP class="flex justify-start w-full">
+        {{ 'settings.privacyPolicy.lastUpdated' | transloco }}:
+        {{ lastUpdatedDate | appDate }}
+      </p>
+      <button
+        hlmBtn
+        variant="outline"
+        hlmDialogClose
+        data-testid="privacy-policy-close"
+      >
+        {{ 'common.close' | transloco }}
+      </button>
+    </hlm-dialog-footer>
+  </hlm-dialog-content>
+</hlm-dialog>

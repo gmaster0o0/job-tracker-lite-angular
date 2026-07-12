@@ -98,10 +98,29 @@ export const appRoutes: Route[] = [
           {
             path: 'privacy',
             canActivate: [authGuard],
-            loadComponent: () =>
-              import(
-                './features/settings/privacy-settings/privacy-settings.component'
-              ).then((m) => m.PrivacySettingsComponent),
+            children: [
+              {
+                path: '',
+                loadComponent: () =>
+                  import(
+                    './features/settings/privacy-settings/privacy-settings.component'
+                  ).then((m) => m.PrivacySettingsComponent),
+              },
+              {
+                path: 'privacy-policy',
+                loadComponent: () =>
+                  import(
+                    './features/settings/privacy-settings/privacy-settings.component'
+                  ).then((m) => m.PrivacySettingsComponent),
+              },
+              {
+                path: 'cookie-policy',
+                loadComponent: () =>
+                  import(
+                    './features/settings/privacy-settings/privacy-settings.component'
+                  ).then((m) => m.PrivacySettingsComponent),
+              },
+            ],
           },
         ],
       },
