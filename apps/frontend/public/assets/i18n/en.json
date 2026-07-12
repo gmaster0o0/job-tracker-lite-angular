@@ -247,10 +247,41 @@
     }
   },
   "settings": {
+    "privacyPolicy": {
+      "title": "Privacy Policy",
+      "description": "Information on how we handle your data.",
+      "open": "View Privacy Policy",
+      "lastUpdated": "Last Updated",
+      "intro": {
+        "title": "Introduction",
+        "description": "We are committed to protecting your privacy. This policy outlines how we collect and process information within our job tracker application."
+      },
+      "data": {
+        "title": "Collected Information",
+        "description": "We only collect the data necessary for the application to function properly:",
+        "identity": "Personal identity: Name and email address.",
+        "professional": "Professional details: CV, links (GitHub, LinkedIn, website).",
+        "jobTracker": "Job tracking data: Applications, notes, and skill matrices."
+      },
+      "control": {
+        "title": "Your Control",
+        "description": "You have full control over your data. You can adjust visibility settings or delete your account and all associated data at any time via the Privacy Settings page.",
+        "warning": "Please note that account deletion is permanent and cannot be undone."
+      },
+      "security": {
+        "title": "Data Security",
+        "description": "We use modern encryption standards and secure protocols to ensure your data is stored safely and protected from unauthorized access."
+      },
+      "contact": {
+        "title": "Contact",
+        "description": "If you have any questions regarding your privacy, feel free to contact the development team via the repository's issue tracker."
+      }
+    },
     "cookiePolicy": {
-      "open": "Open cookie policy",
       "title": "Cookie Policy",
-      "description": "Our website uses \"cookies\" to improve user experience and ensure the proper functioning of the site's essential features. This policy explains what cookies we use and their role.",
+      "description": "The Cookie Policy explains how we use cookies and similar technologies on our website. By using our website, you consent to the use of cookies as described in this policy.",
+      "open": "Open cookie policy",
+      "lead": "Our website uses \"cookies\" to improve user experience and ensure the proper functioning of the site's essential features. This policy explains what cookies we use and their role.",
       "section1": {
         "title": "1. What are cookies?",
         "description": "Cookies are small data files that your web browser stores on your computer or mobile device when you visit our website. They help us remember your preferences and ensure the secure operation of the application."
@@ -260,9 +291,9 @@
         "description": "Currently, our site uses strictly necessary cookies only. These are essential for the basic security and functional requirements of the application (e.g., session management, authentication).",
         "technicalCookiesTitle": "List of technical cookies:",
         "table": {
+          "duration": "Duration",
           "name": "Cookie name",
-          "description": "Description",
-          "duration": "Duration"
+          "description": "Description"
         },
         "note": "Note: Statistical, marketing, and other preference cookies are currently inactive; we do not store data for these purposes.",
         "warning": "The list of cookies may change from time to time, so we recommend that you check this policy periodically."
@@ -277,7 +308,7 @@
         "operator": "Operator",
         "email": "Email"
       },
-
+      "lastUpdated": "Last Updated:",
       "cookies": {
         "description": {
           "sessionToken": "Used to identify the user session.",

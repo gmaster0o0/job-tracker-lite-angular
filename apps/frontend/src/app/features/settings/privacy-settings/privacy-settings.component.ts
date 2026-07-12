@@ -7,6 +7,7 @@ import { DeleteAccountComponent } from './delete-account/delete-account.componen
 import { VisibilityManagementComponent } from './visbility-managment/visibility-management.component';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 import { CookiePolicyComponent } from './cookie-policy/cookie-policy.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 
 @Component({
   selector: 'app-privacy-settings',
@@ -20,6 +21,7 @@ import { CookiePolicyComponent } from './cookie-policy/cookie-policy.component';
     DeleteAccountComponent,
     HlmTypographyImports,
     CookiePolicyComponent,
+    PrivacyPolicyComponent,
   ],
   templateUrl: './privacy-settings.component.html',
 })

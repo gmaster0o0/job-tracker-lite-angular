@@ -1,8 +1,6 @@
-<h2 hlmH2>Cookie Policy</h2>
+<h2 hlmH2>{{ 'settings.cookiePolicy.title' | transloco }}</h2>
 <p hlmP>
-  This Cookie Policy explains how we use cookies and similar technologies on our
-  website. By using our website, you consent to the use of cookies as described
-  in this policy.
+  {{ 'settings.cookiePolicy.description' | transloco }}
 </p>
 <hlm-dialog>
   <button hlmDialogTrigger hlmBtn variant="outline">
@@ -15,7 +13,7 @@
         {{ 'settings.cookiePolicy.title' | transloco }}
       </h1>
       <p hlmDialogDescription>
-        {{ 'settings.cookiePolicy.description' | transloco }}
+        {{ 'settings.cookiePolicy.lead' | transloco }}
       </p>
     </hlm-dialog-header>
     <div class="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4">
@@ -113,6 +111,9 @@
       </ul>
     </div>
     <hlm-dialog-footer>
+      <p hlmP class="flex justify-start w-full">
+        {{ 'settings.cookiePolicy.lastUpdated' | transloco }}: 2026. 07. 12.
+      </p>
       <button hlmBtn variant="outline" hlmDialogClose>
         {{ 'common.close' | transloco }}
       </button>

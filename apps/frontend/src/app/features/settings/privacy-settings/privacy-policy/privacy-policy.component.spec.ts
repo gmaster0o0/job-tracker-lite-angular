@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CookiePolicyComponent } from './cookie-policy.component';
+import { PrivacyPolicyComponent } from './privacy-policy.component';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
-describe('CookiePolicyComponent', () => {
-  let component: CookiePolicyComponent;
-  let fixture: ComponentFixture<CookiePolicyComponent>;
+describe('PrivacyPolicyComponent', () => {
+  let component: PrivacyPolicyComponent;
+  let fixture: ComponentFixture<PrivacyPolicyComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CookiePolicyComponent, getTranslocoModule()],
+      imports: [PrivacyPolicyComponent, getTranslocoModule()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CookiePolicyComponent);
+    fixture = TestBed.createComponent(PrivacyPolicyComponent);
     component = fixture.componentInstance;
   });
 
