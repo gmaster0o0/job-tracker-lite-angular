@@ -19,13 +19,13 @@
     "reject": "Reject",
     "accept": "Accept",
     "logout": "Logout",
+    "saving": "Saving...",
+    "saved": "Saved",
+    "error": "Error",
     "close": "Close",
     "comingSoon": "Coming Soon",
     "discard": "Discard",
     "save": "Save",
-    "saving": "Saving...",
-    "saved": "Saved",
-    "error": "Error",
     "remove": "Remove",
     "edit": "Edit",
     "overview": "Overview",
@@ -96,12 +96,12 @@
     "detail": {
       "loadFailed": "Failed to load job details. Please try again later.",
       "notFound": "Job not found.",
+      "loading": "Loading job details...",
       "noJobs": "No jobs available.",
       "noJobsDescription": "There are no jobs available in the list. Please add a new job to get started.",
-      "loading": "Loading job details...",
+      "addNew": "Add New Job",
       "selectJob": "No Job Selected",
       "reject": "Reject",
-      "addNew": "Add New Job",
       "edit": "Edit",
       "delete": "Delete",
       "coverLetter": "Cover Letter",
@@ -191,6 +191,51 @@
   "privacySettings": {
     "title": "Privacy Settings",
     "description": "Manage your data and account privacy controls.",
+    "dataManagement": {
+      "title": "privacySettings.dataManagement.title"
+    },
+    "visibilityManagement": {
+      "title": "privacySettings.visibilityManagement.title",
+      "description": "privacySettings.visibilityManagement.description",
+      "privateShortcut": {
+        "title": "privacySettings.visibilityManagement.privateShortcut.title",
+        "description": "privacySettings.visibilityManagement.privateShortcut.description"
+      },
+      "fineTuning": {
+        "title": "privacySettings.visibilityManagement.fineTuning.title",
+        "description": "privacySettings.visibilityManagement.fineTuning.description"
+      },
+      "personalData": {
+        "title": "privacySettings.visibilityManagement.personalData.title",
+        "description": "privacySettings.visibilityManagement.personalData.description"
+      },
+      "contactData": {
+        "title": "privacySettings.visibilityManagement.contactData.title",
+        "description": "privacySettings.visibilityManagement.contactData.description"
+      },
+      "skills": {
+        "title": "privacySettings.visibilityManagement.skills.title",
+        "description": "privacySettings.visibilityManagement.skills.description"
+      },
+      "workPreferences": {
+        "title": "privacySettings.visibilityManagement.workPreferences.title",
+        "description": "privacySettings.visibilityManagement.workPreferences.description"
+      }
+    },
+    "cookieManagement": {
+      "title": "Cookie Management",
+      "description": "View or update your cookie preferences and settings at any time.",
+      "openPreferences": "Cookie Preferences"
+    },
+    "privacyPolicy": {
+      "title": "privacySettings.privacyPolicy.title"
+    },
+    "cookiePolicy": {
+      "title": "privacySettings.cookiePolicy.title"
+    },
+    "dangerzone": {
+      "title": "privacySettings.dangerzone.title"
+    },
     "deletePending": {
       "title": "Account Deletion Is Pending",
       "description": "Your account is marked for deletion. You can recover it before the timer reaches zero.",
@@ -221,11 +266,6 @@
         "internal_server_error": "An internal server error occurred. Please try again later."
       }
     },
-    "cookieManagement": {
-      "title": "Cookie Management",
-      "description": "View or update your cookie preferences and settings at any time.",
-      "openPreferences": "Cookie Preferences"
-    },
     "cookieConsent": {
       "title": "Cookie Settings",
       "description": "We use cookies to save your display preferences, such as your dark/light mode and language settings. These cookies are essential for the application to remember your choices.",
@@ -250,10 +290,9 @@
   },
   "settings": {
     "privacyPolicy": {
-      "title": "Privacy Policy",
       "description": "Information on how we handle your data.",
       "open": "View Privacy Policy",
-      "lastUpdated": "Last Updated",
+      "title": "Privacy Policy",
       "intro": {
         "title": "Introduction",
         "description": "We are committed to protecting your privacy. This policy outlines how we collect and process information within our job tracker application."
@@ -277,12 +316,13 @@
       "contact": {
         "title": "Contact",
         "description": "If you have any questions regarding your privacy, feel free to contact the development team via the repository's issue tracker."
-      }
+      },
+      "lastUpdated": "Last Updated"
     },
     "cookiePolicy": {
-      "title": "Cookie Policy",
       "description": "The Cookie Policy explains how we use cookies and similar technologies on our website. By using our website, you consent to the use of cookies as described in this policy.",
       "open": "Open cookie policy",
+      "title": "Cookie Policy",
       "lead": "Our website uses \"cookies\" to improve user experience and ensure the proper functioning of the site's essential features. This policy explains what cookies we use and their role.",
       "section1": {
         "title": "1. What are cookies?",

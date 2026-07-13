@@ -1,7 +1,6 @@
 <div class="flex flex-col gap-4">
   <p hlmP hlmMuted>
-    Itt kezelheted a láthatósági beállításaidat és preferenciáidat.
-    Szabályozhatod, ki láthatja a profilodat és tevékenységeidet.
+    {{ 'privacySettings.visibilityManagement.description' | transloco }}
   </p>
   <hlm-item-group>
     <hlm-item variant="outline">
@@ -9,10 +8,15 @@
         <ng-icon name="lucideShieldAlert" />
       </hlm-item-media>
       <hlm-item-content>
-        <hlm-item-title>Profil priváttá tétele</hlm-item-title>
+        <hlm-item-title>{{
+          'privacySettings.visibilityManagement.privateShortcut.title'
+            | transloco
+        }}</hlm-item-title>
         <p hlmItemDescription>
-          Egyetlen kattintással a legszigorúbb (Privát) szintre korlátozhatod az
-          összes alábbi adatod láthatóságát.
+          {{
+            'privacySettings.visibilityManagement.privateShortcut.description'
+              | transloco
+          }}
         </p>
       </hlm-item-content>
       <hlm-item-actions>
@@ -28,7 +32,11 @@
     </hlm-item>
 
     <div class="flex flex-row items-center justify-between space-y-0">
-      <h3 hlmH3 class="mt-4">Finomhangolás</h3>
+      <h3 hlmH3 class="mt-4">
+        {{
+          'privacySettings.visibilityManagement.fineTuning.title' | transloco
+        }}
+      </h3>
       <!-- Save State Indicator -->
       <div class="flex items-center gap-2">
         <div data-testid="saveStateIndicator">
@@ -57,17 +65,24 @@
     </div>
 
     <p hlmMuted>
-      Itt tudod finomhangolni a profilod láthatóságát. A beállításaid pár
-      másodperc után automatikusan elmentődnek.
+      {{
+        'privacySettings.visibilityManagement.fineTuning.description'
+          | transloco
+      }}
     </p>
     <hlm-item variant="muted">
       <hlm-item-media variant="icon">
         <ng-icon name="lucideUserRound" />
       </hlm-item-media>
       <hlm-item-content>
-        <hlm-item-title>Személyes adatok</hlm-item-title>
+        <hlm-item-title>{{
+          'privacySettings.visibilityManagement.personalData.title' | transloco
+        }}</hlm-item-title>
         <p hlmItemDescription>
-          Név, jelenlegi lokáció és a bemutatkozó (bio) szöveged láthatósága.
+          {{
+            'privacySettings.visibilityManagement.personalData.description'
+              | transloco
+          }}
         </p>
         <app-profile-visibility-settings
           class="w-full block"
@@ -83,10 +98,14 @@
         <ng-icon name="lucideContact" />
       </hlm-item-media>
       <hlm-item-content>
-        <hlm-item-title>Kapcsolati adatok</hlm-item-title>
+        <hlm-item-title>{{
+          'privacySettings.visibilityManagement.contactData.title' | transloco
+        }}</hlm-item-title>
         <p hlmItemDescription>
-          E-mail címed, telefonszámod és a közösségi média (LinkedIn, GitHub)
-          linkjeid.
+          {{
+            'privacySettings.visibilityManagement.contactData.description'
+              | transloco
+          }}
         </p>
         <app-profile-visibility-settings
           class="w-full block"
@@ -102,9 +121,14 @@
         <ng-icon name="lucideStar" />
       </hlm-item-media>
       <hlm-item-content>
-        <hlm-item-title>Képességek</hlm-item-title>
+        <hlm-item-title>{{
+          'privacySettings.visibilityManagement.skills.title' | transloco
+        }}</hlm-item-title>
         <p hlmItemDescription>
-          A profilodhoz hozzáadott technológiák, skillek és nyelvtudás szintjei.
+          {{
+            'privacySettings.visibilityManagement.skills.description'
+              | transloco
+          }}
         </p>
         <app-profile-visibility-settings
           class="w-full block"
@@ -120,10 +144,15 @@
         <ng-icon name="lucideBriefcaseBusiness" />
       </hlm-item-media>
       <hlm-item-content>
-        <hlm-item-title>Munkahely preferencia</hlm-item-title>
+        <hlm-item-title>{{
+          'privacySettings.visibilityManagement.workPreferences.title'
+            | transloco
+        }}</hlm-item-title>
         <p hlmItemDescription>
-          A tapasztalati szinted (pl. Junior, Senior), a munkavégzés módja
-          (Remote, Hybrid) és a foglalkoztatás típusa.
+          {{
+            'privacySettings.visibilityManagement.workPreferences.description'
+              | transloco
+          }}
         </p>
         <app-profile-visibility-settings
           class="w-full block"
