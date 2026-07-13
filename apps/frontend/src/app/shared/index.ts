@@ -17,3 +17,6 @@ export * from './server-error-alert/server-error-alert.harness';
 export * from './inline-edit';
 export * from './transloco-testing.module';
 export * from './empty-list/empty-list.component';
+//export * from './empty-list/empty-list.harness';
+export * from './visibility-settings/visibility-settings.component';
+export * from './visibility-settings/visibility-settings.harness';

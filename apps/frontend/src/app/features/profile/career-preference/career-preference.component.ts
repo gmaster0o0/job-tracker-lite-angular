@@ -24,9 +24,8 @@ import {
   layoutImports,
 } from '../profile.hlmimports';
 import { HlmSpinner } from '@spartan-ng/helm/spinner';
-import { ProfileVisibilitySettingsComponent } from '../visibility-settings/visibility-settings.component';
-
-export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
+import { ProfileVisibilitySettingsComponent } from '@job-tracker-lite-angular/frontend-shared';
+import { SaveState } from '@job-tracker-lite-angular/frontend-data-access';
 
 @Component({
   standalone: true,
@@ -172,9 +171,6 @@ export class CareerPreferenceComponent {
       this.saveState.set('error');
       this.saveStateChanged.emit('error');
 
-      // In case of an error, we intentionally do NOT call scheduleHide(): as long
-      // as we are in an error state, the widget remains visible so the user can
-      // see what was set and try again.
       setTimeout(() => {
         this.saveState.set('idle');
         this.saveStateChanged.emit('idle');

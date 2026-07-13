@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DataManagementComponent } from './data-management.component';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('DataManagementComponent', () => {
   let component: DataManagementComponent;
@@ -7,7 +8,7 @@ describe('DataManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DataManagementComponent],
+      imports: [DataManagementComponent, getTranslocoModule()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DataManagementComponent);

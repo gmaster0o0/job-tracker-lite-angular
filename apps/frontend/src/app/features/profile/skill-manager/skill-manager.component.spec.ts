@@ -2,12 +2,14 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
+import {
+  getTranslocoModule,
+  VisibilityLevel,
+} from '@job-tracker-lite-angular/frontend-shared';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { userProfileFixtures } from '@job-tracker-lite-angular/testing';
 import { SkillManagerComponent } from './skill-manager.component';
 import { SkillManagerHarness } from './skill-manager.component.harness';
-import { VisibilityLevel } from '../visibility-settings/visibility-settings.component';
 
 @Component({
   standalone: true,

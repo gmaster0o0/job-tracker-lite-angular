@@ -1,5 +1,5 @@
 import { ComponentHarness } from '@angular/cdk/testing';
-import { ProfileVisibilitySettingsHarness } from '../visibility-settings/visibility-settings.harness';
+import { ProfileVisibilitySettingsHarness } from '@job-tracker-lite-angular/frontend-shared';
 
 export class SkillManagerHarness extends ComponentHarness {
   static hostSelector = 'app-skill-manager';

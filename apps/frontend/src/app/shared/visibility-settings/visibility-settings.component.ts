@@ -1,5 +1,7 @@
 import { Component, computed, input, model } from '@angular/core';
-import { provideIcons } from '@ng-icons/core';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
+import { provideIcons, NgIcon } from '@ng-icons/core';
 import {
   lucideMinus,
   lucidePlus,
@@ -7,7 +9,6 @@ import {
   lucideLock,
   lucideBriefcase,
 } from '@ng-icons/lucide';
-import { interactiveImports } from '../profile.hlmimports';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 
 export enum VisibilityLevel {
@@ -20,7 +21,7 @@ export enum VisibilityLevel {
 @Component({
   selector: 'app-profile-visibility-settings',
   standalone: true,
-  imports: [interactiveImports, TranslocoModule],
+  imports: [TranslocoModule, NgIcon, HlmButtonImports, HlmTooltipImports],
   providers: [
     provideIcons({
       lucideMinus,
