@@ -218,7 +218,9 @@
       "workPreferences": {
         "title": "Munkahely preferencia",
         "description": "A tapasztalati szinted (pl. Junior, Senior), a munkavégzés módja (Remote, Hybrid) és a foglalkoztatás típusa."
-      }
+      },
+      "makeAllPrivate": "Minden priváttá tétele",
+      "restore": "Előző beállítások visszaállítása"
     },
     "cookieManagement": {
       "title": "Süti kezelés",

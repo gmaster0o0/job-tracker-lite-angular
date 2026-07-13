@@ -2,10 +2,12 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { PersonalInfoComponent } from './personal-info.component';
 import { PersonalInfoHarness } from './personal-info.harness';
-import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
+import {
+  getTranslocoModule,
+  VisibilityLevel,
+} from '@job-tracker-lite-angular/frontend-shared';
 import { userProfileFixtures } from '@job-tracker-lite-angular/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { VisibilityLevel } from '../visibility-settings/visibility-settings.component';
 
 describe('PersonalInfoComponent', () => {
   let harness: PersonalInfoHarness;

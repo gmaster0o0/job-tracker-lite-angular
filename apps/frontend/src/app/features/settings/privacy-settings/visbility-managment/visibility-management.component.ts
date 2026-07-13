@@ -1,7 +1,13 @@
-import { Component, inject, linkedSignal, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  linkedSignal,
+  signal,
+} from '@angular/core';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 import { ProfileVisibilitySettingsComponent } from '@job-tracker-lite-angular/frontend-shared';
-import { TranslocoModule } from '@jsverse/transloco';
+import { translateSignal, TranslocoModule } from '@jsverse/transloco';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmItemImports } from '@spartan-ng/helm/item';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -11,10 +17,16 @@ import {
   lucideBriefcaseBusiness,
   lucideContact,
   lucideUserRound,
+  lucideCheck,
+  lucideAlertCircle,
 } from '@ng-icons/lucide';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { SaveState } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmSpinner } from '@spartan-ng/helm/spinner';
+import { HlmBadgeImports } from '@spartan-ng/helm/badge';
+//import { marker } from '@jsverse/transloco-keys-manager';
+
+const marker = (key: string) => key;
 
 @Component({
   selector: 'app-visibility-management',
@@ -27,6 +39,7 @@ import { HlmSpinner } from '@spartan-ng/helm/spinner';
     HlmItemImports,
     NgIcon,
     HlmSpinner,
+    HlmBadgeImports,
   ],
   providers: [
     provideIcons({
@@ -35,6 +48,8 @@ import { HlmSpinner } from '@spartan-ng/helm/spinner';
       lucideBriefcaseBusiness,
       lucideContact,
       lucideUserRound,
+      lucideCheck,
+      lucideAlertCircle,
     }),
   ],
   templateUrl: './visibility-management.component.html',
@@ -59,7 +74,12 @@ export class VisibilityManagementComponent {
     () => this.profileResource.value()?.preferenceVisibility ?? 0,
   );
 
-  readonly actionButtonLabel = signal<string>('Minden legyen privát');
+  private actionButtonToken = signal<string>(
+    marker('privacySettings.visibilityManagement.makeAllPrivate'),
+  );
+  readonly actionButtonLabel = translateSignal(
+    computed(() => this.actionButtonToken()),
+  );
   readonly restoreMode = signal<boolean>(false);
   private visibilitySnapshot: { [key: string]: number } | null = null;
 
@@ -85,7 +105,9 @@ export class VisibilityManagementComponent {
         break;
     }
     if (type !== 'all') {
-      this.actionButtonLabel.set('Minden legyen privát');
+      this.actionButtonToken.set(
+        marker('privacySettings.visibilityManagement.makeAllPrivate'),
+      );
     }
 
     this.debounceAndSave();
@@ -116,7 +138,9 @@ export class VisibilityManagementComponent {
   private handleSnapshot($event: number) {
     if (this.restoreMode()) {
       this.restoreSnapshot();
-      this.actionButtonLabel.set('Minden legyen privát');
+      this.actionButtonToken.set(
+        marker('privacySettings.visibilityManagement.makeAllPrivate'),
+      );
       this.restoreMode.set(false);
     } else {
       this.createSnapshot();
@@ -126,7 +150,9 @@ export class VisibilityManagementComponent {
       this.skillsVisibilityLevel.set($event);
       this.workPreferencesVisibilityLevel.set($event);
 
-      this.actionButtonLabel.set('Visszaállítás');
+      this.actionButtonToken.set(
+        marker('privacySettings.visibilityManagement.restore'),
+      );
       this.restoreMode.set(true);
     }
   }
