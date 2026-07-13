@@ -3,10 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { provideIcons } from '@ng-icons/core';
 import { profileIcons } from './profile.hlmimports';
-import {
-  CareerPreferenceComponent,
-  SaveState,
-} from './career-preference/career-preference.component';
+import { CareerPreferenceComponent } from './career-preference/career-preference.component';
+import { SaveState } from '@job-tracker-lite-angular/frontend-data-access';
 import { TranslocoModule } from '@jsverse/transloco';
 import { SkillManagerComponent } from './skill-manager/skill-manager.component';
 import { PersonalInfoComponent } from './personal-info/personal-info.component';

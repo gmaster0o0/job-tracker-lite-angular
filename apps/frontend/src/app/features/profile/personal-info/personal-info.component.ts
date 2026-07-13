@@ -12,12 +12,12 @@ import {
   CancelButtonComponent,
   InlineInputComponent,
   InlineTextareaComponent,
+  ProfileVisibilitySettingsComponent,
 } from '@job-tracker-lite-angular/frontend-shared';
 import {
   UserProfileDto,
   UpdateUserProfileDto,
 } from '@job-tracker-lite-angular/schemas';
-import { ProfileVisibilitySettingsComponent } from '../visibility-settings/visibility-settings.component';
 
 @Component({
   standalone: true,
