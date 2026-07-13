@@ -1,8 +1,10 @@
 import { ComponentHarness } from '@angular/cdk/testing';
-import { InlineInputHarness } from '../../../shared/inline-edit/input/input.harness';
-import { EditButtonHarness } from '../../../shared/edit-button/edit-button.harness';
-import { CancelButtonHarness } from '../../../shared/cancel-button/cancel-button.harness';
-import { ProfileVisibilitySettingsHarness } from '../visibility-settings/visibility-settings.harness';
+import {
+  InlineInputHarness,
+  EditButtonHarness,
+  CancelButtonHarness,
+  ProfileVisibilitySettingsHarness,
+} from '@job-tracker-lite-angular/frontend-shared';
 
 export class ContactInfoHarness extends ComponentHarness {
   static hostSelector = 'app-contact-info';

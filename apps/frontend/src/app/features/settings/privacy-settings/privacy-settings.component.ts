@@ -11,6 +11,7 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HlmAccordionImports } from '@spartan-ng/helm/accordion';
 
 @Component({
   selector: 'app-privacy-settings',
@@ -25,6 +26,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     HlmTypographyImports,
     CookiePolicyComponent,
     PrivacyPolicyComponent,
+    HlmAccordionImports,
   ],
   templateUrl: './privacy-settings.component.html',
 })

@@ -7,17 +7,78 @@
       {{ 'privacySettings.description' | transloco }}
     </p>
   </div>
-  <app-visibility-management></app-visibility-management>
-  <app-data-management></app-data-management>
-  <app-cookie-management></app-cookie-management>
-  <app-privacy-policy
-    [open]="activePolicy() === 'privacy-policy'"
-    (closed)="onPolicyClosed()"
-  />
-  <app-cookie-policy
-    [open]="activePolicy() === 'cookie-policy'"
-    (closed)="onPolicyClosed()"
-  />
-  <hlm-separator />
-  <app-delete-account></app-delete-account>
+
+  <hlm-accordion type="multiple">
+    <hlm-accordion-item>
+      <hlm-accordion-trigger class="w-full justify-between">
+        <span class="text-xl text-foreground">{{
+          'privacySettings.dataManagement.title' | transloco
+        }}</span></hlm-accordion-trigger
+      >
+      <hlm-accordion-content>
+        <app-data-management></app-data-management>
+      </hlm-accordion-content>
+    </hlm-accordion-item>
+
+    <hlm-accordion-item>
+      <hlm-accordion-trigger class="w-full justify-between">
+        <span class="text-xl text-foreground">{{
+          'privacySettings.visibilityManagement.title' | transloco
+        }}</span></hlm-accordion-trigger
+      >
+      <hlm-accordion-content>
+        <app-visibility-management></app-visibility-management>
+      </hlm-accordion-content>
+    </hlm-accordion-item>
+
+    <hlm-accordion-item>
+      <hlm-accordion-trigger class="w-full justify-between">
+        <span class="text-xl text-foreground">
+          {{ 'privacySettings.cookieManagement.title' | transloco }}
+        </span></hlm-accordion-trigger
+      >
+      <hlm-accordion-content>
+        <app-cookie-management></app-cookie-management>
+      </hlm-accordion-content>
+    </hlm-accordion-item>
+
+    <hlm-accordion-item>
+      <hlm-accordion-trigger class="w-full justify-between">
+        <span class="text-xl text-foreground">
+          {{ 'privacySettings.privacyPolicy.title' | transloco }}
+        </span></hlm-accordion-trigger
+      >
+      <hlm-accordion-content>
+        <app-privacy-policy
+          [open]="activePolicy() === 'privacy-policy'"
+          (closed)="onPolicyClosed()"
+        />
+      </hlm-accordion-content>
+    </hlm-accordion-item>
+
+    <hlm-accordion-item>
+      <hlm-accordion-trigger class="w-full justify-between">
+        <span class="text-xl text-foreground">
+          {{ 'privacySettings.cookiePolicy.title' | transloco }}
+        </span></hlm-accordion-trigger
+      >
+      <hlm-accordion-content>
+        <app-cookie-policy
+          [open]="activePolicy() === 'cookie-policy'"
+          (closed)="onPolicyClosed()"
+        />
+      </hlm-accordion-content>
+    </hlm-accordion-item>
+
+    <hlm-accordion-item>
+      <hlm-accordion-trigger>
+        <span class="text-xl text-foreground"
+          >{{ 'privacySettings.dangerzone.title' | transloco }}
+        </span></hlm-accordion-trigger
+      >
+      <hlm-accordion-content>
+        <app-delete-account></app-delete-account>
+      </hlm-accordion-content>
+    </hlm-accordion-item>
+  </hlm-accordion>
 </div>

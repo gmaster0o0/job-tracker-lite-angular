@@ -19,13 +19,13 @@
     "reject": "Elutasítás",
     "accept": "Elfogadás",
     "logout": "Kijelentkezés",
+    "saving": "Mentés...",
+    "saved": "Mentve",
+    "error": "Hiba",
     "close": "Bezárás",
     "comingSoon": "Hamarosan érkezik",
     "discard": "Elvetés",
     "save": "Mentés",
-    "saving": "Mentés...",
-    "saved": "Mentve",
-    "error": "Hiba",
     "remove": "Eltávolítás",
     "edit": "Szerkesztés",
     "overview": "Áttekintés",
@@ -96,12 +96,12 @@
     "detail": {
       "loadFailed": "Nem sikerült betölteni a részleteket",
       "notFound": "Munka nem található",
+      "loading": "Munka betöltése...",
       "noJobs": "Nincs elérhető munka",
       "noJobsDescription": "Nincs elérhető munka a listában. Kérjük, adjon hozzá egy új munkát a kezdéshez.",
-      "loading": "Munka betöltése...",
+      "addNew": "Új munka hozzáadása",
       "selectJob": "Nincs munka kiválasztva",
       "reject": "Elutasítás",
-      "addNew": "Új munka hozzáadása",
       "edit": "Szerkesztés",
       "delete": "Törlés",
       "coverLetter": "Kísérőlevél",
@@ -189,6 +189,53 @@
   "privacySettings": {
     "title": "Adatvédelmi beállítások",
     "description": "Az adatvédelmi beállítások kezelése.",
+    "dataManagement": {
+      "title": "Mentett adatok kezelése"
+    },
+    "visibilityManagement": {
+      "title": "Láthatósági beállítások",
+      "description": "Itt kezelheted a láthatósági beállításaidat és preferenciáidat.Szabályozhatod, ki láthatja a profilodat és tevékenységeidet.",
+      "privateShortcut": {
+        "title": "Profil priváttá tétele",
+        "description": "Egyetlen kattintással a legszigorúbb (Privát) szintre korlátozhatod az összes alábbi adatod láthatóságát."
+      },
+      "fineTuning": {
+        "title": "Finomhangolás",
+        "description": "Itt tudod finomhangolni a profilod láthatóságát. A beállításaid pár másodperc után automatikusan elmentődnek."
+      },
+      "personalData": {
+        "title": "Személyes adatok",
+        "description": "Név, jelenlegi lokáció és a bemutatkozó (bio) szöveged láthatósága."
+      },
+      "contactData": {
+        "title": "Kapcsolati adatok",
+        "description": "Email cím, telefonszám és egyéb kapcsolati információk láthatósága."
+      },
+      "skills": {
+        "title": "Készségek",
+        "description": "A készségeid és szakmai kompetenciáid láthatósága."
+      },
+      "workPreferences": {
+        "title": "Munkahely preferencia",
+        "description": "A tapasztalati szinted (pl. Junior, Senior), a munkavégzés módja (Remote, Hybrid) és a foglalkoztatás típusa."
+      },
+      "makeAllPrivate": "Minden priváttá tétele",
+      "restore": "Előző beállítások visszaállítása"
+    },
+    "cookieManagement": {
+      "title": "Süti kezelés",
+      "description": "Itt bármikor megtekintheti vagy módosíthatja a sütikre vonatkozó preferenciáit.",
+      "openPreferences": "Süti beállítások"
+    },
+    "privacyPolicy": {
+      "title": "Adatvédelmi irányelvek"
+    },
+    "cookiePolicy": {
+      "title": "Süti kezelési irányelvek"
+    },
+    "dangerzone": {
+      "title": "Veszélyzóna"
+    },
     "deletePending": {
       "title": "A fiók törlése folyamatban",
       "description": "A fiókod törlésre jelölve. A visszaszámláló lejárta előtt még visszaállíthatod.",
@@ -218,11 +265,6 @@
         "internal_server_error": "Belső szerverhiba történt. Próbáld újra később."
       }
     },
-    "cookieManagement": {
-      "title": "Süti kezelés",
-      "description": "Itt bármikor megtekintheti vagy módosíthatja a sütikre vonatkozó preferenciáit.",
-      "openPreferences": "Süti beállítások"
-    },
     "cookieConsent": {
       "title": "Sütibeállítások",
       "description": "Sütiket használunk a megjelenítési beállítások (például sötét/világos mód és nyelv) mentéséhez. Ezek a sütik elengedhetetlenek ahhoz, hogy az alkalmazás megjegyezze a választásait.",
@@ -247,10 +289,9 @@
   },
   "settings": {
     "privacyPolicy": {
-      "title": "Adatvédelmi tájékoztató",
       "description": "Információk arról, hogyan kezeljük az adataidat.",
       "open": "Adatvédelmi tájékoztató megnyitása",
-      "lastUpdated": "Utoljára frissítve",
+      "title": "Adatvédelmi tájékoztató",
       "intro": {
         "title": "Bevezetés",
         "description": "Elkötelezettek vagyunk az adatvédelem mellett. Ez a tájékoztató leírja, hogyan gyűjtjük és kezeljük az információkat az álláskereső alkalmazásunkban."
@@ -274,12 +315,13 @@
       "contact": {
         "title": "Kapcsolat",
         "description": "Ha bármilyen kérdésed merülne fel az adatvédelemmel kapcsolatban, kérjük, vedd fel a kapcsolatot a fejlesztő csapattal a repository issue trackerén keresztül."
-      }
+      },
+      "lastUpdated": "Utoljára frissítve"
     },
     "cookiePolicy": {
-      "title": "Süti kezelési irányelvek",
       "description": "A Süti Kezelési Irányelv bemutatja, hogyan használjuk a sütiket és hasonló technológiákat weboldalunkon. Weboldalunk használatával hozzájárulsz a sütik ezen irányelv szerinti használatához.",
       "open": "Cookie irányelvek megnyitása",
+      "title": "Süti kezelési irányelvek",
       "lead": "Weboldalunk \"sütiket\" (cookie-kat) használ annak érdekében, hogy a felhasználói élményt javítsuk, és biztosítsuk az oldal alapvető funkcióinak működését. Ez a tájékoztató bemutatja, milyen sütiket használunk, és mi a szerepük.",
       "section1": {
         "title": "1. Mik azok a sütik?",

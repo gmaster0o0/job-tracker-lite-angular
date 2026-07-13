@@ -34,7 +34,7 @@ import {
   interactiveImports,
   layoutImports,
 } from '../profile.hlmimports';
-import { ProfileVisibilitySettingsComponent } from '../visibility-settings/visibility-settings.component';
+import { ProfileVisibilitySettingsComponent } from '@job-tracker-lite-angular/frontend-shared';
 
 import baseSkillSuggestions from '../../../../../public/assets/baseSkillSuggestions.json';
 

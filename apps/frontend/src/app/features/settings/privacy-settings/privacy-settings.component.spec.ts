@@ -6,8 +6,14 @@ import { PrivacySettingsComponent } from './privacy-settings.component';
 import { PrivacyPolicyHarness } from './privacy-policy/privacy-policy.harness';
 import { CookiePolicyHarness } from './cookie-policy/cookie-policy.harness';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
+import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  createProfileDataAccessMock,
+  userProfileFixtures,
+} from '@job-tracker-lite-angular/testing';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { filter } from 'rxjs/operators';
+import { vi } from 'vitest';
 
 describe('PrivacySettingsComponent (routing integration)', () => {
   let harness: RouterTestingHarness;
@@ -17,6 +23,13 @@ describe('PrivacySettingsComponent (routing integration)', () => {
     await TestBed.configureTestingModule({
       imports: [getTranslocoModule()],
       providers: [
+        {
+          provide: ProfileDataAccessService,
+          useValue: createProfileDataAccessMock(
+            { profile: userProfileFixtures.johnDoe },
+            vi.fn,
+          ),
+        },
         provideRouter([
           {
             path: 'settings',

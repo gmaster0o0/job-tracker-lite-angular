@@ -2,10 +2,12 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { ContactInfoComponent } from './contact-info.component';
 import { ContactInfoHarness } from './contact-info.harness';
-import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
+import {
+  getTranslocoModule,
+  VisibilityLevel,
+} from '@job-tracker-lite-angular/frontend-shared';
 import { userProfileFixtures } from '@job-tracker-lite-angular/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { VisibilityLevel } from '../visibility-settings/visibility-settings.component';
 
 describe('ContactInfoComponent', () => {
   let harness: ContactInfoHarness;
