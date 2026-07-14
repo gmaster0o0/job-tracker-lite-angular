@@ -1,3 +1,42 @@
-<p hlmP>
-  {{ 'common.comingSoon' | transloco }}
-</p>
+<div class="space-y-6">
+  <div class="flex flex-col space-y-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 hlmH4>
+          {{ 'privacySettings.datamanagement.export.title' | transloco }}
+        </h3>
+        <p class="text-sm text-muted-foreground">
+          {{ 'privacySettings.datamanagement.export.description' | transloco }}
+        </p>
+      </div>
+      <button
+        hlmBtn
+        variant="outline"
+        (click)="exportUserData()"
+        [disabled]="isExporting()"
+      >
+        <ng-icon hlm name="lucideDownload" size="sm" class="mr-2" />
+        {{ exportLabel() }}
+      </button>
+    </div>
+
+    <hr class="border-border" />
+
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 hlmH4 class="text-destructive">
+          {{ 'privacySettings.datamanagement.deletejobs.title' | transloco }}
+        </h3>
+        <p class="text-sm text-muted-foreground">
+          {{
+            'privacySettings.datamanagement.deletejobs.description' | transloco
+          }}
+        </p>
+      </div>
+      <button hlmBtn variant="destructive" (click)="openDeleteConfirmation()">
+        <ng-icon hlm name="lucideTrash" size="sm" class="mr-2" />
+        {{ deleteLabel() }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -138,8 +138,8 @@
       "description": {
         "label": "Job Description",
         "placeholder": "Paste job description here...",
-        "example": "jobs.create.description.example",
-        "validation": "jobs.create.description.validation"
+        "example": "Example: Key responsibilities, required skills, salary range, benefits",
+        "validation": "Job description is required and must contain relevant details."
       }
     },
     "create": {
@@ -192,34 +192,34 @@
     "title": "Privacy Settings",
     "description": "Manage your data and account privacy controls.",
     "dataManagement": {
-      "title": "privacySettings.dataManagement.title"
+      "title": "Data Management"
     },
     "visibilityManagement": {
-      "title": "privacySettings.visibilityManagement.title",
-      "description": "privacySettings.visibilityManagement.description",
+      "title": "Visibility Settings",
+      "description": "Control who can see your profile and personal information.",
       "privateShortcut": {
-        "title": "privacySettings.visibilityManagement.privateShortcut.title",
-        "description": "privacySettings.visibilityManagement.privateShortcut.description"
+        "title": "Make Everything Private",
+        "description": "Quickly set all your information to private with one click."
       },
       "fineTuning": {
-        "title": "privacySettings.visibilityManagement.fineTuning.title",
-        "description": "privacySettings.visibilityManagement.fineTuning.description"
+        "title": "Fine-Tuning",
+        "description": "Customize the visibility of individual profile sections."
       },
       "personalData": {
-        "title": "privacySettings.visibilityManagement.personalData.title",
-        "description": "privacySettings.visibilityManagement.personalData.description"
+        "title": "Personal Data",
+        "description": "Control visibility of your name, location, and biography."
       },
       "contactData": {
-        "title": "privacySettings.visibilityManagement.contactData.title",
-        "description": "privacySettings.visibilityManagement.contactData.description"
+        "title": "Contact Data",
+        "description": "Control visibility of your email and contact information."
       },
       "skills": {
-        "title": "privacySettings.visibilityManagement.skills.title",
-        "description": "privacySettings.visibilityManagement.skills.description"
+        "title": "Skills",
+        "description": "Control visibility of your technical skills and expertise."
       },
       "workPreferences": {
-        "title": "privacySettings.visibilityManagement.workPreferences.title",
-        "description": "privacySettings.visibilityManagement.workPreferences.description"
+        "title": "Work Preferences",
+        "description": "Control visibility of your experience level, work style, and employment type."
       },
       "makeAllPrivate": "Make All Private",
       "restore": "Restore Previous Settings"
@@ -230,13 +230,13 @@
       "openPreferences": "Cookie Preferences"
     },
     "privacyPolicy": {
-      "title": "privacySettings.privacyPolicy.title"
+      "title": "Privacy Policy"
     },
     "cookiePolicy": {
-      "title": "privacySettings.cookiePolicy.title"
+      "title": "Cookie Policy"
     },
     "dangerzone": {
-      "title": "privacySettings.dangerzone.title"
+      "title": "Danger Zone"
     },
     "deletePending": {
       "title": "Account Deletion Is Pending",
@@ -266,6 +266,36 @@
         "title": "Account Deletion Request Failed",
         "unknown": "Unable to request account deletion right now. Please try again.",
         "internal_server_error": "An internal server error occurred. Please try again later."
+      }
+    },
+    "datamanagement": {
+      "export": {
+        "title": "Export Your Data",
+        "description": "Download a copy of all your personal data in a standard format.",
+        "label": "Export Data"
+      },
+      "deletejobs": {
+        "title": "Delete All Jobs",
+        "description": "Permanently remove all job entries from your account."
+      },
+      "delete": {
+        "label": "Delete Jobs"
+      },
+      "deleteJobs": {
+        "dialog": {
+          "title": "Delete All Jobs",
+          "description": "This action will permanently delete all your job entries. This cannot be undone.",
+          "confirm": "Delete All",
+          "cancel": "Cancel",
+          "emailLabel": "Email",
+          "emailPlaceholder": "example@email.com",
+          "emailHint": "Type your email address to confirm the deletion.",
+          "confirmationValue": {
+            "required": "Email address is required.",
+            "invalid_format": "Invalid email format.",
+            "email_mismatch": "The provided email address does not match the registered email."
+          }
+        }
       }
     },
     "cookieConsent": {
@@ -529,7 +559,7 @@
       "registerLink": "Create one",
       "title": "Login",
       "subtitle": "Sign in to continue managing your jobs.",
-      "subtitleAfterPasswordChange": "auth.login.subtitleAfterPasswordChange",
+      "subtitleAfterPasswordChange": "Your password has been reset. You can now sign in with your new password.",
       "error": {
         "title": "Sign In Failed",
         "unknown": "Unable to sign in right now. Please try again.",
@@ -641,27 +671,27 @@
     },
     "fields": {
       "name": {
-        "label": "contacts.fields.name.label",
-        "placeholder": "contacts.fields.name.placeholder",
-        "required": "contacts.fields.name.required",
-        "example": "contacts.fields.name.example"
+        "label": "Name",
+        "placeholder": "Enter contact name",
+        "required": "Name is required.",
+        "example": "Example: John Smith"
       },
       "email": {
-        "label": "contacts.fields.email.label",
-        "placeholder": "contacts.fields.email.placeholder",
-        "invalid_format": "contacts.fields.email.invalid_format",
+        "label": "Email",
+        "placeholder": "Enter email address",
+        "invalid_format": "Invalid email format",
         "required_one_of": "Please provide an email or phone number.",
-        "example": "contacts.fields.email.example"
+        "example": "Example: john.smith@example.com"
       },
       "phoneNumber": {
-        "label": "Name",
-        "placeholder": "contacts.fields.phoneNumber.placeholder",
+        "label": "Phone Number",
+        "placeholder": "Enter phone number",
         "invalid_format": "Invalid phone number format",
         "required_one_of": "Please provide an email or phone number.",
-        "example": "contacts.fields.phoneNumber.example"
+        "example": "Example: +1 (555) 123-4567"
       },
       "phone": {
-        "label": "contacts.fields.phone.label"
+        "label": "Phone"
       }
     },
     "create": {
@@ -715,6 +745,17 @@
     },
     "settings": {
       "description": "Configure your preferences and account settings."
+    }
+  },
+  "shared": {
+    "confirmationDialog": {
+      "title": "shared.confirmationDialog.title",
+      "description": "shared.confirmationDialog.description",
+      "confirm": "shared.confirmationDialog.confirm",
+      "cancel": "shared.confirmationDialog.cancel",
+      "busy": "shared.confirmationDialog.busy",
+      "fieldLabel": "shared.confirmationDialog.fieldLabel",
+      "fieldPlaceholder": "shared.confirmationDialog.fieldPlaceholder"
     }
   },
   "navigation": {

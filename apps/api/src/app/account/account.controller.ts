@@ -7,11 +7,10 @@ import {
   SupportLang,
   changeEmailRequestSchema,
   deleteAccountSchema,
+  DeleteJobApplicationsDto,
+  deleteJobApplicationsSchema,
 } from '@job-tracker-lite-angular/schemas';
-import {
-  getLanguageFromUrl,
-  ZodBody,
-} from '@job-tracker-lite-angular/core-utils';
+import { ZodBody } from '@job-tracker-lite-angular/core-utils';
 import {
   AllowAnonymous,
   AuthGuard,
@@ -110,5 +109,24 @@ export class AccountController {
   @UseGuards(AuthGuard)
   async recoverDeletion(@Session() session: UserSession): Promise<void> {
     await this.accountService.recoverAccountDeletion(session.user.id);
+  }
+
+  @Get('export-data')
+  @UseGuards(AuthGuard)
+  async exportData(@Session() session: UserSession) {
+    return this.accountService.exportUserData(session.user.id);
+  }
+
+  @Post('delete/jobs')
+  @UseGuards(AuthGuard)
+  async deleteJobs(
+    @Session() session: UserSession,
+    @ZodBody(deleteJobApplicationsSchema) body: DeleteJobApplicationsDto,
+  ): Promise<{ status: true }> {
+    await this.accountService.deleteJobApplications(
+      session.user.id,
+      body.email,
+    );
+    return { status: true };
   }
 }

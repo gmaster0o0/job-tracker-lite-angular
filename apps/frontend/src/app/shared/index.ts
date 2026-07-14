@@ -20,3 +20,5 @@ export * from './empty-list/empty-list.component';
 //export * from './empty-list/empty-list.harness';
 export * from './visibility-settings/visibility-settings.component';
 export * from './visibility-settings/visibility-settings.harness';
+export * from './confirmation-dialog/confirmation-dialog.component';
+export * from './confirmation-dialog/confirmation-dialog.harness';

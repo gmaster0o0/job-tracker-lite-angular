@@ -432,6 +432,42 @@ export class AccountService {
     });
   }
 
+  async exportUserData(userId: string) {
+    return this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      include: {
+        profile: true,
+        jobs: {
+          include: {
+            notes: true,
+            contacts: true,
+          },
+        },
+      },
+    });
+  }
+
+  async deleteJobApplications(
+    userId: string,
+    emailConfirmation: string,
+  ): Promise<void> {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { email: true },
+    });
+
+    if (user.email.toLowerCase() !== emailConfirmation.trim().toLowerCase()) {
+      throw new BadRequestException({
+        errorCode: 'email_mismatch',
+        message: 'Confirmation email does not match your account email',
+      });
+    }
+
+    await this.prisma.job.deleteMany({
+      where: { userId },
+    });
+  }
+
   async executeScheduledDeletion(): Promise<number> {
     const result = await this.prisma.user.deleteMany({
       where: {

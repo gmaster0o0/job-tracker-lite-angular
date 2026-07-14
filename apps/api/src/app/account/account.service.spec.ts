@@ -320,4 +320,67 @@ describe('AccountService', () => {
       }),
     );
   });
+
+  describe('exportUserData', () => {
+    it('returns the user with profile and jobs (including notes and contacts)', async () => {
+      const exportDataMock = { id: 'user-id', profile: {}, jobs: [] };
+      prismaMock.user.findUniqueOrThrow.mockResolvedValue(exportDataMock);
+
+      const result = await service.exportUserData('user-id');
+
+      expect(result).toEqual(exportDataMock);
+      expect(prismaMock.user.findUniqueOrThrow).toHaveBeenCalledWith({
+        where: { id: 'user-id' },
+        include: {
+          profile: true,
+          jobs: {
+            include: {
+              notes: true,
+              contacts: true,
+            },
+          },
+        },
+      });
+    });
+  });
+
+  describe('deleteJobApplications', () => {
+    it('deletes all job applications when the email matches', async () => {
+      prismaMock.user.findUniqueOrThrow.mockResolvedValue({
+        email: 'test@example.com',
+      });
+      prismaMock.job.deleteMany.mockResolvedValue({ count: 5 });
+
+      await service.deleteJobApplications('user-id', 'test@example.com');
+
+      expect(prismaMock.job.deleteMany).toHaveBeenCalledWith({
+        where: { userId: 'user-id' },
+      });
+    });
+
+    it('deletes all job applications when the email matches with different casing and whitespace', async () => {
+      prismaMock.user.findUniqueOrThrow.mockResolvedValue({
+        email: 'test@example.com',
+      });
+      prismaMock.job.deleteMany.mockResolvedValue({ count: 5 });
+
+      await service.deleteJobApplications('user-id', '  TEST@example.com  ');
+
+      expect(prismaMock.job.deleteMany).toHaveBeenCalledWith({
+        where: { userId: 'user-id' },
+      });
+    });
+
+    it('throws BadRequestException when the email does not match', async () => {
+      prismaMock.user.findUniqueOrThrow.mockResolvedValue({
+        email: 'test@example.com',
+      });
+
+      await expect(
+        service.deleteJobApplications('user-id', 'wrong@example.com'),
+      ).rejects.toThrow('Confirmation email does not match your account email');
+
+      expect(prismaMock.job.deleteMany).not.toHaveBeenCalled();
+    });
+  });
 });

@@ -265,6 +265,36 @@
         "internal_server_error": "Belső szerverhiba történt. Próbáld újra később."
       }
     },
+    "datamanagement": {
+      "export": {
+        "title": "Az adatok exportálása",
+        "description": "Töltse le az összes személyes adatait szabványos formátumban.",
+        "label": "Adatok exportálása"
+      },
+      "deletejobs": {
+        "title": "Az összes munka törlése",
+        "description": "Az összes munka bejegyzés végleges eltávolítása a fiókodból."
+      },
+      "delete": {
+        "label": "Munkák törlése"
+      },
+      "deleteJobs": {
+        "dialog": {
+          "title": "Az összes munka törlése",
+          "description": "Ez a művelet véglegesen törli az összes munka bejegyzésed. Ezt nem lehet visszafordítani.",
+          "confirm": "Az összes törlése",
+          "cancel": "Mégse",
+          "emailLabel": "Írd be az email címed a megerősítéshez",
+          "emailPlaceholder": "example@email.com",
+          "emailHint": "A megerősítéshez írja be az email címét.",
+          "confirmationValue": {
+            "required": "Az email cím megadása kötelező.",
+            "invalid_format": "Érvénytelen email formátum.",
+            "email_mismatch": "A megadott email cím nem egyezik a regisztrált email címmel."
+          }
+        }
+      }
+    },
     "cookieConsent": {
       "title": "Sütibeállítások",
       "description": "Sütiket használunk a megjelenítési beállítások (például sötét/világos mód és nyelv) mentéséhez. Ezek a sütik elengedhetetlenek ahhoz, hogy az alkalmazás megjegyezze a választásait.",
@@ -527,7 +557,7 @@
       "registerLink": "Regisztrálj",
       "title": "Bejelentkezés",
       "subtitle": "Jelentkezz be a folytatáshoz.",
-      "subtitleAfterPasswordChange": "auth.login.subtitleAfterPasswordChange",
+      "subtitleAfterPasswordChange": "Az új jelszavad beállítása megtörtént. Most már bejelentkezhetsz az új jelszavaddal.",
       "error": {
         "title": "Bejelentkezés sikertelen",
         "unknown": "Most nem sikerült bejelentkezni. Próbálja újra.",
@@ -654,6 +684,9 @@
         "invalid_format": "Érvénytelen telefonszám formátum",
         "required_one_of": "Adjon meg e-mailt vagy telefonszámot.",
         "example": "Pl. +36 30 123 4567"
+      },
+      "phone": {
+        "label": "Telefon"
       }
     },
     "create": {
@@ -707,6 +740,17 @@
     },
     "settings": {
       "description": "Konfigurálja preferenciáit és fiókbeállításait."
+    }
+  },
+  "shared": {
+    "confirmationDialog": {
+      "title": "shared.confirmationDialog.title",
+      "description": "shared.confirmationDialog.description",
+      "confirm": "shared.confirmationDialog.confirm",
+      "cancel": "shared.confirmationDialog.cancel",
+      "busy": "shared.confirmationDialog.busy",
+      "fieldLabel": "shared.confirmationDialog.fieldLabel",
+      "fieldPlaceholder": "shared.confirmationDialog.fieldPlaceholder"
     }
   },
   "navigation": {

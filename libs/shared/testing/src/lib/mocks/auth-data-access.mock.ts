@@ -22,8 +22,10 @@ export type AuthDataAccessMockOptions = {
   resetPassword?: (dto: ResetPasswordDto) => Promise<void>;
   sendVerificationEmail?: (dto: SendVerificationEmailDto) => Promise<void>;
   getAccountSettings?: () => Promise<AccountSettingsDto>;
-  requestEmailChange?: (dto: ChangeEmailRequestDto) => Promise<void>;
+  requestEmailChange?: (...args: any[]) => Promise<void>;
   changePassword?: (dto: ChangePasswordDto) => Promise<void>;
+  verifyEmailChange?: (...args: any[]) => Promise<string | void>;
+  restoreEmail?: (...args: any[]) => Promise<string | void>;
 };
 
 export function createAuthDataAccessMock(
@@ -47,5 +49,7 @@ export function createAuthDataAccessMock(
       options.getAccountSettings ?? (async () => accountSettings),
     requestEmailChange: options.requestEmailChange ?? (async () => undefined),
     changePassword: options.changePassword ?? (async () => undefined),
+    verifyEmailChange: options.verifyEmailChange ?? (async () => undefined),
+    restoreEmail: options.restoreEmail ?? (async () => undefined),
   };
 }
