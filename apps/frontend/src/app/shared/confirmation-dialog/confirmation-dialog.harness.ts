@@ -3,39 +3,49 @@ import { ComponentHarness } from '@angular/cdk/testing';
 export class ConfirmationDialogHarness extends ComponentHarness {
   static hostSelector = 'app-confirmation-dialog';
 
-  protected getValueInput = this.locatorForOptional('input#confirmationValue');
-  protected getSubmitButton = this.locatorFor('button[type="submit"]');
-  protected getCancelButton = this.locatorFor('button[hlmDialogClose]');
+  private getValueInput = this.locatorForOptional('input#confirmationValue');
+  private getSubmitButton = this.locatorFor('button[type="submit"]');
+  private getCancelButton = this.locatorFor('app-cancel-button button');
+  private getTitle = this.locatorFor('[hlmAlertDialogTitle]');
+  private getDescription = this.locatorFor('[hlmAlertDialogDescription]');
+  private getFieldError = this.locatorForOptional('hlm-field-error');
 
-  /** True, ha a dialog egy "gépeld be a megerősítéshez" mezővel rendelkezik. */
   async hasField(): Promise<boolean> {
     return (await this.getValueInput()) !== null;
   }
 
+  async getTitleText(): Promise<string> {
+    return (await this.getTitle()).text();
+  }
+  async getDescriptionText(): Promise<string> {
+    return (await this.getDescription()).text();
+  }
   async setValue(value: string): Promise<void> {
     const input = await this.getValueInput();
-    if (!input) {
-      throw new Error(
-        'Ehhez a confirmation dialoghoz nincs konfigurálva input mező.',
-      );
-    }
-    await input.clear();
-    await input.sendKeys(value);
+    if (!input) throw new Error('Input field not found.');
+    await input.setInputValue(value);
     await input.blur();
   }
 
   async clickSubmit(): Promise<void> {
-    const button = await this.getSubmitButton();
-    await button.click();
+    await (await this.getSubmitButton()).click();
   }
 
   async clickCancel(): Promise<void> {
-    const button = await this.getCancelButton();
-    await button.click();
+    await (await this.getCancelButton()).click();
   }
 
   async isSubmitDisabled(): Promise<boolean> {
+    return await (await this.getSubmitButton()).getProperty('disabled');
+  }
+
+  async getSubmitButtonText(): Promise<string> {
     const button = await this.getSubmitButton();
-    return await button.getProperty('disabled');
+    return (await button.text()).trim();
+  }
+
+  async getErrorMessage(): Promise<string | null> {
+    const error = await this.getFieldError();
+    return error ? await error.text() : null;
   }
 }

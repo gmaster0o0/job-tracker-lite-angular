@@ -275,17 +275,17 @@
         "label": "Export Data"
       },
       "deletejobs": {
-        "title": "Delete All Jobs",
-        "description": "Permanently remove all job entries from your account."
+        "title": "Delete All Job Applications",
+        "description": "Permanently remove all job application entries from your account."
       },
       "delete": {
         "label": "Delete Jobs"
       },
       "deleteJobs": {
         "dialog": {
-          "title": "Delete All Jobs",
-          "description": "This action will permanently delete all your job entries. This cannot be undone.",
-          "confirm": "Delete All",
+          "title": "Delete All Job Applications",
+          "description": "This action will permanently delete all your job application entries. This cannot be undone.",
+          "confirm": "Confirm Deletion",
           "cancel": "Cancel",
           "emailLabel": "Email",
           "emailPlaceholder": "example@email.com",

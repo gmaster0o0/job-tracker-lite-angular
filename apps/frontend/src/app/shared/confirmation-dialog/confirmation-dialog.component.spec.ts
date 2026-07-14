@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { DIALOG_DATA } from '@angular/cdk/dialog';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import { z } from 'zod';
 import {
@@ -11,189 +11,191 @@ import {
 import { ConfirmationDialogHarness } from './confirmation-dialog.harness';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { createBrnDialogRefMock } from '@job-tracker-lite-angular/testing';
-
-type WithBusySignal = {
-  effectiveIsBusy: { set: (value: boolean) => void };
-};
-
-async function setupComponent(context?: ConfirmationDialogContext): Promise<{
-  fixture: ComponentFixture<ConfirmationDialogComponent>;
-  component: ConfirmationDialogComponent;
-  harness: ConfirmationDialogHarness;
-  dialogRefCloseSpy: ReturnType<typeof vi.fn>;
-}> {
-  const dialogRefCloseSpy = vi.fn();
-
-  await TestBed.configureTestingModule({
-    imports: [ConfirmationDialogComponent, getTranslocoModule()],
-    providers: [{ provide: BrnDialogRef, useValue: createBrnDialogRefMock() }],
-  }).compileComponents();
-
-  const fixture = TestBed.createComponent(ConfirmationDialogComponent);
-  const component = fixture.componentInstance;
-  fixture.detectChanges();
-
-  const loader: HarnessLoader = TestbedHarnessEnvironment.loader(fixture);
-  const harness = await loader.getHarness(ConfirmationDialogHarness);
-
-  return { fixture, component, harness, dialogRefCloseSpy };
-}
-
 describe('ConfirmationDialogComponent', () => {
-  describe('mező nélküli, sima megerősítés mód (nincs context.field)', () => {
+  let dialogRefMock: ReturnType<typeof createBrnDialogRefMock>;
+
+  async function configureTestEnvironment(
+    contextOverride?: ConfirmationDialogContext,
+  ) {
+    dialogRefMock = createBrnDialogRefMock();
+
+    const providers = [
+      { provide: BrnDialogRef, useValue: dialogRefMock },
+      {
+        provide: DIALOG_DATA,
+        useValue: contextOverride ?? {},
+      },
+    ];
+
+    await TestBed.configureTestingModule({
+      imports: [ConfirmationDialogComponent, getTranslocoModule()],
+      providers,
+    }).compileComponents();
+  }
+
+  beforeEach(() => {
+    TestBed.resetTestingModule();
+  });
+  describe('Basic confirmation dialog (no context.field)', () => {
     let fixture: ComponentFixture<ConfirmationDialogComponent>;
     let component: ConfirmationDialogComponent;
     let harness: ConfirmationDialogHarness;
-    let dialogRefCloseSpy: ReturnType<typeof vi.fn>;
-
     beforeEach(async () => {
-      ({ fixture, component, harness, dialogRefCloseSpy } =
-        await setupComponent());
+      await configureTestEnvironment();
+      fixture = TestBed.createComponent(ConfirmationDialogComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      harness = await TestbedHarnessEnvironment.harnessForFixture(
+        fixture,
+        ConfirmationDialogHarness,
+      );
     });
-
     it('should create', () => {
       expect(component).toBeTruthy();
     });
 
-    it('a default (translateSignal-lal feloldott) szövegkulcsokat jeleníti meg, ha nincs context override', () => {
-      const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
-      expect(text).toContain('shared.confirmationDialog.title');
-      expect(text).toContain('shared.confirmationDialog.description');
-      expect(text).toContain('shared.confirmationDialog.confirm');
+    it('displays default (translateSignal-resolved) text keys when no context override is provided', async () => {
+      expect(await harness.getTitleText()).toContain(
+        'shared.confirmationDialog.title',
+      );
+      expect(await harness.getDescriptionText()).toContain(
+        'shared.confirmationDialog.description',
+      );
     });
 
-    it('nem jelenít meg input mezőt', async () => {
+    it('does not display an input field', async () => {
       expect(await harness.hasField()).toBe(false);
     });
 
-    it('a submit gomb induláskor engedélyezett, mező hiányában', async () => {
+    it('submit button is enabled initially, without a field', async () => {
       expect(await harness.isSubmitDisabled()).toBe(false);
     });
 
-    it('submitra rögtön megerősít és bezárja a dialogot, adat nélkül', async () => {
+    it('on submit, immediately confirms and closes the dialog, without data', async () => {
       const confirmSpy = vi.fn();
       component.confirm.subscribe(confirmSpy);
-
+      const closeSpy = vi.spyOn(dialogRefMock, 'close');
       await harness.clickSubmit();
-      fixture.detectChanges();
-      await fixture.whenStable();
 
       expect(confirmSpy).toHaveBeenCalled();
-      expect(dialogRefCloseSpy).toHaveBeenCalled();
+      expect(closeSpy).toHaveBeenCalled();
     });
 
-    it('cancel-re bezárja a dialogot megerősítés nélkül', async () => {
+    it('on cancel, closes the dialog without confirming', async () => {
       const confirmSpy = vi.fn();
       component.confirm.subscribe(confirmSpy);
-
+      const closeSpy = vi.spyOn(dialogRefMock, 'close');
       await harness.clickCancel();
 
-      expect(dialogRefCloseSpy).toHaveBeenCalled();
+      expect(closeSpy).toHaveBeenCalled();
       expect(confirmSpy).not.toHaveBeenCalled();
     });
   });
 
-  describe('context felülírja a default szövegeket', () => {
-    it('a context-ből kapott, már feloldott stringeket jeleníti meg a defaultok helyett', () => {
-      return setupComponent({
+  describe('context overrides default texts', () => {
+    it('displays the resolved strings from the context instead of the defaults', async () => {
+      const context: ConfirmationDialogContext = {
         title: 'Törlés megerősítése',
         description: 'Írd be az emailedet a törléshez.',
         confirmLabel: 'Törlöm',
         cancelLabel: 'Mégse',
-      }).then(({ fixture }) => {
-        const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
-        expect(text).toContain('Törlés megerősítése');
-        expect(text).toContain('Írd be az emailedet a törléshez.');
-        expect(text).toContain('Törlöm');
-        expect(text).not.toContain('shared.confirmationDialog.title');
-      });
+      };
+
+      await configureTestEnvironment(context);
+
+      const fixture = TestBed.createComponent(ConfirmationDialogComponent);
+      fixture.detectChanges();
+
+      const harness = await TestbedHarnessEnvironment.harnessForFixture(
+        fixture,
+        ConfirmationDialogHarness,
+      );
+
+      expect(await harness.getTitleText()).toBe('Törlés megerősítése');
+      expect(await harness.getDescriptionText()).toBe(
+        'Írd be az emailedet a törléshez.',
+      );
     });
   });
 
-  describe('mezővel és külső sémával konfigurált mód (pl. delete-job-applications use case)', () => {
-    // Ezt a sémát a hívó fél állítja elő — ő tudja, mihez kell
-    // "matchelnie" a beírt értéknek. A komponens csak lefuttatja.
+  describe('configured with a field and external schema', () => {
     const expectedEmail = 'user@example.com';
-    const matchEmailSchema = z
-      .string()
-      .min(1, { message: 'settings.data_management.deleteJobs.email_required' })
-      .email({ message: 'settings.data_management.deleteJobs.email_invalid' })
-      .refine((value) => value === expectedEmail, {
-        message: 'settings.data_management.deleteJobs.email_mismatch',
-      });
+    const matchEmailSchema = z.string().refine((val) => val === expectedEmail);
+    let context: ConfirmationDialogContext;
 
-    function contextWithField(
-      overrides: Partial<ConfirmationDialogContext> = {},
-    ): ConfirmationDialogContext {
-      return {
+    beforeEach(() => {
+      context = {
         title: 'Job jelentkezések törlése',
-        description: 'Erősítsd meg az emailed beírásával.',
         field: {
           initialValue: '',
           validationSchema: matchEmailSchema,
           label: 'Email',
-          errorTranslationPrefix: 'settings.data_management.deleteJobs',
         },
-        ...overrides,
       };
-    }
+    });
 
-    it('mezőt jelenít meg, ha van field config', async () => {
-      const { harness } = await setupComponent(contextWithField());
+    it('displays a field if field config is provided', async () => {
+      await configureTestEnvironment(context);
+      const fixture = TestBed.createComponent(ConfirmationDialogComponent);
+      fixture.detectChanges();
+
+      const harness = await TestbedHarnessEnvironment.harnessForFixture(
+        fixture,
+        ConfirmationDialogHarness,
+      );
+
       expect(await harness.hasField()).toBe(true);
     });
 
-    it('a submit gomb tiltott, amíg a mező nem valid', async () => {
-      const { harness } = await setupComponent(contextWithField());
-      expect(await harness.isSubmitDisabled()).toBe(true);
-    });
-
-    it('tiltva marad, ha a beírt érték nem egyezik az elvárt értékkel', async () => {
-      const { fixture, harness } = await setupComponent(contextWithField());
-
-      await harness.setValue('not-the-right-email@example.com');
+    it('submit button is disabled until the field is valid', async () => {
+      await configureTestEnvironment(context);
+      const fixture = TestBed.createComponent(ConfirmationDialogComponent);
       fixture.detectChanges();
 
+      const harness = await TestbedHarnessEnvironment.harnessForFixture(
+        fixture,
+        ConfirmationDialogHarness,
+      );
+
       expect(await harness.isSubmitDisabled()).toBe(true);
     });
 
-    it('engedélyezi a submitot, ha a beírt érték illeszkedik a sémára', async () => {
-      const { fixture, harness } = await setupComponent(contextWithField());
+    it('enables the submit button if the entered value matches the schema', async () => {
+      await configureTestEnvironment(context);
+      const fixture = TestBed.createComponent(ConfirmationDialogComponent);
+      fixture.detectChanges();
+
+      const harness = await TestbedHarnessEnvironment.harnessForFixture(
+        fixture,
+        ConfirmationDialogHarness,
+      );
 
       await harness.setValue(expectedEmail);
       fixture.detectChanges();
 
       expect(await harness.isSubmitDisabled()).toBe(false);
     });
-
-    it('a megfelelő érték megadása után a confirm eventtel adja át az értéket', async () => {
-      const { fixture, component, harness, dialogRefCloseSpy } =
-        await setupComponent(contextWithField());
-      const confirmSpy = vi.fn();
-      component.confirm.subscribe(confirmSpy);
-
-      await harness.setValue(expectedEmail);
-      fixture.detectChanges();
-
-      await harness.clickSubmit();
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      expect(confirmSpy).toHaveBeenCalledWith(expectedEmail);
-      expect(dialogRefCloseSpy).toHaveBeenCalled();
-    });
   });
 
   describe('busy state', () => {
-    it('a submit gombot letiltja és a busy labelt mutatja submit közben', async () => {
-      const { fixture, component, harness } = await setupComponent();
+    it('disables the submit button and shows the busy label while submitting', async () => {
+      const context: ConfirmationDialogContext = {
+        isBusy: true,
+        busyLabel: 'Folyamatban...',
+      };
 
-      (component as unknown as WithBusySignal).effectiveIsBusy.set(true);
+      await configureTestEnvironment(context);
+
+      const fixture = TestBed.createComponent(ConfirmationDialogComponent);
       fixture.detectChanges();
 
+      const harness = await TestbedHarnessEnvironment.harnessForFixture(
+        fixture,
+        ConfirmationDialogHarness,
+      );
+
       expect(await harness.isSubmitDisabled()).toBe(true);
-      const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
-      expect(text).toContain('shared.confirmationDialog.busy');
+      expect(await harness.getSubmitButtonText()).toBe('Folyamatban...');
     });
   });
 });

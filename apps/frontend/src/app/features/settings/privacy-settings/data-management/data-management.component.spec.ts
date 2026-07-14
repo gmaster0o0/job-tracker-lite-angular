@@ -59,12 +59,9 @@ describe('DataManagementComponent', () => {
     beforeEach(() => {
       createObjectUrlSpy = vi.fn().mockReturnValue('blob:mock-url');
       revokeObjectUrlSpy = vi.fn();
-      window.URL.createObjectURL = createObjectUrlSpy;
-      window.URL.revokeObjectURL = revokeObjectUrlSpy;
 
       anchorElement = document.createElement('a');
       anchorClickSpy = vi.fn();
-      vi.spyOn(anchorElement, 'click').mockImplementation(anchorClickSpy);
       vi.spyOn(document, 'createElement').mockReturnValue(anchorElement);
     });
 
@@ -103,57 +100,44 @@ describe('DataManagementComponent', () => {
   });
 
   describe('openDeleteConfirmation', () => {
-    function openAndGetContext(): ConfirmationDialogContext<string> {
+    function openAndGetContext(): ConfirmationDialogContext {
       exposedComponent.openDeleteConfirmation();
 
       expect(dialogService.open).toHaveBeenCalledTimes(1);
       const [dialogComponent, options] = dialogService.open.mock.calls[0];
       expect(dialogComponent).toBe(ConfirmationDialogComponent);
 
-      return options.context as ConfirmationDialogContext<string>;
+      return options.context as ConfirmationDialogContext;
     }
 
-    it('már feloldott title/description/confirm/cancel szöveggel nyitja meg a dialogot', () => {
+    it('displays the resolved strings from the context instead of the defaults', () => {
       const context = openAndGetContext();
 
-      // A `getTranslocoModule()` teszt-stubban feloldatlan kulcsra a
-      // kulcsot magát adja vissza, így ez egyben azt is igazolja, hogy
-      // a translateSignal ténylegesen lefutott hívás előtt.
-      expect(context.title).toBe(
-        'privacySettings.datamanagement.deleteJobs.dialog.title',
-      );
+      expect(context.title).toBe('Delete All Job Applications');
       expect(context.description).toBe(
-        'privacySettings.datamanagement.deleteJobs.dialog.description',
+        'This action will permanently delete all your job application entries. This cannot be undone.',
       );
-      expect(context.confirmLabel).toBe(
-        'privacySettings.datamanagement.deleteJobs.dialog.confirm',
-      );
-      expect(context.cancelLabel).toBe(
-        'privacySettings.datamanagement.deleteJobs.dialog.cancel',
-      );
+      expect(context.confirmLabel).toBe('Confirm Deletion');
+      expect(context.cancelLabel).toBe('Cancel');
     });
 
-    it('field configot ad át validationSchema-val és a megfelelő szövegekkel', () => {
+    it('passes field config with validationSchema and appropriate texts', () => {
       const context = openAndGetContext();
 
       expect(context.field).toBeDefined();
       expect(context.field?.initialValue).toBe('');
       expect(context.field?.validationSchema).toBeDefined();
-      expect(context.field?.label).toBe(
-        'privacySettings.datamanagement.deleteJobs.dialog.emailLabel',
-      );
-      expect(context.field?.placeholder).toBe(
-        'privacySettings.datamanagement.deleteJobs.dialog.emailPlaceholder',
-      );
+      expect(context.field?.label).toBe('Email');
+      expect(context.field?.placeholder).toBe('example@email.com');
       expect(context.field?.hint).toBe(
-        'privacySettings.datamanagement.deleteJobs.dialog.emailHint',
+        'Type your email address to confirm the deletion.',
       );
       expect(context.field?.errorTranslationPrefix).toBe(
         'privacySettings.datamanagement.deleteJobs.dialog',
       );
     });
 
-    it('onConfirm meghívásakor a megadott emaillel törli a job application-öket', async () => {
+    it('calls deleteJobApplications with the provided email when onConfirm is called', async () => {
       const context = openAndGetContext();
 
       await context.onConfirm?.('user@example.com');
@@ -163,7 +147,7 @@ describe('DataManagementComponent', () => {
       });
     });
 
-    it('nem hív semmilyen törlést, ha onConfirm nincs meghívva', () => {
+    it('Should not call deleteJobApplications if onConfirm is not called', () => {
       openAndGetContext();
 
       expect(accountDataAccess.deleteJobApplications).not.toHaveBeenCalled();
