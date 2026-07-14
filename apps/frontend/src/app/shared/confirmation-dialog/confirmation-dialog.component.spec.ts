@@ -44,7 +44,6 @@ describe('ConfirmationDialogComponent', () => {
       await configureTestEnvironment();
       fixture = TestBed.createComponent(ConfirmationDialogComponent);
       component = fixture.componentInstance;
-      fixture.detectChanges();
       harness = await TestbedHarnessEnvironment.harnessForFixture(
         fixture,
         ConfirmationDialogHarness,
@@ -104,7 +103,6 @@ describe('ConfirmationDialogComponent', () => {
       await configureTestEnvironment(context);
 
       const fixture = TestBed.createComponent(ConfirmationDialogComponent);
-      fixture.detectChanges();
 
       const harness = await TestbedHarnessEnvironment.harnessForFixture(
         fixture,
@@ -120,7 +118,11 @@ describe('ConfirmationDialogComponent', () => {
 
   describe('configured with a field and external schema', () => {
     const expectedEmail = 'user@example.com';
-    const matchEmailSchema = z.string().refine((val) => val === expectedEmail);
+
+    // Így pontosan megegyezik a valós felhasználással:
+    const matchEmailSchema = z.object({
+      confirmationValue: z.string().refine((val) => val === expectedEmail),
+    });
     let context: ConfirmationDialogContext;
 
     beforeEach(() => {
@@ -137,7 +139,6 @@ describe('ConfirmationDialogComponent', () => {
     it('displays a field if field config is provided', async () => {
       await configureTestEnvironment(context);
       const fixture = TestBed.createComponent(ConfirmationDialogComponent);
-      fixture.detectChanges();
 
       const harness = await TestbedHarnessEnvironment.harnessForFixture(
         fixture,
@@ -150,7 +151,6 @@ describe('ConfirmationDialogComponent', () => {
     it('submit button is disabled until the field is valid', async () => {
       await configureTestEnvironment(context);
       const fixture = TestBed.createComponent(ConfirmationDialogComponent);
-      fixture.detectChanges();
 
       const harness = await TestbedHarnessEnvironment.harnessForFixture(
         fixture,
@@ -162,8 +162,8 @@ describe('ConfirmationDialogComponent', () => {
 
     it('enables the submit button if the entered value matches the schema', async () => {
       await configureTestEnvironment(context);
+
       const fixture = TestBed.createComponent(ConfirmationDialogComponent);
-      fixture.detectChanges();
 
       const harness = await TestbedHarnessEnvironment.harnessForFixture(
         fixture,
@@ -171,8 +171,6 @@ describe('ConfirmationDialogComponent', () => {
       );
 
       await harness.setValue(expectedEmail);
-      fixture.detectChanges();
-
       expect(await harness.isSubmitDisabled()).toBe(false);
     });
   });
@@ -187,7 +185,6 @@ describe('ConfirmationDialogComponent', () => {
       await configureTestEnvironment(context);
 
       const fixture = TestBed.createComponent(ConfirmationDialogComponent);
-      fixture.detectChanges();
 
       const harness = await TestbedHarnessEnvironment.harnessForFixture(
         fixture,

@@ -22,10 +22,26 @@ export class ConfirmationDialogHarness extends ComponentHarness {
   }
   async setValue(value: string): Promise<void> {
     const input = await this.getValueInput();
-    if (!input) throw new Error('Input field not found.');
-    await input.setInputValue(value);
-    await input.blur();
+
+    if (!input) {
+      throw new Error('Input field not found.');
+    }
+
+    await input.clear();
+
+    if (value.length > 0) {
+      await input.sendKeys(value);
+    }
+
+    await input.dispatchEvent('input');
+    await input.dispatchEvent('blur');
   }
+
+  getValue = async (): Promise<string | null> => {
+    const input = await this.getValueInput();
+    if (!input) return null;
+    return await input.getProperty('value');
+  };
 
   async clickSubmit(): Promise<void> {
     await (await this.getSubmitButton()).click();
