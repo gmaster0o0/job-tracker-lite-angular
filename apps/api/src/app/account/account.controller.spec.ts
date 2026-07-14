@@ -160,7 +160,7 @@ describe('AccountController', () => {
   });
 
   it('returns deletion status for the current session user', async () => {
-    accountDataAccessMock.getAccountDeletionStatus.mockResolvedValue(
+    accountDataAccessMock.getDeletionStatus.mockResolvedValue(
       accountDeletionStatusFixtures.pending,
     );
 
@@ -171,7 +171,7 @@ describe('AccountController', () => {
       gracePeriodDays: 7,
     });
 
-    expect(accountDataAccessMock.getAccountDeletionStatus).toHaveBeenCalledWith(
+    expect(accountDataAccessMock.getDeletionStatus).toHaveBeenCalledWith(
       authSessionFixtures.authenticated?.user.id,
     );
   });

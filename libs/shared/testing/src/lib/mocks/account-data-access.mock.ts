@@ -15,26 +15,26 @@ export function createAccountDataAccessMock(
   const deletionStatus =
     options.deletionStatus ?? accountDeletionStatusFixtures.pending;
 
-  async function getAccountDeletionStatus(_userId: string) {
+  async function getDeletionStatus() {
     return deletionStatus;
   }
 
-  async function requestAccountDeletion(_userId: string, _language?: string) {
+  async function requestAccountDeletion(_language?: string) {
     if (options.requestDeletion) return options.requestDeletion();
     return undefined;
   }
 
-  async function recoverAccountDeletion(_userId: string) {
+  async function recoverAccountDeletion() {
     if (options.recoverDeletion) return options.recoverDeletion();
     return undefined;
   }
 
-  async function exportUserData(_userId: string) {
+  async function exportUserData() {
     if (options.exportUserData) return options.exportUserData();
     return new Blob();
   }
 
-  async function deleteJobApplications(_userId: string, _email?: string) {
+  async function deleteJobApplications(_email?: string) {
     if (options.deleteJobApplications) return options.deleteJobApplications();
     return undefined;
   }
@@ -47,7 +47,7 @@ export function createAccountDataAccessMock(
   }
 
   return {
-    getAccountDeletionStatus,
+    getDeletionStatus,
     requestAccountDeletion,
     confirmAccountDeletion,
     recoverAccountDeletion,
