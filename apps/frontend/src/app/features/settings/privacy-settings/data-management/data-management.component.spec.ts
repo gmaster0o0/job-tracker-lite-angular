@@ -53,15 +53,25 @@ describe('DataManagementComponent', () => {
   describe('exportUserData', () => {
     let createObjectUrlSpy: ReturnType<typeof vi.fn>;
     let revokeObjectUrlSpy: ReturnType<typeof vi.fn>;
-    let anchorClickSpy: ReturnType<typeof vi.fn>;
+    let anchorClickSpy: ReturnType<typeof vi.spyOn>;
     let anchorElement: HTMLAnchorElement;
 
     beforeEach(() => {
-      createObjectUrlSpy = vi.fn().mockReturnValue('blob:mock-url');
-      revokeObjectUrlSpy = vi.fn();
+      createObjectUrlSpy = vi
+        .spyOn(URL, 'createObjectURL')
+        .mockReturnValue('blob:mock-url');
+      revokeObjectUrlSpy = vi
+        .spyOn(URL, 'revokeObjectURL')
+        .mockImplementation(() => {
+          //empty
+        });
 
       anchorElement = document.createElement('a');
-      anchorClickSpy = vi.fn();
+      anchorClickSpy = vi
+        .spyOn(anchorElement, 'click')
+        .mockImplementation(() => {
+          //empty
+        });
       vi.spyOn(document, 'createElement').mockReturnValue(anchorElement);
     });
 
@@ -69,7 +79,7 @@ describe('DataManagementComponent', () => {
       vi.restoreAllMocks();
     });
 
-    it('busy jelzőt állít exportálás közben, majd letölti a fájlt és visszaáll', async () => {
+    it('sets the busy indicator during export and downloads the file', async () => {
       const exportedBlob = new Blob(['{}'], { type: 'application/json' });
       accountDataAccess.exportUserData.mockResolvedValue(exportedBlob);
 
@@ -86,7 +96,7 @@ describe('DataManagementComponent', () => {
       expect(exposedComponent.isExporting()).toBe(false);
     });
 
-    it('hiba esetén is visszaállítja a busy jelzőt', async () => {
+    it('resets the busy indicator even if an error occurs', async () => {
       const exportError = new Error('export failed');
       accountDataAccess.exportUserData.mockRejectedValue(exportError);
 
