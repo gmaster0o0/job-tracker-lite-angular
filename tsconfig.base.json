@@ -143,6 +143,9 @@
       ],
       "@spartan-ng/helm/table": [
         "./libs/shared-ui/table/src/index.ts"
+      ],
+      "@spartan-ng/helm/slider": [
+        "./libs/shared-ui/slider/src/index.ts"
       ]
     }
   },
