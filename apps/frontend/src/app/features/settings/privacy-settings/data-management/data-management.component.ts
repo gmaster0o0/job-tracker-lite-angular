@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { AuthSessionService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import { AccountDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
@@ -34,6 +35,7 @@ import { HlmSwitch } from '@spartan-ng/helm/switch';
 })
 export class DataManagementComponent {
   private readonly accountDataAccess = inject(AccountDataAccessService);
+  private readonly authSessionService = inject(AuthSessionService);
   private readonly hlmDialogService = inject(HlmDialogService);
 
   protected readonly isExporting = signal(false);
@@ -67,13 +69,12 @@ export class DataManagementComponent {
   );
 
   protected async exportUserData(): Promise<void> {
-    this.isExporting.set(true);
     try {
       const blob = await this.accountDataAccess.exportUserData();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'export.json';
+      link.download = this.generateExportFileName();
       link.click();
       window.URL.revokeObjectURL(url);
     } finally {
@@ -112,5 +113,42 @@ export class DataManagementComponent {
     console.log(cutoffDate);
     // Implement the logic to handle the cleanup request based on the cutoffDate.
     // This could involve calling a service method to delete data older than the cutoffDate.
+  }
+
+  private generateExportFileName(): string {
+    const session = this.authSessionService.session();
+
+    // get username or fallback to email prefix if username is not available
+    let username = session?.user.name;
+    if (!username && session?.user.email) {
+      username = session.user.email.split('@')[0];
+    }
+
+    //fallback to a default username if both name and email are unavailable
+    const finalUsername = username || 'user';
+
+    const safeUsername = finalUsername
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9-_]/g, '_');
+
+    const now = new Date();
+
+    //Forcing the date to be in the format "YYYY-MM-DD-HHMMSS" without any spaces or special characters
+    const formatter = new Intl.DateTimeFormat('hu-HU', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    });
+
+    const localDateTimeString = formatter.format(now);
+    const safeDateTimeString = localDateTimeString
+      .replace(/[\s:]/g, '')
+      .replace(/[,.]/g, '-');
+
+    return `jobtracker-${safeUsername}-${safeDateTimeString}.json`;
   }
 }
