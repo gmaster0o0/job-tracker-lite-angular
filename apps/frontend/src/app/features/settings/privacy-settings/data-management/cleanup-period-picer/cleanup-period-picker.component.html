@@ -3,6 +3,7 @@
     <hlm-slider
       class="p-2"
       id="cleanup-period-slider"
+      data-testid="cleanup-period-slider"
       [value]="filterForm.period().value()"
       (valueChange)="filterForm.period().value.set($event)"
       (blur)="filterForm.period().markAsTouched()"
@@ -15,13 +16,17 @@
       [formatTick]="formatTick"
     />
 
-    <p hlmFieldDescription class="min-h-[40px] transition-colors duration-200">
+    <p
+      hlmFieldDescription
+      data-testid="cleanup-period-explanation"
+      class="min-h-[40px] transition-colors duration-200"
+    >
       {{ explanationText() }}
     </p>
   </hlm-field>
 
   <hlm-field orientation="horizontal">
-    <button hlmBtn type="submit">
+    <button hlmBtn type="submit" data-testid="cleanup-period-submit">
       {{ 'privacySettings.datamanagement.cleanupPeriod.submit' | transloco }}
     </button>
   </hlm-field>
