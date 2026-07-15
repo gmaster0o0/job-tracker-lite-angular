@@ -306,23 +306,19 @@
       },
       "deleteJobs": {
         "dialog": {
-          "title": "Delete All Job Applications",
-          "description": "This action will permanently delete all your job application entries. This cannot be undone.",
-          "confirm": "Confirm Deletion",
+          "title": "Confirm Deletion of Job Applications",
+          "description": "{mode, select, all {All of your job applications will be permanently deleted.} other {The job applications from before {date} will be permanently deleted.}} This action is permanent and cannot be undone.",
+          "confirm": "Delete Job Applications",
           "cancel": "Cancel",
           "emailLabel": "Email",
           "emailPlaceholder": "example@email.com",
-          "emailHint": "Type your email address to confirm the deletion.",
+          "emailHint": "Please enter your email address to confirm.",
           "confirmationValue": {
             "required": "Email address is required.",
             "invalid_format": "Invalid email format.",
-            "email_mismatch": "The provided email address does not match the registered email."
+            "email_mismatch": "The provided email address does not match your registered email."
           }
-        },
-        "submit": "privacySettings.datamanagement.deleteJobs.submit"
-      },
-      "period": {
-        "submit": "privacySettings.datamanagement.period.submit"
+        }
       }
     },
     "cookieConsent": {

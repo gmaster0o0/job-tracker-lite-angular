@@ -1,7 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { AuthSessionService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
-import { TranslocoModule, translateSignal } from '@jsverse/transloco';
+import {
+  TranslocoModule,
+  translate,
+  translateSignal,
+} from '@jsverse/transloco';
 import { AccountDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -49,9 +53,20 @@ export class DataManagementComponent {
   private readonly dialogTitle = translateSignal(
     'privacySettings.datamanagement.deleteJobs.dialog.title',
   );
-  private readonly dialogDescription = translateSignal(
-    'privacySettings.datamanagement.deleteJobs.dialog.description',
-  );
+
+  private readonly cutOffDate = signal<string>('2025.11.11.');
+
+  private readonly dialogDescription = computed(() => {
+    const cutoff = this.cutOffDate();
+    const today = new Date().toLocaleDateString('hu-HU');
+
+    const mode = cutoff === today ? 'all' : 'date';
+
+    return translate(
+      'privacySettings.datamanagement.deleteJobs.dialog.description',
+      { mode: mode, date: cutoff },
+    );
+  });
   private readonly dialogConfirmLabel = translateSignal(
     'privacySettings.datamanagement.deleteJobs.dialog.confirm',
   );
@@ -110,10 +125,12 @@ export class DataManagementComponent {
     });
   }
 
-  protected async onCleanupRequested(cutoffDate: Date | null): Promise<void> {
-    console.log(cutoffDate);
-    // Implement the logic to handle the cleanup request based on the cutoffDate.
-    // This could involve calling a service method to delete data older than the cutoffDate.
+  protected async onCleanupRequested(cutoffDate: Date): Promise<void> {
+    this.cutOffDate.set(
+      cutoffDate ? cutoffDate.toLocaleDateString('hu-HU') : '',
+    );
+
+    this.openDeleteConfirmation();
   }
 
   private generateExportFileName(): string {

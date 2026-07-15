@@ -299,15 +299,17 @@
         }
       },
       "delete": {
-        "label": "Munkák törlése"
+        "label": "Állás jelentkezések törlése"
       },
       "deleteJobs": {
         "dialog": {
-          "title": "Az összes munka törlése",
-          "description": "Ez a művelet véglegesen törli az összes munka bejegyzésed. Ezt nem lehet visszafordítani.",
-          "confirm": "Az összes törlése",
+          "title": "Jelentkezések törlésének megerősítése",
+
+          "description": "{mode, select, all {Az ÖSSZES jelentkezésedet véglegesen törölni fogjuk.} other {Azokat a jelentkezéseket fogod véglegesen törölni, amelyek {date} előttiek.}} A művelet végleges, és nem vonható vissza.",
+
+          "confirm": "Állás jelentkezések törlése",
           "cancel": "Mégse",
-          "emailLabel": "Írd be az email címed a megerősítéshez",
+          "emailLabel": "Email",
           "emailPlaceholder": "example@email.com",
           "emailHint": "A megerősítéshez írja be az email címét.",
           "confirmationValue": {
@@ -315,11 +317,7 @@
             "invalid_format": "Érvénytelen email formátum.",
             "email_mismatch": "A megadott email cím nem egyezik a regisztrált email címmel."
           }
-        },
-        "submit": "privacySettings.datamanagement.deleteJobs.submit"
-      },
-      "period": {
-        "submit": "privacySettings.datamanagement.period.submit"
+        }
       }
     },
     "cookieConsent": {

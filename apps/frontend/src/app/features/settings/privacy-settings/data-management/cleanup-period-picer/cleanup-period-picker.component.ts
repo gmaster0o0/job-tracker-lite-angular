@@ -20,7 +20,7 @@ export type CleanupSliderValue = 0 | 10 | 20 | 30 | 40 | 50;
 })
 export class CleanupPeriodPickerComponent {
   // Cleanup request from the parent component, which will be emitted when the user submits the form.
-  readonly cleanupRequested = output<Date | null>();
+  readonly cleanupRequested = output<Date>();
 
   readonly formModel = signal({
     period: [10],
@@ -117,7 +117,7 @@ export class CleanupPeriodPickerComponent {
     this.cleanupRequested.emit(cutoffDate);
   }
 
-  private calculateCutoffDate(value: number): Date | null {
+  private calculateCutoffDate(value: number): Date {
     const now = new Date();
 
     switch (value) {
@@ -137,7 +137,7 @@ export class CleanupPeriodPickerComponent {
         now.setDate(now.getDate() - 14);
         return now;
       case 50: // all
-        return null;
+        return new Date(); // Return the current date to indicate that all data should be cleaned up.
       default:
         now.setMonth(now.getMonth() - 12);
         return now;
