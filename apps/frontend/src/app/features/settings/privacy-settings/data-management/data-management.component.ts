@@ -98,7 +98,7 @@ export class DataManagementComponent {
     }
   }
 
-  protected openDeleteConfirmation(): void {
+  protected openDeleteConfirmation(cutoffDate: Date): void {
     const emailValidationSchema = z.object({
       confirmationValue: deleteJobApplicationsSchema.shape.email,
     });
@@ -110,7 +110,10 @@ export class DataManagementComponent {
         confirmLabel: this.dialogConfirmLabel(),
         cancelLabel: this.dialogCancelLabel(),
         onConfirm: async (email: string) => {
-          await this.accountDataAccess.deleteJobApplications({ email });
+          await this.accountDataAccess.deleteJobApplications({
+            email,
+            cutoffDate,
+          });
         },
         field: {
           initialValue: '',
@@ -130,7 +133,7 @@ export class DataManagementComponent {
       cutoffDate ? cutoffDate.toLocaleDateString('hu-HU') : '',
     );
 
-    this.openDeleteConfirmation();
+    this.openDeleteConfirmation(cutoffDate);
   }
 
   private generateExportFileName(): string {

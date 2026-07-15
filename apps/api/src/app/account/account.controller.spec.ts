@@ -10,6 +10,7 @@ import {
   createAccountServiceMock,
   createAuthDataAccessMock,
   deleteAccountRequestFixtures,
+  jobApplicationDeletionFixtures,
 } from '@job-tracker-lite-angular/testing';
 
 function jestify<T extends Record<string, (...args: any[]) => any>>(
@@ -208,7 +209,10 @@ describe('AccountController', () => {
     it('delegates job deletion to service', async () => {
       accountDataAccessMock.deleteJobApplications.mockResolvedValue(undefined);
 
-      const body = { email: 'test@example.com' };
+      const body = {
+        email: 'test@example.com',
+        cutoffDate: jobApplicationDeletionFixtures.cutoffDate,
+      };
       const result = await controller.deleteJobs(
         authSessionFixtures.authenticated as never,
         body,
@@ -217,7 +221,7 @@ describe('AccountController', () => {
       expect(result).toEqual({ status: true });
       expect(accountDataAccessMock.deleteJobApplications).toHaveBeenCalledWith(
         authSessionFixtures.authenticated?.user.id,
-        body.email,
+        body,
       );
     });
   });

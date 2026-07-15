@@ -135,3 +135,12 @@ export const accountRedirectFixtures = {
   accountDeletionConfirmed:
     'http://localhost:4200/auth/login?accountDeletion=confirmed',
 };
+
+export const jobApplicationDeletionFixtures = {
+  now: new Date('2026-07-15T19:22:16.304Z'),
+  get cutoffDate(): Date {
+    const date = new Date(this.now);
+    date.setMonth(date.getMonth() - 1);
+    return date;
+  },
+};

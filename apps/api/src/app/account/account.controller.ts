@@ -123,10 +123,7 @@ export class AccountController {
     @Session() session: UserSession,
     @ZodBody(deleteJobApplicationsSchema) body: DeleteJobApplicationsDto,
   ): Promise<{ status: true }> {
-    await this.accountService.deleteJobApplications(
-      session.user.id,
-      body.email,
-    );
+    await this.accountService.deleteJobApplications(session.user.id, body);
     return { status: true };
   }
 }

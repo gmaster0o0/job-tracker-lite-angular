@@ -8,6 +8,7 @@ import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import {
   AccountDeletionStatusDto,
   AccountSettingsDto,
+  DeleteJobApplicationsDto,
   SupportLang,
 } from '@job-tracker-lite-angular/schemas';
 import { AccountStatus, EmailChangeTokenType } from '@prisma/client';
@@ -449,22 +450,27 @@ export class AccountService {
 
   async deleteJobApplications(
     userId: string,
-    emailConfirmation: string,
+    data: DeleteJobApplicationsDto,
   ): Promise<void> {
-    const user = await this.prisma.user.findUniqueOrThrow({
-      where: { id: userId },
-      select: { email: true },
-    });
-
-    if (user.email.toLowerCase() !== emailConfirmation.trim().toLowerCase()) {
-      throw new BadRequestException({
-        errorCode: 'email_mismatch',
-        message: 'Confirmation email does not match your account email',
+    await this.prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { email: true },
       });
-    }
 
-    await this.prisma.job.deleteMany({
-      where: { userId },
+      if (user.email.toLowerCase() !== data.email.trim().toLowerCase()) {
+        throw new BadRequestException({
+          errorCode: 'email_mismatch',
+          message: 'Confirmation email does not match your account email',
+        });
+      }
+
+      await tx.job.deleteMany({
+        where: {
+          userId,
+          updatedAt: data.cutoffDate ? { lte: data.cutoffDate } : undefined,
+        },
+      });
     });
   }
 

@@ -345,39 +345,67 @@ describe('AccountService', () => {
   });
 
   describe('deleteJobApplications', () => {
-    it('deletes all job applications when the email matches', async () => {
+    const fixedDate = new Date('2026-05-12T12:12:12.304Z');
+    beforeAll(() => {
+      jest.useFakeTimers();
+      jest.setSystemTime(fixedDate);
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+    it('delete jobs before the cutoff date', async () => {
+      const cutoffDate = new Date();
+      cutoffDate.setMonth(cutoffDate.getMonth() - 1);
+
       prismaMock.user.findUniqueOrThrow.mockResolvedValue({
         email: 'test@example.com',
       });
       prismaMock.job.deleteMany.mockResolvedValue({ count: 5 });
-
-      await service.deleteJobApplications('user-id', 'test@example.com');
+      const data = {
+        email: 'test@example.com',
+        cutoffDate,
+      };
+      await service.deleteJobApplications('user-id', data);
 
       expect(prismaMock.job.deleteMany).toHaveBeenCalledWith({
-        where: { userId: 'user-id' },
+        where: {
+          userId: 'user-id',
+          updatedAt: { lte: cutoffDate },
+        },
       });
     });
 
-    it('deletes all job applications when the email matches with different casing and whitespace', async () => {
+    it('deletes job applications when the email matches with different casing and whitespace', async () => {
+      const cutoffDate = new Date();
+      cutoffDate.setMonth(cutoffDate.getMonth() - 1);
       prismaMock.user.findUniqueOrThrow.mockResolvedValue({
         email: 'test@example.com',
       });
       prismaMock.job.deleteMany.mockResolvedValue({ count: 5 });
-
-      await service.deleteJobApplications('user-id', '  TEST@example.com  ');
+      const data = {
+        email: '  TEST@example.com  ',
+        cutoffDate,
+      };
+      await service.deleteJobApplications('user-id', data);
 
       expect(prismaMock.job.deleteMany).toHaveBeenCalledWith({
-        where: { userId: 'user-id' },
+        where: { userId: 'user-id', updatedAt: { lte: cutoffDate } },
       });
     });
 
     it('throws BadRequestException when the email does not match', async () => {
+      const cutoffDate = new Date();
+      cutoffDate.setMonth(cutoffDate.getMonth() - 1);
       prismaMock.user.findUniqueOrThrow.mockResolvedValue({
         email: 'test@example.com',
       });
-
+      const data = {
+        email: 'wrong@example.com  ',
+        cutoffDate,
+      };
       await expect(
-        service.deleteJobApplications('user-id', 'wrong@example.com'),
+        service.deleteJobApplications('user-id', data),
       ).rejects.toThrow('Confirmation email does not match your account email');
 
       expect(prismaMock.job.deleteMany).not.toHaveBeenCalled();

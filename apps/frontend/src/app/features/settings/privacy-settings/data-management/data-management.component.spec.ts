@@ -144,11 +144,11 @@ describe('DataManagementComponent', () => {
     it('displays the resolved strings from the context instead of the defaults', () => {
       const context = openAndGetContext();
 
-      expect(context.title).toBe('Delete All Job Applications');
+      expect(context.title).toBe('Confirm Deletion of Job Applications');
       expect(context.description).toBe(
-        'This action will permanently delete all your job application entries. This cannot be undone.',
+        '{mode, select, all {All of your job applications will be permanently deleted.} other {The job applications from before {date} will be permanently deleted.}} This action is permanent and cannot be undone.',
       );
-      expect(context.confirmLabel).toBe('Confirm Deletion');
+      expect(context.confirmLabel).toBe('Delete Job Applications');
       expect(context.cancelLabel).toBe('Cancel');
     });
 
@@ -161,7 +161,7 @@ describe('DataManagementComponent', () => {
       expect(context.field?.label).toBe('Email');
       expect(context.field?.placeholder).toBe('example@email.com');
       expect(context.field?.hint).toBe(
-        'Type your email address to confirm the deletion.',
+        'Please enter your email address to confirm.',
       );
       expect(context.field?.errorTranslationPrefix).toBe(
         'privacySettings.datamanagement.deleteJobs.dialog',
