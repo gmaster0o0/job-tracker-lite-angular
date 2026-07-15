@@ -275,8 +275,31 @@
         "label": "Export Data"
       },
       "deletejobs": {
-        "title": "Delete All Job Applications",
-        "description": "Permanently remove all job application entries from your account."
+        "title": "Delete stored job applications",
+        "description": "Moving the slider to the right will set how much data the system will delete. This action is permanent and cannot be undone."
+      },
+      "autoCleanup": {
+        "title": "Automatic Data Cleanup",
+        "description": "Enable automatic cleanup of old data according to your specified retention period."
+      },
+      "cleanupPeriod": {
+        "submit": "Cleanup data",
+        "explanation": {
+          "1year": "Your applications older than 1 year, along with their associated notes and contacts, will be deleted.",
+          "6months": "Your applications older than 6 months, along with their associated notes and contacts, will be deleted.",
+          "3months": "Data older than 3 months will be deleted. Your activity from the last 3 months will remain safe.",
+          "1month": "Warning! Only your data created within the last month will be kept; anything older than this will be deleted.",
+          "2weeks": "Strict cleanup: only your latest data, no older than 2 weeks, will be kept.",
+          "all": "EXTREMELY DANGEROUS! All your submitted applications, notes, and contacts will be deleted immediately."
+        },
+        "tick": {
+          "1year": "1 year",
+          "6months": "6 months",
+          "3months": "3 months",
+          "1month": "1 month",
+          "2weeks": "2 weeks",
+          "all": "All"
+        }
       },
       "delete": {
         "label": "Delete Jobs"
@@ -295,7 +318,11 @@
             "invalid_format": "Invalid email format.",
             "email_mismatch": "The provided email address does not match the registered email."
           }
-        }
+        },
+        "submit": "privacySettings.datamanagement.deleteJobs.submit"
+      },
+      "period": {
+        "submit": "privacySettings.datamanagement.period.submit"
       }
     },
     "cookieConsent": {

@@ -1,12 +1,5 @@
 <form class="space-y-6" (submit)="onSubmit($event)" novalidate>
   <hlm-field>
-    <label
-      hlmFieldLabel
-      for="cleanup-period-slider"
-      class="text-foreground font-semibold"
-      >Időszak szűrése:</label
-    >
-
     <hlm-slider
       class="p-2"
       id="cleanup-period-slider"
@@ -22,15 +15,14 @@
       [formatTick]="formatTick"
     />
 
-    <p
-      hlmFieldDescription
-      class="text-sm font-medium mt-2 min-h-[40px] transition-colors duration-200"
-    >
+    <p hlmFieldDescription class="min-h-[40px] transition-colors duration-200">
       {{ explanationText() }}
     </p>
   </hlm-field>
 
   <hlm-field orientation="horizontal">
-    <button hlmBtn type="submit">Adatok tisztítása</button>
+    <button hlmBtn type="submit">
+      {{ 'privacySettings.datamanagement.cleanupPeriod.submit' | transloco }}
+    </button>
   </hlm-field>
 </form>

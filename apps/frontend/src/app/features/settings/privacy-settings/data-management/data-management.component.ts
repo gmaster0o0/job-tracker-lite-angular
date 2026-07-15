@@ -15,6 +15,7 @@ import { deleteJobApplicationsSchema } from '@job-tracker-lite-angular/schemas';
 import z from 'zod';
 import { CleanupPeriodPickerComponent } from './cleanup-period-picer/cleanup-period-picker.component';
 import { HlmSeparator } from '@spartan-ng/helm/separator';
+import { HlmSwitch } from '@spartan-ng/helm/switch';
 
 @Component({
   selector: 'app-data-management',
@@ -26,6 +27,7 @@ import { HlmSeparator } from '@spartan-ng/helm/separator';
     HlmIconImports,
     CleanupPeriodPickerComponent,
     HlmSeparator,
+    HlmSwitch,
   ],
   providers: [provideIcons({ lucideDownload, lucideTrash })],
   templateUrl: './data-management.component.html',

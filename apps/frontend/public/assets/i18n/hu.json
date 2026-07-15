@@ -272,8 +272,31 @@
         "label": "Adatok exportálása"
       },
       "deletejobs": {
-        "title": "Az összes munka törlése",
-        "description": "Az összes munka bejegyzés végleges eltávolítása a fiókodból."
+        "title": "Tárolt jelentkezések törlése",
+        "description": "A csúszka mozgatásával beállíthatod, mennyi adatot töröljön a rendszer."
+      },
+      "autoCleanup": {
+        "title": "privacySettings.datamanagement.autoCleanup.title",
+        "description": "privacySettings.datamanagement.autoCleanup.description"
+      },
+      "cleanupPeriod": {
+        "submit": "Adatok eltávolítása",
+        "explanation": {
+          "1year": "A 1 évnél régebbi jelentkezéseid, valamint a hozzájuk tartozó jegyzetek és névjegyek törlődnek.",
+          "6months": "A 6 hónapnál régebbi jelentkezéseid, valamint a hozzájuk tartozó jegyzetek és névjegyek törlődnek.",
+          "3months": "Az 3 hónapnál régebbi adatok törlődnek. A legutóbbi 3 hónap aktivitásod biztonságban megmarad.",
+          "1month": "Figyelem! Csak az elmúlt 1 hónapban létrehozott adataidat tartjuk meg, minden ennél régebbit törlünk.",
+          "2weeks": "Szigorú tisztítás: kizárólag a legfrissebb, 2 hétnél nem régebbi adataid maradnak meg.",
+          "all": "RENDKÍVÜL VESZÉLYES! Az összes felvitt jelentkezésed, jegyzeted és kapcsolatod azonnal kitöröljük."
+        },
+        "tick": {
+          "1year": "1 év",
+          "6months": "6 hónap",
+          "3months": "3 hónap",
+          "1month": "1 hónap",
+          "2weeks": "2 hét",
+          "all": "Összes"
+        }
       },
       "delete": {
         "label": "Munkák törlése"
@@ -292,7 +315,11 @@
             "invalid_format": "Érvénytelen email formátum.",
             "email_mismatch": "A megadott email cím nem egyezik a regisztrált email címmel."
           }
-        }
+        },
+        "submit": "privacySettings.datamanagement.deleteJobs.submit"
+      },
+      "period": {
+        "submit": "privacySettings.datamanagement.period.submit"
       }
     },
     "cookieConsent": {

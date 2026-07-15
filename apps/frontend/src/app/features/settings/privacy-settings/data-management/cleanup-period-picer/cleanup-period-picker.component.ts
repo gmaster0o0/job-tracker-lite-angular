@@ -3,10 +3,18 @@ import { form } from '@angular/forms/signals';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmSliderImports } from '@spartan-ng/helm/slider';
+import { translateSignal, TranslocoModule } from '@jsverse/transloco';
+
+export type CleanupSliderValue = 0 | 10 | 20 | 30 | 40 | 50;
 
 @Component({
   selector: 'app-cleanup-period-picker',
-  imports: [HlmSliderImports, HlmButtonImports, HlmFieldImports],
+  imports: [
+    HlmSliderImports,
+    HlmButtonImports,
+    HlmFieldImports,
+    TranslocoModule,
+  ],
   templateUrl: './cleanup-period-picker.component.html',
   styleUrls: ['./cleanup-period-picker.component.scss'],
 })
@@ -15,7 +23,7 @@ export class CleanupPeriodPickerComponent {
   readonly cleanupRequested = output<Date | null>();
 
   readonly formModel = signal({
-    period: [0],
+    period: [10],
   });
 
   readonly filterForm = form(this.formModel);
@@ -39,53 +47,73 @@ export class CleanupPeriodPickerComponent {
     return 'slider-red';
   });
 
-  // Computed signal, ami mindig újraszámolódik, ha a slider értéke változik
-  protected readonly explanationText = computed(() => {
-    const currentValue = this.filterForm.period().value()?.[0] ?? 0; // Mivel tömböt ad vissza a slider
+  private readonly textObject: Record<
+    number,
+    { explanation: () => string; tick: () => string }
+  > = {
+    0: {
+      explanation: translateSignal(
+        'privacySettings.datamanagement.cleanupPeriod.explanation.1year',
+      ),
+      tick: translateSignal(
+        'privacySettings.datamanagement.cleanupPeriod.tick.1year',
+      ),
+    },
+    10: {
+      explanation: translateSignal(
+        'privacySettings.datamanagement.cleanupPeriod.explanation.6months',
+      ),
+      tick: translateSignal(
+        'privacySettings.datamanagement.cleanupPeriod.tick.6months',
+      ),
+    },
+    20: {
+      explanation: translateSignal(
+        'privacySettings.datamanagement.cleanupPeriod.explanation.3months',
+      ),
+      tick: translateSignal(
+        'privacySettings.datamanagement.cleanupPeriod.tick.3months',
+      ),
+    },
+    30: {
+      explanation: translateSignal(
+        'privacySettings.datamanagement.cleanupPeriod.explanation.1month',
+      ),
+      tick: translateSignal(
+        'privacySettings.datamanagement.cleanupPeriod.tick.1month',
+      ),
+    },
+    40: {
+      explanation: translateSignal(
+        'privacySettings.datamanagement.cleanupPeriod.explanation.2weeks',
+      ),
+      tick: translateSignal(
+        'privacySettings.datamanagement.cleanupPeriod.tick.2weeks',
+      ),
+    },
+    50: {
+      explanation: translateSignal(
+        'privacySettings.datamanagement.cleanupPeriod.explanation.all',
+      ),
+      tick: translateSignal(
+        'privacySettings.datamanagement.cleanupPeriod.tick.all',
+      ),
+    },
+  };
 
-    switch (currentValue) {
-      case 0:
-        return 'A 6 hónapnál régebbi jelentkezéseid, valamint a hozzájuk tartozó jegyzetek és névjegyek törlődnek.';
-      case 10:
-        return 'A 3 hónapnál régebbi jelentkezéseid, valamint a hozzájuk tartozó jegyzetek és névjegyek törlődnek.';
-      case 20:
-        return 'Az 1 hónapnál régebbi adatok törlődnek. A legutóbbi 30 napos aktivitásod biztonságban megmarad.';
-      case 30:
-        return 'Figyelem! Csak az elmúlt 2 hétben létrehozott adataidat tartjuk meg, minden ennél régebbit törlünk.';
-      case 40:
-        return 'Szigorú tisztítás: kizárólag a legfrissebb, 1 hétnél nem régebbi adataid maradnak meg.';
-      case 50:
-        return 'RENDKÍVÜL VESZÉLYES! Az összes felvitt jelentkezésed, jegyzeted és kapcsolatod azonnal kitöröljük.';
-      default:
-        return 'Válaszd ki, milyen időszaknál régebbi adatokat szeretnél véglegesen törölni.';
-    }
+  protected readonly explanationText = computed(() => {
+    const currentValue = this.filterForm.period().value()?.[0] ?? 0;
+    return this.textObject[currentValue]?.explanation() ?? '';
   });
 
   formatTick = (value: number): string => {
-    switch (value) {
-      case 0:
-        return '6 hónap';
-      case 10:
-        return '3 hónap';
-      case 20:
-        return '1 hónap';
-      case 30:
-        return '2 hét';
-      case 40:
-        return '1 hét';
-      case 50:
-        return 'Összes';
-      default:
-        return `${value}`;
-    }
+    return this.textObject[value]?.tick() ?? '';
   };
 
   onSubmit(event: Event) {
     event.preventDefault();
-
     const rawValue = this.filterForm.period().value()?.[0] ?? 0;
     const cutoffDate = this.calculateCutoffDate(rawValue);
-
     this.cleanupRequested.emit(cutoffDate);
   }
 
@@ -93,25 +121,25 @@ export class CleanupPeriodPickerComponent {
     const now = new Date();
 
     switch (value) {
-      case 0:
+      case 0: // 1 year
+        now.setMonth(now.getMonth() - 12);
+        return now;
+      case 10: // 6 months
         now.setMonth(now.getMonth() - 6);
         return now;
-      case 10:
+      case 20: // 3 months
         now.setMonth(now.getMonth() - 3);
         return now;
-      case 20:
+      case 30: // 1 month
         now.setMonth(now.getMonth() - 1);
         return now;
-      case 30:
+      case 40: // 2 week
         now.setDate(now.getDate() - 14);
         return now;
-      case 40:
-        now.setDate(now.getDate() - 7);
-        return now;
-      case 50:
-        return null; //no cutoff date, delete all data
+      case 50: // all
+        return null;
       default:
-        now.setMonth(now.getMonth() - 6);
+        now.setMonth(now.getMonth() - 12);
         return now;
     }
   }

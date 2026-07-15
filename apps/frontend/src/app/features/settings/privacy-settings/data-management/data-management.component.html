@@ -43,4 +43,19 @@
       ></app-cleanup-period-picker>
     </div>
   </div>
+
+  <hlm-separator />
+  <div class="space-y-4">
+    <div class="space-y-1">
+      <h3 class="text-base font-semibold leading-none tracking-tight">
+        {{ 'privacySettings.datamanagement.autoCleanup.title' | transloco }}
+      </h3>
+      <p class="text-sm text-muted-foreground">
+        {{
+          'privacySettings.datamanagement.autoCleanup.description' | transloco
+        }}
+      </p>
+      <hlm-switch class="mr-2" />
+    </div>
+  </div>
 </div>
