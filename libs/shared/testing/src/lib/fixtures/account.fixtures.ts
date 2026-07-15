@@ -75,7 +75,7 @@ export const accountDeletionStatusFixtures: {
     scheduledDeletionAt: new Date('2099-01-08T00:00:00.000Z'),
     gracePeriodDays: 7,
   },
-};
+} satisfies Record<string, AccountDeletionStatusDto>;
 
 export const accountDeletionStatusPrismaFixtures = {
   active: {

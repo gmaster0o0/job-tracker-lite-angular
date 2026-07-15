@@ -1,6 +1,5 @@
 import {
   AccountSettingsDto,
-  ChangeEmailRequestDto,
   ChangePasswordDto,
   ForgotPasswordDto,
   AuthSessionDto,

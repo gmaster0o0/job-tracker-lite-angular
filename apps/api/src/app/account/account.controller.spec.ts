@@ -7,7 +7,7 @@ import {
   accountSettingsFixtures,
   authSessionFixtures,
   changeEmailRequestFixtures,
-  createAccountDataAccessMock,
+  createAccountServiceMock,
   createAuthDataAccessMock,
   deleteAccountRequestFixtures,
 } from '@job-tracker-lite-angular/testing';
@@ -25,7 +25,7 @@ function jestify<T extends Record<string, (...args: any[]) => any>>(
 describe('AccountController', () => {
   let controller: AccountController;
   let accountDataAccessMock: ReturnType<
-    typeof jestify<ReturnType<typeof createAccountDataAccessMock>>
+    typeof jestify<ReturnType<typeof createAccountServiceMock>>
   >;
   let authDataAccessMock: ReturnType<
     typeof jestify<ReturnType<typeof createAuthDataAccessMock>>
@@ -33,7 +33,7 @@ describe('AccountController', () => {
 
   beforeEach(async () => {
     accountDataAccessMock = jestify(
-      createAccountDataAccessMock({
+      createAccountServiceMock({
         exportUserData: () => Promise.resolve(new Blob()),
         deleteJobApplications: () => Promise.resolve(undefined),
       }),
@@ -160,7 +160,7 @@ describe('AccountController', () => {
   });
 
   it('returns deletion status for the current session user', async () => {
-    accountDataAccessMock.getDeletionStatus.mockResolvedValue(
+    accountDataAccessMock.getAccountDeletionStatus.mockResolvedValue(
       accountDeletionStatusFixtures.pending,
     );
 
@@ -171,7 +171,7 @@ describe('AccountController', () => {
       gracePeriodDays: 7,
     });
 
-    expect(accountDataAccessMock.getDeletionStatus).toHaveBeenCalledWith(
+    expect(accountDataAccessMock.getAccountDeletionStatus).toHaveBeenCalledWith(
       authSessionFixtures.authenticated?.user.id,
     );
   });
