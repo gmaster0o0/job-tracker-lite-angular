@@ -1,25 +1,47 @@
-import { Component, computed, signal } from '@angular/core';
-import { form, submit } from '@angular/forms/signals';
+import { Component, computed, output, signal } from '@angular/core';
+import { form } from '@angular/forms/signals';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmSliderImports } from '@spartan-ng/helm/slider';
-
-interface FilterModel {
-  volume: number[];
-}
 
 @Component({
   selector: 'app-cleanup-period-picker',
   imports: [HlmSliderImports, HlmButtonImports, HlmFieldImports],
   templateUrl: './cleanup-period-picker.component.html',
+  styleUrls: ['./cleanup-period-picker.component.scss'],
 })
 export class CleanupPeriodPickerComponent {
-  protected readonly filterModel = signal<FilterModel>({ volume: [20] });
-  protected readonly filterForm = form(this.filterModel);
+  // Cleanup request from the parent component, which will be emitted when the user submits the form.
+  readonly cleanupRequested = output<Date | null>();
+
+  readonly formModel = signal({
+    period: [0],
+  });
+
+  readonly filterForm = form(this.formModel);
+
+  /**
+   * Determines the color class for the slider based on the selected value.
+   * - Green for values less than 20 (6 and 3 months)
+   * - Yellow for values equal to 20 or 30 (1 month and 2 weeks)
+   * - Red for values greater than 30 (1 week and All)
+   * This computed signal will automatically update whenever the slider value changes.
+   */
+  readonly sliderColorClass = computed(() => {
+    const value = this.filterForm.period().value()?.[0] ?? 0;
+
+    if (value < 20) {
+      return 'slider-green';
+    }
+    if (value === 20 || value === 30) {
+      return 'slider-yellow';
+    }
+    return 'slider-red';
+  });
 
   // Computed signal, ami mindig újraszámolódik, ha a slider értéke változik
   protected readonly explanationText = computed(() => {
-    const currentValue = this.filterForm.volume().value()[0]; // Mivel tömböt ad vissza a slider
+    const currentValue = this.filterForm.period().value()?.[0] ?? 0; // Mivel tömböt ad vissza a slider
 
     switch (currentValue) {
       case 0:
@@ -60,10 +82,37 @@ export class CleanupPeriodPickerComponent {
 
   onSubmit(event: Event) {
     event.preventDefault();
-    submit(this.filterForm, async () => {
-      const selectedValue = this.filterModel().volume[0];
-      console.log('Backend API hívás ezzel az értékkel:', selectedValue);
-      // Itt indíthatod el az openConfirmationModal(selectedValue) logikát!
-    });
+
+    const rawValue = this.filterForm.period().value()?.[0] ?? 0;
+    const cutoffDate = this.calculateCutoffDate(rawValue);
+
+    this.cleanupRequested.emit(cutoffDate);
+  }
+
+  private calculateCutoffDate(value: number): Date | null {
+    const now = new Date();
+
+    switch (value) {
+      case 0:
+        now.setMonth(now.getMonth() - 6);
+        return now;
+      case 10:
+        now.setMonth(now.getMonth() - 3);
+        return now;
+      case 20:
+        now.setMonth(now.getMonth() - 1);
+        return now;
+      case 30:
+        now.setDate(now.getDate() - 14);
+        return now;
+      case 40:
+        now.setDate(now.getDate() - 7);
+        return now;
+      case 50:
+        return null; //no cutoff date, delete all data
+      default:
+        now.setMonth(now.getMonth() - 6);
+        return now;
+    }
   }
 }

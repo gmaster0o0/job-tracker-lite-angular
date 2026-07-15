@@ -1,14 +1,19 @@
 <form class="space-y-6" (submit)="onSubmit($event)" novalidate>
   <hlm-field>
-    <label hlmFieldLabel for="volume" class="text-foreground font-semibold"
+    <label
+      hlmFieldLabel
+      for="cleanup-period-slider"
+      class="text-foreground font-semibold"
       >Időszak szűrése:</label
     >
 
     <hlm-slider
-      id="volume"
-      [value]="filterForm.volume().value()"
-      (valueChange)="filterForm.volume().value.set($event)"
-      (blur)="filterForm.volume().markAsTouched()"
+      class="p-2"
+      id="cleanup-period-slider"
+      [value]="filterForm.period().value()"
+      (valueChange)="filterForm.period().value.set($event)"
+      (blur)="filterForm.period().markAsTouched()"
+      [class]="sliderColorClass()"
       [min]="0"
       [max]="50"
       [step]="10"
@@ -19,7 +24,7 @@
 
     <p
       hlmFieldDescription
-      class="text-sm font-medium mt-2 min-h-[40px] text-muted-foreground transition-colors duration-200"
+      class="text-sm font-medium mt-2 min-h-[40px] transition-colors duration-200"
     >
       {{ explanationText() }}
     </p>

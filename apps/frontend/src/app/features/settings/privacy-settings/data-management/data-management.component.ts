@@ -105,4 +105,10 @@ export class DataManagementComponent {
       } satisfies ConfirmationDialogContext,
     });
   }
+
+  protected async onCleanupRequested(cutoffDate: Date | null): Promise<void> {
+    console.log(cutoffDate);
+    // Implement the logic to handle the cleanup request based on the cutoffDate.
+    // This could involve calling a service method to delete data older than the cutoffDate.
+  }
 }

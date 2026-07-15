@@ -38,7 +38,9 @@
     </div>
 
     <div class="pt-2 max-w-3xl">
-      <app-cleanup-period-picker></app-cleanup-period-picker>
+      <app-cleanup-period-picker
+        (cleanupRequested)="onCleanupRequested($event)"
+      ></app-cleanup-period-picker>
     </div>
   </div>
 </div>
