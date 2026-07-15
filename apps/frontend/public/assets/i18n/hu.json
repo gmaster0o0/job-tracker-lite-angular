@@ -276,8 +276,8 @@
         "description": "A csúszka mozgatásával beállíthatod, mennyi adatot töröljön a rendszer."
       },
       "autoCleanup": {
-        "title": "privacySettings.datamanagement.autoCleanup.title",
-        "description": "privacySettings.datamanagement.autoCleanup.description"
+        "title": "Adatok automatikus törlése",
+        "description": "Engedélyezi 1 évnél régebbi adatok automatikus törlését a rendszerben."
       },
       "cleanupPeriod": {
         "submit": "Adatok eltávolítása",

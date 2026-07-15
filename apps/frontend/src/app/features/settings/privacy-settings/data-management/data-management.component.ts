@@ -69,6 +69,7 @@ export class DataManagementComponent {
   );
 
   protected async exportUserData(): Promise<void> {
+    this.isExporting.set(true);
     try {
       const blob = await this.accountDataAccess.exportUserData();
       const url = window.URL.createObjectURL(blob);

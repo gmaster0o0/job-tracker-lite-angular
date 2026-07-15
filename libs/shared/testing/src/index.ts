@@ -12,6 +12,7 @@ export * from './lib/fixtures/email.fixtures';
 export * from './lib/fixtures/home.fixtures';
 export * from './lib/fixtures/account.fixtures';
 export * from './lib/fixtures/profile.fixtures';
+export * from './lib/fixtures/data-management.fixtures';
 export * from './lib/mocks/jobs-data-access.mock';
 export * from './lib/mocks/contacts-data-access.mock';
 export * from './lib/mocks/notes-data-access.mock';

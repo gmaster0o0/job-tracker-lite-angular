@@ -280,7 +280,7 @@
       },
       "autoCleanup": {
         "title": "Automatic Data Cleanup",
-        "description": "Enable automatic cleanup of old data according to your specified retention period."
+        "description": "Enables automatic deletion of data older than 1 year from the system."
       },
       "cleanupPeriod": {
         "submit": "Cleanup data",

@@ -1,6 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AccountDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  AccountDataAccessService,
+  AuthSessionService,
+} from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import {
   ConfirmationDialogComponent,
@@ -8,6 +11,7 @@ import {
 } from '@job-tracker-lite-angular/frontend-shared';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { DataManagementComponent } from './data-management.component';
+import { exportDataFixtures } from '@job-tracker-lite-angular/testing';
 
 type ExposedDataManagementComponent = {
   isExporting: () => boolean;
@@ -23,12 +27,24 @@ describe('DataManagementComponent', () => {
     exportUserData: ReturnType<typeof vi.fn>;
     deleteJobApplications: ReturnType<typeof vi.fn>;
   };
+  let authSessionService: {
+    session: ReturnType<typeof vi.fn>;
+  };
   let dialogService: { open: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
+    // TODO : need to move this mock to the shared testing module, so we don't have to repeat it in every test
     accountDataAccess = {
       exportUserData: vi.fn(),
       deleteJobApplications: vi.fn().mockResolvedValue(undefined),
+    };
+    authSessionService = {
+      session: vi.fn().mockReturnValue({
+        user: {
+          name: 'Teszt Elek',
+          email: 'teszt.elek@example.com',
+        },
+      }),
     };
     dialogService = { open: vi.fn() };
 
@@ -36,6 +52,7 @@ describe('DataManagementComponent', () => {
       imports: [DataManagementComponent, getTranslocoModule()],
       providers: [
         { provide: AccountDataAccessService, useValue: accountDataAccess },
+        { provide: AuthSessionService, useValue: authSessionService },
         { provide: HlmDialogService, useValue: dialogService },
       ],
     }).compileComponents();
@@ -80,6 +97,10 @@ describe('DataManagementComponent', () => {
     });
 
     it('sets the busy indicator during export and downloads the file', async () => {
+      const fakeDate = new Date(exportDataFixtures.fakeDateString);
+      vi.useFakeTimers();
+      vi.setSystemTime(fakeDate);
+
       const exportedBlob = new Blob(['{}'], { type: 'application/json' });
       accountDataAccess.exportUserData.mockResolvedValue(exportedBlob);
 
@@ -90,7 +111,7 @@ describe('DataManagementComponent', () => {
 
       expect(accountDataAccess.exportUserData).toHaveBeenCalledTimes(1);
       expect(createObjectUrlSpy).toHaveBeenCalledWith(exportedBlob);
-      expect(anchorElement.download).toBe('export.json');
+      expect(anchorElement.download).toBe(exportDataFixtures.testFileName);
       expect(anchorClickSpy).toHaveBeenCalledTimes(1);
       expect(revokeObjectUrlSpy).toHaveBeenCalledWith('blob:mock-url');
       expect(exposedComponent.isExporting()).toBe(false);
