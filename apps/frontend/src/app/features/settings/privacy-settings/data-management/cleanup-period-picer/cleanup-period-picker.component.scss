@@ -1,17 +1,16 @@
-/* === ZÖLD ZÓNA (6 és 3 hónap) === */
+/* === GREEN ZONE (6 and 3 months) === */
 .slider-green {
-  /* A #{"..."} megvédi a szóközöket a SCSS fordítótól */
   --primary: var(--slider-green) !important;
   --ring: var(--slider-green) !important;
 }
 
-/* === SÁRGA ZÓNA (1 hónap, 2 hét) === */
+/* === YELLOW ZONE (1 month, 2 weeks) === */
 .slider-yellow {
   --primary: var(--slider-yellow) !important;
   --ring: var(--slider-yellow) !important;
 }
 
-/* === VÖRÖS ZÓNA (1 hét, Összes) === */
+/* === RED ZONE (1 week, All) === */
 .slider-red {
   --primary: var(--destructive) !important;
   --ring: var(--destructive) !important;

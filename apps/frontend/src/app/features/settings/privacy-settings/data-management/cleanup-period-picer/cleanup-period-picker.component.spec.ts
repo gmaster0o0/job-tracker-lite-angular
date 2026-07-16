@@ -17,7 +17,6 @@ describe('CleanupPeriodPickerComponent', () => {
 
     fixture = TestBed.createComponent(CleanupPeriodPickerComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
 
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
@@ -28,7 +27,6 @@ describe('CleanupPeriodPickerComponent', () => {
   /** Helper function: sets the slider signal value directly and runs change detection. */
   function setSliderValue(value: number): void {
     component.filterForm.period().value.set([value]);
-    fixture.detectChanges();
   }
 
   it('should create', () => {
@@ -170,7 +168,6 @@ describe('CleanupPeriodPickerComponent', () => {
       // Write a non-standard value directly into the model to cover
       // the switch-default branch.
       component.filterForm.period().value.set([999]);
-      fixture.detectChanges();
 
       await harness.clickSubmit();
 
