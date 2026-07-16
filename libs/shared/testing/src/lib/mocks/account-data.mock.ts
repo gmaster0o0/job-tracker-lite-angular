@@ -5,58 +5,88 @@ import {
   SupportLang,
 } from '@job-tracker-lite-angular/schemas';
 
+/**
+ * Creates a mock function using whichever test framework is currently running
+ * (Vitest's `vi.fn` or Jest's `jest.fn`), so this mock module never has to
+ * import a specific test framework directly.
+ *
+ * Pass a custom `mockFactory` as the second argument to any of the
+ * `create*Mock` functions below if auto-detection isn't suitable
+ * (e.g. a different framework, or a non-global test runner setup).
+ */
+function defaultMockFactory(): any {
+  const globalScope = globalThis as any;
+
+  if (typeof globalScope.vi?.fn === 'function') {
+    return globalScope.vi.fn();
+  }
+
+  if (typeof globalScope.jest?.fn === 'function') {
+    return globalScope.jest.fn();
+  }
+
+  throw new Error(
+    'No mock function factory could be auto-detected (expected a global `vi` or `jest`). ' +
+      'Pass a mockFactory explicitly, e.g. createAccountDataAccessMock(options, vi.fn).',
+  );
+}
+
 export type AccountDataAccessMockOptions = {
   deletionStatus?: any;
   requestDeletion?: () => Promise<void>;
   recoverDeletion?: () => Promise<void>;
-  exportUserData?: () => Promise<any>;
+  exportUserData?: () => Promise<Blob>;
   deleteJobApplications?: () => Promise<void>;
   confirmAccountDeletion?: (
     token: string,
     language: SupportLang,
   ) => Promise<string>;
 };
-/**
- * Creates a mock implementation of the AccountDataAccess interface for testing purposes.
- * @param options - Optional configuration for the mock behavior.
- * @returns An object containing mock implementations of the AccountDataAccess methods.
- */
+
 export function createAccountDataAccessMock(
   options: AccountDataAccessMockOptions = {},
+  mockFactory: () => any = defaultMockFactory,
 ) {
   const deletionStatus =
     options.deletionStatus ?? accountDeletionStatusFixtures.pending;
 
-  async function getDeletionStatus() {
-    return deletionStatus;
-  }
+  const getDeletionStatus = mockFactory();
+  const requestAccountDeletion = mockFactory();
+  const recoverAccountDeletion = mockFactory();
+  const exportUserData = mockFactory();
+  const deleteJobApplications = mockFactory();
+  const confirmAccountDeletion = mockFactory();
 
-  async function requestAccountDeletion(_language?: string) {
+  getDeletionStatus.mockImplementation(async () => deletionStatus);
+
+  requestAccountDeletion.mockImplementation(async (_language?: string) => {
     if (options.requestDeletion) return options.requestDeletion();
     return undefined;
-  }
+  });
 
-  async function recoverAccountDeletion() {
+  recoverAccountDeletion.mockImplementation(async () => {
     if (options.recoverDeletion) return options.recoverDeletion();
     return undefined;
-  }
+  });
 
-  async function exportUserData() {
+  exportUserData.mockImplementation(async () => {
     if (options.exportUserData) return options.exportUserData();
     return new Blob();
-  }
+  });
 
-  async function deleteJobApplications(_email?: string) {
+  deleteJobApplications.mockImplementation(async (_email?: string) => {
     if (options.deleteJobApplications) return options.deleteJobApplications();
     return undefined;
-  }
+  });
 
-  async function confirmAccountDeletion(token: string, language: SupportLang) {
-    if (options.confirmAccountDeletion) {
-      return options.confirmAccountDeletion(token, language);
-    }
-    return '';
-  }
+  confirmAccountDeletion.mockImplementation(
+    async (token: string, language: SupportLang) => {
+      if (options.confirmAccountDeletion) {
+        return options.confirmAccountDeletion(token, language);
+      }
+      return '';
+    },
+  );
 
   return {
     getDeletionStatus,
@@ -67,9 +97,12 @@ export function createAccountDataAccessMock(
     deleteJobApplications,
   };
 }
+
 /**
  * Creates a mock implementation of the AccountService interface for testing purposes.
- * @param options  - Optional configuration for the mock behavior.
+ * @param options - Optional configuration for the mock behavior.
+ * @param mockFactory - Factory that creates a mock function (e.g. vi.fn, jest.fn).
+ *   Defaults to auto-detecting the running test framework.
  * @returns An object containing mock implementations of the AccountService methods.
  */
 export type AccountServiceMockOptions = {
@@ -91,62 +124,86 @@ export type AccountServiceMockOptions = {
 
 export function createAccountServiceMock(
   options: AccountServiceMockOptions = {},
+  mockFactory: () => any = defaultMockFactory,
 ) {
-  async function getAccountSettings(_userId: string) {
+  const getAccountSettings = mockFactory();
+  const requestEmailChange = mockFactory();
+  const verifyEmailChange = mockFactory();
+  const restoreEmail = mockFactory();
+  const requestAccountDeletion = mockFactory();
+  const confirmAccountDeletion = mockFactory();
+  const getAccountDeletionStatus = mockFactory();
+  const recoverAccountDeletion = mockFactory();
+  const exportUserData = mockFactory();
+  const deleteJobApplications = mockFactory();
+  const executeScheduledDeletion = mockFactory();
+
+  getAccountSettings.mockImplementation(async (_userId: string) => {
     return options.accountSettings;
-  }
+  });
 
-  async function requestEmailChange(_userId: string, _newEmail: string) {
-    if (options.requestEmailChange) return options.requestEmailChange();
-    return undefined;
-  }
+  requestEmailChange.mockImplementation(
+    async (_userId: string, _newEmail: string) => {
+      if (options.requestEmailChange) return options.requestEmailChange();
+      return undefined;
+    },
+  );
 
-  async function verifyEmailChange(_userId: string, _token: string) {
-    if (options.verifyEmailChange) return options.verifyEmailChange();
-    return undefined;
-  }
+  verifyEmailChange.mockImplementation(
+    async (_userId: string, _token: string) => {
+      if (options.verifyEmailChange) return options.verifyEmailChange();
+      return undefined;
+    },
+  );
 
-  async function restoreEmail(_userId: string) {
+  restoreEmail.mockImplementation(async (_userId: string) => {
     if (options.restoreEmail) return options.restoreEmail();
     return undefined;
-  }
+  });
 
-  async function requestAccountDeletion(_userId: string, _language: string) {
-    if (options.requestAccountDeletion) return options.requestAccountDeletion();
-    return undefined;
-  }
+  requestAccountDeletion.mockImplementation(
+    async (_userId: string, _language: string) => {
+      if (options.requestAccountDeletion)
+        return options.requestAccountDeletion();
+      return undefined;
+    },
+  );
 
-  async function confirmAccountDeletion(token: string, language: SupportLang) {
-    if (options.confirmAccountDeletion) {
-      return options.confirmAccountDeletion(token, language);
-    }
-    return '';
-  }
+  confirmAccountDeletion.mockImplementation(
+    async (token: string, language: SupportLang) => {
+      if (options.confirmAccountDeletion) {
+        return options.confirmAccountDeletion(token, language);
+      }
+      return '';
+    },
+  );
 
-  async function getAccountDeletionStatus(_userId: string) {
+  getAccountDeletionStatus.mockImplementation(async (_userId: string) => {
     return options.deletionStatus;
-  }
+  });
 
-  async function recoverAccountDeletion(_userId: string) {
+  recoverAccountDeletion.mockImplementation(async (_userId: string) => {
     if (options.recoverAccountDeletion) return options.recoverAccountDeletion();
     return undefined;
-  }
+  });
 
-  async function exportUserData(_userId: string) {
+  exportUserData.mockImplementation(async (_userId: string) => {
     if (options.exportUserData) return options.exportUserData();
     return {};
-  }
+  });
 
-  async function deleteJobApplications(_userId: string, _email: string) {
-    if (options.deleteJobApplications) return options.deleteJobApplications();
-    return undefined;
-  }
+  deleteJobApplications.mockImplementation(
+    async (_userId: string, _email: string) => {
+      if (options.deleteJobApplications) return options.deleteJobApplications();
+      return undefined;
+    },
+  );
 
-  async function executeScheduledDeletion() {
+  executeScheduledDeletion.mockImplementation(async () => {
     if (options.executeScheduledDeletion)
       return options.executeScheduledDeletion();
     return undefined;
-  }
+  });
 
   return {
     getAccountSettings,

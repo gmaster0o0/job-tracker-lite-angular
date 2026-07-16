@@ -34,10 +34,13 @@ describe('AccountController', () => {
 
   beforeEach(async () => {
     accountDataAccessMock = jestify(
-      createAccountServiceMock({
-        exportUserData: () => Promise.resolve(new Blob()),
-        deleteJobApplications: () => Promise.resolve(undefined),
-      }),
+      createAccountServiceMock(
+        {
+          exportUserData: () => Promise.resolve(new Blob()),
+          deleteJobApplications: () => Promise.resolve(undefined),
+        },
+        jest.fn,
+      ),
     );
 
     authDataAccessMock = jestify(

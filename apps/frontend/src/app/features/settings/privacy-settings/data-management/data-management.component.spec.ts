@@ -11,7 +11,11 @@ import {
 } from '@job-tracker-lite-angular/frontend-shared';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { DataManagementComponent } from './data-management.component';
-import { exportDataFixtures } from '@job-tracker-lite-angular/testing';
+import {
+  createAccountDataAccessMock,
+  createAuthSessionServiceMock,
+  exportDataFixtures,
+} from '@job-tracker-lite-angular/testing';
 
 type ExposedDataManagementComponent = {
   isExporting: () => boolean;
@@ -23,36 +27,23 @@ describe('DataManagementComponent', () => {
   let fixture: ComponentFixture<DataManagementComponent>;
   let component: DataManagementComponent;
   let exposedComponent: ExposedDataManagementComponent;
-  let accountDataAccess: {
-    exportUserData: ReturnType<typeof vi.fn>;
-    deleteJobApplications: ReturnType<typeof vi.fn>;
-  };
-  let authSessionService: {
-    session: ReturnType<typeof vi.fn>;
-  };
+  let accountDataAccess: ReturnType<typeof createAccountDataAccessMock>;
   let dialogService: { open: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    // TODO : need to move this mock to the shared testing module, so we don't have to repeat it in every test
-    accountDataAccess = {
-      exportUserData: vi.fn(),
-      deleteJobApplications: vi.fn().mockResolvedValue(undefined),
-    };
-    authSessionService = {
-      session: vi.fn().mockReturnValue({
-        user: {
-          name: 'Teszt Elek',
-          email: 'teszt.elek@example.com',
-        },
-      }),
-    };
+    accountDataAccess = createAccountDataAccessMock({}, vi.fn);
+    const authSessionMock = createAuthSessionServiceMock(vi.fn);
     dialogService = { open: vi.fn() };
 
+    accountDataAccess.exportUserData = vi.fn(accountDataAccess.exportUserData);
+    accountDataAccess.deleteJobApplications = vi.fn(
+      accountDataAccess.deleteJobApplications,
+    );
     await TestBed.configureTestingModule({
       imports: [DataManagementComponent, getTranslocoModule()],
       providers: [
         { provide: AccountDataAccessService, useValue: accountDataAccess },
-        { provide: AuthSessionService, useValue: authSessionService },
+        { provide: AuthSessionService, useValue: authSessionMock },
         { provide: HlmDialogService, useValue: dialogService },
       ],
     }).compileComponents();
@@ -60,7 +51,6 @@ describe('DataManagementComponent', () => {
     fixture = TestBed.createComponent(DataManagementComponent);
     component = fixture.componentInstance;
     exposedComponent = component as unknown as ExposedDataManagementComponent;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
