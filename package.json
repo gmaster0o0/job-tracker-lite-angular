@@ -1,6 +1,6 @@
 {
   "name": "@job-tracker-lite-angular/source",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "license": "MIT",
   "scripts": {
     "app": "npx nx run-many --target=serve --projects=api,frontend --parallel=2",
