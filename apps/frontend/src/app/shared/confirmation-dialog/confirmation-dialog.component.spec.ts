@@ -94,10 +94,10 @@ describe('ConfirmationDialogComponent', () => {
   describe('context overrides default texts', () => {
     it('displays the resolved strings from the context instead of the defaults', async () => {
       const context: ConfirmationDialogContext = {
-        title: 'Törlés megerősítése',
-        description: 'Írd be az emailedet a törléshez.',
-        confirmLabel: 'Törlöm',
-        cancelLabel: 'Mégse',
+        title: 'Delete Confirmation',
+        description: 'Enter your email to confirm deletion.',
+        confirmLabel: 'Delete',
+        cancelLabel: 'Cancel',
       };
 
       await configureTestEnvironment(context);
@@ -109,9 +109,9 @@ describe('ConfirmationDialogComponent', () => {
         ConfirmationDialogHarness,
       );
 
-      expect(await harness.getTitleText()).toBe('Törlés megerősítése');
+      expect(await harness.getTitleText()).toBe('Delete Confirmation');
       expect(await harness.getDescriptionText()).toBe(
-        'Írd be az emailedet a törléshez.',
+        'Enter your email to confirm deletion.',
       );
     });
   });
@@ -127,7 +127,7 @@ describe('ConfirmationDialogComponent', () => {
 
     beforeEach(() => {
       context = {
-        title: 'Job jelentkezések törlése',
+        title: 'Delete Job Applications',
         field: {
           initialValue: '',
           validationSchema: matchEmailSchema,
