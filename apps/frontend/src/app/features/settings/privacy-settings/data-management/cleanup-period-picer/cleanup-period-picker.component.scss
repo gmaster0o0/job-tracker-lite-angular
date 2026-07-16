@@ -1,0 +1,18 @@
+/* === GREEN ZONE (6 and 3 months) === */
+.slider-green {
+  --primary: var(--slider-green) !important;
+  --ring: var(--slider-green) !important;
+}
+
+/* === YELLOW ZONE (1 month, 2 weeks) === */
+.slider-yellow {
+  --primary: var(--slider-yellow) !important;
+  --ring: var(--slider-yellow) !important;
+}
+
+/* === RED ZONE (1 week, All) === */
+.slider-red {
+  --primary: var(--destructive) !important;
+  --ring: var(--destructive) !important;
+  --background: var(--destructive) !important;
+}

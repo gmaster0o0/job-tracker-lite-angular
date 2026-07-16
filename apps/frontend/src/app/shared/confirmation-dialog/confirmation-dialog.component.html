@@ -1,0 +1,80 @@
+<hlm-alert-dialog>
+  <hlm-alert-dialog-header>
+    <h3 hlmAlertDialogTitle>{{ texts().title }}</h3>
+    <p hlmAlertDialogDescription>
+      <ng-content select="[dialogDescription]"></ng-content>
+      {{ texts().description }}
+    </p>
+  </hlm-alert-dialog-header>
+
+  <form
+    [formRoot]="confirmationForm"
+    id="confirmationForm"
+    class="py-4 space-y-4"
+  >
+    @if (fieldConfig) {
+      <hlm-field-group>
+        <hlm-field>
+          <label hlmLabel for="confirmationValue">{{
+            texts().fieldLabel
+          }}</label>
+          <input
+            hlmInput
+            id="confirmationValue"
+            type="text"
+            [formField]="confirmationForm.confirmationValue"
+            placeholder="{{ texts().fieldPlaceholder }}"
+            class="w-full"
+          />
+          @if (
+            (confirmationForm.confirmationValue().touched() ||
+              confirmationForm.confirmationValue().dirty()) &&
+            confirmationForm.confirmationValue().invalid()
+          ) {
+            @if (
+              confirmationForm.confirmationValue().errors()
+                | zodTransformFirst: errorTranslationPrefix;
+              as token
+            ) {
+              <hlm-field-error>{{ token.key | transloco }}</hlm-field-error>
+            }
+          } @else {
+            @if (submitError()) {
+              <p hlmDialogDescription class="text-destructive">
+                {{
+                  errorTranslationPrefix + '.confirmationValue.' + submitError()
+                    | transloco
+                }}
+              </p>
+            } @else if (texts().fieldHint) {
+              <p hlmDialogDescription>{{ texts().fieldHint }}</p>
+            }
+          }
+        </hlm-field>
+      </hlm-field-group>
+    }
+  </form>
+
+  <hlm-alert-dialog-footer>
+    <app-cancel-button
+      (clicked)="onCancel()"
+      [cancelLabel]="texts().cancelLabel"
+    />
+    <button
+      hlmBtn
+      variant="destructive"
+      type="submit"
+      form="confirmationForm"
+      [disabled]="
+        effectiveIsBusy() || confirmationForm().invalid() || submitError()
+      "
+    >
+      @if (effectiveIsBusy()) {
+        {{ texts().busyLabel }}
+      } @else {
+        <ng-icon hlm name="lucideTrash" size="sm" />
+        {{ texts().confirmLabel }}
+      }
+    </button>
+  </hlm-alert-dialog-footer>
+</hlm-alert-dialog>

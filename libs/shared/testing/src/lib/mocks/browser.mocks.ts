@@ -61,3 +61,17 @@ export function createDocumentElementMock(
     },
   } as unknown as HTMLElement;
 }
+
+export function createURLMocks() {
+  function createObjectURL(_blob?: Blob | null) {
+    // return a deterministic string for tests
+    return 'blob:mock-url';
+  }
+
+  function revokeObjectURL(_url?: string) {
+    // noop for tests
+    return undefined;
+  }
+
+  return { createObjectURL, revokeObjectURL };
+}

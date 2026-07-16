@@ -1,0 +1,19 @@
+{
+  "threshold": 5,
+  "reporters": ["html", "console"],
+  "ignore": [
+    "**/node_modules/**",
+    "**/.nx/**",
+    "**/.angular/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/*.config.*",
+    "**/*.spec.ts",
+    "**/eslint.config.mjs",
+    "**/tsconfig*.json",
+    "**/project.json",
+    "**/shared-ui/**"
+  ],
+  "output": "jscpd-report"
+}

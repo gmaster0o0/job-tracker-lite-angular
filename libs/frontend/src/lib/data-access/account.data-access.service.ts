@@ -4,6 +4,7 @@ import {
   AccountDeletionStatusDto,
   DeleteAccountDto,
   accountDeletionStatusSchema,
+  DeleteJobApplicationsDto,
 } from '@job-tracker-lite-angular/schemas';
 import { firstValueFrom } from 'rxjs';
 
@@ -41,6 +42,24 @@ export class AccountDataAccessService {
           withCredentials: true,
         },
       ),
+    );
+  }
+
+  async exportUserData(): Promise<Blob> {
+    return await firstValueFrom(
+      this.http.get('/api/account/export-data', {
+        withCredentials: true,
+        observe: 'response',
+        responseType: 'blob',
+      }),
+    ).then((response) => response.body as Blob);
+  }
+
+  async deleteJobApplications(dto: DeleteJobApplicationsDto): Promise<void> {
+    await firstValueFrom(
+      this.http.post<void>('/api/account/delete/jobs', dto, {
+        withCredentials: true,
+      }),
     );
   }
 }

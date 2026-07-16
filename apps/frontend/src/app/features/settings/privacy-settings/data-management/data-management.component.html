@@ -1,3 +1,64 @@
-<p hlmP>
-  {{ 'common.comingSoon' | transloco }}
-</p>
+<div class="space-y-6">
+  <div
+    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+  >
+    <div class="space-y-1">
+      <h3 class="text-base font-semibold leading-none tracking-tight">
+        {{ 'privacySettings.datamanagement.export.title' | transloco }}
+      </h3>
+      <p class="text-sm text-muted-foreground">
+        {{ 'privacySettings.datamanagement.export.description' | transloco }}
+      </p>
+    </div>
+
+    <button
+      hlmBtn
+      variant="outline"
+      (click)="exportUserData()"
+      [disabled]="isExporting()"
+      class="w-full sm:w-auto shrink-0"
+    >
+      <ng-icon hlm name="lucideDownload" size="sm" class="mr-2" />
+      {{ exportLabel() }}
+    </button>
+  </div>
+
+  <hlm-separator />
+
+  <div class="space-y-4">
+    <div class="space-y-1">
+      <h3 class="text-base font-semibold leading-none tracking-tight">
+        {{ 'privacySettings.datamanagement.deletejobs.title' | transloco }}
+      </h3>
+      <p class="text-sm text-muted-foreground">
+        {{
+          'privacySettings.datamanagement.deletejobs.description' | transloco
+        }}
+      </p>
+    </div>
+
+    <div class="pt-2 max-w-3xl">
+      <app-cleanup-period-picker
+        (cleanupRequested)="onCleanupRequested($event)"
+      ></app-cleanup-period-picker>
+    </div>
+  </div>
+
+  <hlm-separator />
+  <div class="space-y-4">
+    <div class="space-y-1">
+      <h3 class="text-base font-semibold leading-none tracking-tight">
+        {{ 'privacySettings.datamanagement.autoCleanup.title' | transloco }}
+      </h3>
+      <p class="text-sm text-muted-foreground">
+        {{
+          'privacySettings.datamanagement.autoCleanup.description' | transloco
+        }}
+      </p>
+      <hlm-switch class="mr-2" disabled="true" />
+    </div>
+    <p>
+      {{ 'common.comingSoon' | transloco }}
+    </p>
+  </div>
+</div>

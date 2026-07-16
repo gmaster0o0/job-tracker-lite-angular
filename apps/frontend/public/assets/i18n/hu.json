@@ -265,6 +265,61 @@
         "internal_server_error": "Belső szerverhiba történt. Próbáld újra később."
       }
     },
+    "datamanagement": {
+      "export": {
+        "title": "Az adatok exportálása",
+        "description": "Töltse le az összes személyes adatait szabványos formátumban.",
+        "label": "Adatok exportálása"
+      },
+      "deletejobs": {
+        "title": "Tárolt jelentkezések törlése",
+        "description": "A csúszka mozgatásával beállíthatod, mennyi adatot töröljön a rendszer."
+      },
+      "autoCleanup": {
+        "title": "Adatok automatikus törlése",
+        "description": "Engedélyezi 1 évnél régebbi adatok automatikus törlését a rendszerben."
+      },
+      "cleanupPeriod": {
+        "submit": "Adatok eltávolítása",
+        "explanation": {
+          "1year": "A 1 évnél régebbi jelentkezéseid, valamint a hozzájuk tartozó jegyzetek és névjegyek törlődnek.",
+          "6months": "A 6 hónapnál régebbi jelentkezéseid, valamint a hozzájuk tartozó jegyzetek és névjegyek törlődnek.",
+          "3months": "Az 3 hónapnál régebbi adatok törlődnek. A legutóbbi 3 hónap aktivitásod biztonságban megmarad.",
+          "1month": "Figyelem! Csak az elmúlt 1 hónapban létrehozott adataidat tartjuk meg, minden ennél régebbit törlünk.",
+          "2weeks": "Szigorú tisztítás: kizárólag a legfrissebb, 2 hétnél nem régebbi adataid maradnak meg.",
+          "all": "RENDKÍVÜL VESZÉLYES! Az összes felvitt jelentkezésed, jegyzeted és kapcsolatod azonnal kitöröljük."
+        },
+        "tick": {
+          "1year": "1 év",
+          "6months": "6 hónap",
+          "3months": "3 hónap",
+          "1month": "1 hónap",
+          "2weeks": "2 hét",
+          "all": "Összes"
+        }
+      },
+      "delete": {
+        "label": "Állás jelentkezések törlése"
+      },
+      "deleteJobs": {
+        "dialog": {
+          "title": "Jelentkezések törlésének megerősítése",
+
+          "description": "{mode, select, all {Az ÖSSZES jelentkezésedet véglegesen törölni fogjuk.} other {Azokat a jelentkezéseket fogod véglegesen törölni, amelyek {date} előttiek.}} A művelet végleges, és nem vonható vissza.",
+
+          "confirm": "Állás jelentkezések törlése",
+          "cancel": "Mégse",
+          "emailLabel": "Email",
+          "emailPlaceholder": "example@email.com",
+          "emailHint": "A megerősítéshez írja be az email címét.",
+          "confirmationValue": {
+            "required": "Az email cím megadása kötelező.",
+            "invalid_format": "Érvénytelen email formátum.",
+            "email_mismatch": "A megadott email cím nem egyezik a regisztrált email címmel."
+          }
+        }
+      }
+    },
     "cookieConsent": {
       "title": "Sütibeállítások",
       "description": "Sütiket használunk a megjelenítési beállítások (például sötét/világos mód és nyelv) mentéséhez. Ezek a sütik elengedhetetlenek ahhoz, hogy az alkalmazás megjegyezze a választásait.",
@@ -527,7 +582,7 @@
       "registerLink": "Regisztrálj",
       "title": "Bejelentkezés",
       "subtitle": "Jelentkezz be a folytatáshoz.",
-      "subtitleAfterPasswordChange": "auth.login.subtitleAfterPasswordChange",
+      "subtitleAfterPasswordChange": "Az új jelszavad beállítása megtörtént. Most már bejelentkezhetsz az új jelszavaddal.",
       "error": {
         "title": "Bejelentkezés sikertelen",
         "unknown": "Most nem sikerült bejelentkezni. Próbálja újra.",
@@ -654,6 +709,9 @@
         "invalid_format": "Érvénytelen telefonszám formátum",
         "required_one_of": "Adjon meg e-mailt vagy telefonszámot.",
         "example": "Pl. +36 30 123 4567"
+      },
+      "phone": {
+        "label": "Telefon"
       }
     },
     "create": {
@@ -707,6 +765,17 @@
     },
     "settings": {
       "description": "Konfigurálja preferenciáit és fiókbeállításait."
+    }
+  },
+  "shared": {
+    "confirmationDialog": {
+      "title": "shared.confirmationDialog.title",
+      "description": "shared.confirmationDialog.description",
+      "confirm": "shared.confirmationDialog.confirm",
+      "cancel": "shared.confirmationDialog.cancel",
+      "busy": "shared.confirmationDialog.busy",
+      "fieldLabel": "shared.confirmationDialog.fieldLabel",
+      "fieldPlaceholder": "shared.confirmationDialog.fieldPlaceholder"
     }
   },
   "navigation": {

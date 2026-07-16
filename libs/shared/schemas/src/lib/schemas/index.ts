@@ -6,3 +6,4 @@ export * from './profile.schema';
 export * from './health.schema';
 export * from './auth.schema';
 export * from './account.schema';
+export * from './privacy.schema';

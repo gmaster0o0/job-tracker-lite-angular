@@ -26,7 +26,10 @@ import { EmailService } from '../email/email.service';
         );
         return {
           auth: authConfigFactory.create(),
-          disableBodyParser: true,
+          bodyParser: {
+            json: { enabled: false },
+            urlencoded: { enabled: false },
+          },
           disableGlobalAuthGuard: true,
         };
       },

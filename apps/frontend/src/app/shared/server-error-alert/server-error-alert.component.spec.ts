@@ -71,6 +71,7 @@ describe('ServerErrorAlertComponent', () => {
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.cssClass = 'custom-class';
     fixture.componentInstance.errorMessage.set('ERROR');
+    //dont remove this. This is needed to trigger change detection and apply the css class to the component.
     fixture.detectChanges();
 
     const element = fixture.nativeElement.querySelector(
