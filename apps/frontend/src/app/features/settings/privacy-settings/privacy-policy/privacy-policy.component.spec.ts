@@ -24,7 +24,6 @@ describe('PrivacyPolicyComponent', () => {
       fixture,
       PrivacyPolicyHarness,
     );
-    fixture.detectChanges();
   });
 
   it('should navigate to privacy-policy when the open button is clicked', async () => {
@@ -34,16 +33,14 @@ describe('PrivacyPolicyComponent', () => {
 
   it('should open the dialog when the open input is true', async () => {
     fixture.componentRef.setInput('open', true);
-    fixture.detectChanges();
+
     expect(await harness.isDialogVisible()).toBe(true);
   });
 
   it('should close the dialog and emit closed when open input is set to false', async () => {
     fixture.componentRef.setInput('open', true);
-    fixture.detectChanges();
 
     fixture.componentRef.setInput('open', false);
-    fixture.detectChanges();
 
     expect(await harness.isDialogVisible()).toBe(false);
   });

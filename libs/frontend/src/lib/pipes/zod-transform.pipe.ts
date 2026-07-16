@@ -5,7 +5,7 @@ import {
 } from '../utils/error-transformer';
 
 @Pipe({
-  name: 'zodTransform1',
+  name: 'zodTransformFirst',
   standalone: true,
 })
 /**

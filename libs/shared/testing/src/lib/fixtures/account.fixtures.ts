@@ -75,7 +75,7 @@ export const accountDeletionStatusFixtures: {
     scheduledDeletionAt: new Date('2099-01-08T00:00:00.000Z'),
     gracePeriodDays: 7,
   },
-};
+} satisfies Record<string, AccountDeletionStatusDto>;
 
 export const accountDeletionStatusPrismaFixtures = {
   active: {
@@ -134,4 +134,13 @@ export const accountRedirectFixtures = {
     'http://localhost:4200/auth/login?emailRestore=restored',
   accountDeletionConfirmed:
     'http://localhost:4200/auth/login?accountDeletion=confirmed',
+};
+
+export const jobApplicationDeletionFixtures = {
+  now: new Date('2026-07-15T19:22:16.304Z'),
+  get cutoffDate(): Date {
+    const date = new Date(this.now);
+    date.setMonth(date.getMonth() - 1);
+    return date;
+  },
 };

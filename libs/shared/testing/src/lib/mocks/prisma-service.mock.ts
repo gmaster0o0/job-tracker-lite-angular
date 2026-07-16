@@ -15,6 +15,7 @@ export function createPrismaServiceMock(mockFactory: () => any) {
       delete: mockFactory(),
       findFirstOrThrow: mockFactory(),
       findUniqueOrThrow: mockFactory(),
+      deleteMany: mockFactory(),
     },
     contact: {
       findMany: mockFactory(),
@@ -22,12 +23,14 @@ export function createPrismaServiceMock(mockFactory: () => any) {
       findFirst: mockFactory(),
       update: mockFactory(),
       delete: mockFactory(),
+      deleteMany: mockFactory(),
     },
     note: {
       findMany: mockFactory(),
       create: mockFactory(),
       update: mockFactory(),
       delete: mockFactory(),
+      deleteMany: mockFactory(),
     },
     user: {
       findUnique: mockFactory(),

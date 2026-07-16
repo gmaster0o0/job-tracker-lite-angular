@@ -7,32 +7,55 @@ import {
   accountSettingsFixtures,
   authSessionFixtures,
   changeEmailRequestFixtures,
+  createAccountServiceMock,
+  createAuthDataAccessMock,
   deleteAccountRequestFixtures,
+  jobApplicationDeletionFixtures,
 } from '@job-tracker-lite-angular/testing';
+
+function jestify<T extends Record<string, (...args: any[]) => any>>(
+  mock: T,
+): { [K in keyof T]: jest.Mock<ReturnType<T[K]>, Parameters<T[K]>> } {
+  const jestMock: any = {};
+  for (const key of Object.keys(mock) as (keyof T)[]) {
+    jestMock[key] = jest.fn(mock[key]);
+  }
+  return jestMock;
+}
 
 describe('AccountController', () => {
   let controller: AccountController;
-  let serviceMock: {
-    getAccountSettings: jest.Mock;
-    requestEmailChange: jest.Mock;
-    verifyEmailChange: jest.Mock;
-    restoreEmail: jest.Mock;
-    requestAccountDeletion: jest.Mock;
-    confirmAccountDeletion: jest.Mock;
-    getAccountDeletionStatus: jest.Mock;
-    recoverAccountDeletion: jest.Mock;
-  };
+  let accountDataAccessMock: ReturnType<
+    typeof jestify<ReturnType<typeof createAccountServiceMock>>
+  >;
+  let authDataAccessMock: ReturnType<
+    typeof jestify<ReturnType<typeof createAuthDataAccessMock>>
+  >;
 
   beforeEach(async () => {
-    serviceMock = {
-      getAccountSettings: jest.fn(),
-      requestEmailChange: jest.fn(),
-      verifyEmailChange: jest.fn(),
-      restoreEmail: jest.fn(),
-      requestAccountDeletion: jest.fn(),
-      confirmAccountDeletion: jest.fn(),
-      getAccountDeletionStatus: jest.fn(),
-      recoverAccountDeletion: jest.fn(),
+    accountDataAccessMock = jestify(
+      createAccountServiceMock(
+        {
+          exportUserData: () => Promise.resolve(new Blob()),
+          deleteJobApplications: () => Promise.resolve(undefined),
+        },
+        jest.fn,
+      ),
+    );
+
+    authDataAccessMock = jestify(
+      createAuthDataAccessMock({
+        getAccountSettings: () =>
+          Promise.resolve(accountSettingsFixtures.default),
+        requestEmailChange: () => Promise.resolve(undefined),
+        verifyEmailChange: () =>
+          Promise.resolve(accountRedirectFixtures.emailChangeVerified),
+      }),
+    );
+
+    const accountServiceMock = {
+      ...accountDataAccessMock,
+      ...authDataAccessMock,
     };
 
     const moduleRef = await Test.createTestingModule({
@@ -40,7 +63,7 @@ describe('AccountController', () => {
       providers: [
         {
           provide: AccountService,
-          useValue: serviceMock,
+          useValue: accountServiceMock,
         },
       ],
     }).compile();
@@ -49,7 +72,7 @@ describe('AccountController', () => {
   });
 
   it('returns account settings for authenticated user', async () => {
-    serviceMock.getAccountSettings.mockResolvedValue(
+    authDataAccessMock.getAccountSettings.mockResolvedValue(
       accountSettingsFixtures.default,
     );
 
@@ -59,7 +82,7 @@ describe('AccountController', () => {
   });
 
   it('delegates email change request to service', async () => {
-    serviceMock.requestEmailChange.mockResolvedValue(undefined);
+    authDataAccessMock.requestEmailChange.mockResolvedValue(undefined);
 
     await expect(
       controller.changeEmail(
@@ -68,7 +91,7 @@ describe('AccountController', () => {
       ),
     ).resolves.toEqual({ status: true });
 
-    expect(serviceMock.requestEmailChange).toHaveBeenCalledWith(
+    expect(authDataAccessMock.requestEmailChange).toHaveBeenCalledWith(
       authSessionFixtures.authenticated?.user.id,
       changeEmailRequestFixtures.valid.newEmail,
       changeEmailRequestFixtures.valid.language,
@@ -76,7 +99,7 @@ describe('AccountController', () => {
   });
 
   it('redirects verify endpoint to service-provided URL', async () => {
-    serviceMock.verifyEmailChange.mockResolvedValue(
+    authDataAccessMock.verifyEmailChange.mockResolvedValue(
       accountRedirectFixtures.emailChangeVerified,
     );
     const response = {
@@ -94,7 +117,7 @@ describe('AccountController', () => {
   });
 
   it('redirects restore endpoint to service-provided URL', async () => {
-    serviceMock.restoreEmail.mockResolvedValue(
+    authDataAccessMock.restoreEmail.mockResolvedValue(
       accountRedirectFixtures.emailRestoreRestored,
     );
     const response = { redirect: jest.fn() } as any;
@@ -107,7 +130,7 @@ describe('AccountController', () => {
   });
 
   it('requests account deletion only for the current session user', async () => {
-    serviceMock.requestAccountDeletion.mockResolvedValue(undefined);
+    accountDataAccessMock.requestAccountDeletion.mockResolvedValue(undefined);
 
     await expect(
       controller.requestAccountDeletion(
@@ -116,14 +139,14 @@ describe('AccountController', () => {
       ),
     ).resolves.toEqual({ status: true });
 
-    expect(serviceMock.requestAccountDeletion).toHaveBeenCalledWith(
+    expect(accountDataAccessMock.requestAccountDeletion).toHaveBeenCalledWith(
       authSessionFixtures.authenticated?.user.id,
       deleteAccountRequestFixtures.english.language,
     );
   });
 
   it('redirects confirm delete endpoint to service-provided URL', async () => {
-    serviceMock.confirmAccountDeletion.mockResolvedValue(
+    accountDataAccessMock.confirmAccountDeletion.mockResolvedValue(
       accountRedirectFixtures.accountDeletionConfirmed,
     );
     const response = {
@@ -141,7 +164,7 @@ describe('AccountController', () => {
   });
 
   it('returns deletion status for the current session user', async () => {
-    serviceMock.getAccountDeletionStatus.mockResolvedValue(
+    accountDataAccessMock.getAccountDeletionStatus.mockResolvedValue(
       accountDeletionStatusFixtures.pending,
     );
 
@@ -152,20 +175,57 @@ describe('AccountController', () => {
       gracePeriodDays: 7,
     });
 
-    expect(serviceMock.getAccountDeletionStatus).toHaveBeenCalledWith(
+    expect(accountDataAccessMock.getAccountDeletionStatus).toHaveBeenCalledWith(
       authSessionFixtures.authenticated?.user.id,
     );
   });
 
   it('recovers deletion only for the current session user', async () => {
-    serviceMock.recoverAccountDeletion.mockResolvedValue(undefined);
+    accountDataAccessMock.recoverAccountDeletion.mockResolvedValue(undefined);
 
     await expect(
       controller.recoverDeletion(authSessionFixtures.authenticated as never),
     ).resolves.toBeUndefined();
 
-    expect(serviceMock.recoverAccountDeletion).toHaveBeenCalledWith(
+    expect(accountDataAccessMock.recoverAccountDeletion).toHaveBeenCalledWith(
       authSessionFixtures.authenticated?.user.id,
     );
+  });
+
+  describe('exportData', () => {
+    it('returns export data for the current session user', async () => {
+      const mockExportData = { id: 'user-id', profile: {}, jobs: [] };
+      accountDataAccessMock.exportUserData.mockResolvedValue(mockExportData);
+
+      const result = await controller.exportData(
+        authSessionFixtures.authenticated as never,
+      );
+
+      expect(result).toEqual(mockExportData);
+      expect(accountDataAccessMock.exportUserData).toHaveBeenCalledWith(
+        authSessionFixtures.authenticated?.user.id,
+      );
+    });
+  });
+
+  describe('deleteJobs', () => {
+    it('delegates job deletion to service', async () => {
+      accountDataAccessMock.deleteJobApplications.mockResolvedValue(undefined);
+
+      const body = {
+        email: 'test@example.com',
+        cutoffDate: jobApplicationDeletionFixtures.cutoffDate,
+      };
+      const result = await controller.deleteJobs(
+        authSessionFixtures.authenticated as never,
+        body,
+      );
+
+      expect(result).toEqual({ status: true });
+      expect(accountDataAccessMock.deleteJobApplications).toHaveBeenCalledWith(
+        authSessionFixtures.authenticated?.user.id,
+        body,
+      );
+    });
   });
 });

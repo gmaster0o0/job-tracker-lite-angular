@@ -1,23 +1,25 @@
+import { SupportLang } from '@job-tracker-lite-angular/schemas';
+
 export type EmailServiceMock = {
   sendEmailChangeConfirmationEmail: (
     email: string,
     url: string,
-    locale: 'en' | 'hu',
+    locale: SupportLang,
   ) => Promise<void>;
   sendEmailRestoreEmail: (
     email: string,
     url: string,
-    locale: 'en' | 'hu',
+    locale: SupportLang,
   ) => Promise<void>;
   sendDeleteAccountVerificationEmail: (
     email: string,
     url: string,
-    locale: 'en' | 'hu',
+    locale: SupportLang,
     graceDays?: number,
   ) => Promise<void>;
   sendDeleteAccountNotificationEmail: (
     email: string,
-    locale: 'en' | 'hu',
+    locale: SupportLang,
   ) => Promise<void>;
 };
 

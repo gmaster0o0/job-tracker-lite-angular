@@ -63,7 +63,6 @@ describe('PrivacySettingsComponent (routing integration)', () => {
       '/settings/privacy/privacy-policy',
       PrivacySettingsComponent,
     );
-    harness.detectChanges();
 
     const policyHarness = await TestbedHarnessEnvironment.harnessForFixture(
       harness.fixture,
@@ -78,7 +77,6 @@ describe('PrivacySettingsComponent (routing integration)', () => {
       '/settings/privacy/cookie-policy',
       PrivacySettingsComponent,
     );
-    harness.detectChanges();
 
     const policyHarness = await TestbedHarnessEnvironment.harnessForFixture(
       harness.fixture,
@@ -90,7 +88,6 @@ describe('PrivacySettingsComponent (routing integration)', () => {
 
   it('opens the privacy dialog after clicking the open button from the base route', async () => {
     await harness.navigateByUrl('/settings/privacy', PrivacySettingsComponent);
-    harness.detectChanges();
 
     const policyHarness = await TestbedHarnessEnvironment.harnessForFixture(
       harness.fixture,
@@ -105,15 +102,12 @@ describe('PrivacySettingsComponent (routing integration)', () => {
 
     await navigationEnd;
 
-    harness.detectChanges();
-
     expect(router.url).toBe('/settings/privacy/privacy-policy');
     expect(await policyHarness.isDialogVisible()).toBe(true);
   });
 
   it('opens the cookie dialog after clicking the open button from the base route', async () => {
     await harness.navigateByUrl('/settings/privacy', PrivacySettingsComponent);
-    harness.detectChanges();
 
     const policyHarness = await TestbedHarnessEnvironment.harnessForFixture(
       harness.fixture,
@@ -127,8 +121,6 @@ describe('PrivacySettingsComponent (routing integration)', () => {
     await policyHarness.clickOpenButton();
 
     await navigationEnd;
-
-    harness.detectChanges();
 
     expect(router.url).toBe('/settings/privacy/cookie-policy');
     expect(await policyHarness.isDialogVisible()).toBe(true);
@@ -139,7 +131,6 @@ describe('PrivacySettingsComponent (routing integration)', () => {
       '/settings/privacy/privacy-policy',
       PrivacySettingsComponent,
     );
-    harness.detectChanges();
 
     const policyHarness = await TestbedHarnessEnvironment.harnessForFixture(
       harness.fixture,
@@ -148,7 +139,6 @@ describe('PrivacySettingsComponent (routing integration)', () => {
 
     await policyHarness.close();
     await harness.fixture.whenStable();
-    harness.detectChanges();
 
     expect(router.url).toBe('/settings/privacy');
     expect(await policyHarness.isDialogVisible()).toBe(false);
@@ -159,7 +149,6 @@ describe('PrivacySettingsComponent (routing integration)', () => {
       '/settings/privacy/cookie-policy',
       PrivacySettingsComponent,
     );
-    harness.detectChanges();
 
     const policyHarness = await TestbedHarnessEnvironment.harnessForFixture(
       harness.fixture,
@@ -168,7 +157,6 @@ describe('PrivacySettingsComponent (routing integration)', () => {
 
     await policyHarness.close();
     await harness.fixture.whenStable();
-    harness.detectChanges();
 
     expect(router.url).toBe('/settings/privacy');
     expect(await policyHarness.isDialogVisible()).toBe(false);

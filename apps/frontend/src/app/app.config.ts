@@ -13,6 +13,7 @@ import {
 } from '@angular/common/http';
 import { appRoutes } from './app.routes';
 import { provideTransloco } from '@jsverse/transloco';
+import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
 import {
   AuthSessionService,
   SharedTranslocoLoader,
@@ -45,5 +46,6 @@ export const appConfig: ApplicationConfig = {
       },
       loader: SharedTranslocoLoader,
     }),
+    provideTranslocoMessageformat(),
   ],
 };
