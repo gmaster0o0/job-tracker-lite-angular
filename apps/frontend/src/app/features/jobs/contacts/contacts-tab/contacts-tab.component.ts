@@ -14,7 +14,8 @@ import { ContactListComponent } from '../contact-list/contact-list.component';
 import { CreateContactComponent } from '../create-contact/create-contact.component';
 import { EditContactComponent } from '../edit-contact/edit-contact.component';
 import { DeleteConfirmationDialogComponent } from '@job-tracker-lite-angular/frontend-shared';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, translateSignal } from '@jsverse/transloco';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 @Component({
   standalone: true,
   selector: 'app-contacts-tab',
@@ -32,6 +33,12 @@ export class ContactsTabComponent {
   private readonly jobsDataAccess = inject(JobsDataAccessService);
   private readonly contactsDataAccess = inject(ContactsDataAccessService);
   private readonly dialog = inject(HlmDialogService);
+  private readonly notification = inject(NotificationService);
+
+  private readonly deleteSuccessMessage = translateSignal(
+    'jobs.contacts.delete.success',
+    { defaultValue: 'Contact deleted successfully' },
+  );
 
   readonly jobId = input.required<string>();
 
@@ -73,6 +80,7 @@ export class ContactsTabComponent {
         confirmLabel: 'Delete Contact',
         onConfirm: async () => {
           await this.contactsDataAccess.deleteContact(this.jobId(), contact.id);
+          this.notification.success(this.deleteSuccessMessage());
           this.contactsDataAccess.contactsResource.reload();
         },
       },

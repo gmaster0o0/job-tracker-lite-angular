@@ -15,6 +15,7 @@ import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import {
   AuthDataAccessService,
+  NotificationService,
   ZodNgControlBridgeDirective,
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
@@ -44,6 +45,11 @@ export class ResetPasswordComponent {
   private readonly authDataAccess = inject(AuthDataAccessService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly notification = inject(NotificationService);
+
+  private readonly resetPasswordSuccessMessage = translateSignal(
+    'auth.resetPassword.success',
+  );
 
   protected readonly title = translateSignal('auth.resetPassword.title');
   protected readonly subtitle = translateSignal('auth.resetPassword.subtitle');
@@ -71,6 +77,7 @@ export class ResetPasswordComponent {
           try {
             await this.authDataAccess.resetPassword(data().value());
             this.isSuccess.set(true);
+            this.notification.success(this.resetPasswordSuccessMessage());
             await this.router.navigateByUrl('/auth/login');
           } catch (error) {
             this.submitError.set(

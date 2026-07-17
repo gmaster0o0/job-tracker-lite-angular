@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import { provideIcons } from '@ng-icons/core';
 import {
   lucideAlertCircle,
@@ -27,7 +27,10 @@ import {
   BrnComboboxPopoverTrigger,
 } from '@spartan-ng/brain/combobox';
 import { HlmSpinner } from '@spartan-ng/helm/spinner';
-import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  NotificationService,
+  ProfileDataAccessService,
+} from '@job-tracker-lite-angular/frontend-data-access';
 import { UserProfileDto } from '@job-tracker-lite-angular/schemas';
 import {
   formImports,
@@ -73,6 +76,16 @@ type Suggestion = { value: string; label: string };
 })
 export class SkillManagerComponent {
   private readonly profileData = inject(ProfileDataAccessService);
+  private readonly notification = inject(NotificationService);
+
+  private readonly saveSuccessMessage = translateSignal(
+    'profile.skills.saveSuccess',
+    { defaultValue: 'Skills saved successfully' },
+  );
+  private readonly saveErrorMessage = translateSignal(
+    'profile.skills.saveError',
+    { defaultValue: 'Failed to save skills' },
+  );
 
   profile = input.required<UserProfileDto>();
   disabled = input<boolean>(false);
@@ -236,6 +249,7 @@ export class SkillManagerComponent {
       });
       this.savedSkills.set(nextSkills);
       this.setSaveState('saved');
+      this.notification.success(this.saveSuccessMessage());
 
       setTimeout(() => {
         this.setSaveState('idle');
@@ -243,6 +257,7 @@ export class SkillManagerComponent {
     } catch (error) {
       console.error('Failed to save skills', error);
       this.setSaveState('error');
+      this.notification.error(this.saveErrorMessage());
 
       setTimeout(() => {
         this.setSaveState('idle');

@@ -20,13 +20,14 @@ import {
   EditJobDialogFooterComponent,
   ServerErrorAlertComponent,
 } from '@job-tracker-lite-angular/frontend-shared';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import {
   form,
   validateStandardSchema,
   FormRoot,
   FormField,
 } from '@angular/forms/signals';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 
 type EditContactDialogContext = {
   jobId: string;
@@ -56,12 +57,18 @@ type EditContactDialogContext = {
 })
 export class EditContactComponent {
   private readonly dataAccess = inject(ContactsDataAccessService);
+  private readonly notification = inject(NotificationService);
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
   private readonly dialogContext =
     injectBrnDialogContext<EditContactDialogContext>({ optional: true }) ?? {
       jobId: '',
       contact: { id: '', name: '', email: '', phoneNumber: '' },
     };
+
+  private readonly successMessage = translateSignal(
+    'jobs.contacts.edit.success',
+    { defaultValue: 'Contact updated successfully' },
+  );
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
@@ -86,6 +93,7 @@ export class EditContactComponent {
               this.dialogContext.contact.id,
               data().value(),
             );
+            this.notification.success(this.successMessage());
             this.dialogContext.onUpdated?.();
             this.dialogRef?.close(contact);
           } catch (error) {

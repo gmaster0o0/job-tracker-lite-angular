@@ -78,17 +78,22 @@
       },
       "createTitle": "Create Note",
       "createDescription": "Add a new note",
-      "create": {
-        "error": {
-          "title": "Note Creation Failed",
-          "unknown": "Unable to create note right now. Please try again.",
-          "not_unique": "A note with the same title already exists."
-        }
+      "delete": {
+        "success": "jobs.notes.delete.success"
       },
       "edit": {
+        "success": "jobs.notes.edit.success",
         "error": {
           "title": "Note Update Failed",
           "unknown": "Unable to update note right now. Please try again.",
+          "not_unique": "A note with the same title already exists."
+        }
+      },
+      "create": {
+        "success": "jobs.notes.create.success",
+        "error": {
+          "title": "Note Creation Failed",
+          "unknown": "Unable to create note right now. Please try again.",
           "not_unique": "A note with the same title already exists."
         }
       }
@@ -145,6 +150,7 @@
     "create": {
       "title": "Create New Job",
       "description": "Create a new job entry to track your application process.",
+      "success": "jobs.create.success",
       "error": {
         "title": "Job Creation Failed",
         "not_unique": "A job with a same link already exists. Please check your job list."
@@ -152,7 +158,16 @@
     },
     "contacts": {
       "title": "Contacts",
-      "add": "Add Contact"
+      "add": "Add Contact",
+      "edit": {
+        "success": "jobs.contacts.edit.success"
+      },
+      "create": {
+        "success": "jobs.contacts.create.success"
+      },
+      "delete": {
+        "success": "jobs.contacts.delete.success"
+      }
     },
     "filters": {
       "all": "All",
@@ -169,6 +184,12 @@
       "confirmLabel": "Delete",
       "title": "Delete Job"
     },
+    "delete": {
+      "success": "jobs.delete.success"
+    },
+    "statusUpdate": {
+      "success": "jobs.statusUpdate.success"
+    },
     "tabs": {
       "overview": "Overview",
       "contacts": "Contacts",
@@ -176,6 +197,7 @@
       "coverLetter": "Cover Letter"
     },
     "update": {
+      "success": "jobs.update.success",
       "error": {
         "title": "Job Update Failed",
         "not_unique": "A job with a same link already exists. Please check your job list."
@@ -262,6 +284,7 @@
       "button": "Delete Account",
       "dialogTitle": "Confirm Account Deletion",
       "dialogDescription": "Do you want to request account deletion? We will send a confirmation email and start the grace period only after confirmation.",
+      "success": "privacySettings.deleteAccount.success",
       "error": {
         "title": "Account Deletion Request Failed",
         "unknown": "Unable to request account deletion right now. Please try again.",
@@ -272,6 +295,7 @@
       "export": {
         "title": "Export Your Data",
         "description": "Download a copy of all your personal data in a standard format.",
+        "success": "privacySettings.datamanagement.export.success",
         "label": "Export Data"
       },
       "deletejobs": {
@@ -301,13 +325,10 @@
           "all": "All"
         }
       },
-      "delete": {
-        "label": "Delete Jobs"
-      },
       "deleteJobs": {
         "dialog": {
-          "title": "Confirm Deletion of Job Applications",
           "description": "{mode, select, all {All of your job applications will be permanently deleted.} other {The job applications from before {date} will be permanently deleted.}} This action is permanent and cannot be undone.",
+          "title": "Confirm Deletion of Job Applications",
           "confirm": "Delete Job Applications",
           "cancel": "Cancel",
           "emailLabel": "Email",
@@ -319,6 +340,10 @@
             "email_mismatch": "The provided email address does not match your registered email."
           }
         }
+      },
+      "delete": {
+        "success": "privacySettings.datamanagement.delete.success",
+        "label": "Delete Jobs"
       }
     },
     "cookieConsent": {
@@ -564,6 +589,7 @@
       "submit": "Create account",
       "hasAccount": "Already have an account?",
       "loginLink": "Sign in",
+      "success": "auth.register.success",
       "title": "Create Account",
       "subtitle": "Register to track your applications.",
       "error": {
@@ -580,6 +606,7 @@
       "submit": "Sign in",
       "noAccount": "No account yet?",
       "registerLink": "Create one",
+      "success": "auth.login.success",
       "title": "Login",
       "subtitle": "Sign in to continue managing your jobs.",
       "subtitleAfterPasswordChange": "Your password has been reset. You can now sign in with your new password.",
@@ -617,7 +644,9 @@
       "empty": "No skills added yet.",
       "placeholder": "Add a technical skill...",
       "addNewElement": "Add new element",
-      "visibilityLabel": "You can setup who can see your skills here."
+      "visibilityLabel": "You can setup who can see your skills here.",
+      "saveSuccess": "profile.skills.saveSuccess",
+      "saveError": "profile.skills.saveError"
     },
     "personal": {
       "title": "Personal Information",
@@ -653,7 +682,9 @@
       "notSet": "Not set",
       "workingStyleLabel": "Working Style",
       "careerTypeLabel": "Contract",
-      "visibilityLabel": "You can setup who can see your professional preferences here."
+      "visibilityLabel": "You can setup who can see your professional preferences here.",
+      "saveSuccess": "profile.preferences.saveSuccess",
+      "saveError": "profile.preferences.saveError"
     },
     "visibilitySettings": {
       "public": "Public (Anyone)",
@@ -668,6 +699,8 @@
       },
       "label": "Profile Visibility"
     },
+    "saveSuccess": "profile.saveSuccess",
+    "saveError": "profile.saveError",
     "experienceLevels": {
       "INTERN": "Intern",
       "JUNIOR": "Junior",

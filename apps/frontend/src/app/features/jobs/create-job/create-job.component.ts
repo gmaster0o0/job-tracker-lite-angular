@@ -22,13 +22,15 @@ import {
   CreateJobDialogFooterComponent,
   ServerErrorAlertComponent,
 } from '@job-tracker-lite-angular/frontend-shared';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import {
   form,
   validateStandardSchema,
   FormRoot,
   FormField,
 } from '@angular/forms/signals';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
+
 type CreateJobDialogContext = {
   onCreated?: (job: JobDto) => void;
 };
@@ -56,9 +58,14 @@ type CreateJobDialogContext = {
 })
 export class CreateJobComponent {
   private readonly jobsDataAccess = inject(JobsDataAccessService);
+  private readonly notification = inject(NotificationService);
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
   private readonly dialogContext =
     injectBrnDialogContext<CreateJobDialogContext>({ optional: true });
+
+  private readonly successMessage = translateSignal('jobs.create.success', {
+    defaultValue: 'Job created successfully',
+  });
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
@@ -81,6 +88,7 @@ export class CreateJobComponent {
           this.submitError.set(null);
           try {
             const job = await this.jobsDataAccess.createJob(data().value());
+            this.notification.success(this.successMessage());
             this.dialogContext?.onCreated?.(job);
             this.dialogRef?.close(job);
           } catch (error) {

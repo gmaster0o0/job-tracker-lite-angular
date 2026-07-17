@@ -6,7 +6,10 @@ import {
   translate,
   translateSignal,
 } from '@jsverse/transloco';
-import { AccountDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  AccountDataAccessService,
+  NotificationService,
+} from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { provideIcons } from '@ng-icons/core';
@@ -41,6 +44,16 @@ export class DataManagementComponent {
   private readonly accountDataAccess = inject(AccountDataAccessService);
   private readonly authSessionService = inject(AuthSessionService);
   private readonly hlmDialogService = inject(HlmDialogService);
+  private readonly notification = inject(NotificationService);
+
+  private readonly exportSuccessMessage = translateSignal(
+    'privacySettings.datamanagement.export.success',
+    { defaultValue: 'Data exported successfully' },
+  );
+  private readonly deleteSuccessMessage = translateSignal(
+    'privacySettings.datamanagement.delete.success',
+    { defaultValue: 'Jobs deleted successfully' },
+  );
 
   protected readonly isExporting = signal(false);
 
@@ -93,6 +106,7 @@ export class DataManagementComponent {
       link.download = this.generateExportFileName();
       link.click();
       window.URL.revokeObjectURL(url);
+      this.notification.success(this.exportSuccessMessage());
     } finally {
       this.isExporting.set(false);
     }
@@ -114,6 +128,7 @@ export class DataManagementComponent {
             email,
             cutoffDate,
           });
+          this.notification.success(this.deleteSuccessMessage());
         },
         field: {
           initialValue: '',

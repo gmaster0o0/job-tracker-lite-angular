@@ -18,13 +18,14 @@ import {
   CreateJobDialogFooterComponent,
   ServerErrorAlertComponent,
 } from '@job-tracker-lite-angular/frontend-shared';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import {
   form,
   validateStandardSchema,
   FormRoot,
   FormField,
 } from '@angular/forms/signals';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 
 type CreateNoteDialogContext = {
   jobId: string;
@@ -54,10 +55,16 @@ type CreateNoteDialogContext = {
 })
 export class CreateNoteComponent {
   private readonly dataAccess = inject(NotesDataAccessService);
+  private readonly notification = inject(NotificationService);
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
   private readonly context = injectBrnDialogContext<CreateNoteDialogContext>({
     optional: true,
   }) ?? { jobId: '' };
+
+  private readonly successMessage = translateSignal(
+    'jobs.notes.create.success',
+    { defaultValue: 'Note created successfully' },
+  );
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
@@ -81,6 +88,7 @@ export class CreateNoteComponent {
               data().value(),
             );
 
+            this.notification.success(this.successMessage());
             this.context.onCreated?.(note);
             this.dialogRef?.close(note);
           } catch (error) {

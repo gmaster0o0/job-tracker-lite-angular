@@ -18,13 +18,14 @@ import {
   EditJobDialogFooterComponent,
   ServerErrorAlertComponent,
 } from '@job-tracker-lite-angular/frontend-shared';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import {
   form,
   validateStandardSchema,
   FormRoot,
   FormField,
 } from '@angular/forms/signals';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 
 type EditNoteDialogContext = {
   jobId: string;
@@ -55,12 +56,17 @@ type EditNoteDialogContext = {
 })
 export class EditNoteComponent {
   private readonly dataAccess = inject(NotesDataAccessService);
+  private readonly notification = inject(NotificationService);
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
   private readonly dialogContext =
     injectBrnDialogContext<EditNoteDialogContext>({ optional: true }) ?? {
       jobId: '',
       note: { id: '', title: '', body: '' },
     };
+
+  private readonly successMessage = translateSignal('jobs.notes.edit.success', {
+    defaultValue: 'Note updated successfully',
+  });
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
@@ -84,6 +90,7 @@ export class EditNoteComponent {
               this.dialogContext.note.id,
               data().value(),
             );
+            this.notification.success(this.successMessage());
             this.dialogContext.onUpdated?.();
             this.dialogRef?.close(note);
           } catch (error) {

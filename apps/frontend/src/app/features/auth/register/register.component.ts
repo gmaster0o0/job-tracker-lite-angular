@@ -21,6 +21,8 @@ import {
 import { ServerErrorAlertComponent } from '@job-tracker-lite-angular/frontend-shared';
 import { registerSchema } from '@job-tracker-lite-angular/schemas';
 
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
+
 @Component({
   standalone: true,
   selector: 'app-register',
@@ -43,6 +45,12 @@ import { registerSchema } from '@job-tracker-lite-angular/schemas';
 export class RegisterComponent {
   private readonly authDataAccess = inject(AuthDataAccessService);
   private readonly router = inject(Router);
+  private readonly notification = inject(NotificationService);
+
+  private readonly registerSuccessMessage = translateSignal(
+    'auth.register.success',
+    { defaultValue: 'Registered successfully' },
+  );
 
   protected readonly title = translateSignal('auth.register.title');
   protected readonly subtitle = translateSignal('auth.register.subtitle');
@@ -68,6 +76,7 @@ export class RegisterComponent {
 
           try {
             await this.authDataAccess.signUp(data().value());
+            this.notification.success(this.registerSuccessMessage());
             await this.router.navigateByUrl(
               `/auth/verify-email-notice?email=${encodeURIComponent(
                 data().value().email,
