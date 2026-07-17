@@ -146,6 +146,9 @@
       ],
       "@spartan-ng/helm/slider": [
         "./libs/shared-ui/slider/src/index.ts"
+      ],
+      "@spartan-ng/helm/sonner": [
+        "./libs/shared-ui/sonner/src/index.ts"
       ]
     }
   },
