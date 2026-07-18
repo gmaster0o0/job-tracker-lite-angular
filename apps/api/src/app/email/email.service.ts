@@ -1,11 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 import { SupportLang } from '@job-tracker-lite-angular/schemas';
 import { EmailSendException } from './email.errors';
-import {
-  EMAIL_PROVIDER,
-  type EmailProvider,
-  type SendEmailOptions,
-} from './providers/email-provider.interface';
+import { EMAIL_QUEUE, EmailJobName } from './email.queue';
+import { type SendEmailOptions } from './providers/email-provider.interface';
 import {
   getDeleteAccountVerificationTemplate,
   getResetPasswordEmailTemplate,
@@ -18,14 +17,22 @@ import {
 @Injectable()
 export class EmailService {
   constructor(
-    @Inject(EMAIL_PROVIDER)
-    private readonly emailProvider: EmailProvider,
+    @InjectQueue(EMAIL_QUEUE)
+    private readonly emailQueue: Queue<SendEmailOptions>,
   ) {}
 
   async send(options: SendEmailOptions): Promise<void> {
     try {
-      await this.emailProvider.send(options);
+      await this.emailQueue.add(EmailJobName.SEND, options, {
+        attempts: 3,
+        backoff: { type: 'exponential', delay: 5000 },
+        removeOnComplete: true,
+        removeOnFail: false,
+      });
     } catch (error) {
+      // This only fires if enqueueing itself fails (e.g. Redis unreachable).
+      // Failures during the actual send happen later in EmailProcessor and
+      // are handled by BullMQ's retry policy, not here.
       throw new EmailSendException(error);
     }
   }
