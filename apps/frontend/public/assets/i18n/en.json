@@ -79,10 +79,10 @@
       "createTitle": "Create Note",
       "createDescription": "Add a new note",
       "delete": {
-        "success": "jobs.notes.delete.success"
+        "success": "Note deleted successfully."
       },
       "edit": {
-        "success": "jobs.notes.edit.success",
+        "success": "Note updated successfully.",
         "error": {
           "title": "Note Update Failed",
           "unknown": "Unable to update note right now. Please try again.",
@@ -90,7 +90,7 @@
         }
       },
       "create": {
-        "success": "jobs.notes.create.success",
+        "success": "Note created successfully.",
         "error": {
           "title": "Note Creation Failed",
           "unknown": "Unable to create note right now. Please try again.",
@@ -150,7 +150,7 @@
     "create": {
       "title": "Create New Job",
       "description": "Create a new job entry to track your application process.",
-      "success": "jobs.create.success",
+      "success": "New job application created successfully.",
       "error": {
         "title": "Job Creation Failed",
         "not_unique": "A job with a same link already exists. Please check your job list."
@@ -160,13 +160,13 @@
       "title": "Contacts",
       "add": "Add Contact",
       "edit": {
-        "success": "jobs.contacts.edit.success"
+        "success": "Contact updated successfully."
       },
       "create": {
-        "success": "jobs.contacts.create.success"
+        "success": "Contact created successfully."
       },
       "delete": {
-        "success": "jobs.contacts.delete.success"
+        "success": "Contact deleted successfully."
       }
     },
     "filters": {
@@ -185,10 +185,10 @@
       "title": "Delete Job"
     },
     "delete": {
-      "success": "jobs.delete.success"
+      "success": "Job application deleted successfully."
     },
     "statusUpdate": {
-      "success": "jobs.statusUpdate.success"
+      "success": "Job application status updated successfully."
     },
     "tabs": {
       "overview": "Overview",
@@ -197,7 +197,7 @@
       "coverLetter": "Cover Letter"
     },
     "update": {
-      "success": "jobs.update.success",
+      "success": "Job application updated successfully.",
       "error": {
         "title": "Job Update Failed",
         "not_unique": "A job with a same link already exists. Please check your job list."
@@ -270,6 +270,7 @@
       "backToHome": "Back to the Homepage",
       "recoverDialogTitle": "Recover Account",
       "recoverDialogDescription": "Do you want to cancel the pending account deletion and restore your account to active status?",
+      "recoverSuccess": "User account recovery successful.",
       "error": {
         "title": "Recovery Failed",
         "unknown": "Unable to process account recovery right now. Please try again.",
@@ -284,7 +285,7 @@
       "button": "Delete Account",
       "dialogTitle": "Confirm Account Deletion",
       "dialogDescription": "Do you want to request account deletion? We will send a confirmation email and start the grace period only after confirmation.",
-      "success": "privacySettings.deleteAccount.success",
+      "success": "Account deletion request successful.",
       "error": {
         "title": "Account Deletion Request Failed",
         "unknown": "Unable to request account deletion right now. Please try again.",
@@ -295,7 +296,9 @@
       "export": {
         "title": "Export Your Data",
         "description": "Download a copy of all your personal data in a standard format.",
-        "success": "privacySettings.datamanagement.export.success",
+        "success": "Data export successful.",
+        "loading": "Collecting your data for export...",
+        "error": "Failed to export data",
         "label": "Export Data"
       },
       "deletejobs": {
@@ -342,7 +345,7 @@
         }
       },
       "delete": {
-        "success": "privacySettings.datamanagement.delete.success",
+        "success": "Job applications deleted successfully.",
         "label": "Delete Jobs"
       }
     },
@@ -589,7 +592,7 @@
       "submit": "Create account",
       "hasAccount": "Already have an account?",
       "loginLink": "Sign in",
-      "success": "auth.register.success",
+      "success": "Registration successful. Please check your email to verify your account.",
       "title": "Create Account",
       "subtitle": "Register to track your applications.",
       "error": {
@@ -606,7 +609,7 @@
       "submit": "Sign in",
       "noAccount": "No account yet?",
       "registerLink": "Create one",
-      "success": "auth.login.success",
+      "success": "Login successful.",
       "title": "Login",
       "subtitle": "Sign in to continue managing your jobs.",
       "subtitleAfterPasswordChange": "Your password has been reset. You can now sign in with your new password.",

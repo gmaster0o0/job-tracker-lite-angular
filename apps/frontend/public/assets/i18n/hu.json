@@ -79,10 +79,10 @@
       "createTitle": "Jegyzet létrehozása",
       "createDescription": "Új jegyzet hozzáadása",
       "delete": {
-        "success": "jobs.notes.delete.success"
+        "success": "Jegyzet sikeresen törölve."
       },
       "edit": {
-        "success": "jobs.notes.edit.success",
+        "success": "Jegyzet sikeresen frissítve.",
         "error": {
           "title": "A jegyzet frissítése sikertelen",
           "unknown": "A jegyzetet most nem sikerült frissíteni. Próbálja újra.",
@@ -90,7 +90,7 @@
         }
       },
       "create": {
-        "success": "jobs.notes.create.success",
+        "success": "Jegyzet sikeresen létrehozva.",
         "error": {
           "title": "A jegyzet létrehozása sikertelen",
           "unknown": "A jegyzetet most nem sikerült létrehozni. Próbálja újra.",
@@ -146,25 +146,25 @@
       }
     },
     "create": {
-      "title": "Új munka létrehozása",
-      "description": "Hozz létre egy új munkát a jelentkezéseid követéséhez",
-      "success": "jobs.create.success",
+      "title": "Új állás jelentkezés létrehozása",
+      "description": "Hozz létre egy új állást a jelentkezéseid követéséhez",
+      "success": "Állás jelentkezés sikeresen létrehozva.",
       "error": {
-        "title": "Hiba történt a munka létrehozása során",
-        "not_unique": "Egy ugyanazzal a linkkel rendelkező munka már létezik. Kérjük, ellenőrizze a munkalistáját."
+        "title": "Hiba történt az állás létrehozása során",
+        "not_unique": "Egy ugyanazzal a linkkel rendelkező állás már létezik. Kérjük, ellenőrizze a munkalistáját."
       }
     },
     "contacts": {
       "title": "Kapcsolatok",
       "add": "Kapcsolat hozzáadása",
       "edit": {
-        "success": "jobs.contacts.edit.success"
+        "success": "Kapcsolat sikeresen frissítve."
       },
       "create": {
-        "success": "jobs.contacts.create.success"
+        "success": "Kapcsolat sikeresen létrehozva."
       },
       "delete": {
-        "success": "jobs.contacts.delete.success"
+        "success": "Kapcsolat sikeresen törölve."
       }
     },
     "filters": {
@@ -178,15 +178,15 @@
       "noDescription": "Nincs leírás megadva."
     },
     "deleteDialog": {
-      "description": "Biztosan törölni szeretné ezt a munkát?",
+      "description": "Biztosan törölni szeretné ezt az állás jelentkezést?",
       "confirmLabel": "Törlés",
       "title": "Jelentkezés törlése"
     },
     "delete": {
-      "success": "jobs.delete.success"
+      "success": "Állás jelentkezés sikeresen törölve."
     },
     "statusUpdate": {
-      "success": "jobs.statusUpdate.success"
+      "success": "Állás jelentkezés státusza sikeresen frissítve."
     },
     "tabs": {
       "overview": "Áttekintés",
@@ -195,7 +195,7 @@
       "coverLetter": "Kísérőlevél"
     },
     "update": {
-      "success": "jobs.update.success",
+      "success": "Állás jelentkezés sikeresen frissítve.",
       "error": {
         "title": "Hiba történt a munka frissítése során",
         "not_unique": "Egy ugyanazzal a linkkel rendelkező munka már létezik. Kérjük, ellenőrizze a munkalistáját."
@@ -268,6 +268,7 @@
       "backToHome": "Vissza a kezdőlapra",
       "recoverDialogTitle": "Fiók visszaállítása",
       "recoverDialogDescription": "Biztosan megszakítod a törlési folyamatot, és újra aktívra állítod a fiókot?",
+      "recoverSuccess": "Fiók visszaállítása sikeres.",
       "error": {
         "title": "Visszaállítás sikertelen",
         "unknown": "Most nem sikerült visszaállítani a fiókot. Próbáld újra."
@@ -281,7 +282,7 @@
       "button": "Fiók törlése",
       "dialogTitle": "Fiók törlésének megerősítése",
       "dialogDescription": "Elindítod a fióktörlési kérelmet? A megerősítéshez emailt küldünk, és a türelmi idő csak a link megerősítése után indul.",
-      "success": "privacySettings.deleteAccount.success",
+      "success": "Fiók sikeresen törölve.",
       "error": {
         "title": "Fióktörlési kérelem sikertelen",
         "unknown": "Most nem sikerült elindítani a fióktörlést. Próbáld újra.",
@@ -292,7 +293,9 @@
       "export": {
         "title": "Az adatok exportálása",
         "description": "Töltse le az összes személyes adatait szabványos formátumban.",
-        "success": "privacySettings.datamanagement.export.success",
+        "success": "Adatok sikeresen exportálva.",
+        "loading": "Adatok gyűjtése exportáláshoz...",
+        "error": "Adatok exportálása sikertelen.",
         "label": "Adatok exportálása"
       },
       "deletejobs": {
@@ -339,7 +342,7 @@
         }
       },
       "delete": {
-        "success": "privacySettings.datamanagement.delete.success",
+        "success": "Állás jelentkezések sikeresen törölve.",
         "label": "Állás jelentkezések törlése"
       }
     },
@@ -586,7 +589,7 @@
       "submit": "Fiók létrehozása",
       "hasAccount": "Van már fiókod?",
       "loginLink": "Jelentkezz be",
-      "success": "auth.register.success",
+      "success": "Regisztráció sikeres. Kérjük, ellenőrizze az email fiókját a megerősítéshez.",
       "title": "Fiók létrehozása",
       "subtitle": "Regisztrálj a jelentkezéseid követéséhez.",
       "error": {
@@ -604,7 +607,7 @@
       "submit": "Bejelentkezés",
       "noAccount": "Nincs még fiókod?",
       "registerLink": "Regisztrálj",
-      "success": "auth.login.success",
+      "success": "Sikeres bejelentkezés.",
       "title": "Bejelentkezés",
       "subtitle": "Jelentkezz be a folytatáshoz.",
       "subtitleAfterPasswordChange": "Az új jelszavad beállítása megtörtént. Most már bejelentkezhetsz az új jelszavaddal.",

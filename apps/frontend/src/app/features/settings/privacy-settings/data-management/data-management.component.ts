@@ -50,9 +50,18 @@ export class DataManagementComponent {
     'privacySettings.datamanagement.export.success',
     { defaultValue: 'Data exported successfully' },
   );
+
+  private readonly exportLoadingMessage = translateSignal(
+    'privacySettings.datamanagement.export.loading',
+    { defaultValue: 'Collecting data...' },
+  );
   private readonly deleteSuccessMessage = translateSignal(
     'privacySettings.datamanagement.delete.success',
     { defaultValue: 'Jobs deleted successfully' },
+  );
+  private readonly exportErrorMessage = translateSignal(
+    'privacySettings.datamanagement.export.error',
+    { defaultValue: 'Failed to export data' },
   );
 
   protected readonly isExporting = signal(false);
@@ -99,14 +108,22 @@ export class DataManagementComponent {
   protected async exportUserData(): Promise<void> {
     this.isExporting.set(true);
     try {
-      const blob = await this.accountDataAccess.exportUserData();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = this.generateExportFileName();
-      link.click();
-      window.URL.revokeObjectURL(url);
-      this.notification.success(this.exportSuccessMessage());
+      await this.notification.promise(
+        (async () => {
+          const blob = await this.accountDataAccess.exportUserData();
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = this.generateExportFileName();
+          link.click();
+          window.URL.revokeObjectURL(url);
+        })(),
+        {
+          loading: this.exportLoadingMessage(),
+          success: this.exportSuccessMessage(),
+          error: this.exportErrorMessage(),
+        },
+      );
     } finally {
       this.isExporting.set(false);
     }

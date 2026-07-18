@@ -35,4 +35,16 @@ export class NotificationService {
       description,
     });
   }
+
+  promise<T>(
+    promise: Promise<T>,
+    messages: {
+      loading: string;
+      success: string | ((data: T) => string);
+      error: string | ((err: any) => string);
+    },
+  ): Promise<T> {
+    toast.promise(promise, messages);
+    return promise;
+  }
 }

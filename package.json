@@ -3,7 +3,7 @@
   "version": "0.3.4",
   "license": "MIT",
   "scripts": {
-    "app": "npx nx run-many --target=serve --projects=api,frontend --parallel=2",
+    "app": "npx nx run-many --target=serve --projects=api,frontend --parallel=2 --no-tui",
     "prepare": "husky install",
     "prepare:dev": "npm run prisma:generate",
     "prisma:generate": "npx prisma generate --schema=libs/shared/prisma/db-schema/schema.prisma",
