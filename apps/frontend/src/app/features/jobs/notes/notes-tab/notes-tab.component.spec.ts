@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { ContactDto } from '@job-tracker-lite-angular/schemas';
@@ -24,6 +26,10 @@ describe('NotesTabComponent', () => {
     await TestBed.configureTestingModule({
       imports: [NotesTabComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: createNotificationServiceMock(),
+        },
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
         {
           provide: NotesDataAccessService,

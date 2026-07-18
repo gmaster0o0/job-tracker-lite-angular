@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { convertToParamMap, ActivatedRoute, Router } from '@angular/router';
@@ -92,6 +94,10 @@ describe('JobDetailComponent', () => {
     await TestBed.configureTestingModule({
       imports: [JobDetailComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: createNotificationServiceMock(),
+        },
         {
           provide: ActivatedRoute,
           useValue: { paramMap: of(convertToParamMap({ id: options.id })) },

@@ -1,14 +1,11 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  NotificationService,
-  ProfileDataAccessService,
-} from '@job-tracker-lite-angular/frontend-data-access';
+import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { provideIcons } from '@ng-icons/core';
 import { profileIcons } from './profile.hlmimports';
 import { CareerPreferenceComponent } from './career-preference/career-preference.component';
 import { SaveState } from '@job-tracker-lite-angular/frontend-data-access';
-import { TranslocoModule, translateSignal } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import { SkillManagerComponent } from './skill-manager/skill-manager.component';
 import { PersonalInfoComponent } from './personal-info/personal-info.component';
 import { ContactInfoComponent } from './contact-info/contact-info.component';
@@ -36,14 +33,6 @@ type SectionName = 'personal' | 'contact' | 'skills' | 'career-preference';
 })
 export class ProfileComponent {
   private readonly profileData = inject(ProfileDataAccessService);
-  private readonly notification = inject(NotificationService);
-
-  private readonly saveSuccessMessage = translateSignal('profile.saveSuccess', {
-    defaultValue: 'Profile updated successfully',
-  });
-  private readonly saveErrorMessage = translateSignal('profile.saveError', {
-    defaultValue: 'Failed to update profile',
-  });
 
   profileResource = this.profileData.profileResource;
 
@@ -98,11 +87,9 @@ export class ProfileComponent {
     try {
       this.savingSection.set(section);
       await this.profileData.updateProfile(updateDto);
-      this.notification.success(this.saveSuccessMessage());
       this.editingSection.set(null);
     } catch (error) {
       console.error('Failed to update profile', error);
-      this.notification.error(this.saveErrorMessage());
     } finally {
       this.savingSection.set(null);
     }

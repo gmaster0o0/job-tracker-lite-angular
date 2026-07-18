@@ -9,6 +9,7 @@ import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import {
   AccountDataAccessService,
   AuthSessionService,
+  NotificationService,
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import {
@@ -36,6 +37,7 @@ export class DeletePendingComponent {
   private readonly translocoService = inject(TranslocoService);
   private readonly dialogService = inject(HlmDialogService);
   private readonly router = inject(Router);
+  private readonly notification = inject(NotificationService);
 
   protected readonly isLoading = signal(true);
   protected readonly isRecovering = signal(false);
@@ -113,6 +115,12 @@ export class DeletePendingComponent {
           try {
             await this.accountDataAccess.recoverAccountDeletion();
             await this.authSessionService.loadSession();
+            this.notification.success(
+              this.translocoService.translate(
+                'privacySettings.deletePending.recoverSuccess',
+                { defaultValue: 'Account recovery successful' },
+              ),
+            );
             await this.router.navigate(['/settings/privacy'], {
               queryParams: { accountDeletion: 'recovered' },
             });

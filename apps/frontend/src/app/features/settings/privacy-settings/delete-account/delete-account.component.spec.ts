@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { AccountDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
@@ -21,6 +23,10 @@ describe('DeleteAccountComponent', () => {
     await TestBed.configureTestingModule({
       imports: [DeleteAccountComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: createNotificationServiceMock(),
+        },
         {
           provide: AccountDataAccessService,
           useValue: accountDataAccessMock,

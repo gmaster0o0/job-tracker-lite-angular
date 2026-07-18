@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestBed } from '@angular/core/testing';
 import { ResetPasswordComponent } from './reset-password.component';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -29,6 +31,10 @@ describe('ResetPasswordComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ResetPasswordComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: createNotificationServiceMock(),
+        },
         provideRouter([]),
         {
           provide: ActivatedRoute,

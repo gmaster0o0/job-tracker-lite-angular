@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
@@ -28,6 +30,10 @@ describe('EditJobComponent', () => {
     await TestBed.configureTestingModule({
       imports: [EditJobComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: createNotificationServiceMock(),
+        },
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
         {
           provide: DIALOG_DATA,

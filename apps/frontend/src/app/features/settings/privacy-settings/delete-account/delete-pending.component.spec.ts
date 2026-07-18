@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { AccountDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
@@ -26,6 +28,10 @@ describe('DeletePendingComponent', () => {
     await TestBed.configureTestingModule({
       imports: [DeletePendingComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: createNotificationServiceMock(),
+        },
         provideRouter([]),
         { provide: AccountDataAccessService, useValue: accountDataAccessMock },
         { provide: HlmDialogService, useValue: dialogServiceMock },

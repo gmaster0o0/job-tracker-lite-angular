@@ -8,13 +8,10 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  NotificationService,
-  ProfileDataAccessService,
-} from '@job-tracker-lite-angular/frontend-data-access';
+import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { provideIcons } from '@ng-icons/core';
 import { lucideCheck, lucideAlertCircle, lucideLoader } from '@ng-icons/lucide';
-import { TranslocoModule, translateSignal } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import {
   UserProfileDto,
   ExperienceLevel,
@@ -54,16 +51,6 @@ import { SaveState } from '@job-tracker-lite-angular/frontend-data-access';
 })
 export class CareerPreferenceComponent {
   private readonly profileData = inject(ProfileDataAccessService);
-  private readonly notification = inject(NotificationService);
-
-  private readonly saveSuccessMessage = translateSignal(
-    'profile.preferences.saveSuccess',
-    { defaultValue: 'Preferences saved successfully' },
-  );
-  private readonly saveErrorMessage = translateSignal(
-    'profile.preferences.saveError',
-    { defaultValue: 'Failed to save preferences' },
-  );
 
   profile = input.required<UserProfileDto>();
   disabled = input<boolean>(false);
@@ -171,7 +158,6 @@ export class CareerPreferenceComponent {
       });
       this.saveState.set('saved');
       this.saveStateChanged.emit('saved');
-      this.notification.success(this.saveSuccessMessage());
 
       // Reset to idle after 2s, and only now start the countdown to hide
       // the visibility gadget (a successful save ends the "active" cycle)
@@ -184,7 +170,6 @@ export class CareerPreferenceComponent {
       console.error('Failed to save preferences', error);
       this.saveState.set('error');
       this.saveStateChanged.emit('error');
-      this.notification.error(this.saveErrorMessage());
 
       setTimeout(() => {
         this.saveState.set('idle');

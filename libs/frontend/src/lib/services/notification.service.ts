@@ -14,6 +14,7 @@ export class NotificationService {
   error(message: string, description?: string): void {
     toast.error(message, {
       description,
+      duration: 6000,
     });
   }
 

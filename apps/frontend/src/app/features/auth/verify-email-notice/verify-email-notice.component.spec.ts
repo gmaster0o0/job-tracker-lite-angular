@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -23,6 +25,10 @@ describe('VerifyEmailNoticeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [VerifyEmailNoticeComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: createNotificationServiceMock(),
+        },
         provideRouter([]),
         {
           provide: AuthDataAccessService,

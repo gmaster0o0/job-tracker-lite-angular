@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AccountSettingsComponent } from './account-settings.component';
@@ -35,6 +37,10 @@ describe('AccountSettingsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AccountSettingsComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: createNotificationServiceMock(),
+        },
         {
           provide: AuthDataAccessService,
           useValue: authDataAccessMock,

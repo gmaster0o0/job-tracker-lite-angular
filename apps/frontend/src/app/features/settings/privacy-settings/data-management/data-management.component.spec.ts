@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
@@ -42,6 +44,10 @@ describe('DataManagementComponent', () => {
     await TestBed.configureTestingModule({
       imports: [DataManagementComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: createNotificationServiceMock(),
+        },
         { provide: AccountDataAccessService, useValue: accountDataAccess },
         { provide: AuthSessionService, useValue: authSessionMock },
         { provide: HlmDialogService, useValue: dialogService },
