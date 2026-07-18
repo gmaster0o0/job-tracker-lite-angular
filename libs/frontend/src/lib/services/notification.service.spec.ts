@@ -11,6 +11,7 @@ vi.mock('@spartan-ng/brain/sonner', () => {
       error: vi.fn(() => undefined),
       info: vi.fn(() => undefined),
       warning: vi.fn(() => undefined),
+      promise: vi.fn((promise: Promise<unknown>) => promise),
     },
   );
 
@@ -66,6 +67,49 @@ describe('NotificationService', () => {
     service.show('Regular message', 'Regular description');
     expect(toast).toHaveBeenCalledWith('Regular message', {
       description: 'Regular description',
+    });
+  });
+
+  describe('promise', () => {
+    it('should call toast.promise with the given promise and messages', () => {
+      const promise = Promise.resolve('data');
+      const messages = {
+        loading: 'Loading...',
+        success: 'Success!',
+        error: 'Error!',
+      };
+
+      service.promise(promise, messages);
+
+      expect(toast.promise).toHaveBeenCalledWith(promise, messages);
+    });
+
+    it('should return the original promise', async () => {
+      const promise = Promise.resolve('data');
+      const messages = {
+        loading: 'Loading...',
+        success: 'Success!',
+        error: 'Error!',
+      };
+
+      const result = service.promise(promise, messages);
+
+      expect(result).toBe(promise);
+      await expect(result).resolves.toBe('data');
+    });
+
+    it('should propagate a rejection', async () => {
+      const error = new Error('failed');
+      const promise = Promise.reject(error);
+      const messages = {
+        loading: 'Loading...',
+        success: 'Success!',
+        error: 'Error!',
+      };
+
+      const result = service.promise(promise, messages);
+
+      await expect(result).rejects.toBe(error);
     });
   });
 });
