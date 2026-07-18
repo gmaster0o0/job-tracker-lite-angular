@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { ForgotPasswordComponent } from './forgot-password.component';
@@ -14,14 +16,19 @@ import { ForgotPasswordHarness } from './forgot-password.harness';
 describe('ForgotPasswordComponent', () => {
   let harness: ForgotPasswordHarness;
   let authDataAccessMock: ReturnType<typeof createAuthDataAccessMock>;
-
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
   beforeEach(async () => {
     authDataAccessMock = createAuthDataAccessMock();
     vi.spyOn(authDataAccessMock, 'requestPasswordReset');
-
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
     await TestBed.configureTestingModule({
       imports: [ForgotPasswordComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: notificationMock,
+        },
         {
           provide: AuthDataAccessService,
           useValue: authDataAccessMock,
@@ -50,6 +57,10 @@ describe('ForgotPasswordComponent', () => {
 
     expect(authDataAccessMock.requestPasswordReset).toHaveBeenCalledWith(
       validForgotPasswordCredentials,
+    );
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'If an account exists for this email, a reset link has been sent.',
     );
   });
 

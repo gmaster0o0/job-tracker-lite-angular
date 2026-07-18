@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
@@ -21,13 +23,20 @@ describe('CreateNoteComponent', () => {
   let fixture: ComponentFixture<CreateNoteComponent>;
   let harness: CreateNoteHarness;
   let notesDataAccessMock: ReturnType<typeof createNotesDataAccessMock>;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     notesDataAccessMock = createNotesDataAccessMock();
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [CreateNoteComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: notificationMock,
+        },
         { provide: NotesDataAccessService, useValue: notesDataAccessMock },
         {
           provide: DIALOG_DATA,
@@ -62,6 +71,9 @@ describe('CreateNoteComponent', () => {
     expect(createNote).toHaveBeenCalledWith(
       'test-job-id',
       createNoteFixtures.janeDoe,
+    );
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Note created successfully.',
     );
   });
 

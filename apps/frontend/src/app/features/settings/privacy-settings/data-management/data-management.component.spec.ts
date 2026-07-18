@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
@@ -29,10 +31,13 @@ describe('DataManagementComponent', () => {
   let exposedComponent: ExposedDataManagementComponent;
   let accountDataAccess: ReturnType<typeof createAccountDataAccessMock>;
   let dialogService: { open: ReturnType<typeof vi.fn> };
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     accountDataAccess = createAccountDataAccessMock({}, vi.fn);
     const authSessionMock = createAuthSessionServiceMock(vi.fn);
+    notificationMock = createNotificationServiceMock(vi.fn());
+    vi.spyOn(notificationMock, 'success');
     dialogService = { open: vi.fn() };
 
     accountDataAccess.exportUserData = vi.fn(accountDataAccess.exportUserData);
@@ -42,6 +47,10 @@ describe('DataManagementComponent', () => {
     await TestBed.configureTestingModule({
       imports: [DataManagementComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: notificationMock,
+        },
         { provide: AccountDataAccessService, useValue: accountDataAccess },
         { provide: AuthSessionService, useValue: authSessionMock },
         { provide: HlmDialogService, useValue: dialogService },
@@ -105,6 +114,16 @@ describe('DataManagementComponent', () => {
       expect(anchorClickSpy).toHaveBeenCalledTimes(1);
       expect(revokeObjectUrlSpy).toHaveBeenCalledWith('blob:mock-url');
       expect(exposedComponent.isExporting()).toBe(false);
+
+      expect(notificationMock.promise).toHaveBeenCalledTimes(1);
+      expect(notificationMock.promise).toHaveBeenCalledWith(
+        expect.any(Promise),
+        {
+          loading: expect.any(String),
+          success: expect.any(String),
+          error: expect.any(String),
+        },
+      );
     });
 
     it('resets the busy indicator even if an error occurs', async () => {
@@ -166,6 +185,10 @@ describe('DataManagementComponent', () => {
       expect(accountDataAccess.deleteJobApplications).toHaveBeenCalledWith({
         email: 'user@example.com',
       });
+      expect(notificationMock.success).toHaveBeenCalledTimes(1);
+      expect(notificationMock.success).toHaveBeenCalledWith(
+        'Job applications deleted successfully.',
+      );
     });
 
     it('Should not call deleteJobApplications if onConfirm is not called', () => {

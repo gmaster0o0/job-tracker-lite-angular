@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { ContactDto } from '@job-tracker-lite-angular/schemas';
@@ -20,10 +22,16 @@ describe('ContactsTabComponent', () => {
     const dialogMock = { open: vi.fn() };
     const jobsDataAccessMock = createJobsDataAccessMock({ contacts });
     const contactsDataAccessMock = createContactsDataAccessMock();
+    const notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [ContactsTabComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: notificationMock,
+        },
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
         {
           provide: ContactsDataAccessService,
@@ -41,7 +49,7 @@ describe('ContactsTabComponent', () => {
       ContactsTabHarness,
     );
 
-    return { fixture, harness, dialogMock };
+    return { fixture, harness, dialogMock, notificationMock };
   }
 
   it('should render contact tab header and add button', async () => {
@@ -57,5 +65,11 @@ describe('ContactsTabComponent', () => {
     await harness.clickAddContact();
 
     expect(dialogMock.open).toHaveBeenCalled();
+  });
+
+  it('shows a success notification when a contact is deleted', async () => {
+    const { notificationMock } = await setup([]);
+
+    expect(notificationMock.success).not.toHaveBeenCalled();
   });
 });

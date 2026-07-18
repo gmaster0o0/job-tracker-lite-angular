@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { AccountDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
@@ -22,10 +24,16 @@ describe('DeletePendingComponent', () => {
     const dialogServiceMock = {
       open: vi.fn(),
     };
+    const notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [DeletePendingComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: notificationMock,
+        },
         provideRouter([]),
         { provide: AccountDataAccessService, useValue: accountDataAccessMock },
         { provide: HlmDialogService, useValue: dialogServiceMock },
@@ -47,6 +55,7 @@ describe('DeletePendingComponent', () => {
       accountDataAccessMock,
       dialogServiceMock,
       router,
+      notificationMock,
     };
   }
 
@@ -78,8 +87,13 @@ describe('DeletePendingComponent', () => {
   });
 
   it('opens recover dialog and recovers account on confirm', async () => {
-    const { harness, dialogServiceMock, accountDataAccessMock, router } =
-      await setup();
+    const {
+      harness,
+      dialogServiceMock,
+      accountDataAccessMock,
+      router,
+      notificationMock,
+    } = await setup();
 
     await harness.clickRecoverButton();
 
@@ -99,6 +113,10 @@ describe('DeletePendingComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/settings/privacy'], {
       queryParams: { accountDeletion: 'recovered' },
     });
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'User account recovery successful.',
+    );
   });
 
   it('shows backend error when recover fails', async () => {

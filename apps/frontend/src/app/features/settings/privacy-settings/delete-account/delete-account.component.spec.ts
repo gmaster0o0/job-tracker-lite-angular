@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { AccountDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
@@ -17,10 +19,16 @@ describe('DeleteAccountComponent', () => {
     const dialogServiceMock = {
       open: vi.fn(),
     };
+    const notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [DeleteAccountComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: notificationMock,
+        },
         {
           provide: AccountDataAccessService,
           useValue: accountDataAccessMock,
@@ -38,7 +46,13 @@ describe('DeleteAccountComponent', () => {
       DeleteAccountHarness,
     );
 
-    return { fixture, harness, accountDataAccessMock, dialogServiceMock };
+    return {
+      fixture,
+      harness,
+      accountDataAccessMock,
+      dialogServiceMock,
+      notificationMock,
+    };
   }
 
   it('opens a confirmation dialog when delete button is clicked', async () => {
@@ -50,7 +64,12 @@ describe('DeleteAccountComponent', () => {
   });
 
   it('shows confirmation info after successful deletion request', async () => {
-    const { harness, accountDataAccessMock, dialogServiceMock } = await setup();
+    const {
+      harness,
+      accountDataAccessMock,
+      dialogServiceMock,
+      notificationMock,
+    } = await setup();
 
     await harness.clickDeleteButton();
 
@@ -67,6 +86,10 @@ describe('DeleteAccountComponent', () => {
     });
     expect(await harness.getSuccessText()).toContain(
       'A confirmation email has been sent',
+    );
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Account deletion request successful.',
     );
   });
 

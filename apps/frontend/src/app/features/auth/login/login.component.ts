@@ -22,6 +22,8 @@ import {
 import { ServerErrorAlertComponent } from '@job-tracker-lite-angular/frontend-shared';
 import { loginSchema } from '@job-tracker-lite-angular/schemas';
 
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
+
 @Component({
   standalone: true,
   selector: 'app-login',
@@ -45,6 +47,11 @@ export class LoginComponent {
   private readonly authDataAccess = inject(AuthDataAccessService);
   private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
+  private readonly notification = inject(NotificationService);
+
+  private readonly loginSuccessMessage = translateSignal('auth.login.success', {
+    defaultValue: 'Logged in successfully',
+  });
 
   protected readonly title = translateSignal('auth.login.title');
   protected readonly subtitle = translateSignal('auth.login.subtitle');
@@ -75,6 +82,7 @@ export class LoginComponent {
           try {
             const session = await this.authDataAccess.signIn(data().value());
             this.authSession.setSession(session);
+            this.notification.success(this.loginSuccessMessage());
             await this.redirectAfterLogin();
           } catch (error) {
             if (this.shouldRedirectToVerifyEmail(error)) {

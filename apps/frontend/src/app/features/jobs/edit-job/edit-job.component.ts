@@ -20,14 +20,17 @@ import {
   EditJobDialogFooterComponent,
   ServerErrorAlertComponent,
 } from '@job-tracker-lite-angular/frontend-shared';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import {
   form,
   FormRoot,
   FormField,
   validateStandardSchema,
 } from '@angular/forms/signals';
-import { ZodNgControlBridgeDirective } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  ZodNgControlBridgeDirective,
+  NotificationService,
+} from '@job-tracker-lite-angular/frontend-data-access';
 
 type EditJobDialogContext = {
   job: JobDto;
@@ -57,11 +60,16 @@ type EditJobDialogContext = {
 })
 export class EditJobComponent {
   private readonly jobsDataAccess = inject(JobsDataAccessService);
+  private readonly notification = inject(NotificationService);
   private readonly dialogRef = inject(BrnDialogRef, { optional: true });
   private readonly dialogContext = injectBrnDialogContext<EditJobDialogContext>(
     { optional: true },
   );
   protected readonly job = this.dialogContext?.job as JobDto;
+
+  private readonly successMessage = translateSignal('jobs.update.success', {
+    defaultValue: 'Job updated successfully',
+  });
 
   protected readonly isSubmitting = signal(false);
   protected readonly submitError = signal<string | null>(null);
@@ -87,6 +95,7 @@ export class EditJobComponent {
               this.job.id,
               data().value(),
             );
+            this.notification.success(this.successMessage());
             this.dialogRef?.close(job);
           } catch (error) {
             this.submitError.set(

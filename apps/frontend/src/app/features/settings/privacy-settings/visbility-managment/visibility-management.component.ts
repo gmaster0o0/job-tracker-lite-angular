@@ -24,7 +24,6 @@ import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-dat
 import { SaveState } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmSpinner } from '@spartan-ng/helm/spinner';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
-//import { marker } from '@jsverse/transloco-keys-manager';
 
 const marker = (key: string) => key;
 

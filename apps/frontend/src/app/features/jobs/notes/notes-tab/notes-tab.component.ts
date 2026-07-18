@@ -14,7 +14,8 @@ import { NotesListComponent } from '../notes-list/notes-list.component';
 import { EditNoteComponent } from '../edit-note/edit-note.component';
 import { DeleteConfirmationDialogComponent } from '@job-tracker-lite-angular/frontend-shared';
 import { CreateNoteComponent } from '../create-note/create-note.component';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, translateSignal } from '@jsverse/transloco';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 
 @Component({
   standalone: true,
@@ -33,6 +34,12 @@ export class NotesTabComponent {
   private readonly jobsDataAccess = inject(JobsDataAccessService);
   private readonly notesDataAccess = inject(NotesDataAccessService);
   private readonly dialog = inject(HlmDialogService);
+  private readonly notification = inject(NotificationService);
+
+  private readonly deleteSuccessMessage = translateSignal(
+    'jobs.notes.delete.success',
+    { defaultValue: 'Note deleted successfully' },
+  );
 
   readonly jobId = input.required<string>();
 
@@ -71,6 +78,7 @@ export class NotesTabComponent {
           'Are you absolutely sure? This action cannot be undone. This will permanently delete the resource.',
         onConfirm: async () => {
           await this.notesDataAccess.deleteNote(this.jobId(), note.id);
+          this.notification.success(this.deleteSuccessMessage());
           this.notesDataAccess.notesResource.reload();
         },
       },

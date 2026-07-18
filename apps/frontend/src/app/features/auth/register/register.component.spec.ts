@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
@@ -16,14 +18,21 @@ describe('RegisterComponent', () => {
   let harness: RegisterHarness;
   let authDataAccessMock: ReturnType<typeof createAuthDataAccessMock>;
   let router: Router;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     authDataAccessMock = createAuthDataAccessMock();
+    notificationMock = createNotificationServiceMock();
     vi.spyOn(authDataAccessMock, 'signUp');
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [RegisterComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: notificationMock,
+        },
         provideRouter([]),
         {
           provide: AuthDataAccessService,
@@ -69,6 +78,10 @@ describe('RegisterComponent', () => {
       `/auth/verify-email-notice?email=${encodeURIComponent(
         validRegisterCredentials.email,
       )}`,
+    );
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Registration successful. Please check your email to verify your account.',
     );
   });
 

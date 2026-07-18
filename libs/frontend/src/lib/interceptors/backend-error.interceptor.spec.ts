@@ -11,16 +11,57 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { PRISMA_ERROR_CODES } from '@job-tracker-lite-angular/prisma/error-codes';
 import { backendErrorInterceptor } from './backend-error.interceptor';
+import { NotificationService } from '../services/notification.service';
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { TranslocoTestingModule } from '@jsverse/transloco';
+import { vi } from 'vitest';
+
+const en = {
+  errors: {
+    global: {
+      title: 'System Error',
+      network:
+        'Cannot connect to the server. Please check your internet connection.',
+      internal: 'An unexpected error occurred. Please try again later.',
+    },
+  },
+};
+
+const hu = {
+  errors: {
+    global: {
+      title: 'Rendszerhiba',
+      network:
+        'Nem sikerült csatlakozni a szerverhez. Kérjük, ellenőrizze az internetkapcsolatot.',
+      internal: 'Váratlan hiba történt. Kérjük, próbálja újra később.',
+    },
+  },
+};
 
 describe('backendErrorInterceptor', () => {
   let httpClient: HttpClient;
   let httpMock: HttpTestingController;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(() => {
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'error');
+
     TestBed.configureTestingModule({
+      imports: [
+        TranslocoTestingModule.forRoot({
+          langs: { en, hu },
+          translocoConfig: {
+            availableLangs: ['en', 'hu'],
+            defaultLang: 'en',
+          },
+          preloadLangs: true,
+        }),
+      ],
       providers: [
         provideHttpClient(withInterceptors([backendErrorInterceptor])),
         provideHttpClientTesting(),
+        { provide: NotificationService, useValue: notificationMock },
       ],
     });
 
@@ -85,5 +126,32 @@ describe('backendErrorInterceptor', () => {
         statusCode: 500,
       }),
     );
+    expect(notificationMock.error).toHaveBeenCalled();
+  });
+
+  it('shows toast for network error', async () => {
+    const request = firstValueFrom(httpClient.get('/api/test'));
+
+    const req = httpMock.expectOne('/api/test');
+    req.flush(null, { status: 0, statusText: 'Unknown Error' });
+
+    await expect(request).rejects.toBeDefined();
+    expect(notificationMock.error).toHaveBeenCalledWith(
+      'System Error',
+      'Cannot connect to the server. Please check your internet connection.',
+    );
+  });
+
+  it('does not show toast for silent errors like 400', async () => {
+    const request = firstValueFrom(httpClient.get('/api/test'));
+
+    const req = httpMock.expectOne('/api/test');
+    req.flush(
+      { message: 'Bad request' },
+      { status: 400, statusText: 'Bad Request' },
+    );
+
+    await expect(request).rejects.toBeDefined();
+    expect(notificationMock.error).not.toHaveBeenCalled();
   });
 });

@@ -2,16 +2,48 @@ import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
 import { BackendError } from './backend-error.types';
 import { PRISMA_ERROR_CODES } from '@job-tracker-lite-angular/prisma/error-codes';
+import { inject, Injector, runInInjectionContext } from '@angular/core';
+import { NotificationService } from '../services/notification.service';
+import { translateSignal } from '@jsverse/transloco';
+
+const SILENT_ERROR_STATUSES = [400, 401, 403, 404, 409, 422];
 
 /**
  * HTTP interceptor that normalizes backend errors into a consistent BackendError shape.
  * This keeps components free from HttpErrorResponse handling logic.
  */
 export const backendErrorInterceptor: HttpInterceptorFn = (req, next) => {
+  const notification = inject(NotificationService);
+  const injector = inject(Injector);
   return next(req).pipe(
     catchError((error: unknown) => {
       if (error instanceof HttpErrorResponse) {
         const normalizedError = normalizeHttpError(error);
+
+        // Show global toast for non-silent errors (e.g. 500, network errors)
+        if (!SILENT_ERROR_STATUSES.includes(error.status)) {
+          runInInjectionContext(injector, () => {
+            const title = translateSignal('errors.global.title', {
+              defaultValue: 'System Error',
+            });
+            const message =
+              error.status === 0
+                ? translateSignal('errors.global.network', {
+                    defaultValue:
+                      'Cannot connect to the server. Please check your internet connection.',
+                  })
+                : translateSignal('errors.global.internal', {
+                    defaultValue:
+                      'An unexpected error occurred. Please try again later.',
+                  });
+
+            // Assuming the notification service could be configured for longer duration
+            // Since our NotificationService is simple, we just pass the description.
+            // For longer duration, we will update the notification service itself to allow options.
+            notification.error(title(), message());
+          });
+        }
+
         return throwError(() => normalizedError);
       }
       // Non-HTTP errors pass through unchanged

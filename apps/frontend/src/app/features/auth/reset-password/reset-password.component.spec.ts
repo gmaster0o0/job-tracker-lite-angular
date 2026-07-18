@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestBed } from '@angular/core/testing';
 import { ResetPasswordComponent } from './reset-password.component';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -21,14 +23,21 @@ describe('ResetPasswordComponent', () => {
   let harness: ResetPasswordHarness;
   let authDataAccessMock: ReturnType<typeof createAuthDataAccessMock>;
   let router: Router;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     authDataAccessMock = createAuthDataAccessMock();
+    notificationMock = createNotificationServiceMock();
     vi.spyOn(authDataAccessMock, 'resetPassword');
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [ResetPasswordComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: notificationMock,
+        },
         provideRouter([]),
         {
           provide: ActivatedRoute,
@@ -78,6 +87,10 @@ describe('ResetPasswordComponent', () => {
       validResetPasswordCredentials,
     );
     expect(router.navigateByUrl).toHaveBeenCalledWith('/auth/login');
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Password reset successful. Redirecting to sign in...',
+    );
   });
 
   it('should show error message on failure', async () => {

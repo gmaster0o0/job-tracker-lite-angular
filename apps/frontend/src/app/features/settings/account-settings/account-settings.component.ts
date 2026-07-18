@@ -38,6 +38,7 @@ import {
   lucideMail,
 } from '@ng-icons/lucide';
 import { AuthService } from '../../auth/auth.service';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 
 @Component({
   standalone: true,
@@ -63,10 +64,17 @@ export class AccountSettingsComponent {
   private readonly authDataAccess = inject(AuthDataAccessService);
   private readonly authService = inject(AuthService);
   private readonly translocoService = inject(TranslocoService);
+  private readonly notification = inject(NotificationService);
 
   protected readonly title = translateSignal('settings.accountSettings.title');
   protected readonly subtitle = translateSignal(
     'settings.accountSettings.subtitle',
+  );
+  private readonly changeEmailSuccessMessage = translateSignal(
+    'settings.accountSettings.changeEmail.success',
+  );
+  private readonly changePasswordSuccessMessage = translateSignal(
+    'settings.accountSettings.changePassword.success',
   );
 
   protected readonly accountSettings = signal({
@@ -116,6 +124,7 @@ export class AccountSettingsComponent {
               language,
             });
             this.changeEmailSuccess.set(true);
+            this.notification.success(this.changeEmailSuccessMessage());
 
             const current = this.accountSettings();
             this.accountSettings.set({
@@ -147,6 +156,7 @@ export class AccountSettingsComponent {
           try {
             await this.authDataAccess.changePassword(data().value());
             this.changePasswordSuccess.set(true);
+            this.notification.success(this.changePasswordSuccessMessage());
             // Clear the form values and reset the form state so validation
             // errors do not appear immediately after a successful submit.
             this.passwordModel.set({

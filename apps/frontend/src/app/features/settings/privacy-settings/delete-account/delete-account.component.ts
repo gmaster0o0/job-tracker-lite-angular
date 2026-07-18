@@ -1,5 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import {
+  TranslocoModule,
+  TranslocoService,
+  translateSignal,
+} from '@jsverse/transloco';
 import { provideIcons } from '@ng-icons/core';
 import { lucideTrash2 } from '@ng-icons/lucide';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
@@ -9,6 +13,7 @@ import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import {
   AccountDataAccessService,
+  NotificationService,
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import {
@@ -34,6 +39,12 @@ export class DeleteAccountComponent {
   private readonly accountDataAccess = inject(AccountDataAccessService);
   private readonly translocoService = inject(TranslocoService);
   private readonly hlmDialogService = inject(HlmDialogService);
+  private readonly notification = inject(NotificationService);
+
+  private readonly deleteSuccessMessage = translateSignal(
+    'privacySettings.deleteAccount.success',
+    { defaultValue: 'Account deletion requested successfully' },
+  );
 
   protected readonly isDeleting = signal(false);
   protected readonly deleteError = signal<string | null>(null);
@@ -64,6 +75,7 @@ export class DeleteAccountComponent {
           try {
             await this.accountDataAccess.requestAccountDeletion({ language });
             this.confirmationSent.set(true);
+            this.notification.success(this.deleteSuccessMessage());
           } catch (error) {
             this.deleteError.set(
               isBackendError(error) ? error.errorCode : 'unknown',

@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
@@ -21,13 +23,20 @@ describe('CreateContactComponent', () => {
   let fixture: ComponentFixture<CreateContactComponent>;
   let harness: CreateContactHarness;
   let contactsDataAccessMock: any;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     contactsDataAccessMock = createContactsDataAccessMock();
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [CreateContactComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: notificationMock,
+        },
         {
           provide: ContactsDataAccessService,
           useValue: contactsDataAccessMock,
@@ -69,6 +78,10 @@ describe('CreateContactComponent', () => {
     expect(createContact).toHaveBeenCalledWith(
       'test-job-id',
       createContactFixtures.janeDoe,
+    );
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Contact created successfully.',
     );
   });
 

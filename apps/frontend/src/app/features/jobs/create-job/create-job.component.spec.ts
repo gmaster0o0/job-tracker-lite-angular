@@ -1,3 +1,5 @@
+import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import {
@@ -20,13 +22,20 @@ describe('CreateJobComponent', () => {
   let fixture: ComponentFixture<CreateJobComponent>;
   let harness: CreateJobHarness;
   let jobsDataAccessMock: any;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     jobsDataAccessMock = createJobsDataAccessMock();
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [CreateJobComponent, getTranslocoModule()],
       providers: [
+        {
+          provide: NotificationService,
+          useValue: notificationMock,
+        },
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
         { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
       ],
@@ -60,6 +69,10 @@ describe('CreateJobComponent', () => {
       ...createJobFixtures.designer,
       status: 'SAVED',
     });
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'New job application created successfully.',
+    );
   });
 
   it('should not submit if form invalid', async () => {

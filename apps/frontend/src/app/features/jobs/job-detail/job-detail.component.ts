@@ -50,6 +50,7 @@ import {
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { NotesTabComponent } from '../notes/notes-tab/notes-tab.component';
 import { translateSignal, TranslocoModule } from '@jsverse/transloco';
+import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 
 type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
 
@@ -93,6 +94,7 @@ export class JobDetailComponent {
   private readonly contactsDataAccess = inject(ContactsDataAccessService);
   private readonly notesDataAccess = inject(NotesDataAccessService);
   private readonly dialog = inject(HlmDialogService);
+  private readonly notification = inject(NotificationService);
 
   protected readonly moreOptionsTooltip = translateSignal(
     'jobs.detail.moreOptionsTooltip',
@@ -116,6 +118,14 @@ export class JobDetailComponent {
   private readonly deleteTitle = translateSignal(
     this.deleteTitleKey,
     this.deleteTitleParams,
+  );
+  private readonly deleteSuccessMessage = translateSignal(
+    'jobs.delete.success',
+    { defaultValue: 'Job deleted successfully' },
+  );
+  private readonly statusUpdateSuccessMessage = translateSignal(
+    'jobs.statusUpdate.success',
+    { defaultValue: 'Job status updated successfully' },
   );
 
   protected readonly JobStatus = JobStatus;
@@ -245,6 +255,7 @@ export class JobDetailComponent {
         confirmLabel: this.deleteConfirmLabel(),
         onConfirm: async () => {
           await this.jobsDataAccess.deleteJob(job.id);
+          this.notification.success(this.deleteSuccessMessage());
           this.router.navigate(['/jobs']);
         },
       },
@@ -293,6 +304,7 @@ export class JobDetailComponent {
     this.isUpdatingStatus.set(true);
     try {
       await this.jobsDataAccess.updateJobStatus(job.id, status);
+      this.notification.success(this.statusUpdateSuccessMessage());
     } finally {
       this.isUpdatingStatus.set(false);
     }
@@ -306,6 +318,7 @@ export class JobDetailComponent {
     this.isUpdatingStatus.set(true);
     try {
       await this.jobsDataAccess.updateJobStatus(job.id, JobStatus.REJECTED);
+      this.notification.success(this.statusUpdateSuccessMessage());
     } finally {
       this.isUpdatingStatus.set(false);
     }

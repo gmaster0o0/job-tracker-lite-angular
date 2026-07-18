@@ -18,6 +18,7 @@ import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import {
   AuthDataAccessService,
+  NotificationService,
   ZodNgControlBridgeDirective,
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
@@ -45,6 +46,11 @@ import { forgotPasswordSchema } from '@job-tracker-lite-angular/schemas';
 export class ForgotPasswordComponent {
   private readonly authDataAccess = inject(AuthDataAccessService);
   private readonly translocoService = inject(TranslocoService);
+  private readonly notification = inject(NotificationService);
+
+  private readonly forgotPasswordSuccessMessage = translateSignal(
+    'auth.forgotPassword.success',
+  );
 
   protected readonly title = translateSignal('auth.forgotPassword.title');
   protected readonly subtitle = translateSignal('auth.forgotPassword.subtitle');
@@ -74,6 +80,7 @@ export class ForgotPasswordComponent {
           try {
             await this.authDataAccess.requestPasswordReset(data().value());
             this.isSuccess.set(true);
+            this.notification.success(this.forgotPasswordSuccessMessage());
           } catch (error) {
             this.submitError.set(
               isBackendError(error) ? error.errorCode : 'unknown',

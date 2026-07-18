@@ -19,6 +19,7 @@ import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import {
   AuthDataAccessService,
+  NotificationService,
   ZodNgControlBridgeDirective,
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
@@ -51,6 +52,11 @@ export class VerifyEmailNoticeComponent {
   private readonly authDataAccess = inject(AuthDataAccessService);
   private readonly route = inject(ActivatedRoute);
   private readonly translocoService = inject(TranslocoService);
+  private readonly notification = inject(NotificationService);
+
+  private readonly verifyEmailSuccessMessage = translateSignal(
+    'auth.verifyEmailNotice.success',
+  );
 
   protected readonly title = translateSignal('auth.verifyEmailNotice.title');
   protected readonly subtitle = translateSignal(
@@ -82,6 +88,7 @@ export class VerifyEmailNoticeComponent {
           try {
             await this.authDataAccess.sendVerificationEmail(data().value());
             this.isSuccess.set(true);
+            this.notification.success(this.verifyEmailSuccessMessage());
           } catch (error) {
             this.submitError.set(
               isBackendError(error) ? error.errorCode : 'unknown',
