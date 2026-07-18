@@ -34,10 +34,10 @@ export const userProfileSchema = z.object({
   experienceLevel: experienceLevelSchema.nullable().optional(),
   workingStyle: workingStyleSchema.nullable().optional(),
   careerType: careerPreferenceTypeSchema.nullable().optional(),
-  personalVisibility: visibilityLevelSchema.default(0),
-  contactVisibility: visibilityLevelSchema.default(0),
-  skillsVisibility: visibilityLevelSchema.default(0),
-  preferenceVisibility: visibilityLevelSchema.default(0),
+  personalVisibility: visibilityLevelSchema,
+  contactVisibility: visibilityLevelSchema,
+  skillsVisibility: visibilityLevelSchema,
+  preferenceVisibility: visibilityLevelSchema,
 });
 
 export const updateUserProfileSchema = userProfileSchema
