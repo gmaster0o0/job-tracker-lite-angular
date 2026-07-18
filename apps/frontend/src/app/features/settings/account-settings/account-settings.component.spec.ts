@@ -21,6 +21,7 @@ describe('AccountSettingsComponent', () => {
   let harness: AccountSettingsHarness;
   let authDataAccessMock: ReturnType<typeof createAuthDataAccessMock>;
   let authServiceMock: { handleLogout: ReturnType<typeof vi.fn> };
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     authDataAccessMock = createAuthDataAccessMock({
@@ -33,13 +34,15 @@ describe('AccountSettingsComponent', () => {
     authServiceMock = {
       handleLogout: vi.fn(async () => undefined),
     };
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [AccountSettingsComponent, getTranslocoModule()],
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         {
           provide: AuthDataAccessService,
@@ -74,6 +77,9 @@ describe('AccountSettingsComponent', () => {
     expect(authDataAccessMock.requestEmailChange).toHaveBeenCalledWith(
       changeEmailRequestFixtures.valid,
     );
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Verification email sent to your new address.',
+    );
   });
 
   it('toggles new password visibility', async () => {
@@ -96,6 +102,9 @@ describe('AccountSettingsComponent', () => {
 
     expect(authDataAccessMock.changePassword).toHaveBeenCalledWith(
       changePasswordFixtures.valid,
+    );
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Password updated successfully.',
     );
   });
 

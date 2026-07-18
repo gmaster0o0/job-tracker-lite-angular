@@ -23,17 +23,20 @@ describe('ResetPasswordComponent', () => {
   let harness: ResetPasswordHarness;
   let authDataAccessMock: ReturnType<typeof createAuthDataAccessMock>;
   let router: Router;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     authDataAccessMock = createAuthDataAccessMock();
+    notificationMock = createNotificationServiceMock();
     vi.spyOn(authDataAccessMock, 'resetPassword');
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [ResetPasswordComponent, getTranslocoModule()],
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         provideRouter([]),
         {
@@ -84,6 +87,10 @@ describe('ResetPasswordComponent', () => {
       validResetPasswordCredentials,
     );
     expect(router.navigateByUrl).toHaveBeenCalledWith('/auth/login');
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Password reset successful. Redirecting to sign in...',
+    );
   });
 
   it('should show error message on failure', async () => {

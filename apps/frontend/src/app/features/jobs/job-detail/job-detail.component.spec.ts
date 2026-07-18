@@ -4,6 +4,7 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TestBed } from '@angular/core/testing';
 import { convertToParamMap, ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
+import { vi } from 'vitest';
 import {
   JobDto,
   JobStatusDto,
@@ -50,6 +51,12 @@ type DialogOpenCall = {
 
 describe('JobDetailComponent', () => {
   const baseJob = jobFixtures.platformEngineer;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
+
+  beforeEach(() => {
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
+  });
 
   async function setup(options: {
     id: string;
@@ -96,7 +103,7 @@ describe('JobDetailComponent', () => {
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         {
           provide: ActivatedRoute,
@@ -201,6 +208,9 @@ describe('JobDetailComponent', () => {
     expect(dataAccessServiceMock.__calls.updateJobStatusCalls).toEqual([
       [baseJob.id, JobStatus.APPLIED],
     ]);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Job application status updated successfully.',
+    );
   });
 
   it('should preserve active tab when an unknown tab is selected', async () => {
@@ -322,5 +332,8 @@ describe('JobDetailComponent', () => {
 
     expect(deleteJobCalls).toEqual([baseJob.id]);
     expect(routerNavigateCalls).toEqual([['/jobs']]);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Job application deleted successfully.',
+    );
   });
 });

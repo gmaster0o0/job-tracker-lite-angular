@@ -23,16 +23,19 @@ describe('EditJobComponent', () => {
   let fixture: ComponentFixture<EditJobComponent>;
   let harness: EditJobHarness;
   let jobsDataAccessMock: any;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     jobsDataAccessMock = createJobsDataAccessMock();
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [EditJobComponent, getTranslocoModule()],
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
         {
@@ -78,6 +81,10 @@ describe('EditJobComponent', () => {
       ...updateJobFixtures['updatedFrontendEngineer'],
       status: 'SAVED',
     });
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Job application updated successfully.',
+    );
   });
 
   it('should not submit if form invalid', async () => {

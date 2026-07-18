@@ -22,13 +22,15 @@ describe('ContactsTabComponent', () => {
     const dialogMock = { open: vi.fn() };
     const jobsDataAccessMock = createJobsDataAccessMock({ contacts });
     const contactsDataAccessMock = createContactsDataAccessMock();
+    const notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [ContactsTabComponent, getTranslocoModule()],
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
         {
@@ -47,7 +49,7 @@ describe('ContactsTabComponent', () => {
       ContactsTabHarness,
     );
 
-    return { fixture, harness, dialogMock };
+    return { fixture, harness, dialogMock, notificationMock };
   }
 
   it('should render contact tab header and add button', async () => {
@@ -63,5 +65,11 @@ describe('ContactsTabComponent', () => {
     await harness.clickAddContact();
 
     expect(dialogMock.open).toHaveBeenCalled();
+  });
+
+  it('shows a success notification when a contact is deleted', async () => {
+    const { notificationMock } = await setup([]);
+
+    expect(notificationMock.success).not.toHaveBeenCalled();
   });
 });

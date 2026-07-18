@@ -18,17 +18,20 @@ describe('RegisterComponent', () => {
   let harness: RegisterHarness;
   let authDataAccessMock: ReturnType<typeof createAuthDataAccessMock>;
   let router: Router;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     authDataAccessMock = createAuthDataAccessMock();
+    notificationMock = createNotificationServiceMock();
     vi.spyOn(authDataAccessMock, 'signUp');
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [RegisterComponent, getTranslocoModule()],
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         provideRouter([]),
         {
@@ -75,6 +78,10 @@ describe('RegisterComponent', () => {
       `/auth/verify-email-notice?email=${encodeURIComponent(
         validRegisterCredentials.email,
       )}`,
+    );
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Registration successful. Please check your email to verify your account.',
     );
   });
 

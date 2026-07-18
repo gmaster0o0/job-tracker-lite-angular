@@ -19,17 +19,20 @@ describe('LoginComponent', () => {
   let harness: LoginHarness;
   let authDataAccessMock: ReturnType<typeof createAuthDataAccessMock>;
   let router: Router;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     authDataAccessMock = createAuthDataAccessMock();
+    notificationMock = createNotificationServiceMock();
     vi.spyOn(authDataAccessMock, 'signIn');
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [LoginComponent, getTranslocoModule()],
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         provideRouter([]),
         {
@@ -66,6 +69,8 @@ describe('LoginComponent', () => {
       validLoginCredentials,
     );
     expect(router.navigateByUrl).toHaveBeenCalledWith('/jobs');
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith('Login successful.');
   });
 
   it('should redirect to delete pending page for pending deletion accounts', async () => {

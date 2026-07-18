@@ -17,17 +17,20 @@ import { VerifyEmailNoticeHarness } from './verify-email-notice.harness';
 describe('VerifyEmailNoticeComponent', () => {
   let harness: VerifyEmailNoticeHarness;
   let authDataAccessMock: ReturnType<typeof createAuthDataAccessMock>;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     authDataAccessMock = createAuthDataAccessMock();
+    notificationMock = createNotificationServiceMock();
     vi.spyOn(authDataAccessMock, 'sendVerificationEmail');
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [VerifyEmailNoticeComponent, getTranslocoModule()],
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         provideRouter([]),
         {
@@ -58,6 +61,10 @@ describe('VerifyEmailNoticeComponent', () => {
 
     expect(authDataAccessMock.sendVerificationEmail).toHaveBeenCalledWith(
       validVerificationEmailCredentials,
+    );
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Verification email sent. Check your inbox.',
     );
   });
 

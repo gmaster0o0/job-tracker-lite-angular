@@ -23,16 +23,19 @@ describe('EditContactComponent', () => {
   let fixture: ComponentFixture<EditContactComponent>;
   let harness: EditContactHarness;
   let contactsDataAccessMock: any;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     contactsDataAccessMock = createContactsDataAccessMock();
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [EditContactComponent, getTranslocoModule()],
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         {
           provide: ContactsDataAccessService,
@@ -88,6 +91,10 @@ describe('EditContactComponent', () => {
       'test-job-id',
       contactFixtures.janeDoe.id,
       updateContactFixtures.updatedContact,
+    );
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Contact updated successfully.',
     );
   });
 

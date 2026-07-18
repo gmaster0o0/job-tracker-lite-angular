@@ -23,16 +23,19 @@ describe('CreateNoteComponent', () => {
   let fixture: ComponentFixture<CreateNoteComponent>;
   let harness: CreateNoteHarness;
   let notesDataAccessMock: ReturnType<typeof createNotesDataAccessMock>;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     notesDataAccessMock = createNotesDataAccessMock();
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [CreateNoteComponent, getTranslocoModule()],
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         { provide: NotesDataAccessService, useValue: notesDataAccessMock },
         {
@@ -68,6 +71,9 @@ describe('CreateNoteComponent', () => {
     expect(createNote).toHaveBeenCalledWith(
       'test-job-id',
       createNoteFixtures.janeDoe,
+    );
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Note created successfully.',
     );
   });
 

@@ -23,16 +23,19 @@ describe('CreateContactComponent', () => {
   let fixture: ComponentFixture<CreateContactComponent>;
   let harness: CreateContactHarness;
   let contactsDataAccessMock: any;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     contactsDataAccessMock = createContactsDataAccessMock();
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [CreateContactComponent, getTranslocoModule()],
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         {
           provide: ContactsDataAccessService,
@@ -75,6 +78,10 @@ describe('CreateContactComponent', () => {
     expect(createContact).toHaveBeenCalledWith(
       'test-job-id',
       createContactFixtures.janeDoe,
+    );
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Contact created successfully.',
     );
   });
 

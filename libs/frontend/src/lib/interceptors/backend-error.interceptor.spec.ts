@@ -14,19 +14,43 @@ import { backendErrorInterceptor } from './backend-error.interceptor';
 import { NotificationService } from '../services/notification.service';
 import { createNotificationServiceMock } from '@job-tracker-lite-angular/testing';
 import { TranslocoTestingModule } from '@jsverse/transloco';
+import { vi } from 'vitest';
+
+const en = {
+  errors: {
+    global: {
+      title: 'System Error',
+      network:
+        'Cannot connect to the server. Please check your internet connection.',
+      internal: 'An unexpected error occurred. Please try again later.',
+    },
+  },
+};
+
+const hu = {
+  errors: {
+    global: {
+      title: 'Rendszerhiba',
+      network:
+        'Nem sikerült csatlakozni a szerverhez. Kérjük, ellenőrizze az internetkapcsolatot.',
+      internal: 'Váratlan hiba történt. Kérjük, próbálja újra később.',
+    },
+  },
+};
 
 describe('backendErrorInterceptor', () => {
   let httpClient: HttpClient;
   let httpMock: HttpTestingController;
-  let notificationMock: Partial<NotificationService>;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(() => {
     notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'error');
 
     TestBed.configureTestingModule({
       imports: [
         TranslocoTestingModule.forRoot({
-          langs: { en: {}, hu: {} },
+          langs: { en, hu },
           translocoConfig: {
             availableLangs: ['en', 'hu'],
             defaultLang: 'en',
@@ -112,7 +136,10 @@ describe('backendErrorInterceptor', () => {
     req.flush(null, { status: 0, statusText: 'Unknown Error' });
 
     await expect(request).rejects.toBeDefined();
-    expect(notificationMock.error).toHaveBeenCalled();
+    expect(notificationMock.error).toHaveBeenCalledWith(
+      'System Error',
+      'Cannot connect to the server. Please check your internet connection.',
+    );
   });
 
   it('does not show toast for silent errors like 400', async () => {

@@ -22,16 +22,19 @@ describe('CreateJobComponent', () => {
   let fixture: ComponentFixture<CreateJobComponent>;
   let harness: CreateJobHarness;
   let jobsDataAccessMock: any;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     jobsDataAccessMock = createJobsDataAccessMock();
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [CreateJobComponent, getTranslocoModule()],
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         { provide: JobsDataAccessService, useValue: jobsDataAccessMock },
         { provide: BrnDialogRef, useValue: createBrnDialogRefMock() },
@@ -66,6 +69,10 @@ describe('CreateJobComponent', () => {
       ...createJobFixtures.designer,
       status: 'SAVED',
     });
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'New job application created successfully.',
+    );
   });
 
   it('should not submit if form invalid', async () => {

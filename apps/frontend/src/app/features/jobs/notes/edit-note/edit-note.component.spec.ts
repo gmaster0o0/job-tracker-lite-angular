@@ -23,16 +23,19 @@ describe('EditNoteComponent', () => {
   let fixture: ComponentFixture<EditNoteComponent>;
   let harness: EditNoteHarness;
   let notesDataAccessMock: ReturnType<typeof createNotesDataAccessMock>;
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
 
   beforeEach(async () => {
     notesDataAccessMock = createNotesDataAccessMock();
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
 
     await TestBed.configureTestingModule({
       imports: [EditNoteComponent, getTranslocoModule()],
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         { provide: NotesDataAccessService, useValue: notesDataAccessMock },
         {
@@ -73,6 +76,9 @@ describe('EditNoteComponent', () => {
       'test-job-id',
       noteFixtures.janeDoe.id,
       updateNoteFixtures.updatedNote,
+    );
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'Note updated successfully.',
     );
   });
 

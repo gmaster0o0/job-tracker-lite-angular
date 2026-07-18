@@ -16,17 +16,18 @@ import { ForgotPasswordHarness } from './forgot-password.harness';
 describe('ForgotPasswordComponent', () => {
   let harness: ForgotPasswordHarness;
   let authDataAccessMock: ReturnType<typeof createAuthDataAccessMock>;
-
+  let notificationMock: ReturnType<typeof createNotificationServiceMock>;
   beforeEach(async () => {
     authDataAccessMock = createAuthDataAccessMock();
     vi.spyOn(authDataAccessMock, 'requestPasswordReset');
-
+    notificationMock = createNotificationServiceMock();
+    vi.spyOn(notificationMock, 'success');
     await TestBed.configureTestingModule({
       imports: [ForgotPasswordComponent, getTranslocoModule()],
       providers: [
         {
           provide: NotificationService,
-          useValue: createNotificationServiceMock(),
+          useValue: notificationMock,
         },
         {
           provide: AuthDataAccessService,
@@ -56,6 +57,10 @@ describe('ForgotPasswordComponent', () => {
 
     expect(authDataAccessMock.requestPasswordReset).toHaveBeenCalledWith(
       validForgotPasswordCredentials,
+    );
+    expect(notificationMock.success).toHaveBeenCalledTimes(1);
+    expect(notificationMock.success).toHaveBeenCalledWith(
+      'If an account exists for this email, a reset link has been sent.',
     );
   });
 
