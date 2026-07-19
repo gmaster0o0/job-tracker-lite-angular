@@ -26,7 +26,7 @@ export class EmailService {
       await this.emailQueue.add(EmailJobName.SEND, options, {
         attempts: 3,
         backoff: { type: 'exponential', delay: 5000 },
-        removeOnComplete: true,
+        removeOnComplete: 10,
         removeOnFail: false,
       });
     } catch (error) {

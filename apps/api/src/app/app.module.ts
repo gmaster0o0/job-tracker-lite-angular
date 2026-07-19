@@ -10,6 +10,7 @@ import { AccountModule } from './account/account.module';
 import { ProfileModule } from './profile/profile.module';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { ExpressAdapter } from '@bull-board/express';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -17,16 +18,7 @@ import { ExpressAdapter } from '@bull-board/express';
       isGlobal: true,
       cache: true,
     }),
-    BullModule.forRoot({
-      connection: {
-        host: 'localhost',
-        port: 6379,
-      },
-    }),
-    BullBoardModule.forRoot({
-      route: '/admin/queues',
-      adapter: ExpressAdapter,
-    }),
+
     ScheduleModule.forRoot(),
     PrismaModule,
     JobsModule,
@@ -34,6 +26,7 @@ import { ExpressAdapter } from '@bull-board/express';
     AuthModule,
     AccountModule,
     ProfileModule,
+    QueueModule,
   ],
   controllers: [],
 })
