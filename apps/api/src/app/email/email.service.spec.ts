@@ -6,6 +6,10 @@ import { EMAIL_QUEUE, EmailJobName } from './email.queue';
 import { EMAIL_ERROR_CODES } from './email.errors';
 import { EmailService } from './email.service';
 import {
+  EMAIL_PROVIDER,
+  SendEmailOptions,
+} from './providers/email-provider.interface';
+import {
   testRecipient,
   testResetUrl,
   testRestoreRecipient,
@@ -18,10 +22,14 @@ import {
 describe('EmailService', () => {
   let service: EmailService;
   let emailQueue: { add: jest.Mock };
+  let emailProvider: { send: jest.Mock<Promise<void>, [SendEmailOptions]> };
 
   beforeEach(async () => {
     emailQueue = {
       add: jest.fn().mockResolvedValue(undefined),
+    };
+    emailProvider = {
+      send: jest.fn().mockResolvedValue(undefined),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -30,6 +38,10 @@ describe('EmailService', () => {
         {
           provide: getQueueToken(EMAIL_QUEUE),
           useValue: emailQueue,
+        },
+        {
+          provide: EMAIL_PROVIDER,
+          useValue: emailProvider,
         },
       ],
     }).compile();
@@ -199,8 +211,18 @@ describe('EmailService', () => {
     },
   );
 
-  it('should wrap enqueue errors in a backend-style exception', async () => {
+  it('should fall back to sending directly through the provider if enqueueing fails', async () => {
     emailQueue.add.mockRejectedValueOnce(new Error('redis unreachable'));
+
+    await service.send(testSendOptions);
+
+    expect(emailQueue.add).toHaveBeenCalled();
+    expect(emailProvider.send).toHaveBeenCalledWith(testSendOptions);
+  });
+
+  it('should wrap the error in a backend-style exception if both enqueueing and the fallback send fail', async () => {
+    emailQueue.add.mockRejectedValueOnce(new Error('redis unreachable'));
+    emailProvider.send.mockRejectedValueOnce(new Error('smtp failed'));
 
     await expect(service.send(testSendOptions)).rejects.toMatchObject({
       status: HttpStatus.INTERNAL_SERVER_ERROR,

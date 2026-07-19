@@ -1,10 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { SupportLang } from '@job-tracker-lite-angular/schemas';
 import { EmailSendException } from './email.errors';
 import { EMAIL_QUEUE, EmailJobName } from './email.queue';
-import { type SendEmailOptions } from './providers/email-provider.interface';
+import {
+  EMAIL_PROVIDER,
+  type EmailProvider,
+  type SendEmailOptions,
+} from './providers/email-provider.interface';
 import {
   getDeleteAccountVerificationTemplate,
   getResetPasswordEmailTemplate,
@@ -16,9 +20,13 @@ import {
 
 @Injectable()
 export class EmailService {
+  private readonly logger = new Logger(EmailService.name);
+
   constructor(
     @InjectQueue(EMAIL_QUEUE)
     private readonly emailQueue: Queue<SendEmailOptions>,
+    @Inject(EMAIL_PROVIDER)
+    private readonly emailProvider: EmailProvider,
   ) {}
 
   async send(options: SendEmailOptions): Promise<void> {
@@ -26,14 +34,29 @@ export class EmailService {
       await this.emailQueue.add(EmailJobName.SEND, options, {
         attempts: 3,
         backoff: { type: 'exponential', delay: 5000 },
-        removeOnComplete: 10,
+        // Keep the last 100 completed jobs (or up to 24h old) around so
+        // they're still visible in Bull Board for debugging, instead of
+        // vanishing immediately on success.
+        removeOnComplete: { count: 100, age: 24 * 60 * 60 },
         removeOnFail: false,
       });
-    } catch (error) {
-      // This only fires if enqueueing itself fails (e.g. Redis unreachable).
-      // Failures during the actual send happen later in EmailProcessor and
-      // are handled by BullMQ's retry policy, not here.
-      throw new EmailSendException(error);
+      return;
+    } catch (queueError) {
+      // Enqueueing failed - most likely Redis is unreachable or misconfigured.
+      // Log loudly so this doesn't go unnoticed (we don't want the fallback
+      // to silently mask a Redis outage for days), then fall back to sending
+      // directly through the provider so the user isn't blocked.
+      this.logger.warn(
+        `Failed to enqueue email to ${options.to}, falling back to direct send: ${
+          queueError instanceof Error ? queueError.message : String(queueError)
+        }`,
+      );
+    }
+
+    try {
+      await this.emailProvider.send(options);
+    } catch (sendError) {
+      throw new EmailSendException(sendError);
     }
   }
 
