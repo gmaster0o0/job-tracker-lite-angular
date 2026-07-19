@@ -29,6 +29,10 @@ export class HealthController {
     ]);
   }
 
+  // Separate from the main /health check on purpose: a temporary Redis
+  // outage shouldn't make Render think the whole service is down and
+  // restart it - the email queue already retries on its own once Redis
+  // is reachable again. This endpoint is for manual/dashboard checks.
   @Get('detailed')
   @HealthCheck()
   checkDetailed() {
