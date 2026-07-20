@@ -12,7 +12,6 @@ describe('EmptyListComponent', () => {
 
     fixture = TestBed.createComponent(EmptyListComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
   });
 
   it('should create', () => {
