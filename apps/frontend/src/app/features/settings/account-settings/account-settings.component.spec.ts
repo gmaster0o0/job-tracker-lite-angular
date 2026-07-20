@@ -138,7 +138,6 @@ describe('AccountSettingsComponent', () => {
     );
     await harness.submitChangePassword();
 
-    await fixture.whenStable();
     const form = component['changePasswordForm'] as any;
 
     expect(form.currentPassword().touched()).toBe(false);

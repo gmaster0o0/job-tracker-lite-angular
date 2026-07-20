@@ -29,7 +29,6 @@ describe('CookieManagementComponent', () => {
       fixture,
       CookieManagementHarness,
     );
-    await fixture.whenStable();
   });
 
   it('should create', () => {

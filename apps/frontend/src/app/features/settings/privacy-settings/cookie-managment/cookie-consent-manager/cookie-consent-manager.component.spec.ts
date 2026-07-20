@@ -39,7 +39,6 @@ describe('CookieConsentManager', () => {
       fixture,
       CookieConsentManagerHarness,
     );
-    await fixture.whenStable();
   });
 
   it('should create', () => {
