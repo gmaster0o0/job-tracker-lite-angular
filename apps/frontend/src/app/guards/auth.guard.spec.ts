@@ -29,7 +29,7 @@ describe('authGuard', () => {
   });
 
   it('should allow navigation for authenticated users', async () => {
-    authSessionServiceMock.loadSession.mockResolvedValue(
+    authSessionServiceMock.session.mockReturnValue(
       authSessionFixtures.authenticated,
     );
 
@@ -41,9 +41,7 @@ describe('authGuard', () => {
   });
 
   it('should redirect guests to login', async () => {
-    authSessionServiceMock.loadSession.mockResolvedValue(
-      authSessionFixtures.guest,
-    );
+    authSessionServiceMock.session.mockReturnValue(authSessionFixtures.guest);
 
     const result = await TestBed.runInInjectionContext(() =>
       authGuard({} as never, {} as never),
@@ -54,7 +52,7 @@ describe('authGuard', () => {
   });
 
   it('should redirect pending deletion users to delete pending page', async () => {
-    authSessionServiceMock.loadSession.mockResolvedValue(
+    authSessionServiceMock.session.mockReturnValue(
       authSessionFixtures.pendingDeletion,
     );
     authSessionServiceMock.isPendingDeletion.mockReturnValue(true);
@@ -75,7 +73,7 @@ describe('authGuard', () => {
     );
 
     // Active user should be prevented from visiting delete-pending
-    authSessionServiceMock.loadSession.mockResolvedValue(
+    authSessionServiceMock.session.mockReturnValue(
       authSessionFixtures.authenticated,
     );
     authSessionServiceMock.isPendingDeletion.mockReturnValue(false);

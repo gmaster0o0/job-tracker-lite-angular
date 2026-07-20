@@ -15,12 +15,17 @@ export function createAuthSessionServiceMock(
   const setSession = mockFactory();
   const clearSession = mockFactory();
   const isPendingDeletion = mockFactory();
+  const session = mockFactory();
 
   if (
     !options.loadSession &&
     typeof loadSession.mockImplementation === 'function'
   ) {
     loadSession.mockImplementation(async () => currentSession);
+  }
+
+  if (typeof session.mockImplementation === 'function') {
+    session.mockImplementation(() => currentSession);
   }
 
   if (typeof setSession.mockImplementation === 'function') {
@@ -45,7 +50,7 @@ export function createAuthSessionServiceMock(
     loadSession,
     setSession,
     clearSession,
-    session: mockFactory(),
+    session,
     isAuthenticated: mockFactory(),
     userId: mockFactory(),
     isPendingDeletion,
