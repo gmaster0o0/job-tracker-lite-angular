@@ -4,6 +4,7 @@ import { Queue } from 'bullmq';
 import { SupportLang } from '@job-tracker-lite-angular/schemas';
 import { EmailSendException } from './email.errors';
 import { EMAIL_QUEUE, EmailJobName } from './email.queue';
+import { describeRedisError } from '../queue/redis-error.util';
 import {
   EMAIL_PROVIDER,
   type EmailProvider,
@@ -45,7 +46,9 @@ export class EmailService {
       return;
     }
     this.lastQueueErrorLoggedAt = now;
-    this.logger.warn(`Email queue Redis connection error: ${error.message}`);
+    this.logger.warn(
+      `Email queue Redis connection error: ${describeRedisError(error)}`,
+    );
   }
 
   async send(options: SendEmailOptions): Promise<void> {

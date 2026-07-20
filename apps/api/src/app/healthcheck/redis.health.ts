@@ -4,6 +4,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { Redis } from 'ioredis';
 import { EMAIL_QUEUE } from '../email/email.queue';
+import { describeRedisError } from '../queue/redis-error.util';
 
 @Injectable()
 export class RedisHealthIndicator {
@@ -24,7 +25,7 @@ export class RedisHealthIndicator {
       return indicator.up();
     } catch (error) {
       return indicator.down({
-        message: error instanceof Error ? error.message : 'Unknown error',
+        message: describeRedisError(error),
       });
     }
   }

@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import {
   EMAIL_PROVIDER,
@@ -51,5 +52,31 @@ describe('EmailProcessor', () => {
     const job = buildJob(testSendOptions);
 
     await expect(processor.process(job)).rejects.toThrow(providerError);
+  });
+
+  it('registers a listener for the worker connection error event', () => {
+    const workerMock = { on: jest.fn() };
+    (processor as unknown as { _worker: unknown })._worker = workerMock;
+
+    processor.onApplicationBootstrap();
+
+    expect(workerMock.on).toHaveBeenCalledWith('error', expect.any(Function));
+  });
+
+  it('throttles repeated worker connection error logs', () => {
+    const warnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+    const workerMock = { on: jest.fn() };
+    (processor as unknown as { _worker: unknown })._worker = workerMock;
+    processor.onApplicationBootstrap();
+
+    const [, errorHandler] = workerMock.on.mock.calls.find(
+      ([event]) => event === 'error',
+    );
+
+    errorHandler(new Error('connect ECONNREFUSED'));
+    errorHandler(new Error('connect ECONNREFUSED'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    warnSpy.mockRestore();
   });
 });
