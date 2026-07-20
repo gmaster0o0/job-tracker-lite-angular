@@ -23,7 +23,6 @@ describe('InlineInputComponent', () => {
       InlineInputHarness,
     );
     fixture.componentRef.setInput('value', '');
-    await fixture.whenStable();
   });
 
   it('should create', () => {
@@ -83,7 +82,6 @@ describe('InlineInputComponent', () => {
     fixture.componentRef.setInput('value', 'Live value');
     fixture.componentRef.setInput('fallbackValue', 'Read only value');
     fixture.componentRef.setInput('isEditing', false);
-    await fixture.whenStable();
 
     expect(await harness.getValue()).toBe('Read only value');
 
