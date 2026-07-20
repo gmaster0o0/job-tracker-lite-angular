@@ -18,16 +18,35 @@ import {
   getDeleteAccountNotificationTemplate,
 } from './templates';
 
+// BullMQ re-emits the Redis connection's 'error' event on the Queue itself.
+// If nothing is listening for it, BullMQ's own fallback kicks in and dumps
+// the raw error straight to the console on every reconnect attempt (ioredis
+// retries indefinitely by default, so that's every second or two while
+// Redis is down). Throttle how often we actually log it.
+const QUEUE_ERROR_LOG_INTERVAL_MS = 30_000;
+
 @Injectable()
 export class EmailService {
   private readonly logger = new Logger(EmailService.name);
+  private lastQueueErrorLoggedAt = 0;
 
   constructor(
     @InjectQueue(EMAIL_QUEUE)
     private readonly emailQueue: Queue<SendEmailOptions>,
     @Inject(EMAIL_PROVIDER)
     private readonly emailProvider: EmailProvider,
-  ) {}
+  ) {
+    this.emailQueue.on('error', (error) => this.handleQueueError(error));
+  }
+
+  private handleQueueError(error: Error): void {
+    const now = Date.now();
+    if (now - this.lastQueueErrorLoggedAt < QUEUE_ERROR_LOG_INTERVAL_MS) {
+      return;
+    }
+    this.lastQueueErrorLoggedAt = now;
+    this.logger.warn(`Email queue Redis connection error: ${error.message}`);
+  }
 
   async send(options: SendEmailOptions): Promise<void> {
     try {

@@ -1,4 +1,4 @@
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, Logger } from '@nestjs/common';
 import { getQueueToken } from '@nestjs/bullmq';
 import { Test, TestingModule } from '@nestjs/testing';
 import { SupportLang } from '@job-tracker-lite-angular/schemas';
@@ -21,12 +21,13 @@ import {
 
 describe('EmailService', () => {
   let service: EmailService;
-  let emailQueue: { add: jest.Mock };
+  let emailQueue: { add: jest.Mock; on: jest.Mock };
   let emailProvider: { send: jest.Mock<Promise<void>, [SendEmailOptions]> };
 
   beforeEach(async () => {
     emailQueue = {
       add: jest.fn().mockResolvedValue(undefined),
+      on: jest.fn(),
     };
     emailProvider = {
       send: jest.fn().mockResolvedValue(undefined),
@@ -57,6 +58,25 @@ describe('EmailService', () => {
       testSendOptions,
       expect.objectContaining({ attempts: expect.any(Number) }),
     );
+  });
+
+  it('registers a listener for the queue connection error event', () => {
+    // Without a listener, BullMQ's own fallback dumps the raw connection
+    // error straight to the console on every reconnect attempt.
+    expect(emailQueue.on).toHaveBeenCalledWith('error', expect.any(Function));
+  });
+
+  it('throttles repeated queue connection error logs', () => {
+    const warnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+    const [, errorHandler] = emailQueue.on.mock.calls.find(
+      ([event]) => event === 'error',
+    );
+
+    errorHandler(new Error('connect ECONNREFUSED'));
+    errorHandler(new Error('connect ECONNREFUSED'));
+
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    warnSpy.mockRestore();
   });
 
   it.each<[SupportLang, string]>([
