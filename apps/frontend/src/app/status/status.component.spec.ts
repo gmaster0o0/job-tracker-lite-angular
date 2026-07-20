@@ -3,9 +3,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { HealthResponseDto } from '@job-tracker-lite-angular/schemas';
-import { DataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import { HealthDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import {
-  createDataAccessMock,
+  createHealthDataAccessMock,
   degradedHealth,
   healthFixture,
 } from '@job-tracker-lite-angular/testing';
@@ -21,13 +21,13 @@ describe('StatusComponent', () => {
     error?: unknown;
     hasValue?: boolean;
   }) {
-    const dataAccessMock = createDataAccessMock(options);
+    const dataAccessMock = createHealthDataAccessMock(options);
 
     await TestBed.configureTestingModule({
       imports: [StatusComponent, getTranslocoModule()],
       providers: [
         provideRouter([]),
-        { provide: DataAccessService, useValue: dataAccessMock },
+        { provide: HealthDataAccessService, useValue: dataAccessMock },
       ],
     }).compileComponents();
 
@@ -40,11 +40,12 @@ describe('StatusComponent', () => {
     return { fixture, harness };
   }
 
-  it('should render API and database status from health data', async () => {
+  it('should render API, database and queue status from health data', async () => {
     const { harness } = await setup({ health: healthFixture });
 
     expect(await harness.getApiStatus()).toContain('OK');
     expect(await harness.getDatabaseStatus()).toContain('UP');
+    expect(await harness.getQueueStatus()).toContain('UP');
     expect(await harness.getTimestamp()).toBeTruthy();
     expect(await harness.getUptime()).toContain('Uptime:');
   });
@@ -86,5 +87,16 @@ describe('StatusComponent', () => {
 
     expect(await harness.getApiStatus()).toContain('ERROR');
     expect(await harness.getDatabaseStatus()).toContain('DOWN');
+  });
+
+  it('should show an offline fallback when the backend is unreachable', async () => {
+    const { harness } = await setup({
+      health: null,
+      hasValue: false,
+      error: new HttpErrorResponse({ status: 0 }),
+    });
+
+    expect(await harness.hasErrorMessage()).toBe(true);
+    expect(await harness.getErrorText()).toContain('Cannot reach the server.');
   });
 });

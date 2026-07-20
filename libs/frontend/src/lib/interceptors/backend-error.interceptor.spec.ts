@@ -154,4 +154,28 @@ describe('backendErrorInterceptor', () => {
     await expect(request).rejects.toBeDefined();
     expect(notificationMock.error).not.toHaveBeenCalled();
   });
+
+  it('passes through the raw HttpErrorResponse for health check requests without a toast', async () => {
+    const request = firstValueFrom(httpClient.get('/api/health/detailed'));
+
+    const req = httpMock.expectOne('/api/health/detailed');
+    const degradedHealth = {
+      status: 'error',
+      info: {},
+      error: { database: { status: 'down' } },
+      details: {},
+    };
+    req.flush(degradedHealth, {
+      status: 503,
+      statusText: 'Service Unavailable',
+    });
+
+    await expect(request).rejects.toEqual(
+      expect.objectContaining({
+        status: 503,
+        error: degradedHealth,
+      }),
+    );
+    expect(notificationMock.error).not.toHaveBeenCalled();
+  });
 });

@@ -1,20 +1,23 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { DataAccessService } from './data-access';
+import { HealthDataAccessService } from './health.data-access';
 
-describe('DataAccessService', () => {
+describe('HealthDataAccessService', () => {
+  let service: HealthDataAccessService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        DataAccessService,
+        HealthDataAccessService,
         provideHttpClient(),
         provideHttpClientTesting(),
       ],
     });
+    service = TestBed.inject(HealthDataAccessService);
   });
 
-  it('should create', () => {
-    expect(TestBed.inject(DataAccessService)).toBeTruthy();
+  it('should be created', () => {
+    expect(service).toBeTruthy();
   });
 });

@@ -16,9 +16,6 @@ export class RedisHealthIndicator {
     const indicator = this.healthIndicatorService.check(key);
 
     try {
-      // Queue.client returns BullMQ's generic IRedisClient adapter type,
-      // which doesn't expose ping() even though the underlying client is
-      // ioredis by default (we haven't configured a different adapter).
       const client = (await this.emailQueue.client) as unknown as Redis;
       await client.ping();
       return indicator.up();

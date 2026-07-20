@@ -8,6 +8,10 @@ import { translateSignal } from '@jsverse/transloco';
 
 const SILENT_ERROR_STATUSES = [400, 401, 403, 404, 409, 422];
 
+function isHealthCheckRequest(url: string): boolean {
+  return url.includes('/health/');
+}
+
 /**
  * HTTP interceptor that normalizes backend errors into a consistent BackendError shape.
  * This keeps components free from HttpErrorResponse handling logic.
@@ -18,6 +22,10 @@ export const backendErrorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error: unknown) => {
       if (error instanceof HttpErrorResponse) {
+        if (isHealthCheckRequest(req.url)) {
+          return throwError(() => error);
+        }
+
         const normalizedError = normalizeHttpError(error);
 
         // Show global toast for non-silent errors (e.g. 500, network errors)
@@ -37,9 +45,6 @@ export const backendErrorInterceptor: HttpInterceptorFn = (req, next) => {
                       'An unexpected error occurred. Please try again later.',
                   });
 
-            // Assuming the notification service could be configured for longer duration
-            // Since our NotificationService is simple, we just pass the description.
-            // For longer duration, we will update the notification service itself to allow options.
             notification.error(title(), message());
           });
         }

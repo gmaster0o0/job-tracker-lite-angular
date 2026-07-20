@@ -8,14 +8,16 @@ type HealthResourceState = {
   hasValue: () => boolean;
 };
 
-export type DataAccessMockOptions = {
+export type HealthDataAccessMockOptions = {
   health?: HealthResponseDto | null;
   isLoading?: boolean;
   error?: unknown;
   hasValue?: boolean;
 };
 
-export function createDataAccessMock(options: DataAccessMockOptions = {}) {
+export function createHealthDataAccessMock(
+  options: HealthDataAccessMockOptions = {},
+) {
   const health = options.health ?? null;
   const isLoading = options.isLoading ?? false;
   const hasValue = options.hasValue ?? health !== null;

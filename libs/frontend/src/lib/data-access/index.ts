@@ -1,4 +1,4 @@
-export * from './data-access';
+export * from './health.data-access';
 export * from './jobs.data-access';
 export * from './contacts.data-access';
 export * from './notes.data-access';

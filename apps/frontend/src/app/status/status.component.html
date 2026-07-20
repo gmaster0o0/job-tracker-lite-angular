@@ -11,7 +11,7 @@
     </hlm-card-header>
     <div hlmCardContent>
       @if (health(); as healthData) {
-        <div class="grid gap-6 sm:grid-cols-2">
+        <div class="grid gap-6 sm:grid-cols-3">
           <hlm-card>
             <hlm-card-header>
               <span style="display: none">{{ 0 | uptime }}</span>
@@ -46,6 +46,23 @@
               </span>
             </div>
           </hlm-card>
+          <hlm-card>
+            <hlm-card-header>
+              <h3 hlmCardTitle>{{ 'status.queue' | transloco }}</h3>
+            </hlm-card-header>
+            <div hlmCardContent>
+              @let redisStatus =
+                healthData.info.redis?.status ?? healthData.error.redis?.status;
+              <span
+                hlmBadge
+                class="text-white"
+                [class.bg-green-500]="redisStatus === 'up'"
+                [class.bg-red-500]="redisStatus === 'down'"
+              >
+                {{ redisStatus?.toUpperCase() || 'UNKNOWN' }}
+              </span>
+            </div>
+          </hlm-card>
         </div>
 
         <hlm-card class="mt-6">
@@ -70,6 +87,10 @@
         <div>
           <hlm-spinner></hlm-spinner>
           <p>{{ 'status.loadingHealth' | transloco }}</p>
+        </div>
+      } @else if (isUnreachable()) {
+        <div>
+          <p class="text-red-500">{{ 'status.offline' | transloco }}</p>
         </div>
       } @else {
         <div>
