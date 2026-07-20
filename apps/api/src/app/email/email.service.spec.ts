@@ -1,12 +1,14 @@
 import { HttpStatus } from '@nestjs/common';
+import { getQueueToken } from '@nestjs/bullmq';
 import { Test, TestingModule } from '@nestjs/testing';
 import { SupportLang } from '@job-tracker-lite-angular/schemas';
+import { EMAIL_QUEUE, EmailJobName } from './email.queue';
+import { EMAIL_ERROR_CODES } from './email.errors';
+import { EmailService } from './email.service';
 import {
   EMAIL_PROVIDER,
   SendEmailOptions,
 } from './providers/email-provider.interface';
-import { EMAIL_ERROR_CODES } from './email.errors';
-import { EmailService } from './email.service';
 import {
   testRecipient,
   testResetUrl,
@@ -19,9 +21,13 @@ import {
 
 describe('EmailService', () => {
   let service: EmailService;
+  let emailQueue: { add: jest.Mock };
   let emailProvider: { send: jest.Mock<Promise<void>, [SendEmailOptions]> };
 
   beforeEach(async () => {
+    emailQueue = {
+      add: jest.fn().mockResolvedValue(undefined),
+    };
     emailProvider = {
       send: jest.fn().mockResolvedValue(undefined),
     };
@@ -29,6 +35,10 @@ describe('EmailService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EmailService,
+        {
+          provide: getQueueToken(EMAIL_QUEUE),
+          useValue: emailQueue,
+        },
         {
           provide: EMAIL_PROVIDER,
           useValue: emailProvider,
@@ -39,75 +49,87 @@ describe('EmailService', () => {
     service = module.get<EmailService>(EmailService);
   });
 
-  it('should delegate send calls to the configured provider', async () => {
+  it('should enqueue send calls instead of sending directly', async () => {
     await service.send(testSendOptions);
 
-    expect(emailProvider.send).toHaveBeenCalledWith(testSendOptions);
+    expect(emailQueue.add).toHaveBeenCalledWith(
+      EmailJobName.SEND,
+      testSendOptions,
+      expect.objectContaining({ attempts: expect.any(Number) }),
+    );
   });
 
   it.each<[SupportLang, string]>([
     ['en', 'Reset your password - Job Tracker Lite'],
     ['hu', 'Jelszó visszaállítása - Job Tracker Lite'],
-  ])('should send the reset password email in %s', async (lang, subject) => {
+  ])('should enqueue the reset password email in %s', async (lang, subject) => {
     await service.sendResetPasswordEmail(testRecipient, testResetUrl, lang);
 
-    expect(emailProvider.send).toHaveBeenCalledWith(
+    expect(emailQueue.add).toHaveBeenCalledWith(
+      EmailJobName.SEND,
       expect.objectContaining({
         to: testRecipient,
         subject,
       }),
+      expect.any(Object),
     );
   });
 
   it.each<[SupportLang, string]>([
     ['en', 'Verify your email - Job Tracker Lite'],
     ['hu', 'Email cím megerősítése - Job Tracker Lite'],
-  ])('should send the verification email in %s', async (lang, subject) => {
+  ])('should enqueue the verification email in %s', async (lang, subject) => {
     await service.sendVerificationEmail(
       testVerificationRecipient,
       testVerificationUrl,
       lang,
     );
 
-    expect(emailProvider.send).toHaveBeenCalledWith(
+    expect(emailQueue.add).toHaveBeenCalledWith(
+      EmailJobName.SEND,
       expect.objectContaining({
         to: testVerificationRecipient,
         subject,
       }),
+      expect.any(Object),
     );
   });
 
   it.each<[SupportLang, string]>([
     ['en', 'Restore your previous email - Job Tracker Lite'],
     ['hu', 'Email visszaállítása - Job Tracker Lite'],
-  ])('should send the email restore email in %s', async (lang, subject) => {
+  ])('should enqueue the email restore email in %s', async (lang, subject) => {
     await service.sendEmailRestoreEmail(
       testRestoreRecipient,
       testRestoreUrl,
       lang,
     );
 
-    expect(emailProvider.send).toHaveBeenCalledWith(
+    expect(emailQueue.add).toHaveBeenCalledWith(
+      EmailJobName.SEND,
       expect.objectContaining({
         to: testRestoreRecipient,
         subject,
       }),
+      expect.any(Object),
     );
   });
 
-  it('should include the restore URL in the email restore payload', async () => {
+  it('should include the restore URL in the enqueued email restore payload', async () => {
     await service.sendEmailRestoreEmail(
       testRestoreRecipient,
       testRestoreUrl,
       'en',
     );
 
-    expect(emailProvider.send).toHaveBeenCalledWith(
+    expect(emailQueue.add).toHaveBeenCalledWith(
+      EmailJobName.SEND,
       expect.objectContaining({
         to: testRestoreRecipient,
         text: expect.stringContaining(testRestoreUrl),
         html: expect.stringContaining(testRestoreUrl),
       }),
+      expect.any(Object),
     );
   });
 
@@ -115,7 +137,7 @@ describe('EmailService', () => {
     ['en', 'Confirm your email change - Job Tracker Lite'],
     ['hu', 'Email-cím változtatás megerősítése - Job Tracker Lite'],
   ])(
-    'should send the email change confirmation email in %s',
+    'should enqueue the email change confirmation email in %s',
     async (lang, subject) => {
       await service.sendEmailChangeConfirmationEmail(
         testVerificationRecipient,
@@ -123,11 +145,13 @@ describe('EmailService', () => {
         lang,
       );
 
-      expect(emailProvider.send).toHaveBeenCalledWith(
+      expect(emailQueue.add).toHaveBeenCalledWith(
+        EmailJobName.SEND,
         expect.objectContaining({
           to: testVerificationRecipient,
           subject,
         }),
+        expect.any(Object),
       );
     },
   );
@@ -136,7 +160,7 @@ describe('EmailService', () => {
     ['en', 'Confirm your account deletion - Job Tracker Lite'],
     ['hu', 'Fióktörlés megerősítése - Job Tracker Lite'],
   ])(
-    'should send the account deletion verification email in %s',
+    'should enqueue the account deletion verification email in %s',
     async (lang, subject) => {
       await service.sendDeleteAccountVerificationEmail(
         testVerificationRecipient,
@@ -145,13 +169,15 @@ describe('EmailService', () => {
         7,
       );
 
-      expect(emailProvider.send).toHaveBeenCalledWith(
+      expect(emailQueue.add).toHaveBeenCalledWith(
+        EmailJobName.SEND,
         expect.objectContaining({
           to: testVerificationRecipient,
           subject,
           text: expect.stringContaining(testVerificationUrl),
           html: expect.stringContaining(testVerificationUrl),
         }),
+        expect.any(Object),
       );
     },
   );
@@ -160,7 +186,7 @@ describe('EmailService', () => {
     ['en', 'Your account is scheduled for deletion - Job Tracker Lite'],
     ['hu', 'Fiókod törlése ütemezve lett - Job Tracker Lite'],
   ])(
-    'should send the account deletion notification email in %s',
+    'should enqueue the account deletion notification email in %s',
     async (lang, subject) => {
       const scheduledDeletionAt = new Date('2024-01-01T00:00:00Z');
       const recoverUrl = 'https://example.com/recover';
@@ -172,18 +198,30 @@ describe('EmailService', () => {
         lang,
       );
 
-      expect(emailProvider.send).toHaveBeenCalledWith(
+      expect(emailQueue.add).toHaveBeenCalledWith(
+        EmailJobName.SEND,
         expect.objectContaining({
           to: testVerificationRecipient,
           subject,
           text: expect.stringContaining(recoverUrl),
           html: expect.stringContaining(recoverUrl),
         }),
+        expect.any(Object),
       );
     },
   );
 
-  it('should wrap provider errors in a backend-style exception', async () => {
+  it('should fall back to sending directly through the provider if enqueueing fails', async () => {
+    emailQueue.add.mockRejectedValueOnce(new Error('redis unreachable'));
+
+    await service.send(testSendOptions);
+
+    expect(emailQueue.add).toHaveBeenCalled();
+    expect(emailProvider.send).toHaveBeenCalledWith(testSendOptions);
+  });
+
+  it('should wrap the error in a backend-style exception if both enqueueing and the fallback send fail', async () => {
+    emailQueue.add.mockRejectedValueOnce(new Error('redis unreachable'));
     emailProvider.send.mockRejectedValueOnce(new Error('smtp failed'));
 
     await expect(service.send(testSendOptions)).rejects.toMatchObject({

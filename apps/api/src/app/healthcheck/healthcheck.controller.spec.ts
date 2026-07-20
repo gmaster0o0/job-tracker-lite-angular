@@ -1,8 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HealthController } from './healthcheck.controller';
 import { HealthCheckService, PrismaHealthIndicator } from '@nestjs/terminus';
-import { UptimeHealthIndicator } from './uptime.health';
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
+import { HealthController } from './healthcheck.controller';
+import { UptimeHealthIndicator } from './uptime.health';
+import { RedisHealthIndicator } from './redis.health';
 
 describe('HealthcheckController', () => {
   let controller: HealthController;
@@ -14,6 +15,7 @@ describe('HealthcheckController', () => {
         { provide: HealthCheckService, useValue: {} },
         { provide: PrismaHealthIndicator, useValue: {} },
         { provide: UptimeHealthIndicator, useValue: {} },
+        { provide: RedisHealthIndicator, useValue: {} },
         { provide: PrismaService, useValue: {} },
       ],
     }).compile();

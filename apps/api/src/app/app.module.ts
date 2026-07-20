@@ -7,6 +7,7 @@ import { HealthModule } from './healthcheck/healthcheck.module';
 import { AuthModule } from './auth/auth.module';
 import { AccountModule } from './account/account.module';
 import { ProfileModule } from './profile/profile.module';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ProfileModule } from './profile/profile.module';
       isGlobal: true,
       cache: true,
     }),
+
     ScheduleModule.forRoot(),
     PrismaModule,
     JobsModule,
@@ -21,6 +23,7 @@ import { ProfileModule } from './profile/profile.module';
     AuthModule,
     AccountModule,
     ProfileModule,
+    QueueModule,
   ],
   controllers: [],
 })
