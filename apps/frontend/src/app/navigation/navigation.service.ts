@@ -33,11 +33,19 @@ export class NavigationService {
   }
 
   handleBack(): void {
-    if (this.router.navigated) {
-      this.location.back();
+    const currentUrl = this.router.url.split('?')[0];
+
+    if (currentUrl.startsWith('/jobs/') && currentUrl !== '/jobs') {
+      void this.router.navigateByUrl('/');
       return;
     }
 
-    void this.router.navigateByUrl('/');
+    const segments = currentUrl.split('/').filter(Boolean);
+    if (segments.length > 1) {
+      segments.pop();
+      void this.router.navigateByUrl('/' + segments.join('/'));
+    } else {
+      void this.router.navigateByUrl('/');
+    }
   }
 }
