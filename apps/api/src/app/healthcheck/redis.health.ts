@@ -16,7 +16,10 @@ export class RedisHealthIndicator {
     const indicator = this.healthIndicatorService.check(key);
 
     try {
-      const client = (await this.emailQueue.client) as unknown as Redis;
+      const client = (await Promise.race([
+        this.emailQueue.client,
+        this.connectionTimeout(),
+      ])) as unknown as Redis;
       await client.ping();
       return indicator.up();
     } catch (error) {
@@ -24,5 +27,14 @@ export class RedisHealthIndicator {
         message: error instanceof Error ? error.message : 'Unknown error',
       });
     }
+  }
+
+  // ioredis retries a broken connection forever by default, so awaiting
+  // Queue.client never settles while Redis is unreachable. Bound the wait
+  // so the health check reports "down" instead of hanging the request.
+  private connectionTimeout(): Promise<never> {
+    return new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Redis connection timed out')), 2000),
+    );
   }
 }

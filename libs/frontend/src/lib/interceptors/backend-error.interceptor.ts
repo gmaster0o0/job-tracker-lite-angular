@@ -12,6 +12,15 @@ function isHealthCheckRequest(url: string): boolean {
   return url.includes('/health/');
 }
 
+// The session check fires on every app bootstrap (AuthSessionService,
+// wired via APP_INITIALIZER) to silently probe "is anyone logged in?" -
+// callers already treat a failure as "no session" and never surface it.
+// A backend hiccup (e.g. the DB being temporarily unreachable) shouldn't
+// pop a scary global error toast for what's meant to be an invisible check.
+function isSessionCheckRequest(url: string): boolean {
+  return url.split('?')[0].endsWith('/auth/get-session');
+}
+
 /**
  * HTTP interceptor that normalizes backend errors into a consistent BackendError shape.
  * This keeps components free from HttpErrorResponse handling logic.
@@ -29,7 +38,10 @@ export const backendErrorInterceptor: HttpInterceptorFn = (req, next) => {
         const normalizedError = normalizeHttpError(error);
 
         // Show global toast for non-silent errors (e.g. 500, network errors)
-        if (!SILENT_ERROR_STATUSES.includes(error.status)) {
+        if (
+          !SILENT_ERROR_STATUSES.includes(error.status) &&
+          !isSessionCheckRequest(req.url)
+        ) {
           runInInjectionContext(injector, () => {
             const title = translateSignal('errors.global.title', {
               defaultValue: 'System Error',
