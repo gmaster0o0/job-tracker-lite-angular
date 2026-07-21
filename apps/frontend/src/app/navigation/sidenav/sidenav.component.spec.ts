@@ -79,7 +79,7 @@ describe('SidenavComponent', () => {
     const { harness } = await setup({ health: healthFixture });
 
     expect(await harness.getStatusBadgeText()).toContain('Status');
-    expect(await harness.getStatusIconName()).toBe('lucideCircleCheck');
+    expect(await harness.getStatusHealthState()).toBe('ok');
   });
 
   it('should show the ok badge while the health resource is loading', async () => {
@@ -89,13 +89,13 @@ describe('SidenavComponent', () => {
       isLoading: true,
     });
 
-    expect(await harness.getStatusIconName()).toBe('lucideCircleCheck');
+    expect(await harness.getStatusHealthState()).toBe('ok');
   });
 
   it('should show a warning badge when the health check reports a degraded status', async () => {
     const { harness } = await setup({ health: degradedHealth });
 
-    expect(await harness.getStatusIconName()).toBe('lucideTriangleAlert');
+    expect(await harness.getStatusHealthState()).toBe('warning');
   });
 
   it('should show a warning badge when the backend is unreachable', async () => {
@@ -106,6 +106,6 @@ describe('SidenavComponent', () => {
       error: new HttpErrorResponse({ status: 0 }),
     });
 
-    expect(await harness.getStatusIconName()).toBe('lucideTriangleAlert');
+    expect(await harness.getStatusHealthState()).toBe('warning');
   });
 });

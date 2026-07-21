@@ -3,9 +3,8 @@ import { ComponentHarness } from '@angular/cdk/testing';
 export class SidenavHarness extends ComponentHarness {
   static hostSelector = 'app-sidenav';
 
-  private readonly statusBadgeLocator = this.locatorFor('span[hlmBadge]');
-  private readonly statusIconLocator = this.locatorForOptional(
-    'span[hlmBadge] ng-icon',
+  private readonly statusBadgeLocator = this.locatorFor(
+    '[data-testid="status-badge"]',
   );
 
   async getStatusBadgeText(): Promise<string> {
@@ -13,8 +12,8 @@ export class SidenavHarness extends ComponentHarness {
     return await badge.text();
   }
 
-  async getStatusIconName(): Promise<string | null> {
-    const icon = await this.statusIconLocator();
-    return icon ? await icon.getAttribute('name') : null;
+  async getStatusHealthState(): Promise<string | null> {
+    const badge = await this.statusBadgeLocator();
+    return await badge.getAttribute('data-health-state');
   }
 }

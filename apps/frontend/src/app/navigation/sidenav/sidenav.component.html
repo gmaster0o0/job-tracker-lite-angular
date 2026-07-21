@@ -50,7 +50,12 @@
           <div class="flex items-center justify-between">
             <span>Version {{ version }}</span>
             <a routerLink="/status" [hlmTooltip]="statusTooltipContent">
-              <span hlmBadge variant="outline">
+              <span
+                hlmBadge
+                variant="outline"
+                data-testid="status-badge"
+                [attr.data-health-state]="healthState()"
+              >
                 <ng-icon
                   hlm
                   [name]="statusIcon()"
