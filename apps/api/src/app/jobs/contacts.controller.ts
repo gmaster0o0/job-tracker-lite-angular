@@ -6,8 +6,17 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import {
+  contactSchema,
   ContactDto,
   contactIdParamSchema,
   CreateContactDto,
@@ -17,19 +26,38 @@ import {
   updateContactSchema,
 } from '@job-tracker-lite-angular/schemas';
 import { JobsService } from './jobs.service';
-import { ZodBody, ZodParam } from '@job-tracker-lite-angular/core-utils';
+import {
+  ZodBody,
+  ZodParam,
+  zodToApiSchema,
+} from '@job-tracker-lite-angular/core-utils';
 import {
   AuthGuard,
   Session,
   type UserSession,
 } from '@thallesp/nestjs-better-auth';
 
+@ApiTags('contacts')
+@ApiBearerAuth()
 @Controller('jobs/:id/contacts')
 @UseGuards(AuthGuard)
 export class ContactsController {
   constructor(private readonly jobsService: JobsService) {}
 
   @Get()
+  @ApiOperation({
+    summary: 'List contacts for a job application',
+    description:
+      'Returns every contact associated with the given job application.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Job application identifier (CUID2)',
+    schema: zodToApiSchema(jobIdParamSchema),
+  })
+  @ApiOkResponse({
+    schema: { type: 'array', items: zodToApiSchema(contactSchema) },
+  })
   async findContacts(
     @Session() session: UserSession,
     @ZodParam('id', jobIdParamSchema) id: string,
@@ -38,6 +66,21 @@ export class ContactsController {
   }
 
   @Post()
+  @ApiOperation({
+    summary: 'Add a contact to a job application',
+    description:
+      'Creates a new contact linked to the given job application. Either an email or a phone number must be provided.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Job application identifier (CUID2)',
+    schema: zodToApiSchema(jobIdParamSchema),
+  })
+  @ApiBody({
+    description: 'Contact to create',
+    schema: zodToApiSchema(createContactSchema),
+  })
+  @ApiOkResponse({ schema: zodToApiSchema(contactSchema) })
   async createContact(
     @Session() session: UserSession,
     @ZodParam('id', jobIdParamSchema) id: string,
@@ -51,6 +94,25 @@ export class ContactsController {
   }
 
   @Patch(':contactId')
+  @ApiOperation({
+    summary: 'Update a contact',
+    description: 'Partially updates the fields of an existing contact.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Job application identifier (CUID2)',
+    schema: zodToApiSchema(jobIdParamSchema),
+  })
+  @ApiParam({
+    name: 'contactId',
+    description: 'Contact identifier (CUID2)',
+    schema: zodToApiSchema(contactIdParamSchema),
+  })
+  @ApiBody({
+    description: 'Fields to update on the contact',
+    schema: zodToApiSchema(updateContactSchema),
+  })
+  @ApiOkResponse({ schema: zodToApiSchema(contactSchema) })
   async updateContact(
     @Session() session: UserSession,
     @ZodParam('id', jobIdParamSchema) id: string,
@@ -66,6 +128,20 @@ export class ContactsController {
   }
 
   @Delete(':contactId')
+  @ApiOperation({
+    summary: 'Delete a contact',
+    description: 'Permanently deletes a contact from a job application.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Job application identifier (CUID2)',
+    schema: zodToApiSchema(jobIdParamSchema),
+  })
+  @ApiParam({
+    name: 'contactId',
+    description: 'Contact identifier (CUID2)',
+    schema: zodToApiSchema(contactIdParamSchema),
+  })
   async deleteContact(
     @Session() session: UserSession,
     @ZodParam('id', jobIdParamSchema) id: string,

@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { PrismaClientExceptionFilter } from '@job-tracker-lite-angular/prisma';
+import { setupSwagger } from './swagger.setup';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -28,11 +29,19 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  const swaggerEnabled = setupSwagger(app, configService, globalPrefix);
+
   const port = Number(configService.get<string>('PORT') ?? '3000');
   await app.listen(port);
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
   );
+  if (swaggerEnabled) {
+    Logger.log(
+      `📖 Swagger docs available at: http://localhost:${port}/${globalPrefix}/docs`,
+    );
+  }
 }
 
 bootstrap();
