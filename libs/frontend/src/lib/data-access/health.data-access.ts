@@ -5,6 +5,8 @@ import { HealthResponseDto } from '@job-tracker-lite-angular/schemas';
 @Injectable({
   providedIn: 'root',
 })
-export class DataAccessService {
-  healthResource = httpResource<HealthResponseDto>(() => `/api/health`);
+export class HealthDataAccessService {
+  healthResource = httpResource<HealthResponseDto>(
+    () => `/api/health/detailed`,
+  );
 }

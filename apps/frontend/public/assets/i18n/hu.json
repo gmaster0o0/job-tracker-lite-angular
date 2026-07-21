@@ -3,10 +3,12 @@
     "title": "Heath Status",
     "api": "API",
     "database": "Adatbázis",
+    "queue": "Üzenetsor",
     "lastChecked": "Utolsó ellenőrzés",
     "uptime": "Üzemidő",
-    "loadingHealth": "Egészség betöltése",
-    "loadFailed": "Nem sikerült betölteni az állapotot"
+    "loadingHealth": "Rendszerállapot betöltése...",
+    "loadFailed": "Nem sikerült betölteni az állapotot",
+    "offline": "Nem sikerült elérni a szervert. Lehet, hogy nem elérhető vagy újraindul."
   },
   "common": {
     "back": "Vissza",

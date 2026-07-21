@@ -12,14 +12,17 @@ export const healthResponseSchema = z.object({
   info: z.object({
     server: healthIndicatorSchema.optional(),
     database: healthIndicatorSchema.optional(),
+    redis: healthIndicatorSchema.optional(),
   }),
   error: z.object({
     server: healthIndicatorSchema.optional(),
     database: healthIndicatorSchema.optional(),
+    redis: healthIndicatorSchema.optional(),
   }),
   details: z.object({
     server: healthIndicatorSchema.optional(),
     database: healthIndicatorSchema.optional(),
+    redis: healthIndicatorSchema.optional(),
   }),
 });
 

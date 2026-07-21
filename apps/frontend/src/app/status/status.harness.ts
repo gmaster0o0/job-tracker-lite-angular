@@ -40,6 +40,14 @@ export class StatusHarness extends ComponentHarness {
     return null;
   }
 
+  async getQueueStatus(): Promise<string | null> {
+    const badges = await this.dbBadgesLocator();
+    if (badges && badges.length > 2) {
+      return await badges[2].text();
+    }
+    return null;
+  }
+
   async isLoading(): Promise<boolean> {
     return !!(await this.spinnerLocator());
   }

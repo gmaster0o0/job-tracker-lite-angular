@@ -3,10 +3,12 @@
     "title": "Health Check",
     "api": "API",
     "database": "Database",
+    "queue": "Queue",
     "lastChecked": "Last Checked",
     "uptime": "Uptime:",
     "loadingHealth": "Loading health check data...",
-    "loadFailed": "Failed to load health check data."
+    "loadFailed": "Failed to load health check data.",
+    "offline": "Cannot reach the server. It may be down or restarting."
   },
   "common": {
     "back": "Back",

@@ -1,7 +1,6 @@
 import {
   ApplicationConfig,
   isDevMode,
-  provideAppInitializer,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
@@ -15,7 +14,6 @@ import { appRoutes } from './app.routes';
 import { provideTransloco } from '@jsverse/transloco';
 import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
 import {
-  AuthSessionService,
   SharedTranslocoLoader,
   backendErrorInterceptor,
 } from '@job-tracker-lite-angular/frontend-data-access';
@@ -26,16 +24,6 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(appRoutes),
     provideHttpClient(withFetch(), withInterceptors([backendErrorInterceptor])),
-    {
-      provide: provideAppInitializer,
-      multi: true,
-      deps: [AuthSessionService],
-      useFactory: (authSession: AuthSessionService) => () =>
-        authSession
-          .loadSession()
-          .then(() => undefined)
-          .catch(() => undefined),
-    },
     { provide: 'I18N_PATH', useValue: '/assets/i18n/' },
     provideTransloco({
       config: {

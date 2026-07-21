@@ -154,4 +154,46 @@ describe('backendErrorInterceptor', () => {
     await expect(request).rejects.toBeDefined();
     expect(notificationMock.error).not.toHaveBeenCalled();
   });
+
+  it('passes through the raw HttpErrorResponse for health check requests without a toast', async () => {
+    const request = firstValueFrom(httpClient.get('/api/health/detailed'));
+
+    const req = httpMock.expectOne('/api/health/detailed');
+    const degradedHealth = {
+      status: 'error',
+      info: {},
+      error: { database: { status: 'down' } },
+      details: {},
+    };
+    req.flush(degradedHealth, {
+      status: 503,
+      statusText: 'Service Unavailable',
+    });
+
+    await expect(request).rejects.toEqual(
+      expect.objectContaining({
+        status: 503,
+        error: degradedHealth,
+      }),
+    );
+    expect(notificationMock.error).not.toHaveBeenCalled();
+  });
+
+  it('normalizes the error but does not show a toast when the session check fails', async () => {
+    const request = firstValueFrom(httpClient.get('/api/auth/get-session'));
+
+    const req = httpMock.expectOne('/api/auth/get-session');
+    req.flush(
+      { message: 'Failed to get session', code: 'FAILED_TO_GET_SESSION' },
+      { status: 500, statusText: 'Internal Server Error' },
+    );
+
+    await expect(request).rejects.toEqual(
+      expect.objectContaining({
+        errorCode: 'FAILED_TO_GET_SESSION',
+        statusCode: 500,
+      }),
+    );
+    expect(notificationMock.error).not.toHaveBeenCalled();
+  });
 });

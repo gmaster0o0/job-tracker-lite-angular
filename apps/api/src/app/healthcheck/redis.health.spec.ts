@@ -62,4 +62,39 @@ describe('RedisHealthIndicator', () => {
       message: 'connection refused',
     });
   });
+
+  it('should report down instead of hanging when the redis connection never settles', async () => {
+    jest.useFakeTimers();
+
+    const healthIndicatorService = {
+      check: jest.fn(() => ({ up: upMock, down: downMock })),
+    };
+    // ioredis retries a broken connection forever by default, so this never
+    // resolves or rejects on its own - mirrors an unreachable Redis.
+    const emailQueue = { client: new Promise(() => undefined) };
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        RedisHealthIndicator,
+        { provide: HealthIndicatorService, useValue: healthIndicatorService },
+        { provide: getQueueToken(EMAIL_QUEUE), useValue: emailQueue },
+      ],
+    }).compile();
+    const indicatorUnderTest =
+      module.get<RedisHealthIndicator>(RedisHealthIndicator);
+
+    const resultPromise = indicatorUnderTest.isHealthy('redis');
+    await jest.advanceTimersByTimeAsync(2000);
+    const result = await resultPromise;
+
+    expect(downMock).toHaveBeenCalledWith({
+      message: 'Redis connection timed out',
+    });
+    expect(result).toEqual({
+      status: 'down',
+      message: 'Redis connection timed out',
+    });
+
+    jest.useRealTimers();
+  });
 });

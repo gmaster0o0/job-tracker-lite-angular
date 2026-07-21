@@ -4,6 +4,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { Redis } from 'ioredis';
 import { EMAIL_QUEUE } from '../email/email.queue';
+import { describeRedisError } from '../queue/redis-error.util';
 
 @Injectable()
 export class RedisHealthIndicator {
@@ -16,16 +17,25 @@ export class RedisHealthIndicator {
     const indicator = this.healthIndicatorService.check(key);
 
     try {
-      // Queue.client returns BullMQ's generic IRedisClient adapter type,
-      // which doesn't expose ping() even though the underlying client is
-      // ioredis by default (we haven't configured a different adapter).
-      const client = (await this.emailQueue.client) as unknown as Redis;
+      const client = (await Promise.race([
+        this.emailQueue.client,
+        this.connectionTimeout(),
+      ])) as unknown as Redis;
       await client.ping();
       return indicator.up();
     } catch (error) {
       return indicator.down({
-        message: error instanceof Error ? error.message : 'Unknown error',
+        message: describeRedisError(error),
       });
     }
+  }
+
+  // ioredis retries a broken connection forever by default, so awaiting
+  // Queue.client never settles while Redis is unreachable. Bound the wait
+  // so the health check reports "down" instead of hanging the request.
+  private connectionTimeout(): Promise<never> {
+    return new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Redis connection timed out')), 2000),
+    );
   }
 }

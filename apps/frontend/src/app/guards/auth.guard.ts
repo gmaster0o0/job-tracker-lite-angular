@@ -2,10 +2,10 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthSessionService } from '@job-tracker-lite-angular/frontend-data-access';
 
-export const authGuard: CanActivateFn = async (_route, state) => {
+export const authGuard: CanActivateFn = (_route, state) => {
   const authSession = inject(AuthSessionService);
   const router = inject(Router);
-  const session = await authSession.loadSession();
+  const session = authSession.session();
   const target = state?.url ?? '';
 
   if (!session) {
