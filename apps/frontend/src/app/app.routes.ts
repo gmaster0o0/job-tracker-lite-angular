@@ -2,11 +2,12 @@ import { Route } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 import { guestGuard } from './guards/guest.guard';
 import { sessionInitGuard } from './guards/session-init.guard';
+import { preferencesInitGuard } from './guards/preferences-init.guard';
 
 export const appRoutes: Route[] = [
   {
     path: '',
-    canActivate: [sessionInitGuard],
+    canActivate: [preferencesInitGuard, sessionInitGuard],
     loadComponent: () =>
       import('./layouts/main-layout/main-layout.component').then(
         (m) => m.MainLayoutComponent,
@@ -241,6 +242,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'status',
+    canActivate: [preferencesInitGuard],
     loadComponent: () =>
       import('./status/status.component').then((m) => m.StatusComponent),
   },

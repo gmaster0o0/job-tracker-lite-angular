@@ -3,7 +3,7 @@ import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { provideIcons } from '@ng-icons/core';
 import { lucideGlobe } from '@ng-icons/lucide';
-import { LanguageService } from '@job-tracker-lite-angular/frontend-data-access';
+import { UserPreferencesService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TranslocoModule } from '@jsverse/transloco';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 
@@ -19,7 +19,7 @@ interface LangOption {
   providers: [provideIcons({ lucideGlobe })],
 })
 export class LanguageComponent {
-  languageService = inject(LanguageService);
+  preferences = inject(UserPreferencesService);
   formId = 'language-form';
 
   protected readonly languageOptions: readonly LangOption[] = [
@@ -29,13 +29,13 @@ export class LanguageComponent {
 
   protected readonly currentLangValue = computed(() =>
     this.languageOptions.find(
-      (opt) => opt.value === this.languageService.currentLang(),
+      (opt) => opt.value === this.preferences.language(),
     ),
   );
 
   handleLangChange(newLang: LangOption | null | undefined) {
     if (newLang) {
-      this.languageService.setLanguage(newLang.value);
+      this.preferences.setLanguage(newLang.value);
     }
   }
 }

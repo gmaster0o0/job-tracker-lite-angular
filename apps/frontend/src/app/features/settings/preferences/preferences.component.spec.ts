@@ -2,7 +2,7 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PreferencesComponent } from './preferences.component';
 import { PreferencesHarness } from './preferences.harness';
-import { ThemeService } from '@job-tracker-lite-angular/frontend-data-access';
+import { UserPreferencesService } from '@job-tracker-lite-angular/frontend-data-access';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 import { createMediaQueryListMock } from '@job-tracker-lite-angular/testing';
 import { vi } from 'vitest';
@@ -11,7 +11,7 @@ describe('PreferencesComponent', () => {
   let component: PreferencesComponent;
   let fixture: ComponentFixture<PreferencesComponent>;
   let harness: PreferencesHarness;
-  let themeService: ThemeService;
+  let preferences: UserPreferencesService;
 
   beforeAll(() => {
     Object.defineProperty(window, 'matchMedia', {
@@ -27,12 +27,12 @@ describe('PreferencesComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PreferencesComponent, getTranslocoModule()],
-      providers: [ThemeService],
+      providers: [UserPreferencesService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PreferencesComponent);
     component = fixture.componentInstance;
-    themeService = TestBed.inject(ThemeService);
+    preferences = TestBed.inject(UserPreferencesService);
     harness = await TestbedHarnessEnvironment.harnessForFixture(
       fixture,
       PreferencesHarness,
@@ -63,14 +63,16 @@ describe('PreferencesComponent', () => {
     const appearanceHarness = await harness.getAppearanceHarness();
     await appearanceHarness.selectAppearanceOption('dark');
 
-    expect(themeService.theme()).toBe('dark');
+    expect(preferences.theme()).toBe('dark');
   });
 
   it('should persist theme selection', async () => {
     const appearanceHarness = await harness.getAppearanceHarness();
     await appearanceHarness.selectAppearanceOption('system');
 
-    expect(themeService.theme()).toBe('system');
-    expect(localStorage.getItem('theme')).toBe('system');
+    expect(preferences.theme()).toBe('system');
+    expect(
+      JSON.parse(localStorage.getItem('user-preferences') ?? '{}').theme,
+    ).toBe('system');
   });
 });

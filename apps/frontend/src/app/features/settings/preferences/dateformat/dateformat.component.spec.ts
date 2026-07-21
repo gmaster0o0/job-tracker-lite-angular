@@ -18,4 +18,21 @@ describe('DateformatComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should update preferences when a date format is selected', () => {
+    component.handleDateFormatChange({
+      value: 'YYYY-MM-DD',
+      label: 'ÉÉÉÉ-HH-NN',
+    });
+
+    expect(component.preferences.dateFormat()).toBe('YYYY-MM-DD');
+  });
+
+  it('should ignore a null/undefined selection', () => {
+    const before = component.preferences.dateFormat();
+
+    component.handleDateFormatChange(null);
+
+    expect(component.preferences.dateFormat()).toBe(before);
+  });
 });
