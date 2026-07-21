@@ -4,11 +4,12 @@ import { jobFixtures } from '@job-tracker-lite-angular/testing';
 import { JobCardComponent } from './job-card.component';
 import { JobCardHarness } from './job-card.harness';
 import { JobStatus } from '@job-tracker-lite-angular/schemas';
+import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('JobCardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [JobCardComponent],
+      imports: [JobCardComponent, getTranslocoModule()],
     }).compileComponents();
   });
 
