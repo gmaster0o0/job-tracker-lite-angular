@@ -18,4 +18,18 @@ describe('LanguageComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should update preferences when a language is selected', () => {
+    component.handleLangChange({ value: 'en', label: 'English/EN' });
+
+    expect(component.preferences.language()).toBe('en');
+  });
+
+  it('should ignore a null/undefined selection', () => {
+    const before = component.preferences.language();
+
+    component.handleLangChange(null);
+
+    expect(component.preferences.language()).toBe(before);
+  });
 });

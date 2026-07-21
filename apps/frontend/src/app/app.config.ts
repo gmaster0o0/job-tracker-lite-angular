@@ -16,6 +16,7 @@ import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat'
 import {
   SharedTranslocoLoader,
   backendErrorInterceptor,
+  DEFAULT_LANGUAGE,
 } from '@job-tracker-lite-angular/frontend-data-access';
 
 export const appConfig: ApplicationConfig = {
@@ -28,7 +29,7 @@ export const appConfig: ApplicationConfig = {
     provideTransloco({
       config: {
         availableLangs: ['hu', 'en'],
-        defaultLang: 'hu',
+        defaultLang: DEFAULT_LANGUAGE,
         reRenderOnLangChange: true,
         prodMode: !isDevMode(),
       },

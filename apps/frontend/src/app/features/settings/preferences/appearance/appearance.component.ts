@@ -9,7 +9,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { translateSignal, TranslocoModule } from '@jsverse/transloco';
 
 import { hlm } from '@spartan-ng/helm/utils';
-import { ThemeService } from '@job-tracker-lite-angular/frontend-data-access';
+import { UserPreferencesService } from '@job-tracker-lite-angular/frontend-data-access';
 
 export interface AppearanceCard {
   label: () => string;
@@ -32,14 +32,14 @@ export interface AppearanceCard {
   templateUrl: './appearance.component.html',
 })
 export class AppearanceComponent {
-  private themeService = inject(ThemeService);
+  private preferences = inject(UserPreferencesService);
   public appearance = model<'light' | 'dark' | 'system'>(
-    this.themeService.theme(),
+    this.preferences.theme(),
   );
 
   constructor() {
     effect(() => {
-      this.themeService.theme.set(this.appearance());
+      this.preferences.setTheme(this.appearance());
     });
   }
 

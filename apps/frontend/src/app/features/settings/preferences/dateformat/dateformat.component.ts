@@ -3,7 +3,7 @@ import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { provideIcons } from '@ng-icons/core';
 import { lucideGlobe } from '@ng-icons/lucide';
-import { SettingsService } from '@job-tracker-lite-angular/frontend-data-access';
+import { UserPreferencesService } from '@job-tracker-lite-angular/frontend-data-access';
 import { TranslocoModule } from '@jsverse/transloco';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 
@@ -19,7 +19,7 @@ interface DateFormatOption {
   providers: [provideIcons({ lucideGlobe })],
 })
 export class DateformatComponent {
-  settingsService = inject(SettingsService);
+  preferences = inject(UserPreferencesService);
   formId = 'dateformat-form';
 
   protected readonly dateFormatOptions: readonly DateFormatOption[] = [
@@ -29,13 +29,13 @@ export class DateformatComponent {
 
   protected readonly currentDateFormatValue = computed(() =>
     this.dateFormatOptions.find(
-      (opt) => opt.value === this.settingsService.dateFormat,
+      (opt) => opt.value === this.preferences.dateFormat(),
     ),
   );
 
   handleDateFormatChange(newDateFormat: DateFormatOption | null | undefined) {
     if (newDateFormat) {
-      this.settingsService.dateFormat = newDateFormat.value;
+      this.preferences.setDateFormat(newDateFormat.value);
     }
   }
 }

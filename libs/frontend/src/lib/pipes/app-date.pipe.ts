@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { SettingsService } from '../services/settings.service';
+import { UserPreferencesService } from '../services/user-preferences.service';
 
 @Pipe({
   name: 'appDate',
@@ -8,11 +8,11 @@ import { SettingsService } from '../services/settings.service';
   pure: false,
 })
 export class AppDatePipe implements PipeTransform {
-  private settings = inject(SettingsService);
+  private preferences = inject(UserPreferencesService);
   private datePipe = new DatePipe('en-US');
 
   transform(value: string): string | null {
-    const fmt = this.normalizeFormat(this.settings.dateFormat);
+    const fmt = this.normalizeFormat(this.preferences.dateFormat());
     return this.datePipe.transform(value, fmt);
   }
 
