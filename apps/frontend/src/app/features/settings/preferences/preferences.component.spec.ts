@@ -1,5 +1,6 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { PreferencesComponent } from './preferences.component';
 import { PreferencesHarness } from './preferences.harness';
 import { UserPreferencesService } from '@job-tracker-lite-angular/frontend-data-access';
@@ -27,7 +28,7 @@ describe('PreferencesComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PreferencesComponent, getTranslocoModule()],
-      providers: [UserPreferencesService],
+      providers: [UserPreferencesService, provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PreferencesComponent);

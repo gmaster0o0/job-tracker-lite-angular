@@ -13,6 +13,7 @@ import {
   getSeedNotesForJob,
   SeedNoteTemplate,
   userProfileFixtures,
+  userPreferencesFixtures,
 } from '@job-tracker-lite-angular/testing';
 
 const envPath = path.join(process.cwd(), '.env');
@@ -58,6 +59,7 @@ async function main() {
       email: seedUserEmail,
       pendingEmail: null,
       emailVerified: true,
+      preferences: userPreferencesFixtures.johnDoe,
     },
     create: {
       id: systemUserId,
@@ -65,6 +67,7 @@ async function main() {
       email: seedUserEmail,
       pendingEmail: null,
       emailVerified: true,
+      preferences: userPreferencesFixtures.johnDoe,
     },
   });
 

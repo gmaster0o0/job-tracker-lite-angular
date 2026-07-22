@@ -13,6 +13,7 @@
   <div hlmCardContent>
     <hlm-select
       [value]="currentLangValue()"
+      [itemToString]="languageItemToString"
       (valueChange)="handleLangChange($event)"
     >
       <hlm-select-label class="mb-2">{{
@@ -27,7 +28,7 @@
         <hlm-select-group>
           @for (language of languageOptions; track language.value) {
             <hlm-select-item [value]="language">{{
-              language.label
+              language.label()
             }}</hlm-select-item>
           }
         </hlm-select-group>

@@ -498,6 +498,7 @@
       "description": "Select your preferred language for the interface.",
       "label": "Interface Language",
       "select": "Select language",
+      "system": "System",
       "languageNote": "Note: Language changes will be applied to the entire interface."
     },
     "dateformat": {

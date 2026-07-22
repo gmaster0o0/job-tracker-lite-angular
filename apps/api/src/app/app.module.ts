@@ -7,6 +7,7 @@ import { HealthModule } from './healthcheck/healthcheck.module';
 import { AuthModule } from './auth/auth.module';
 import { AccountModule } from './account/account.module';
 import { ProfileModule } from './profile/profile.module';
+import { PreferencesModule } from './preferences/preferences.module';
 import { QueueModule } from './queue/queue.module';
 
 @Module({
@@ -23,6 +24,7 @@ import { QueueModule } from './queue/queue.module';
     AuthModule,
     AccountModule,
     ProfileModule,
+    PreferencesModule,
     QueueModule,
   ],
   controllers: [],

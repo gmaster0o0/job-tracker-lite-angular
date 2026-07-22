@@ -17,6 +17,7 @@ import {
   SharedTranslocoLoader,
   backendErrorInterceptor,
   DEFAULT_LANGUAGE,
+  AVAILABLE_LANGUAGES,
 } from '@job-tracker-lite-angular/frontend-data-access';
 
 export const appConfig: ApplicationConfig = {
@@ -28,7 +29,7 @@ export const appConfig: ApplicationConfig = {
     { provide: 'I18N_PATH', useValue: '/assets/i18n/' },
     provideTransloco({
       config: {
-        availableLangs: ['hu', 'en'],
+        availableLangs: [...AVAILABLE_LANGUAGES],
         defaultLang: DEFAULT_LANGUAGE,
         reRenderOnLangChange: true,
         prodMode: !isDevMode(),
