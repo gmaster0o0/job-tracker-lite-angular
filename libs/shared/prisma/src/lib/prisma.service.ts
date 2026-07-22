@@ -1,5 +1,5 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class PrismaService
     await this.$disconnect();
   }
 
-  async testConnection() {
+  async testConnection(): Promise<User[]> {
     return await this.user.findMany();
   }
 }
