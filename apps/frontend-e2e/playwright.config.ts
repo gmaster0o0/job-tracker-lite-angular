@@ -34,7 +34,11 @@ export default defineConfig({
         NODE_OPTIONS: '',
       },
       reuseExistingServer: !process.env['CI'],
-      timeout: 120000,
+      // CI runners are shared/contended and the affected build for this
+      // server runs alongside the other webServer's cold Vite pre-bundle,
+      // so 120s isn't always enough there even though it boots in ~1s
+      // locally - see PR #133.
+      timeout: 300000,
       cwd: workspaceRoot,
     },
     {
@@ -47,7 +51,7 @@ export default defineConfig({
         NODE_OPTIONS: '',
       },
       reuseExistingServer: !process.env['CI'],
-      timeout: 120000,
+      timeout: 300000,
       cwd: workspaceRoot,
     },
   ],
