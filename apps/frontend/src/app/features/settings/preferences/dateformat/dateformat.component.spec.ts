@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { DateformatComponent } from './dateformat.component';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
@@ -9,6 +10,7 @@ describe('DateformatComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DateformatComponent, getTranslocoModule()],
+      providers: [provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DateformatComponent);

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { LanguageComponent } from './language.component';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
@@ -9,6 +10,7 @@ describe('LanguageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LanguageComponent, getTranslocoModule()],
+      providers: [provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LanguageComponent);
@@ -20,9 +22,15 @@ describe('LanguageComponent', () => {
   });
 
   it('should update preferences when a language is selected', () => {
-    component.handleLangChange({ value: 'en', label: 'English/EN' });
+    component.handleLangChange({ value: 'en', label: () => 'English/EN' });
 
     expect(component.preferences.language()).toBe('en');
+  });
+
+  it('should update preferences when the system option is selected', () => {
+    component.handleLangChange({ value: 'system', label: () => 'System' });
+
+    expect(component.preferences.language()).toBe('system');
   });
 
   it('should ignore a null/undefined selection', () => {

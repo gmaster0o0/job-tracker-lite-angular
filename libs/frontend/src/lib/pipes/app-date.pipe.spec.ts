@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { TranslocoService } from '@jsverse/transloco';
 import { AppDatePipe } from './app-date.pipe';
@@ -14,6 +15,7 @@ describe('AppDatePipe', () => {
       providers: [
         AppDatePipe,
         UserPreferencesService,
+        provideHttpClientTesting(),
         { provide: TranslocoService, useValue: { setActiveLang: vi.fn() } },
       ],
     });

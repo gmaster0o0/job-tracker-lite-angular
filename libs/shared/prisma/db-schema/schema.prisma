@@ -27,6 +27,7 @@ model User {
   scheduledDeletionAt DateTime?
   gracePeriodDays Int @default(7)
   image         String?
+  preferences   Json?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   sessions      Session[]

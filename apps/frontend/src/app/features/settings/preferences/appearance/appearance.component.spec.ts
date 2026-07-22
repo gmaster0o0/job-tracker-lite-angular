@@ -1,5 +1,6 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { describe, expect, it, beforeEach } from 'vitest';
 import { AppearanceComponent } from './appearance.component';
 import { AppearanceHarness } from './appearance.harness';
@@ -15,7 +16,7 @@ describe('AppearanceComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppearanceComponent, getTranslocoModule()],
-      providers: [UserPreferencesService],
+      providers: [UserPreferencesService, provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppearanceComponent);

@@ -21,6 +21,15 @@ function isSessionCheckRequest(url: string): boolean {
   return url.split('?')[0].endsWith('/auth/get-session');
 }
 
+// Preference sync (GET/PATCH /api/preferences) is always a background
+// reconciliation the user never explicitly triggered - login-sync, an
+// optimistic write, or a reconnect push. The isSynced flag is the complete,
+// intentional feedback story for this feature; any failure here should stay
+// silent rather than pop a scary global error toast.
+function isPreferencesRequest(url: string): boolean {
+  return url.split('?')[0].endsWith('/preferences');
+}
+
 /**
  * HTTP interceptor that normalizes backend errors into a consistent BackendError shape.
  * This keeps components free from HttpErrorResponse handling logic.
@@ -40,7 +49,8 @@ export const backendErrorInterceptor: HttpInterceptorFn = (req, next) => {
         // Show global toast for non-silent errors (e.g. 500, network errors)
         if (
           !SILENT_ERROR_STATUSES.includes(error.status) &&
-          !isSessionCheckRequest(req.url)
+          !isSessionCheckRequest(req.url) &&
+          !isPreferencesRequest(req.url)
         ) {
           runInInjectionContext(injector, () => {
             const title = translateSignal('errors.global.title', {
