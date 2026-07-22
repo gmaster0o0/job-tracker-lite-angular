@@ -821,8 +821,14 @@
   },
   "navigation": {
     "backTooltip": "Go back to the previous page",
-    "statusTooltip": "View application health status",
     "appTitleTooltip": "Open the Job Tracker Lite GitHub page",
-    "notImplementedTooltip": "This function not implemented yet"
+    "notImplementedTooltip": "This function not implemented yet",
+    "status": {
+      "label": "Status",
+      "tooltip": {
+        "title": "System Health",
+        "description": "Click here for more details."
+      }
+    }
   }
 }

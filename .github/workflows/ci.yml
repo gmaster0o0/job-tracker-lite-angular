@@ -52,6 +52,56 @@ jobs:
           DATABASE_URL: postgresql://user:password@localhost:5432/test_db?schema=public
         run: npm run prisma:generate
       - uses: nrwl/nx-set-shas@v4
+      - name: Start e2e dev servers
+        # Started here, outside of any nx process, so the e2e task never
+        # has to invoke `nx run ...` itself to bring them up - a nested nx
+        # CLI call from inside an already-running one deadlocks in CI (the
+        # daemon that would otherwise coordinate that is disabled whenever
+        # CI=true). See playwright.config.ts and frontend-e2e/project.json
+        # for the other halves of this fix.
+        shell: bash
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/test_db?schema=public
+          DB_USER: user
+          DB_PASSWORD: password
+          DB_NAME: test_db
+          SMTP_HOST: smtp.ethereal.email
+          SMTP_PORT: 587
+          SMTP_USER: fake@ethereal.email
+          SMTP_PASS: fakepassword
+          PORT: '3000'
+          API_PORT: '3000'
+          # NX_CLOUD=false doesn't stop nx from trying (and, right now,
+          # failing) to authorize against Nx Cloud - NX_NO_CLOUD is the
+          # variable that actually disables it, matching the fallback
+          # below and in the "Run affected targets" step.
+          NX_NO_CLOUD: 'true'
+        run: |
+          set -o pipefail
+
+          nohup npx nx run api:serve:development --skipRemoteCache --skipNxCache > /tmp/api-serve.log 2>&1 &
+          echo "API_SERVE_PID=$!" >> "$GITHUB_ENV"
+
+          nohup npx nx run frontend:serve-e2e --skipRemoteCache --skipNxCache -- --port 4200 > /tmp/frontend-serve.log 2>&1 &
+          echo "FRONTEND_SERVE_PID=$!" >> "$GITHUB_ENV"
+
+          wait_for_url() {
+            local url="$1" label="$2" log="$3"
+            for _ in $(seq 1 60); do
+              if curl -fsS "$url" >/dev/null 2>&1; then
+                echo "$label is up."
+                return 0
+              fi
+              sleep 2
+            done
+            echo "$label did not become ready in time." >&2
+            echo "--- $label log ---"
+            cat "$log"
+            return 1
+          }
+
+          wait_for_url http://localhost:3000/api/health/live "API" /tmp/api-serve.log
+          wait_for_url http://localhost:4200 "Frontend" /tmp/frontend-serve.log
       - name: Run affected targets with automatic Nx Cloud fallback
         shell: bash
         env:
@@ -80,5 +130,11 @@ jobs:
 
           echo "Nx failed for a reason other than Nx Cloud availability."
           exit 1
+      - name: Stop e2e dev servers
+        if: always()
+        shell: bash
+        run: |
+          [ -n "${API_SERVE_PID:-}" ] && kill "$API_SERVE_PID" 2>/dev/null || true
+          [ -n "${FRONTEND_SERVE_PID:-}" ] && kill "$FRONTEND_SERVE_PID" 2>/dev/null || true
       - run: npx nx fix-ci
         if: always()

@@ -816,8 +816,14 @@
   },
   "navigation": {
     "backTooltip": "Vissza az előző oldalra",
-    "statusTooltip": "Az alkalmazás állapotának megtekintése",
     "appTitleTooltip": "Nyissa meg a Job Tracker Lite GitHub oldalát",
-    "notImplementedTooltip": "Ez a funkció még nincs megvalósítva"
+    "notImplementedTooltip": "Ez a funkció még nincs megvalósítva",
+    "status": {
+      "label": "Állapot",
+      "tooltip": {
+        "title": "Rendszerállapot",
+        "description": "Kattints ide a részletekért."
+      }
+    }
   }
 }

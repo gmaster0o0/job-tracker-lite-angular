@@ -26,14 +26,26 @@ export default defineConfig({
   webServer: [
     {
       command: 'npx nx run api:serve:development',
-      url: 'http://localhost:3000/api/health',
+      // Not the bare /api/health - that path has no route (only
+      // /live, /ready, /detailed do) and 404s, which Playwright's own
+      // isURLAvailable check explicitly never treats as "available"
+      // (statusCode >= 200 && statusCode < 404), so this entry could
+      // never be detected as ready regardless of anything else here.
+      url: 'http://localhost:3000/api/health/live',
       env: {
         ...process.env,
         PORT: '3000',
-        NX_CLOUD: 'false',
+        NX_NO_CLOUD: 'true',
         NODE_OPTIONS: '',
       },
-      reuseExistingServer: !process.env['CI'],
+      // In CI, this server is started by an earlier workflow step, outside
+      // of any Nx process - `npx nx run ...` here would be a *nested* Nx
+      // CLI call (this whole config only runs as part of `frontend-e2e:e2e`,
+      // itself an Nx target), and without the daemon (which Nx disables
+      // whenever CI=true) that nested invocation deadlocks against the
+      // still-running outer one until this timeout fires. Always reuse
+      // what's already there instead of ever attempting that.
+      reuseExistingServer: true,
       timeout: 120000,
       cwd: workspaceRoot,
     },
@@ -43,10 +55,11 @@ export default defineConfig({
       env: {
         ...process.env,
         API_PORT: '3000',
-        NX_CLOUD: 'false',
+        NX_NO_CLOUD: 'true',
         NODE_OPTIONS: '',
       },
-      reuseExistingServer: !process.env['CI'],
+      // Same reasoning as the API entry above.
+      reuseExistingServer: true,
       timeout: 120000,
       cwd: workspaceRoot,
     },
