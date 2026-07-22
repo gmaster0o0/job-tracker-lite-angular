@@ -10,6 +10,7 @@
     "@job-tracker-lite-angular/schemas": "0.0.1",
     "@angular/core": "~21.2.0",
     "@ng-icons/core": "^32.2.0",
-    "@ng-icons/lucide": "^32.2.0"
+    "@ng-icons/lucide": "^32.2.0",
+    "@nestjs/common": "^11.0.0"
   }
 }
