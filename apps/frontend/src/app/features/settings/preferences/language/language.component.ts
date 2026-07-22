@@ -39,4 +39,7 @@ export class LanguageComponent {
       this.preferences.setLanguage(newLang.value);
     }
   }
+
+  protected readonly languageItemToString = (option: LangOption): string =>
+    option.label();
 }
