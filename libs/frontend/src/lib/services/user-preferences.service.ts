@@ -26,15 +26,11 @@ export const AVAILABLE_LANGUAGES = ['hu', 'en'] as const;
 export const DEFAULT_LANGUAGE = 'hu';
 
 const STORAGE_KEY = 'user-preferences';
-const LEGACY_THEME_KEY = 'theme';
-const LEGACY_LANGUAGE_KEY = 'user-lang';
-const LEGACY_DATE_FORMAT_KEY = 'setttings';
 
-// The DTO shape (theme/language/dateFormat/updatedAt) is the shared,
-// backend-facing contract from @job-tracker-lite-angular/schemas. isSynced
-// is purely client-local bookkeeping for the offline queue - the backend
-// never sees or persists it, so it's added here rather than in the shared
-// schema.
+/**
+ * Purely for local storage - the backend doesn't know about isSynced, and it doesn't need to.
+ * This is a local-only sentinel to track whether the last change was successfully pushed to the backend.
+ */
 interface StoredPreferences extends UserPreferencesDto {
   isSynced: boolean;
 }
@@ -116,10 +112,10 @@ export class UserPreferencesService {
     });
   }
 
-  // Reads (and, on a legacy user, migrates) stored preferences and applies
-  // them synchronously before returning. This is awaited by
-  // preferencesInitGuard so the app never renders with default preferences
-  // before the real, stored ones are applied - see that guard for why.
+  // Reads stored preferences and applies them synchronously before
+  // returning. This is awaited by preferencesInitGuard so the app never
+  // renders with default preferences before the real, stored ones are
+  // applied - see that guard for why.
   async init(): Promise<void> {
     if (!this.isBrowser) return;
 
@@ -174,14 +170,9 @@ export class UserPreferencesService {
     }
   }
 
-  // Fresh login (empty local) and login-with-existing-local-data collapse
-  // into one last-write-wins comparison: an untouched side always carries
-  // DEFAULT_USER_PREFERENCES.updatedAt (epoch-zero), so it always loses to
-  // any side with a real timestamp. When local wins, it's pushed with a
-  // FRESH timestamp rather than its own (possibly epoch-zero) one - so a
-  // later, genuinely-fresh device can never tie against it and clobber it.
   private async syncOnLogin(): Promise<void> {
     if (!this.isBrowser) return;
+    if (!this.networkService.isOnline()) return;
 
     try {
       const server = await this.preferencesDataAccess.getPreferences();
@@ -249,43 +240,11 @@ export class UserPreferencesService {
           return { ...result.data, isSynced: parsed.isSynced ?? true };
         }
       } catch {
-        // Corrupt blob - fall through to legacy keys / defaults below.
+        // Corrupt blob - fall through to defaults below.
       }
     }
 
-    return this.migrateFromLegacyKeys();
-  }
-
-  // One-time migration for users with preferences saved under the old,
-  // per-concern keys (from before theme/language/date-format were merged
-  // into a single UserPreferencesService). Safe to run every time init() is
-  // called: once migrated, STORAGE_KEY is populated and short-circuits this
-  // path on the next call. A legacy user who never touched language ends up
-  // with the same 'system' default as a genuinely fresh user - they never
-  // expressed a preference either.
-  private migrateFromLegacyKeys(): StoredPreferences {
-    const legacyTheme = localStorage.getItem(LEGACY_THEME_KEY) as Theme | null;
-    const legacyLanguage = localStorage.getItem(LEGACY_LANGUAGE_KEY);
-    const legacyDateFormat = localStorage.getItem(LEGACY_DATE_FORMAT_KEY);
-
-    if (!legacyTheme && !legacyLanguage && !legacyDateFormat) {
-      return DEFAULT_STORED_PREFERENCES;
-    }
-
-    const migrated: StoredPreferences = {
-      theme: legacyTheme ?? DEFAULT_STORED_PREFERENCES.theme,
-      language: legacyLanguage ?? DEFAULT_STORED_PREFERENCES.language,
-      dateFormat: legacyDateFormat ?? DEFAULT_STORED_PREFERENCES.dateFormat,
-      updatedAt: DEFAULT_USER_PREFERENCES.updatedAt,
-      isSynced: true,
-    };
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
-    localStorage.removeItem(LEGACY_THEME_KEY);
-    localStorage.removeItem(LEGACY_LANGUAGE_KEY);
-    localStorage.removeItem(LEGACY_DATE_FORMAT_KEY);
-
-    return migrated;
+    return DEFAULT_STORED_PREFERENCES;
   }
 
   private applyThemeClass(theme: Theme): void {
