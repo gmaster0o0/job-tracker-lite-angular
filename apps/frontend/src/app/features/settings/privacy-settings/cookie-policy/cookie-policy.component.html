@@ -4,10 +4,9 @@
 <hlm-dialog [state]="state()" (stateChanged)="onStateChanged($event)">
   <button
     hlmBtn
-    type="button"
     variant="outline"
-    [class.hidden]="open()"
-    (click)="onOpenRequested()"
+    routerLink="cookie-policy"
+    routerLinkActive="hidden"
     data-testid="cookie-policy-trigger"
   >
     <ng-icon name="lucideScrollText" />

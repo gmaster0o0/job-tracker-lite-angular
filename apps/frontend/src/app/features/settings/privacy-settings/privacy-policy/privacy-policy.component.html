@@ -5,10 +5,9 @@
 <hlm-dialog [state]="state()" (stateChanged)="onStateChanged($event)">
   <button
     hlmBtn
-    type="button"
     variant="outline"
-    [class.hidden]="open()"
-    (click)="onOpenRequested()"
+    routerLink="privacy-policy"
+    routerLinkActive="hidden"
     data-testid="privacy-policy-trigger"
   >
     <ng-icon name="lucideShieldCheck" />

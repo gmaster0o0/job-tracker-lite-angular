@@ -1,18 +1,11 @@
-import {
-  Component,
-  effect,
-  inject,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { Component, effect, input, output, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 import { provideIcons, NgIcon } from '@ng-icons/core';
 import { lucideShieldCheck } from '@ng-icons/lucide';
-import { ActivatedRoute, Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AppDatePipe } from '@job-tracker-lite-angular/frontend-data-access';
 
 @Component({
@@ -24,15 +17,13 @@ import { AppDatePipe } from '@job-tracker-lite-angular/frontend-data-access';
     HlmButtonImports,
     HlmTypographyImports,
     NgIcon,
+    RouterLink,
     AppDatePipe,
   ],
   providers: [provideIcons({ lucideShieldCheck })],
   templateUrl: './privacy-policy.component.html',
 })
 export class PrivacyPolicyComponent {
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-
   open = input<boolean>(false);
   closed = output<void>();
 
@@ -51,11 +42,5 @@ export class PrivacyPolicyComponent {
     if (newState === 'closed') {
       this.closed.emit();
     }
-  }
-
-  protected onOpenRequested(): void {
-    void this.router.navigate(['privacy-policy'], {
-      relativeTo: this.route,
-    });
   }
 }
