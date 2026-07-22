@@ -1,4 +1,11 @@
-import { Component, effect, input, output, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -7,7 +14,7 @@ import { HlmTableImports } from '@spartan-ng/helm/table';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import { lucideScrollText } from '@ng-icons/lucide';
 import { provideIcons, NgIcon } from '@ng-icons/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppDatePipe } from '@job-tracker-lite-angular/frontend-data-access';
 
 @Component({
@@ -21,13 +28,15 @@ import { AppDatePipe } from '@job-tracker-lite-angular/frontend-data-access';
     SlicePipe,
     TranslocoModule,
     NgIcon,
-    RouterLink,
     AppDatePipe,
   ],
   providers: [provideIcons({ lucideScrollText })],
   templateUrl: './cookie-policy.component.html',
 })
 export class CookiePolicyComponent {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
   open = input<boolean>(false);
   closed = output<void>();
 
@@ -86,4 +95,10 @@ export class CookiePolicyComponent {
       ),
     },
   ];
+
+  protected onOpenRequested(): void {
+    void this.router.navigate(['cookie-policy'], {
+      relativeTo: this.route,
+    });
+  }
 }
