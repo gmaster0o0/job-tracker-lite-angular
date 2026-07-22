@@ -11,6 +11,10 @@
       "options": {
         "command": "npx tsc -p apps/frontend-e2e/tsconfig.json --noEmit"
       }
+    },
+    "e2e": {
+      "// dependsOn": "CI starts api:serve and frontend:serve-e2e itself, outside of any nx process, before this target runs (see .github/workflows/ci.yml). Clearing this stops @nx/playwright/plugin from also scheduling api:serve as a task here, which would otherwise race the CI-started one for port 3000.",
+      "dependsOn": []
     }
   }
 }
