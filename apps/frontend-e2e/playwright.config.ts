@@ -35,7 +35,7 @@ export default defineConfig({
       env: {
         ...process.env,
         PORT: '3000',
-        NX_CLOUD: 'false',
+        NX_NO_CLOUD: 'true',
         NODE_OPTIONS: '',
       },
       // In CI, this server is started by an earlier workflow step, outside
@@ -55,7 +55,7 @@ export default defineConfig({
       env: {
         ...process.env,
         API_PORT: '3000',
-        NX_CLOUD: 'false',
+        NX_NO_CLOUD: 'true',
         NODE_OPTIONS: '',
       },
       // Same reasoning as the API entry above.

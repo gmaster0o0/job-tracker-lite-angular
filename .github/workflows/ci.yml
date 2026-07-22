@@ -71,14 +71,18 @@ jobs:
           SMTP_PASS: fakepassword
           PORT: '3000'
           API_PORT: '3000'
-          NX_CLOUD: 'false'
+          # NX_CLOUD=false doesn't stop nx from trying (and, right now,
+          # failing) to authorize against Nx Cloud - NX_NO_CLOUD is the
+          # variable that actually disables it, matching the fallback
+          # below and in the "Run affected targets" step.
+          NX_NO_CLOUD: 'true'
         run: |
           set -o pipefail
 
-          nohup npx nx run api:serve:development > /tmp/api-serve.log 2>&1 &
+          nohup npx nx run api:serve:development --skipRemoteCache --skipNxCache > /tmp/api-serve.log 2>&1 &
           echo "API_SERVE_PID=$!" >> "$GITHUB_ENV"
 
-          nohup npx nx run frontend:serve-e2e -- --port 4200 > /tmp/frontend-serve.log 2>&1 &
+          nohup npx nx run frontend:serve-e2e --skipRemoteCache --skipNxCache -- --port 4200 > /tmp/frontend-serve.log 2>&1 &
           echo "FRONTEND_SERVE_PID=$!" >> "$GITHUB_ENV"
 
           wait_for_url() {
