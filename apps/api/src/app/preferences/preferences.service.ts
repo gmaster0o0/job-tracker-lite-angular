@@ -1,5 +1,5 @@
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   DEFAULT_USER_PREFERENCES,
   UpdateUserPreferencesDto,
@@ -9,6 +9,8 @@ import {
 
 @Injectable()
 export class PreferencesService {
+  private readonly logger = new Logger(PreferencesService.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
   async getPreferences(userId: string): Promise<UserPreferencesDto> {
@@ -21,7 +23,15 @@ export class PreferencesService {
       return DEFAULT_USER_PREFERENCES;
     }
 
-    return userPreferencesSchema.parse(user.preferences);
+    const result = userPreferencesSchema.safeParse(user.preferences);
+    if (!result.success) {
+      this.logger.warn(
+        `Stored preferences for user ${userId} failed schema validation, falling back to defaults: ${result.error.message}`,
+      );
+      return DEFAULT_USER_PREFERENCES;
+    }
+
+    return result.data;
   }
 
   async updatePreferences(

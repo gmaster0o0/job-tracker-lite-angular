@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import { PreferencesService } from './preferences.service';
@@ -48,6 +49,22 @@ describe('PreferencesService', () => {
     const result = await service.getPreferences(authUserIdFixture);
 
     expect(result).toEqual(userPreferencesFixtures.default);
+  });
+
+  it('should return defaults and log a warning when stored preferences fail schema validation', async () => {
+    const warnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+    prismaMock.user.findUnique.mockResolvedValue({
+      preferences: { theme: 'not-a-real-theme' },
+    });
+
+    const result = await service.getPreferences(authUserIdFixture);
+
+    expect(result).toEqual(userPreferencesFixtures.default);
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining(authUserIdFixture),
+    );
+
+    warnSpy.mockRestore();
   });
 
   it('should merge a partial update onto the current preferences and persist it', async () => {
