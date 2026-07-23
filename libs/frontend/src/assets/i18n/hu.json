@@ -1,0 +1,7 @@
+{
+  "global": {
+    "title": "Rendszerhiba",
+    "network": "Nem sikerült kapcsolódni a szerverhez. Kérjük, ellenőrizze az internetkapcsolatot.",
+    "internal": "Váratlan hiba történt. Kérjük, próbálja újra később."
+  }
+}

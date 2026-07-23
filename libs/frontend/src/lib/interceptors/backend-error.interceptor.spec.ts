@@ -17,24 +17,20 @@ import { TranslocoTestingModule } from '@jsverse/transloco';
 import { vi } from 'vitest';
 
 const en = {
-  errors: {
-    global: {
-      title: 'System Error',
-      network:
-        'Cannot connect to the server. Please check your internet connection.',
-      internal: 'An unexpected error occurred. Please try again later.',
-    },
+  global: {
+    title: 'System Error',
+    network:
+      'Cannot connect to the server. Please check your internet connection.',
+    internal: 'An unexpected error occurred. Please try again later.',
   },
 };
 
 const hu = {
-  errors: {
-    global: {
-      title: 'Rendszerhiba',
-      network:
-        'Nem sikerült csatlakozni a szerverhez. Kérjük, ellenőrizze az internetkapcsolatot.',
-      internal: 'Váratlan hiba történt. Kérjük, próbálja újra később.',
-    },
+  global: {
+    title: 'Rendszerhiba',
+    network:
+      'Nem sikerült csatlakozni a szerverhez. Kérjük, ellenőrizze az internetkapcsolatot.',
+    internal: 'Váratlan hiba történt. Kérjük, próbálja újra később.',
   },
 };
 
@@ -50,7 +46,7 @@ describe('backendErrorInterceptor', () => {
     TestBed.configureTestingModule({
       imports: [
         TranslocoTestingModule.forRoot({
-          langs: { en, hu },
+          langs: { en: {}, hu: {}, 'errors/en': en, 'errors/hu': hu },
           translocoConfig: {
             availableLangs: ['en', 'hu'],
             defaultLang: 'en',

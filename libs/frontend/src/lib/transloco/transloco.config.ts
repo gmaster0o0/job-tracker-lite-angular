@@ -26,6 +26,13 @@ export function createTranslocoKeysManagerConfig({
   };
 }
 
-const config = createTranslocoKeysManagerConfig({ appName: 'frontend' });
+const config = {
+  ...createTranslocoKeysManagerConfig({ appName: 'frontend' }),
+
+  input: ['apps/frontend/src', 'libs/frontend/src'],
+  scopePathMap: {
+    errors: 'libs/frontend/src/assets/i18n',
+  },
+};
 
 export default config;

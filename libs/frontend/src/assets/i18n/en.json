@@ -1,0 +1,7 @@
+{
+  "global": {
+    "title": "System Error",
+    "network": "Cannot connect to the server. Please check your internet connection.",
+    "internal": "An unexpected error occurred. Please try again later."
+  }
+}

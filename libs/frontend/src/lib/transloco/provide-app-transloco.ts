@@ -1,5 +1,5 @@
 import { EnvironmentProviders, isDevMode, Provider } from '@angular/core';
-import { provideTransloco } from '@jsverse/transloco';
+import { provideTransloco, provideTranslocoScope } from '@jsverse/transloco';
 import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
 import {
   I18N_PATH,
@@ -9,6 +9,8 @@ import {
   AVAILABLE_LANGUAGES,
   DEFAULT_LANGUAGE,
 } from '../services/user-preferences.service';
+
+provideTranslocoScope('errors');
 
 export function provideAppTransloco(
   i18nPath = '/assets/i18n/',

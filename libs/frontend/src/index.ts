@@ -7,5 +7,5 @@ export * from './lib/interceptors';
 export * from './lib/types';
 export * from './lib/transloco/provide-app-transloco';
 export * from './lib/transloco/transloco-testing.factory';
-export { createTranslocoKeysManagerConfig } from './lib/transloco/transloco-keys-manager.config';
-export type { TranslocoKeysManagerConfigOptions } from './lib/transloco/transloco-keys-manager.config';
+export { createTranslocoKeysManagerConfig } from './lib/transloco/transloco.config';
+export type { TranslocoKeysManagerConfigOptions } from './lib/transloco/transloco.config';

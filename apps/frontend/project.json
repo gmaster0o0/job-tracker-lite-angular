@@ -18,6 +18,11 @@
           {
             "glob": "**/*",
             "input": "apps/frontend/public"
+          },
+          {
+            "glob": "**/*",
+            "input": "libs/frontend/src/assets/i18n",
+            "output": "assets/i18n/errors"
           }
         ],
         "styles": ["apps/frontend/src/styles.scss"]

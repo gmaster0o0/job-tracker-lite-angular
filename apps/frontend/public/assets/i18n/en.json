@@ -7,8 +7,8 @@
     "lastChecked": "Last Checked",
     "uptime": "Uptime:",
     "loadingHealth": "Loading health check data...",
-    "loadFailed": "Failed to load health check data.",
-    "offline": "Cannot reach the server. It may be down or restarting."
+    "offline": "Cannot reach the server. It may be down or restarting.",
+    "loadFailed": "Failed to load health check data."
   },
   "common": {
     "back": "Back",
@@ -211,6 +211,18 @@
     "description": "We use cookies to ensure you get the best experience on our website. For more information on how we use cookies, please see our cookie policy.",
     "detailedSettings": "By clicking \"Accept\", you agree to our use of cookies.",
     "cookiePreferences": "Cookie preferences"
+  },
+  "navigation": {
+    "status": {
+      "label": "Status",
+      "tooltip": {
+        "title": "System Health",
+        "description": "Click here for more details."
+      }
+    },
+    "backTooltip": "Go back to the previous page",
+    "appTitleTooltip": "Open the Job Tracker Lite GitHub page",
+    "notImplementedTooltip": "This function not implemented yet"
   },
   "privacySettings": {
     "title": "Privacy Settings",
@@ -498,8 +510,8 @@
       "description": "Select your preferred language for the interface.",
       "label": "Interface Language",
       "select": "Select language",
-      "system": "System",
-      "languageNote": "Note: Language changes will be applied to the entire interface."
+      "languageNote": "Note: Language changes will be applied to the entire interface.",
+      "system": "System"
     },
     "dateformat": {
       "title": "Date Format",
@@ -818,18 +830,6 @@
       "busy": "shared.confirmationDialog.busy",
       "fieldLabel": "shared.confirmationDialog.fieldLabel",
       "fieldPlaceholder": "shared.confirmationDialog.fieldPlaceholder"
-    }
-  },
-  "navigation": {
-    "backTooltip": "Go back to the previous page",
-    "appTitleTooltip": "Open the Job Tracker Lite GitHub page",
-    "notImplementedTooltip": "This function not implemented yet",
-    "status": {
-      "label": "Status",
-      "tooltip": {
-        "title": "System Health",
-        "description": "Click here for more details."
-      }
     }
   }
 }

@@ -21,8 +21,8 @@
     "typecheck": "npx nx run-many --target=typecheck --all",
     "test:push": "npx nx affected -t test --base=origin/main --head=HEAD --parallel=3",
     "release": "npx standard-version && node tools/sync-version.js && git add . && git commit --amend --no-edit",
-    "i18n:extract": "npx transloco-keys-manager extract --config libs/frontend/src/lib/transloco/transloco-keys-manager.config.ts --project frontend --input \"apps/frontend/src\" --translations-path \"./apps/frontend/public/assets/i18n/\"",
-    "i18n:find": "npx transloco-keys-manager find --config libs/frontend/src/lib/transloco/transloco-keys-manager.config.ts --project frontend --input \"apps/frontend/src\" --translations-path \"./apps/frontend/public/assets/i18n/\""
+    "i18n:extract": "npx transloco-keys-manager extract --config libs/frontend/src/lib/transloco/transloco.config.ts --project frontend --input \"apps/frontend/src,libs/frontend/src\" --translations-path \"./apps/frontend/public/assets/i18n/\"",
+    "i18n:find": "npx transloco-keys-manager find --config libs/frontend/src/lib/transloco/transloco.config.ts --project frontend --input \"apps/frontend/src,libs/frontend/src\" --translations-path \"./apps/frontend/public/assets/i18n/\""
   },
   "private": true,
   "engines": {

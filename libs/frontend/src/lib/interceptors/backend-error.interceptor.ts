@@ -1,10 +1,10 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
-import { catchError, throwError } from 'rxjs';
+import { catchError, combineLatest, take, throwError } from 'rxjs';
 import { BackendError } from './backend-error.types';
 import { PRISMA_ERROR_CODES } from '@job-tracker-lite-angular/prisma/error-codes';
-import { inject, Injector, runInInjectionContext } from '@angular/core';
+import { inject } from '@angular/core';
 import { NotificationService } from '../services/notification.service';
-import { translateSignal } from '@jsverse/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 
 const SILENT_ERROR_STATUSES = [400, 401, 403, 404, 409, 422];
 
@@ -36,7 +36,7 @@ function isPreferencesRequest(url: string): boolean {
  */
 export const backendErrorInterceptor: HttpInterceptorFn = (req, next) => {
   const notification = inject(NotificationService);
-  const injector = inject(Injector);
+  const transloco = inject(TranslocoService);
   return next(req).pipe(
     catchError((error: unknown) => {
       if (error instanceof HttpErrorResponse) {
@@ -52,23 +52,35 @@ export const backendErrorInterceptor: HttpInterceptorFn = (req, next) => {
           !isSessionCheckRequest(req.url) &&
           !isPreferencesRequest(req.url)
         ) {
-          runInInjectionContext(injector, () => {
-            const title = translateSignal('errors.global.title', {
-              defaultValue: 'System Error',
-            });
-            const message =
-              error.status === 0
-                ? translateSignal('errors.global.network', {
+          const title$ = transloco.selectTranslate<string>(
+            'global.title',
+            { defaultValue: 'System Error' },
+            'errors',
+          );
+          const message$ =
+            error.status === 0
+              ? transloco.selectTranslate<string>(
+                  'global.network',
+                  {
                     defaultValue:
                       'Cannot connect to the server. Please check your internet connection.',
-                  })
-                : translateSignal('errors.global.internal', {
+                  },
+                  'errors',
+                )
+              : transloco.selectTranslate<string>(
+                  'global.internal',
+                  {
                     defaultValue:
                       'An unexpected error occurred. Please try again later.',
-                  });
+                  },
+                  'errors',
+                );
 
-            notification.error(title(), message());
-          });
+          combineLatest([title$, message$])
+            .pipe(take(1))
+            .subscribe(([title, message]) => {
+              notification.error(title, message);
+            });
         }
 
         return throwError(() => normalizedError);
