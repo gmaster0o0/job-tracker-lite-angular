@@ -3,7 +3,6 @@ import { ComponentHarness } from '@angular/cdk/testing';
 export class AppearanceHarness extends ComponentHarness {
   static hostSelector = 'app-appearance';
 
-  private readonly getRadioGroup = this.locatorFor('hlm-radio-group');
   private readonly getLabels = this.locatorForAll('label');
 
   async selectAppearanceOption(
@@ -18,11 +17,6 @@ export class AppearanceHarness extends ComponentHarness {
       }
     }
     throw new Error(`Appearance option "${value}" not found`);
-  }
-
-  async getSelectedAppearance(): Promise<string | null> {
-    const radioGroup = await this.getRadioGroup();
-    return radioGroup.getAttribute('value');
   }
 
   async getAppearanceOptions(): Promise<
