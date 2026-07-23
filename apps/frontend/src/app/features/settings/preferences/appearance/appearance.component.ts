@@ -1,5 +1,4 @@
-import { Component, effect, inject, model } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject } from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { provideIcons } from '@ng-icons/core';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -9,7 +8,10 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { translateSignal, TranslocoModule } from '@jsverse/transloco';
 
 import { hlm } from '@spartan-ng/helm/utils';
-import { UserPreferencesService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  Theme,
+  UserPreferencesService,
+} from '@job-tracker-lite-angular/frontend-data-access';
 
 export interface AppearanceCard {
   label: () => string;
@@ -24,7 +26,6 @@ export interface AppearanceCard {
     HlmIconImports,
     HlmRadioGroupImports,
     HlmButtonImports,
-    FormsModule,
     TranslocoModule,
   ],
   providers: [provideIcons({ lucideSun, lucideMoon, lucideMonitor })],
@@ -32,15 +33,12 @@ export interface AppearanceCard {
   templateUrl: './appearance.component.html',
 })
 export class AppearanceComponent {
-  private preferences = inject(UserPreferencesService);
-  public appearance = model<'light' | 'dark' | 'system'>(
-    this.preferences.theme(),
-  );
+  protected preferences = inject(UserPreferencesService);
 
-  constructor() {
-    effect(() => {
-      this.preferences.setTheme(this.appearance());
-    });
+  handleAppearanceChange(value: Theme | null | undefined): void {
+    if (value) {
+      this.preferences.setTheme(value);
+    }
   }
 
   public readonly appearanceOptions: AppearanceCard[] = [
@@ -62,7 +60,7 @@ export class AppearanceComponent {
   ];
 
   cardClass(optionValue: string) {
-    const isSelected = this.appearance() === optionValue;
+    const isSelected = this.preferences.theme() === optionValue;
     return hlm(
       'relative flex flex-col items-center justify-center rounded-lg px-4 py-8 transition-all border-2 cursor-pointer',
       isSelected

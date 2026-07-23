@@ -8,7 +8,11 @@
     </div>
   </hlm-card-header>
   <div hlmCardContent>
-    <hlm-radio-group [(value)]="appearance" class="grid grid-cols-3 gap-4">
+    <hlm-radio-group
+      [value]="preferences.theme()"
+      (valueChange)="handleAppearanceChange($event)"
+      class="grid grid-cols-3 gap-4"
+    >
       @for (option of appearanceOptions; track option.value) {
         <label
           for="radio-{{ option.value }}"
