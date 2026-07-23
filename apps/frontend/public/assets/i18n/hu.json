@@ -7,8 +7,8 @@
     "lastChecked": "Utolsó ellenőrzés",
     "uptime": "Üzemidő",
     "loadingHealth": "Rendszerállapot betöltése...",
-    "loadFailed": "Nem sikerült betölteni az állapotot",
-    "offline": "Nem sikerült elérni a szervert. Lehet, hogy nem elérhető vagy újraindul."
+    "offline": "Nem sikerült elérni a szervert. Lehet, hogy nem elérhető vagy újraindul.",
+    "loadFailed": "Nem sikerült betölteni az állapotot"
   },
   "common": {
     "back": "Vissza",
@@ -209,6 +209,18 @@
     "description": "A legjobb élmény biztosítása érdekében sütiket használunk. További információkért kérjük, tekintse meg a sütikre vonatkozó irányelveinket.",
     "detailedSettings": "A \"Elfogadás\" gombra kattintva hozzájárulsz a sütik használatához.",
     "cookiePreferences": "Süti testreszabása"
+  },
+  "navigation": {
+    "status": {
+      "label": "Állapot",
+      "tooltip": {
+        "title": "Rendszerállapot",
+        "description": "Kattints ide a részletekért."
+      }
+    },
+    "backTooltip": "Vissza az előző oldalra",
+    "appTitleTooltip": "Nyissa meg a Job Tracker Lite GitHub oldalát",
+    "notImplementedTooltip": "Ez a funkció még nincs megvalósítva"
   },
   "privacySettings": {
     "title": "Adatvédelmi beállítások",
@@ -495,8 +507,8 @@
       "description": "Válassza ki az alapértelmezett nyelvet.",
       "label": "Felület nyelve",
       "select": "Válasszon nyelvet",
-      "system": "Rendszer",
-      "languageNote": "Megjegyzés: A nyelvváltás a teljes kezelőfelületre vonatkozik."
+      "languageNote": "Megjegyzés: A nyelvváltás a teljes kezelőfelületre vonatkozik.",
+      "system": "Rendszer"
     },
     "dateformat": {
       "title": "Dátumformátum",
@@ -813,18 +825,6 @@
       "busy": "shared.confirmationDialog.busy",
       "fieldLabel": "shared.confirmationDialog.fieldLabel",
       "fieldPlaceholder": "shared.confirmationDialog.fieldPlaceholder"
-    }
-  },
-  "navigation": {
-    "backTooltip": "Vissza az előző oldalra",
-    "appTitleTooltip": "Nyissa meg a Job Tracker Lite GitHub oldalát",
-    "notImplementedTooltip": "Ez a funkció még nincs megvalósítva",
-    "status": {
-      "label": "Állapot",
-      "tooltip": {
-        "title": "Rendszerállapot",
-        "description": "Kattints ide a részletekért."
-      }
     }
   }
 }
