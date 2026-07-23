@@ -22,7 +22,7 @@ export function createHealthDataAccessMock(
   const isLoading = options.isLoading ?? false;
   const hasValue = options.hasValue ?? health !== null;
 
-  const healthResource: HealthResourceState = {
+  const resourceState: HealthResourceState = {
     value: () => health,
     isLoading: () => isLoading,
     reload: () => undefined,
@@ -30,8 +30,11 @@ export function createHealthDataAccessMock(
     hasValue: () => hasValue,
   };
 
+  // Both resources share the same options-driven state: consumers pick whichever
+  // one they depend on (the navbar uses readiness, the status page detailed).
   return {
-    healthResource,
+    healthResource: resourceState,
+    readinessResource: resourceState,
   };
 }
 

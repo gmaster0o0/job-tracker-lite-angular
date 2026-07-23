@@ -17,11 +17,7 @@ export class RedisHealthIndicator {
     const indicator = this.healthIndicatorService.check(key);
 
     try {
-      const client = (await Promise.race([
-        this.emailQueue.client,
-        this.connectionTimeout(),
-      ])) as unknown as Redis;
-      await client.ping();
+      await Promise.race([this.ping(), this.connectionTimeout()]);
       return indicator.up();
     } catch (error) {
       return indicator.down({
@@ -30,9 +26,18 @@ export class RedisHealthIndicator {
     }
   }
 
-  // ioredis retries a broken connection forever by default, so awaiting
-  // Queue.client never settles while Redis is unreachable. Bound the wait
-  // so the health check reports "down" instead of hanging the request.
+  private async ping(): Promise<void> {
+    const client = (await this.emailQueue.client) as unknown as Redis;
+    await client.ping();
+  }
+
+  // Two ways a dead Redis can wedge this check, both bounded by the timeout:
+  //  - ioredis retries a broken connection forever, so awaiting Queue.client
+  //    never settles when Redis was never reachable.
+  //  - if the connection was established and then dropped, `client.ping()` is
+  //    parked in ioredis's offline command queue and never settles either.
+  // Racing the whole ping against this timeout reports "down" instead of
+  // hanging the request in either case.
   private connectionTimeout(): Promise<never> {
     return new Promise((_, reject) =>
       setTimeout(() => reject(new Error('Redis connection timed out')), 2000),

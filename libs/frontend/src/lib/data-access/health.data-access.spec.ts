@@ -28,6 +28,14 @@ describe('HealthDataAccessService', () => {
     httpMock.verify();
   });
 
+  const okBody = { status: 'ok', info: {}, error: {}, details: {} } as const;
+
+  // Both resources load eagerly, so drain the sibling request the test under
+  // inspection isn't asserting on to keep httpMock.verify() happy.
+  function drainRemaining(): void {
+    httpMock.match(() => true).forEach((req) => req.flush(okBody));
+  }
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
@@ -39,11 +47,20 @@ describe('HealthDataAccessService', () => {
 
     const req = httpMock.expectOne('/api/health/detailed');
     expect(req.request.method).toBe('GET');
-    req.flush({
-      status: 'ok',
-      info: {},
-      error: {},
-      details: {},
-    });
+    req.flush(okBody);
+
+    drainRemaining();
+  });
+
+  it('should request the readiness health endpoint', () => {
+    service.readinessResource.reload();
+
+    TestBed.flushEffects();
+
+    const req = httpMock.expectOne('/api/health/ready');
+    expect(req.request.method).toBe('GET');
+    req.flush(okBody);
+
+    drainRemaining();
   });
 });

@@ -6,8 +6,16 @@ import { HealthResponseDto } from '@job-tracker-lite-angular/schemas';
   providedIn: 'root',
 })
 export class HealthDataAccessService {
+  // Full report (database + server + redis) for the manual /status dashboard.
   healthResource = httpResource<HealthResponseDto>(
     () => `/api/health/detailed`,
+  );
+
+  // Readiness probe (dependencies required to serve traffic - the database).
+  // Drives the navbar indicator: redis being down must not flag the app as
+  // unhealthy there, since it isn't required to serve requests.
+  readinessResource = httpResource<HealthResponseDto>(
+    () => `/api/health/ready`,
   );
 }
 

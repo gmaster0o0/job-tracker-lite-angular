@@ -97,4 +97,42 @@ describe('RedisHealthIndicator', () => {
 
     jest.useRealTimers();
   });
+
+  it('should report down instead of hanging when a connected client never answers ping', async () => {
+    jest.useFakeTimers();
+
+    const healthIndicatorService = {
+      check: jest.fn(() => ({ up: upMock, down: downMock })),
+    };
+    // Connection is established (client resolves) but the ping is parked in
+    // ioredis's offline queue and never settles - mirrors Redis dropping after
+    // the app has already connected.
+    const emailQueue = {
+      client: Promise.resolve({ ping: () => new Promise(() => undefined) }),
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        RedisHealthIndicator,
+        { provide: HealthIndicatorService, useValue: healthIndicatorService },
+        { provide: getQueueToken(EMAIL_QUEUE), useValue: emailQueue },
+      ],
+    }).compile();
+    const indicatorUnderTest =
+      module.get<RedisHealthIndicator>(RedisHealthIndicator);
+
+    const resultPromise = indicatorUnderTest.isHealthy('redis');
+    await jest.advanceTimersByTimeAsync(2000);
+    const result = await resultPromise;
+
+    expect(downMock).toHaveBeenCalledWith({
+      message: 'Redis connection timed out',
+    });
+    expect(result).toEqual({
+      status: 'down',
+      message: 'Redis connection timed out',
+    });
+
+    jest.useRealTimers();
+  });
 });

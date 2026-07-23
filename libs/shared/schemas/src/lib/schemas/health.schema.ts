@@ -4,6 +4,7 @@ export const healthIndicatorSchema = z.object({
   status: z.enum(['up', 'down']),
   uptime: z.string().optional(),
   timestamp: z.string().optional(),
+  message: z.string().optional(),
 });
 export type HealthIndicator = z.infer<typeof healthIndicatorSchema>;
 

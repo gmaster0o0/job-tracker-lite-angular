@@ -8,6 +8,7 @@ import {
   createHealthDataAccessMock,
   degradedHealth,
   healthFixture,
+  redisDownHealth,
 } from '@job-tracker-lite-angular/testing';
 import { describe, expect, it } from 'vitest';
 import { StatusComponent } from './status.component';
@@ -87,6 +88,23 @@ describe('StatusComponent', () => {
 
     expect(await harness.getApiStatus()).toContain('ERROR');
     expect(await harness.getDatabaseStatus()).toContain('DOWN');
+  });
+
+  it('keeps the API status OK when only redis is down', async () => {
+    const { harness } = await setup({
+      health: null,
+      hasValue: false,
+      error: new HttpErrorResponse({
+        status: 503,
+        error: redisDownHealth,
+      }),
+    });
+
+    // The app can still serve traffic, so the API reads OK even though the
+    // overall report status is "error" and the queue card shows DOWN.
+    expect(await harness.getApiStatus()).toContain('OK');
+    expect(await harness.getDatabaseStatus()).toContain('UP');
+    expect(await harness.getQueueStatus()).toContain('DOWN');
   });
 
   it('should show an offline fallback when the backend is unreachable', async () => {

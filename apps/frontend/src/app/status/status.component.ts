@@ -46,6 +46,20 @@ export class StatusComponent {
     selectHealthValue(this.healthResource),
   );
 
+  protected readonly apiStatus = computed<'ok' | 'error'>(() => {
+    const health = this.health();
+    if (!health) {
+      return 'error';
+    }
+
+    const dbStatus =
+      health.info.database?.status ?? health.error.database?.status;
+    const serverStatus =
+      health.info.server?.status ?? health.error.server?.status;
+
+    return dbStatus === 'up' && serverStatus === 'up' ? 'ok' : 'error';
+  });
+
   protected readonly isUnreachable = computed(() =>
     isHealthUnreachable(this.healthResource, this.health()),
   );

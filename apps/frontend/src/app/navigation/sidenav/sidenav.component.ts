@@ -78,7 +78,10 @@ export class SidenavComponent {
     'navigation.appTitleTooltip',
   );
 
-  private readonly healthResource = this.healthDataAccess.healthResource;
+  // The navbar reflects readiness (can we serve traffic?), not the full
+  // detailed report - so a non-critical dependency like redis being down
+  // does not surface as a warning here. The /status page shows the details.
+  private readonly healthResource = this.healthDataAccess.readinessResource;
 
   private readonly health = computed(() =>
     selectHealthValue(this.healthResource),

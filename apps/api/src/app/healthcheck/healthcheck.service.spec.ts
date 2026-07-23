@@ -57,7 +57,11 @@ describe('HealthService', () => {
   it('checks only the database for readiness', async () => {
     await service.checkReadiness();
 
-    expect(dbPingCheck).toHaveBeenCalledWith('database', expect.anything());
+    expect(dbPingCheck).toHaveBeenCalledWith(
+      'database',
+      expect.anything(),
+      expect.objectContaining({ timeout: expect.any(Number) }),
+    );
     expect(uptimeIsHealthy).not.toHaveBeenCalled();
     expect(redisIsHealthy).not.toHaveBeenCalled();
   });
@@ -65,7 +69,11 @@ describe('HealthService', () => {
   it('checks database, uptime and redis for the detailed report', async () => {
     await service.checkDetailed();
 
-    expect(dbPingCheck).toHaveBeenCalledWith('database', expect.anything());
+    expect(dbPingCheck).toHaveBeenCalledWith(
+      'database',
+      expect.anything(),
+      expect.objectContaining({ timeout: expect.any(Number) }),
+    );
     expect(uptimeIsHealthy).toHaveBeenCalledWith('server');
     expect(redisIsHealthy).toHaveBeenCalledWith('redis');
   });

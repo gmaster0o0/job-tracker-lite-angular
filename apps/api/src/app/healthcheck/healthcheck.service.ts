@@ -14,6 +14,10 @@ export class HealthService {
     private readonly prisma: PrismaService,
   ) {}
 
+  // Bound the database ping so a downed/unreachable DB reports "down" quickly
+  // instead of stalling the request while the driver waits on a dead socket.
+  private readonly dbPingTimeoutMs = 2000;
+
   /**
    * Check if the service is alive and responding. Only checks the uptime of this instance.
    */
@@ -26,7 +30,10 @@ export class HealthService {
    */
   checkReadiness() {
     return this.health.check([
-      () => this.db.pingCheck('database', this.prisma),
+      () =>
+        this.db.pingCheck('database', this.prisma, {
+          timeout: this.dbPingTimeoutMs,
+        }),
     ]);
   }
 
@@ -38,7 +45,10 @@ export class HealthService {
    */
   checkDetailed() {
     return this.health.check([
-      () => this.db.pingCheck('database', this.prisma),
+      () =>
+        this.db.pingCheck('database', this.prisma, {
+          timeout: this.dbPingTimeoutMs,
+        }),
       () => this.uptime.isHealthy('server'),
       () => this.redis.isHealthy('redis'),
     ]);
