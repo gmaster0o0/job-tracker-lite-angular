@@ -35,6 +35,30 @@ export const healthFixture: HealthResponseDto = {
   },
 };
 
+export const redisDownHealth: HealthResponseDto = {
+  status: 'error',
+  info: {
+    database: { status: 'up' },
+    server: {
+      status: 'up',
+      uptime: '1051',
+      timestamp: '2026-07-23T14:21:25.528Z',
+    },
+  },
+  error: {
+    redis: { status: 'down', message: 'Redis connection timed out' },
+  },
+  details: {
+    database: { status: 'up' },
+    server: {
+      status: 'up',
+      uptime: '1051',
+      timestamp: '2026-07-23T14:21:25.528Z',
+    },
+    redis: { status: 'down', message: 'Redis connection timed out' },
+  },
+};
+
 export const degradedHealth: HealthResponseDto = {
   status: 'error',
   info: {

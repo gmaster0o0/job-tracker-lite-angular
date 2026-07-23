@@ -21,10 +21,10 @@
               <span
                 hlmBadge
                 class="text-white"
-                [class.bg-green-500]="healthData.status === 'ok'"
-                [class.bg-red-500]="healthData.status === 'error'"
+                [class.bg-green-500]="apiStatus() === 'ok'"
+                [class.bg-red-500]="apiStatus() === 'error'"
               >
-                {{ healthData.status.toUpperCase() }}
+                {{ apiStatus().toUpperCase() }}
               </span>
             </div>
           </hlm-card>
