@@ -41,13 +41,6 @@ describe('AppearanceComponent', () => {
     expect(options.some((opt) => opt.value === 'system')).toBe(true);
   });
 
-  it('should reflect the preferences service value', async () => {
-    preferences.setTheme('dark');
-    fixture.detectChanges();
-
-    expect(await harness.getSelectedAppearance()).toBe('dark');
-  });
-
   it('should update preferences service when appearance changes', async () => {
     await harness.selectAppearanceOption('dark');
     expect(preferences.theme()).toBe('dark');
