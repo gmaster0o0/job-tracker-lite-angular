@@ -127,32 +127,42 @@
     </div>
 
     <hlm-card-footer class="justify-end">
-      <app-save-button
-        [formId]="'changeEmailForm'"
-        [disabled]="
-          isLoadingSettings() ||
-          changeEmailForm().invalid() ||
-          isChangingEmail() ||
-          isResendOnCooldown()
+      <div
+        [hlmTooltip]="
+          'settings.accountSettings.changeEmail.cooldownTooltip' | transloco
         "
-        [isSubmitting]="isChangingEmail()"
-        [idleIcon]="isResendMode() ? 'lucideRefreshCw' : 'lucideSave'"
-        [idleLabel]="
-          isResendMode()
-            ? isResendOnCooldown()
-              ? ('settings.accountSettings.changeEmail.resendCountdownButton'
-                | transloco: { seconds: remainingResendCooldownSeconds() })
-              : ('settings.accountSettings.changeEmail.resendButton'
+        [tooltipDisabled]="!isOnCooldown()"
+      >
+        <app-save-button
+          [formId]="'changeEmailForm'"
+          [disabled]="
+            isLoadingSettings() ||
+            changeEmailForm().invalid() ||
+            isChangingEmail() ||
+            isOnCooldown()
+          "
+          [isSubmitting]="isChangingEmail()"
+          [idleIcon]="isResendMode() ? 'lucideRefreshCw' : 'lucideSave'"
+          [idleLabel]="
+            isResendMode()
+              ? isOnCooldown()
+                ? ('settings.accountSettings.changeEmail.resendCountdownButton'
+                  | transloco: { seconds: remainingResendCooldownSeconds() })
+                : ('settings.accountSettings.changeEmail.resendButton'
+                  | transloco)
+              : isOnCooldown()
+                ? ('settings.accountSettings.changeEmail.saveCountdownButton'
+                  | transloco: { seconds: remainingResendCooldownSeconds() })
+                : ('settings.accountSettings.changeEmail.submit' | transloco)
+          "
+          [submittingLabel]="
+            isResendMode()
+              ? ('settings.accountSettings.changeEmail.resendSubmitting'
                 | transloco)
-            : ('settings.accountSettings.changeEmail.submit' | transloco)
-        "
-        [submittingLabel]="
-          isResendMode()
-            ? ('settings.accountSettings.changeEmail.resendSubmitting'
-              | transloco)
-            : ('settings.accountSettings.changeEmail.submitting' | transloco)
-        "
-      />
+              : ('settings.accountSettings.changeEmail.submitting' | transloco)
+          "
+        />
+      </div>
     </hlm-card-footer>
   </hlm-card>
   <!-- Change password -->

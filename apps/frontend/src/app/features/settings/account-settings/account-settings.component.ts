@@ -36,6 +36,7 @@ import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmInputImports } from '@spartan-ng/helm/input';
+import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { provideIcons } from '@ng-icons/core';
 import {
   lucideClock,
@@ -63,6 +64,7 @@ const RESEND_DEBOUNCE_MS = 600;
     HlmInputImports,
     HlmButtonImports,
     HlmIconImports,
+    HlmTooltipImports,
     FormRoot,
     FormField,
     ZodNgControlBridgeDirective,
@@ -106,7 +108,7 @@ export class AccountSettingsComponent {
     emailVerified: false,
     pendingEmailRequestedAt: null as Date | null,
     pendingEmailExpiresAt: null as Date | null,
-    pendingEmailResendAvailableAt: null as Date | null,
+    emailChangeResendAvailableAt: null as Date | null,
   });
 
   protected readonly isLoadingSettings = signal(true);
@@ -146,10 +148,12 @@ export class AccountSettingsComponent {
   );
 
   /**
-   * Whether the currently typed address matches the pending target. The
-   * cooldown itself is always derived from the server's sentAt-based
-   * pendingEmailResendAvailableAt (below), not from client-side timer state,
-   * so re-typing the same pending address can't be used to bypass it.
+   * Whether the currently typed address matches the pending target - used
+   * only to pick which label family (Save vs Resend) to show. The cooldown
+   * itself (below) is global per-user and independent of this, derived from
+   * the server's sentAt-based emailChangeResendAvailableAt, which survives
+   * cancellation, so it applies whether or not a request is currently
+   * pending or the typed address matches it.
    */
   protected readonly isResendMode = computed(() => {
     const pendingEmail = this.accountSettings().pendingEmail;
@@ -163,11 +167,8 @@ export class AccountSettingsComponent {
   });
 
   protected readonly remainingResendCooldownSeconds = computed(() => {
-    if (!this.isResendMode()) {
-      return 0;
-    }
     const resendAvailableAt =
-      this.accountSettings().pendingEmailResendAvailableAt;
+      this.accountSettings().emailChangeResendAvailableAt;
     if (!resendAvailableAt) {
       return 0;
     }
@@ -175,7 +176,7 @@ export class AccountSettingsComponent {
     return Math.max(0, Math.ceil(remainingMs / 1000));
   });
 
-  protected readonly isResendOnCooldown = computed(
+  protected readonly isOnCooldown = computed(
     () => this.remainingResendCooldownSeconds() > 0,
   );
 
@@ -282,14 +283,11 @@ export class AccountSettingsComponent {
 
     try {
       await this.authDataAccess.cancelEmailChange();
-      const current = this.accountSettings();
-      this.accountSettings.set({
-        ...current,
-        pendingEmail: null,
-        pendingEmailRequestedAt: null,
-        pendingEmailExpiresAt: null,
-        pendingEmailResendAvailableAt: null,
-      });
+      // Re-fetch rather than hand-patch the signal: pendingEmail/its
+      // timestamps clear, but emailChangeResendAvailableAt must persist
+      // (the server never resets it on cancel) so the cooldown still
+      // applies immediately afterwards.
+      await this.loadSettings();
       this.notification.success(this.cancelEmailChangeSuccessMessage());
     } catch (error) {
       this.cancelEmailChangeError.set(

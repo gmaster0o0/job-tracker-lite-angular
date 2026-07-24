@@ -46,12 +46,12 @@ export class AccountService {
         email: true,
         pendingEmail: true,
         emailVerified: true,
+        lastEmailChangeRequestedAt: true,
       },
     });
 
     let pendingEmailRequestedAt: Date | null = null;
     let pendingEmailExpiresAt: Date | null = null;
-    let pendingEmailResendAvailableAt: Date | null = null;
 
     if (user.pendingEmail) {
       const verifyToken = await this.prisma.emailChangeToken.findFirst({
@@ -63,12 +63,15 @@ export class AccountService {
       if (verifyToken) {
         pendingEmailRequestedAt = verifyToken.createdAt;
         pendingEmailExpiresAt = verifyToken.expiresAt;
-        pendingEmailResendAvailableAt = addSeconds(
-          this.getEmailChangeResendCooldownSeconds(),
-          verifyToken.createdAt,
-        );
       }
     }
+
+    const emailChangeResendAvailableAt = user.lastEmailChangeRequestedAt
+      ? addSeconds(
+          this.getEmailChangeResendCooldownSeconds(),
+          user.lastEmailChangeRequestedAt,
+        )
+      : null;
 
     return {
       email: user.email,
@@ -76,11 +79,14 @@ export class AccountService {
       emailVerified: user.emailVerified,
       pendingEmailRequestedAt,
       pendingEmailExpiresAt,
-      pendingEmailResendAvailableAt,
+      emailChangeResendAvailableAt,
     };
   }
 
   async cancelEmailChange(userId: string): Promise<void> {
+    // Intentionally does not reset lastEmailChangeRequestedAt: cancelling must
+    // not reset the resend cooldown, otherwise a request -> cancel -> request
+    // loop would bypass it and let a user spam verification emails.
     await this.prisma.$transaction(async (tx) => {
       await tx.user.update({
         where: { id: userId },
@@ -104,6 +110,7 @@ export class AccountService {
       select: {
         id: true,
         email: true,
+        lastEmailChangeRequestedAt: true,
       },
     });
 
@@ -131,23 +138,20 @@ export class AccountService {
       });
     }
 
-    const existingToken = await this.prisma.emailChangeToken.findFirst({
-      where: { userId, type: EmailChangeTokenType.VERIFY },
-      orderBy: { createdAt: 'desc' },
-      select: { newEmail: true, createdAt: true },
-    });
-
-    if (existingToken && existingToken.newEmail === newEmail) {
+    // Cooldown is global per user (not scoped to the target address) and
+    // lives on the User row rather than the EmailChangeToken, since the token
+    // gets deleted on cancel - if the cooldown depended on it, a
+    // request -> cancel -> request loop would bypass it entirely.
+    if (currentUser.lastEmailChangeRequestedAt) {
       const resendAvailableAt = addSeconds(
         this.getEmailChangeResendCooldownSeconds(),
-        existingToken.createdAt,
+        currentUser.lastEmailChangeRequestedAt,
       );
 
       if (resendAvailableAt > new Date()) {
         throw new BadRequestException({
           errorCode: 'resend_cooldown_active',
-          message:
-            'Please wait before requesting another verification email for this address',
+          message: 'Please wait before requesting another verification email',
         });
       }
     }
@@ -156,12 +160,14 @@ export class AccountService {
     const verifyTokenExpiresAt = addSeconds(
       this.getEmailVerificationExpiresInSeconds(),
     );
+    const requestedAt = new Date();
 
     await this.prisma.$transaction(async (tx) => {
       await tx.user.update({
         where: { id: userId },
         data: {
           pendingEmail: newEmail,
+          lastEmailChangeRequestedAt: requestedAt,
         },
       });
 

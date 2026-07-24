@@ -84,9 +84,10 @@ describe('AccountService', () => {
 
     expect(prismaMock.user.update).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: {
+        data: expect.objectContaining({
           pendingEmail: changeEmailRequestFixtures.valid.newEmail,
-        },
+          lastEmailChangeRequestedAt: expect.any(Date),
+        }),
       }),
     );
     expect(prismaMock.emailChangeToken.create).toHaveBeenCalledWith(
@@ -112,15 +113,12 @@ describe('AccountService', () => {
     );
   });
 
-  it('rejects a resend for the same target email before the cooldown elapses', async () => {
-    prismaMock.user.findUniqueOrThrow.mockResolvedValue(
-      accountUserFixtures.primary,
-    );
-    prismaMock.user.findFirst.mockResolvedValue(null);
-    prismaMock.emailChangeToken.findFirst.mockResolvedValue({
-      newEmail: changeEmailRequestFixtures.valid.newEmail,
-      createdAt: new Date('2026-01-01T00:00:00.000Z'),
+  it('rejects a request before the cooldown elapses', async () => {
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue({
+      ...accountUserFixtures.primary,
+      lastEmailChangeRequestedAt: new Date('2026-01-01T00:00:00.000Z'),
     });
+    prismaMock.user.findFirst.mockResolvedValue(null);
 
     jest.useFakeTimers();
     jest.setSystemTime(new Date('2026-01-01T00:00:30.000Z')); // 30s later, cooldown is 60s
@@ -147,15 +145,12 @@ describe('AccountService', () => {
     }
   });
 
-  it('allows a resend for the same target email once the cooldown elapses', async () => {
-    prismaMock.user.findUniqueOrThrow.mockResolvedValue(
-      accountUserFixtures.primary,
-    );
-    prismaMock.user.findFirst.mockResolvedValue(null);
-    prismaMock.emailChangeToken.findFirst.mockResolvedValue({
-      newEmail: changeEmailRequestFixtures.valid.newEmail,
-      createdAt: new Date('2026-01-01T00:00:00.000Z'),
+  it('allows a request once the cooldown elapses', async () => {
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue({
+      ...accountUserFixtures.primary,
+      lastEmailChangeRequestedAt: new Date('2026-01-01T00:00:00.000Z'),
     });
+    prismaMock.user.findFirst.mockResolvedValue(null);
 
     jest.useFakeTimers();
     jest.setSystemTime(new Date('2026-01-01T00:01:01.000Z')); // 61s later, past the 60s cooldown
@@ -173,29 +168,59 @@ describe('AccountService', () => {
     }
   });
 
-  it('allows an immediate request for a different target email regardless of cooldown', async () => {
-    prismaMock.user.findUniqueOrThrow.mockResolvedValue(
-      accountUserFixtures.primary,
-    );
+  it('rejects an immediate request for a different target email during the cooldown', async () => {
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue({
+      ...accountUserFixtures.primary,
+      lastEmailChangeRequestedAt: new Date(),
+    });
     prismaMock.user.findFirst.mockResolvedValue(null);
-    prismaMock.emailChangeToken.findFirst.mockResolvedValue({
-      newEmail: 'someone-else@example.com',
-      createdAt: new Date(),
+
+    await expect(
+      service.requestEmailChange(
+        accountUserFixtures.primary.id,
+        'a-totally-different-address@example.com',
+        changeEmailRequestFixtures.valid.language,
+      ),
+    ).rejects.toMatchObject({
+      response: expect.objectContaining({
+        errorCode: 'resend_cooldown_active',
+      }),
     });
 
-    await service.requestEmailChange(
-      accountUserFixtures.primary.id,
-      changeEmailRequestFixtures.valid.newEmail,
-      changeEmailRequestFixtures.valid.language,
-    );
+    expect(prismaMock.emailChangeToken.create).not.toHaveBeenCalled();
+  });
 
-    expect(prismaMock.emailChangeToken.create).toHaveBeenCalled();
+  it('rejects an immediate re-request after cancelling within the cooldown window', async () => {
+    // cancelEmailChange must not reset lastEmailChangeRequestedAt, so a
+    // request -> cancel -> request loop can't bypass the cooldown.
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue({
+      ...accountUserFixtures.primary,
+      lastEmailChangeRequestedAt: new Date(),
+    });
+    prismaMock.user.findFirst.mockResolvedValue(null);
+
+    await service.cancelEmailChange(accountUserFixtures.primary.id);
+
+    await expect(
+      service.requestEmailChange(
+        accountUserFixtures.primary.id,
+        'yet-another-address@example.com',
+        changeEmailRequestFixtures.valid.language,
+      ),
+    ).rejects.toMatchObject({
+      response: expect.objectContaining({
+        errorCode: 'resend_cooldown_active',
+      }),
+    });
+
+    expect(prismaMock.emailChangeToken.create).not.toHaveBeenCalled();
   });
 
   it('returns pending email requested/expires timestamps from the active verify token', async () => {
-    prismaMock.user.findUniqueOrThrow.mockResolvedValue(
-      accountSettingsFixtures.withPendingEmail,
-    );
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue({
+      ...accountSettingsFixtures.withPendingEmail,
+      lastEmailChangeRequestedAt: null,
+    });
     prismaMock.emailChangeToken.findFirst.mockResolvedValue({
       createdAt: emailChangeTokenFixtures.verify.createdAt,
       expiresAt: emailChangeTokenFixtures.verify.expiresAt,
@@ -209,9 +234,7 @@ describe('AccountService', () => {
       emailVerified: accountSettingsFixtures.withPendingEmail.emailVerified,
       pendingEmailRequestedAt: emailChangeTokenFixtures.verify.createdAt,
       pendingEmailExpiresAt: emailChangeTokenFixtures.verify.expiresAt,
-      pendingEmailResendAvailableAt: new Date(
-        emailChangeTokenFixtures.verify.createdAt.getTime() + 60_000,
-      ),
+      emailChangeResendAvailableAt: null,
     });
     expect(prismaMock.emailChangeToken.findFirst).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -221,6 +244,21 @@ describe('AccountService', () => {
         },
       }),
     );
+  });
+
+  it('returns emailChangeResendAvailableAt from lastEmailChangeRequestedAt even without a pending email', async () => {
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue({
+      ...accountSettingsFixtures.default,
+      lastEmailChangeRequestedAt: new Date('2026-01-01T00:00:00.000Z'),
+    });
+
+    await expect(
+      service.getAccountSettings(accountUserFixtures.primary.id),
+    ).resolves.toEqual({
+      ...accountSettingsFixtures.default,
+      emailChangeResendAvailableAt: new Date('2026-01-01T00:01:00.000Z'),
+    });
+    expect(prismaMock.emailChangeToken.findFirst).not.toHaveBeenCalled();
   });
 
   it('cancels a pending email change by clearing pendingEmail and deleting the verify token', async () => {

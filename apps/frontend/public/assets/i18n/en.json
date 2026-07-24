@@ -476,10 +476,12 @@
         "resendButton": "Resend",
         "resendCountdownButton": "Resend ({{seconds}}s)",
         "resendSubmitting": "Resending...",
+        "saveCountdownButton": "Save ({{seconds}}s)",
+        "cooldownTooltip": "There's a short wait between sending emails, to avoid overloading the system.",
         "error": {
           "title": "Email Update Failed",
           "unknown": "Unable to update email right now. Please try again.",
-          "resend_cooldown_active": "Please wait a bit before requesting another verification email for this address.",
+          "resend_cooldown_active": "Please wait a bit before requesting another verification email.",
           "user_already_exists": "An account with this email already exists.",
           "email_is_same": "Please use a different email than your current one."
         }

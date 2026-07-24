@@ -473,10 +473,12 @@
         "resendButton": "Újraküldés",
         "resendCountdownButton": "Újraküldés ({{seconds}} mp)",
         "resendSubmitting": "Küldés...",
+        "saveCountdownButton": "Mentés ({{seconds}} mp)",
+        "cooldownTooltip": "Rövid ideig várni kell két email küldése között, hogy elkerüljük a rendszer túlterhelését.",
         "error": {
           "title": "Email módosítás sikertelen",
           "unknown": "Most nem sikerült az email módosítása. Próbáld újra.",
-          "resend_cooldown_active": "Kérjük, várj egy kicsit, mielőtt újra megerősítő emailt kérsz erre a címre.",
+          "resend_cooldown_active": "Kérjük, várj egy kicsit, mielőtt újra megerősítő emailt kérsz.",
           "user_already_exists": "Ezzel az email címmel már létezik fiók.",
           "email_is_same": "Kérjük, a jelenlegitől eltérő email címet adjon meg."
         }

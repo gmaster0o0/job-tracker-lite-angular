@@ -172,6 +172,12 @@ describe('AccountSettingsComponent', () => {
     });
 
     it('cancels the pending request immediately on click, without confirmation', async () => {
+      // onCancelEmailChange re-fetches settings from the server rather than
+      // hand-patching the signal, so mock the post-cancel state it'll see.
+      vi.spyOn(authDataAccessMock, 'getAccountSettings').mockResolvedValueOnce(
+        accountSettingsFixtures.default,
+      );
+
       await harness.clickCancelEmailChangeButton();
 
       expect(authDataAccessMock.cancelEmailChange).toHaveBeenCalled();
@@ -189,6 +195,37 @@ describe('AccountSettingsComponent', () => {
       await harness.clickCancelEmailChangeButton();
 
       expect(component['cancelEmailChangeError']()).toBe('unknown');
+    });
+
+    it('shows a disabled Save (Xs) countdown immediately after cancelling within the cooldown window', async () => {
+      // The cooldown is global and stored server-side, independent of the
+      // pending token cancel just deleted, so it must still apply right
+      // after cancelling -- this is the actual regression test for the
+      // request -> cancel -> request spam loop.
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2026-01-01T00:00:30.000Z')); // 30s left of the 60s cooldown
+
+      try {
+        // Re-run setup now that fake time is active, so the component's
+        // `now` signal initializes from the fake clock instead of the real
+        // one captured by the outer beforeEach.
+        await setup(accountSettingsFixtures.withPendingEmail);
+
+        vi.spyOn(
+          authDataAccessMock,
+          'getAccountSettings',
+        ).mockResolvedValueOnce({
+          ...accountSettingsFixtures.default,
+          emailChangeResendAvailableAt: new Date('2026-01-01T00:01:00.000Z'),
+        });
+
+        await harness.clickCancelEmailChangeButton();
+
+        expect(await harness.getChangeEmailButtonText()).toContain('Save (');
+        expect(await harness.isChangeEmailButtonDisabled()).toBe(true);
+      } finally {
+        vi.useRealTimers();
+      }
     });
   });
 
@@ -209,7 +246,7 @@ describe('AccountSettingsComponent', () => {
       vi.setSystemTime(new Date('2026-01-01T00:00:30.000Z')); // 30s left of the 60s cooldown
 
       await setup(accountSettingsFixtures.withPendingEmail);
-      await vi.advanceTimersByTimeAsync(350); // let the debounce settle
+      await vi.advanceTimersByTimeAsync(650); // let the debounce settle
 
       expect(await harness.getNewEmailValue()).toBe(
         accountSettingsFixtures.withPendingEmail.pendingEmail,
@@ -225,24 +262,43 @@ describe('AccountSettingsComponent', () => {
       vi.setSystemTime(new Date('2026-01-01T00:01:30.000Z')); // 30s past the 60s cooldown
 
       await setup(accountSettingsFixtures.withPendingEmail);
-      await vi.advanceTimersByTimeAsync(350);
+      await vi.advanceTimersByTimeAsync(650);
 
       expect(await harness.getChangeEmailButtonText()).toContain('Resend');
       expect(await harness.getChangeEmailButtonText()).not.toContain('(');
       expect(await harness.isChangeEmailButtonDisabled()).toBe(false);
     });
 
-    it('switches to an enabled Save button when the typed address differs from the pending target', async () => {
+    it('shows a disabled Save (Xs) when the typed address differs from the pending target during an active cooldown', async () => {
+      // The cooldown is global per-user: switching to a different address
+      // does not escape it, since that's exactly the loophole this design
+      // closes (a user cycling through different throwaway addresses each
+      // time to bypass the rate limit).
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2026-01-01T00:00:30.000Z'));
 
       await setup(accountSettingsFixtures.withPendingEmail);
-      await vi.advanceTimersByTimeAsync(350);
+      await vi.advanceTimersByTimeAsync(650);
 
       await harness.setNewEmail('someone-else@example.com');
-      await vi.advanceTimersByTimeAsync(350);
+      await vi.advanceTimersByTimeAsync(650);
+
+      expect(await harness.getChangeEmailButtonText()).toContain('Save (');
+      expect(await harness.isChangeEmailButtonDisabled()).toBe(true);
+    });
+
+    it('shows an enabled Save button for a different address once the cooldown has elapsed', async () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2026-01-01T00:01:30.000Z')); // 30s past the 60s cooldown
+
+      await setup(accountSettingsFixtures.withPendingEmail);
+      await vi.advanceTimersByTimeAsync(650);
+
+      await harness.setNewEmail('someone-else@example.com');
+      await vi.advanceTimersByTimeAsync(650);
 
       expect(await harness.getChangeEmailButtonText()).toContain('Save');
+      expect(await harness.getChangeEmailButtonText()).not.toContain('(');
       expect(await harness.isChangeEmailButtonDisabled()).toBe(false);
     });
 
@@ -251,15 +307,15 @@ describe('AccountSettingsComponent', () => {
       vi.setSystemTime(new Date('2026-01-01T00:00:30.000Z')); // 30s left of cooldown
 
       await setup(accountSettingsFixtures.withPendingEmail);
-      await vi.advanceTimersByTimeAsync(350);
+      await vi.advanceTimersByTimeAsync(650);
 
       // Detour: type a different address, then type the pending one back.
       await harness.setNewEmail('someone-else@example.com');
-      await vi.advanceTimersByTimeAsync(350);
+      await vi.advanceTimersByTimeAsync(650);
       await harness.setNewEmail(
         accountSettingsFixtures.withPendingEmail.pendingEmail as string,
       );
-      await vi.advanceTimersByTimeAsync(350);
+      await vi.advanceTimersByTimeAsync(650);
 
       // Still disabled, with a cooldown derived from the server's sentAt
       // timestamp (a couple of seconds under the original 30s, from the
