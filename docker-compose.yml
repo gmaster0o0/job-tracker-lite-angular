@@ -11,6 +11,13 @@ services:
     volumes:
       - job-tracker-shared-data:/var/lib/postgresql/data
 
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: job-tracker-mailpit
+    ports:
+      - "1025:1025" # SMTP - point EMAIL_PROVIDER=mailpit at this
+      - "8025:8025" # Web UI - view captured emails at http://localhost:8025
+
 volumes:
   job-tracker-shared-data:
     name: job-tracker-universal-storage

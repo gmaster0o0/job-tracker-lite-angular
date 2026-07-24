@@ -13,6 +13,8 @@ import { EMAIL_QUEUE } from './email.queue';
 import { EmailService } from './email.service';
 import { EmailProcessor } from './email.processor';
 import { MailtrapEmailProvider } from './providers/mailtrap-email.provider';
+import { ResendEmailProvider } from './providers/resend-email.provider';
+import { MailpitEmailProvider } from './providers/mailpit-email.provider';
 import { QueueConfigFactory } from '../queue/queue.config.factory';
 
 // NODE_ENV alone isn't a reliable signal here - the staging server on Render
@@ -70,18 +72,31 @@ const isDashboardEnabled = process.env.ENABLE_QUEUE_DASHBOARD === 'true';
     EmailService,
     EmailProcessor,
     MailtrapEmailProvider,
+    ResendEmailProvider,
+    MailpitEmailProvider,
     {
       provide: EMAIL_PROVIDER,
-      inject: [ConfigService, MailtrapEmailProvider],
+      inject: [
+        ConfigService,
+        MailtrapEmailProvider,
+        ResendEmailProvider,
+        MailpitEmailProvider,
+      ],
       useFactory: (
         configService: ConfigService,
         mailtrapEmailProvider: MailtrapEmailProvider,
+        resendEmailProvider: ResendEmailProvider,
+        mailpitEmailProvider: MailpitEmailProvider,
       ) => {
         const emailConfig = getEmailConfig(configService);
 
         switch (emailConfig.provider) {
           case 'mailtrap':
             return mailtrapEmailProvider;
+          case 'resend':
+            return resendEmailProvider;
+          case 'mailpit':
+            return mailpitEmailProvider;
           default:
             throw new UnsupportedEmailProviderException(emailConfig.provider);
         }
