@@ -60,7 +60,6 @@ export function getEmailConfig(configService: ConfigService): EmailConfig {
         },
       };
     case 'mailtrap':
-    default:
       return {
         provider,
         from,
@@ -72,6 +71,9 @@ export function getEmailConfig(configService: ConfigService): EmailConfig {
           pass: getRequiredValue(configService, 'SMTP_PASS'),
         },
       };
+    default:
+      // Let email-provider.factory.ts handle unrecognized provider validation.
+      return { provider, from };
   }
 }
 

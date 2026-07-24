@@ -84,6 +84,17 @@ describe('email.config', () => {
 
       expect(config.mailpit).toEqual({ host: 'mailpit.local', port: 2025 });
     });
+
+    it('should not require mailtrap SMTP values for an unrecognized provider', () => {
+      const configService = buildConfigService({ EMAIL_PROVIDER: 'sendgrid' });
+
+      const config = getEmailConfig(configService);
+
+      expect(config).toEqual({
+        provider: 'sendgrid',
+        from: 'no-reply@example.com',
+      });
+    });
   });
 
   describe('getMailerOptions', () => {
