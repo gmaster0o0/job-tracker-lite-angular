@@ -1,6 +1,12 @@
 import { ConfigService } from '@nestjs/config';
 import { MailerOptions } from '@nestjs-modules/mailer';
 
+const DEFAULT_EMAIL_PROVIDER = 'mailtrap';
+const DEFAULT_EMAIL_FROM = 'no-reply@example.com';
+const DEFAULT_SMTP_PORT = '2525';
+const DEFAULT_MAILPIT_HOST = 'localhost';
+const DEFAULT_MAILPIT_PORT = '1025';
+
 interface MailtrapConfig {
   host: string;
   port: number;
@@ -38,8 +44,9 @@ function getRequiredValue(configService: ConfigService, key: string): string {
 
 export function getEmailConfig(configService: ConfigService): EmailConfig {
   const provider =
-    (configService.get<string>('EMAIL_PROVIDER') as string) ?? 'mailtrap';
-  const from = configService.get<string>('SMTP_FROM') ?? 'no-reply@example.com';
+    (configService.get<string>('EMAIL_PROVIDER') as string) ??
+    DEFAULT_EMAIL_PROVIDER;
+  const from = configService.get<string>('SMTP_FROM') ?? DEFAULT_EMAIL_FROM;
 
   switch (provider) {
     case 'resend':
@@ -55,8 +62,11 @@ export function getEmailConfig(configService: ConfigService): EmailConfig {
         provider,
         from,
         mailpit: {
-          host: configService.get<string>('MAILPIT_HOST') ?? 'localhost',
-          port: Number(configService.get<string>('MAILPIT_PORT') ?? '1025'),
+          host:
+            configService.get<string>('MAILPIT_HOST') ?? DEFAULT_MAILPIT_HOST,
+          port: Number(
+            configService.get<string>('MAILPIT_PORT') ?? DEFAULT_MAILPIT_PORT,
+          ),
         },
       };
     case 'mailtrap':
@@ -65,14 +75,19 @@ export function getEmailConfig(configService: ConfigService): EmailConfig {
         from,
         mailtrap: {
           host: getRequiredValue(configService, 'SMTP_HOST'),
-          port: Number(configService.get<string>('SMTP_PORT') ?? '2525'),
+          port: Number(
+            configService.get<string>('SMTP_PORT') ?? DEFAULT_SMTP_PORT,
+          ),
           secure: configService.get<string>('SMTP_SECURE') === 'true',
           user: getRequiredValue(configService, 'SMTP_USER'),
           pass: getRequiredValue(configService, 'SMTP_PASS'),
         },
       };
     default:
-      // Let email-provider.factory.ts handle unrecognized provider validation.
+      // Unrecognized provider - don't force mailtrap's SMTP_* requirements
+      // on a value that isn't mailtrap. Let the EMAIL_PROVIDER factory
+      // (email-provider.factory.ts) be the single place that rejects it via
+      // UnsupportedEmailProviderException, with a clear error message.
       return { provider, from };
   }
 }
