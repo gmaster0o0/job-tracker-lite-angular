@@ -191,4 +191,87 @@ describe('AccountSettingsComponent', () => {
       expect(component['cancelEmailChangeError']()).toBe('unknown');
     });
   });
+
+  describe('resend cooldown', () => {
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('shows an enabled Save button when there is no pending email change', async () => {
+      await harness.setNewEmail(changeEmailRequestFixtures.valid.newEmail);
+
+      expect(await harness.getChangeEmailButtonText()).toContain('Save');
+      expect(await harness.isChangeEmailButtonDisabled()).toBe(false);
+    });
+
+    it('prefills the field and shows a disabled countdown while the cooldown is active', async () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2026-01-01T00:00:30.000Z')); // 30s left of the 60s cooldown
+
+      await setup(accountSettingsFixtures.withPendingEmail);
+      await vi.advanceTimersByTimeAsync(350); // let the debounce settle
+
+      expect(await harness.getNewEmailValue()).toBe(
+        accountSettingsFixtures.withPendingEmail.pendingEmail,
+      );
+      expect(await harness.getChangeEmailButtonText()).toContain(
+        'Resend (30s)',
+      );
+      expect(await harness.isChangeEmailButtonDisabled()).toBe(true);
+    });
+
+    it('shows an enabled Resend button once the cooldown has elapsed', async () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2026-01-01T00:01:30.000Z')); // 30s past the 60s cooldown
+
+      await setup(accountSettingsFixtures.withPendingEmail);
+      await vi.advanceTimersByTimeAsync(350);
+
+      expect(await harness.getChangeEmailButtonText()).toContain('Resend');
+      expect(await harness.getChangeEmailButtonText()).not.toContain('(');
+      expect(await harness.isChangeEmailButtonDisabled()).toBe(false);
+    });
+
+    it('switches to an enabled Save button when the typed address differs from the pending target', async () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2026-01-01T00:00:30.000Z'));
+
+      await setup(accountSettingsFixtures.withPendingEmail);
+      await vi.advanceTimersByTimeAsync(350);
+
+      await harness.setNewEmail('someone-else@example.com');
+      await vi.advanceTimersByTimeAsync(350);
+
+      expect(await harness.getChangeEmailButtonText()).toContain('Save');
+      expect(await harness.isChangeEmailButtonDisabled()).toBe(false);
+    });
+
+    it('re-derives the cooldown from the server sentAt, not a client timer, after typing away and back', async () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2026-01-01T00:00:30.000Z')); // 30s left of cooldown
+
+      await setup(accountSettingsFixtures.withPendingEmail);
+      await vi.advanceTimersByTimeAsync(350);
+
+      // Detour: type a different address, then type the pending one back.
+      await harness.setNewEmail('someone-else@example.com');
+      await vi.advanceTimersByTimeAsync(350);
+      await harness.setNewEmail(
+        accountSettingsFixtures.withPendingEmail.pendingEmail as string,
+      );
+      await vi.advanceTimersByTimeAsync(350);
+
+      // Still disabled, with a cooldown derived from the server's sentAt
+      // timestamp (a couple of seconds under the original 30s, from the
+      // elapsed debounce waits above) -- not reset to the full 60s by a
+      // client-side timer that would've restarted on the detour.
+      const text = await harness.getChangeEmailButtonText();
+      const match = text.match(/Resend \((\d+)s\)/);
+      expect(match).not.toBeNull();
+      const remainingSeconds = Number(match?.[1]);
+      expect(remainingSeconds).toBeGreaterThan(0);
+      expect(remainingSeconds).toBeLessThanOrEqual(30);
+      expect(await harness.isChangeEmailButtonDisabled()).toBe(true);
+    });
+  });
 });

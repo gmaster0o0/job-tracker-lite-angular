@@ -7,6 +7,7 @@ export class SaveButtonHarness extends ComponentHarness {
   private readonly getLoadingIcon = this.locatorForOptional(
     'ng-icon[name="lucideLoader2"]',
   );
+  private readonly getIdleIcon = this.locatorForOptional('ng-icon');
 
   async getLabelText(): Promise<string> {
     const button = await this.getSubmitButton();
@@ -26,5 +27,13 @@ export class SaveButtonHarness extends ComponentHarness {
   async isSubmittingStateVisible(): Promise<boolean> {
     const icon = await this.getLoadingIcon();
     return !!icon;
+  }
+
+  async getIdleIconMarkup(): Promise<string> {
+    const icon = await this.getIdleIcon();
+    if (!icon) {
+      return '';
+    }
+    return String((await icon.getProperty('innerHTML')) ?? '');
   }
 }

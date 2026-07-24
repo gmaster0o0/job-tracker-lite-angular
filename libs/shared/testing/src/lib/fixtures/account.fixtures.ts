@@ -16,6 +16,7 @@ export const accountSettingsFixtures: {
     emailVerified: true,
     pendingEmailRequestedAt: null,
     pendingEmailExpiresAt: null,
+    pendingEmailResendAvailableAt: null,
   },
   withPendingEmail: {
     email: 'admin@example.com',
@@ -23,6 +24,7 @@ export const accountSettingsFixtures: {
     emailVerified: true,
     pendingEmailRequestedAt: new Date('2026-01-01T00:00:00.000Z'),
     pendingEmailExpiresAt: new Date('2026-01-02T00:00:00.000Z'),
+    pendingEmailResendAvailableAt: new Date('2026-01-01T00:01:00.000Z'),
   },
 };
 

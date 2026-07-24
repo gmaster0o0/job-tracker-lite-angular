@@ -29,6 +29,7 @@ export class AccountService {
   private readonly defaultAuthApiUrl = 'http://localhost:3000/api/auth';
   private readonly defaultEmailVerificationExpiresIn = 60 * 60 * 24; // 24 hours
   private readonly defaultEmailRestoreExpiresIn = 60 * 60 * 24 * 7; // 7 days
+  private readonly defaultEmailChangeResendCooldownSeconds = 60; // 1 minute
   private readonly defaultDeleteVerificationExpiresIn = 60 * 30; // 30 minutes
   private readonly defaultDeletionGracePeriodDays = 7; // 7 days;
 
@@ -50,6 +51,7 @@ export class AccountService {
 
     let pendingEmailRequestedAt: Date | null = null;
     let pendingEmailExpiresAt: Date | null = null;
+    let pendingEmailResendAvailableAt: Date | null = null;
 
     if (user.pendingEmail) {
       const verifyToken = await this.prisma.emailChangeToken.findFirst({
@@ -61,6 +63,10 @@ export class AccountService {
       if (verifyToken) {
         pendingEmailRequestedAt = verifyToken.createdAt;
         pendingEmailExpiresAt = verifyToken.expiresAt;
+        pendingEmailResendAvailableAt = addSeconds(
+          this.getEmailChangeResendCooldownSeconds(),
+          verifyToken.createdAt,
+        );
       }
     }
 
@@ -70,6 +76,7 @@ export class AccountService {
       emailVerified: user.emailVerified,
       pendingEmailRequestedAt,
       pendingEmailExpiresAt,
+      pendingEmailResendAvailableAt,
     };
   }
 
@@ -122,6 +129,27 @@ export class AccountService {
         errorCode: 'user_already_exists',
         message: 'An account with this email already exists',
       });
+    }
+
+    const existingToken = await this.prisma.emailChangeToken.findFirst({
+      where: { userId, type: EmailChangeTokenType.VERIFY },
+      orderBy: { createdAt: 'desc' },
+      select: { newEmail: true, createdAt: true },
+    });
+
+    if (existingToken && existingToken.newEmail === newEmail) {
+      const resendAvailableAt = addSeconds(
+        this.getEmailChangeResendCooldownSeconds(),
+        existingToken.createdAt,
+      );
+
+      if (resendAvailableAt > new Date()) {
+        throw new BadRequestException({
+          errorCode: 'resend_cooldown_active',
+          message:
+            'Please wait before requesting another verification email for this address',
+        });
+      }
     }
 
     const verifyToken = randomUUID();
@@ -599,6 +627,13 @@ export class AccountService {
     return parseEnvValue(
       this.configService.get('EMAIL_RESTORE_EXPIRES_IN_SECONDS'),
       this.defaultEmailRestoreExpiresIn,
+    );
+  }
+
+  private getEmailChangeResendCooldownSeconds(): number {
+    return parseEnvValue(
+      this.configService.get('EMAIL_CHANGE_RESEND_COOLDOWN_SECONDS'),
+      this.defaultEmailChangeResendCooldownSeconds,
     );
   }
 

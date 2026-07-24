@@ -44,9 +44,24 @@ export class AccountSettingsHarness extends ComponentHarness {
     }
   }
 
+  async getNewEmailValue(): Promise<string> {
+    const input = await this.newEmailInputLocator();
+    return String(await input.getProperty('value'));
+  }
+
   async submitChangeEmail(): Promise<void> {
     const button = await this.changeEmailSubmitLocator();
     await button.click();
+  }
+
+  async getChangeEmailButtonText(): Promise<string> {
+    const button = await this.changeEmailSubmitLocator();
+    return (await button.text()).trim();
+  }
+
+  async isChangeEmailButtonDisabled(): Promise<boolean> {
+    const button = await this.changeEmailSubmitLocator();
+    return button.getProperty('disabled');
   }
 
   async setCurrentPassword(password: string): Promise<void> {

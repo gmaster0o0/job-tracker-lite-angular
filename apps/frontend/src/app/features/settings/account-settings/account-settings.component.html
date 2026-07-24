@@ -5,7 +5,7 @@
     <h1 class="text-3xl font-bold tracking-tight">{{ title() }}</h1>
     <p class="text-muted-foreground">{{ subtitle() }}</p>
   </div>
-
+  <!-- Change email -->
   <hlm-card>
     <hlm-card-header>
       <h2 hlmCardTitle>
@@ -19,7 +19,7 @@
     </hlm-card-header>
 
     <div hlmCardContent>
-      <form [formRoot]="changeEmailForm" id="changeEmailForm" class="space-y-2">
+      <form [formRoot]="changeEmailForm" id="changeEmailForm">
         <hlm-field-group>
           <hlm-field>
             <label hlmLabel for="currentEmail">{{
@@ -66,35 +66,35 @@
           </hlm-field>
 
           @if (accountSettings().pendingEmail) {
-            <div
-              class="space-y-2 rounded-md border border-muted bg-muted/40 p-3"
+            <hlm-alert
+              class="border-amber-500 bg-amber-300/30 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50"
             >
-              <p class="text-sm text-muted-foreground">
+              <ng-icon name="lucideClock" />
+              <h4 hlmAlertTitle>
                 {{
                   'settings.accountSettings.changeEmail.pendingEmailNotice'
                     | transloco: { email: accountSettings().pendingEmail }
                 }}
-              </p>
-
-              @if (formattedPendingEmailRequestedAt()) {
-                <p class="text-xs text-muted-foreground">
+              </h4>
+              @if (
+                formattedPendingEmailSentAt() &&
+                formattedPendingEmailExpiresAt()
+              ) {
+                <p hlmAlertDescription>
                   {{
-                    'settings.accountSettings.changeEmail.pendingEmailSentAt'
-                      | transloco: { date: formattedPendingEmailRequestedAt() }
-                  }}
-                </p>
-              }
-
-              @if (formattedPendingEmailExpiresAt()) {
-                <p class="text-xs text-muted-foreground">
-                  {{
-                    'settings.accountSettings.changeEmail.pendingEmailExpiresAt'
-                      | transloco: { date: formattedPendingEmailExpiresAt() }
+                    'settings.accountSettings.changeEmail.pendingEmailTiming'
+                      | transloco
+                        : {
+                            sentDate: formattedPendingEmailSentAt(),
+                            expiresDate: formattedPendingEmailExpiresAt(),
+                            relative: formattedPendingEmailExpiresRelative(),
+                          }
                   }}
                 </p>
               }
 
               <button
+                hlmAlertAction
                 hlmBtn
                 id="cancelEmailChangeButton"
                 type="button"
@@ -108,19 +108,13 @@
                     | transloco
                 }}
               </button>
+            </hlm-alert>
 
-              <app-server-error-alert
-                [errorMessage]="cancelEmailChangeError()"
-                translationPrefix="settings.accountSettings.changeEmail"
-                cssClass="w-full"
-              />
-            </div>
-          }
-
-          @if (changeEmailSuccess()) {
-            <p class="text-sm text-emerald-600">
-              {{ 'settings.accountSettings.changeEmail.success' | transloco }}
-            </p>
+            <app-server-error-alert
+              [errorMessage]="cancelEmailChangeError()"
+              translationPrefix="settings.accountSettings.changeEmail"
+              cssClass="w-full"
+            />
           }
 
           <app-server-error-alert
@@ -138,17 +132,30 @@
         [disabled]="
           isLoadingSettings() ||
           changeEmailForm().invalid() ||
-          isChangingEmail()
+          isChangingEmail() ||
+          isResendOnCooldown()
         "
         [isSubmitting]="isChangingEmail()"
-        [idleLabel]="'settings.accountSettings.changeEmail.submit' | transloco"
+        [idleIcon]="isResendMode() ? 'lucideRefreshCw' : 'lucideSave'"
+        [idleLabel]="
+          isResendMode()
+            ? isResendOnCooldown()
+              ? ('settings.accountSettings.changeEmail.resendCountdownButton'
+                | transloco: { seconds: remainingResendCooldownSeconds() })
+              : ('settings.accountSettings.changeEmail.resendButton'
+                | transloco)
+            : ('settings.accountSettings.changeEmail.submit' | transloco)
+        "
         [submittingLabel]="
-          'settings.accountSettings.changeEmail.submitting' | transloco
+          isResendMode()
+            ? ('settings.accountSettings.changeEmail.resendSubmitting'
+              | transloco)
+            : ('settings.accountSettings.changeEmail.submitting' | transloco)
         "
       />
     </hlm-card-footer>
   </hlm-card>
-
+  <!-- Change password -->
   <hlm-card>
     <hlm-card-header>
       <h2 hlmCardTitle>

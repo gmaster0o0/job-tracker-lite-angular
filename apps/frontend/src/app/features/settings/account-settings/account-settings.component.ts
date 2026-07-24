@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import {
+  takeUntilDestroyed,
+  toObservable,
+  toSignal,
+} from '@angular/core/rxjs-interop';
+import {
   FormField,
   FormRoot,
   form,
@@ -25,6 +30,7 @@ import {
   changeEmailRequestSchema,
   changePasswordSchema,
 } from '@job-tracker-lite-angular/schemas';
+import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
@@ -32,13 +38,18 @@ import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { provideIcons } from '@ng-icons/core';
 import {
+  lucideClock,
   lucideEye,
   lucideEyeOff,
   lucideKey,
   lucideMail,
 } from '@ng-icons/lucide';
+import { interval } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
+
+const RESEND_DEBOUNCE_MS = 600;
 
 @Component({
   standalone: true,
@@ -46,6 +57,7 @@ import { NotificationService } from '@job-tracker-lite-angular/frontend-data-acc
   imports: [
     CommonModule,
     TranslocoModule,
+    HlmAlertImports,
     HlmCardImports,
     HlmFieldImports,
     HlmInputImports,
@@ -57,7 +69,15 @@ import { NotificationService } from '@job-tracker-lite-angular/frontend-data-acc
     SaveButtonComponent,
     ServerErrorAlertComponent,
   ],
-  providers: [provideIcons({ lucideEye, lucideEyeOff, lucideMail, lucideKey })],
+  providers: [
+    provideIcons({
+      lucideEye,
+      lucideEyeOff,
+      lucideMail,
+      lucideKey,
+      lucideClock,
+    }),
+  ],
   templateUrl: './account-settings.component.html',
 })
 export class AccountSettingsComponent {
@@ -86,26 +106,16 @@ export class AccountSettingsComponent {
     emailVerified: false,
     pendingEmailRequestedAt: null as Date | null,
     pendingEmailExpiresAt: null as Date | null,
+    pendingEmailResendAvailableAt: null as Date | null,
   });
 
   protected readonly isLoadingSettings = signal(true);
 
   protected readonly isChangingEmail = signal(false);
   protected readonly changeEmailError = signal<string | null>(null);
-  protected readonly changeEmailSuccess = signal(false);
 
   protected readonly isCancelingEmailChange = signal(false);
   protected readonly cancelEmailChangeError = signal<string | null>(null);
-
-  protected readonly formattedPendingEmailRequestedAt = computed(() => {
-    const requestedAt = this.accountSettings().pendingEmailRequestedAt;
-    return requestedAt ? this.formatDateTime(requestedAt) : null;
-  });
-
-  protected readonly formattedPendingEmailExpiresAt = computed(() => {
-    const expiresAt = this.accountSettings().pendingEmailExpiresAt;
-    return expiresAt ? this.formatDateTime(expiresAt) : null;
-  });
 
   protected readonly isChangingPassword = signal(false);
   protected readonly changePasswordError = signal<string | null>(null);
@@ -123,6 +133,67 @@ export class AccountSettingsComponent {
     confirmPassword: '',
   });
 
+  private readonly now = signal(new Date());
+
+  /**
+   * Debouncer for avoid the flickering resend buttion
+   */
+  private readonly debouncedTypedEmail = toSignal(
+    toObservable(computed(() => this.emailModel().newEmail)).pipe(
+      debounceTime(RESEND_DEBOUNCE_MS),
+    ),
+    { initialValue: '' },
+  );
+
+  /**
+   * Whether the currently typed address matches the pending target. The
+   * cooldown itself is always derived from the server's sentAt-based
+   * pendingEmailResendAvailableAt (below), not from client-side timer state,
+   * so re-typing the same pending address can't be used to bypass it.
+   */
+  protected readonly isResendMode = computed(() => {
+    const pendingEmail = this.accountSettings().pendingEmail;
+    if (!pendingEmail) {
+      return false;
+    }
+    return (
+      this.debouncedTypedEmail().trim().toLowerCase() ===
+      pendingEmail.trim().toLowerCase()
+    );
+  });
+
+  protected readonly remainingResendCooldownSeconds = computed(() => {
+    if (!this.isResendMode()) {
+      return 0;
+    }
+    const resendAvailableAt =
+      this.accountSettings().pendingEmailResendAvailableAt;
+    if (!resendAvailableAt) {
+      return 0;
+    }
+    const remainingMs = resendAvailableAt.getTime() - this.now().getTime();
+    return Math.max(0, Math.ceil(remainingMs / 1000));
+  });
+
+  protected readonly isResendOnCooldown = computed(
+    () => this.remainingResendCooldownSeconds() > 0,
+  );
+
+  protected readonly formattedPendingEmailSentAt = computed(() => {
+    const requestedAt = this.accountSettings().pendingEmailRequestedAt;
+    return requestedAt ? this.formatShortDateTime(requestedAt) : null;
+  });
+
+  protected readonly formattedPendingEmailExpiresAt = computed(() => {
+    const expiresAt = this.accountSettings().pendingEmailExpiresAt;
+    return expiresAt ? this.formatShortDateTime(expiresAt) : null;
+  });
+
+  protected readonly formattedPendingEmailExpiresRelative = computed(() => {
+    const expiresAt = this.accountSettings().pendingEmailExpiresAt;
+    return expiresAt ? this.formatRelativeTime(expiresAt) : null;
+  });
+
   protected readonly changeEmailForm = form(
     this.emailModel,
     (path) => validateStandardSchema(path, changeEmailRequestSchema),
@@ -131,7 +202,6 @@ export class AccountSettingsComponent {
         action: async (data) => {
           this.isChangingEmail.set(true);
           this.changeEmailError.set(null);
-          this.changeEmailSuccess.set(false);
 
           const language =
             this.translocoService.getActiveLang() === 'hu' ? 'hu' : 'en';
@@ -141,7 +211,6 @@ export class AccountSettingsComponent {
               ...data().value(),
               language,
             });
-            this.changeEmailSuccess.set(true);
             this.notification.success(this.changeEmailSuccessMessage());
             await this.loadSettings();
           } catch (error) {
@@ -197,6 +266,10 @@ export class AccountSettingsComponent {
 
   constructor() {
     void this.loadSettings();
+
+    interval(1000)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.now.set(new Date()));
   }
 
   protected toggleNewPasswordVisibility(): void {
@@ -209,13 +282,13 @@ export class AccountSettingsComponent {
 
     try {
       await this.authDataAccess.cancelEmailChange();
-      this.changeEmailSuccess.set(false);
       const current = this.accountSettings();
       this.accountSettings.set({
         ...current,
         pendingEmail: null,
         pendingEmailRequestedAt: null,
         pendingEmailExpiresAt: null,
+        pendingEmailResendAvailableAt: null,
       });
       this.notification.success(this.cancelEmailChangeSuccessMessage());
     } catch (error) {
@@ -227,14 +300,30 @@ export class AccountSettingsComponent {
     }
   }
 
-  private formatDateTime(date: Date): string {
-    const locale =
-      this.translocoService.getActiveLang() === 'hu' ? 'hu-HU' : 'en-US';
+  private getLocale(): string {
+    return this.translocoService.getActiveLang() === 'hu' ? 'hu-HU' : 'en-US';
+  }
 
-    return new Intl.DateTimeFormat(locale, {
-      dateStyle: 'long',
-      timeStyle: 'short',
+  private formatShortDateTime(date: Date): string {
+    return new Intl.DateTimeFormat(this.getLocale(), {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     }).format(date);
+  }
+
+  private formatRelativeTime(target: Date): string {
+    const diffMs = target.getTime() - this.now().getTime();
+    const diffHours = diffMs / (1000 * 60 * 60);
+    const rtf = new Intl.RelativeTimeFormat(this.getLocale(), {
+      numeric: 'auto',
+    });
+
+    if (Math.abs(diffHours) >= 24) {
+      return rtf.format(Math.round(diffHours / 24), 'day');
+    }
+    return rtf.format(Math.round(diffHours), 'hour');
   }
 
   private async loadSettings(): Promise<void> {
@@ -244,6 +333,18 @@ export class AccountSettingsComponent {
       const parsed = accountSettingsSchema.safeParse(response);
       if (parsed.success) {
         this.accountSettings.set(parsed.data);
+
+        // Prefill the field with the pending target so a reload (or the
+        // initial load) lands in Resend mode instead of showing an empty
+        // field with an enabled Save button for a request that's already
+        // in flight. A no-op once the field already holds this value (e.g.
+        // right after submitting).
+        if (parsed.data.pendingEmail && !this.emailModel().newEmail) {
+          this.emailModel.set({
+            ...this.emailModel(),
+            newEmail: parsed.data.pendingEmail,
+          });
+        }
       }
     } finally {
       this.isLoadingSettings.set(false);

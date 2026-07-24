@@ -12,6 +12,7 @@ import { SaveButtonHarness } from './save-button.harness';
       formId="jobForm"
       [disabled]="disabled"
       [isSubmitting]="isSubmitting"
+      [idleIcon]="idleIcon"
       idleLabel="Create"
       submittingLabel="Saving..."
     />
@@ -20,6 +21,7 @@ import { SaveButtonHarness } from './save-button.harness';
 class HostComponent {
   disabled = false;
   isSubmitting = false;
+  idleIcon = 'lucideSave';
 }
 
 describe('SaveButtonComponent', () => {
@@ -41,6 +43,20 @@ describe('SaveButtonComponent', () => {
     expect(await harness.getLabelText()).toContain('Create');
     expect(await harness.isDisabled()).toBe(false);
     expect(await harness.getFormId()).toBe('jobForm');
+  });
+
+  it('should render a different icon when idleIcon is overridden', async () => {
+    const defaultIconMarkup = await harness.getIdleIconMarkup();
+    expect(defaultIconMarkup).not.toBe('');
+
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.componentInstance.idleIcon = 'lucideRefreshCw';
+    const localHarness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      SaveButtonHarness,
+    );
+
+    expect(await localHarness.getIdleIconMarkup()).not.toBe(defaultIconMarkup);
   });
 
   it('should render submitting label and disable button while submitting', async () => {
