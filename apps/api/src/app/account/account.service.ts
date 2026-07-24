@@ -15,7 +15,11 @@ import { AccountStatus, EmailChangeTokenType } from '@prisma/client';
 import { EmailService } from '../email/email.service';
 import { randomUUID } from 'crypto';
 import {
+  addDays,
+  addSeconds,
   parseEnvValue,
+  secondsToDays,
+  secondsToHours,
   setLanguageOnUrl,
 } from '@job-tracker-lite-angular/core-utils';
 
@@ -44,11 +48,42 @@ export class AccountService {
       },
     });
 
+    let pendingEmailRequestedAt: Date | null = null;
+    let pendingEmailExpiresAt: Date | null = null;
+
+    if (user.pendingEmail) {
+      const verifyToken = await this.prisma.emailChangeToken.findFirst({
+        where: { userId, type: EmailChangeTokenType.VERIFY },
+        orderBy: { createdAt: 'desc' },
+        select: { createdAt: true, expiresAt: true },
+      });
+
+      if (verifyToken) {
+        pendingEmailRequestedAt = verifyToken.createdAt;
+        pendingEmailExpiresAt = verifyToken.expiresAt;
+      }
+    }
+
     return {
       email: user.email,
       pendingEmail: user.pendingEmail,
       emailVerified: user.emailVerified,
+      pendingEmailRequestedAt,
+      pendingEmailExpiresAt,
     };
+  }
+
+  async cancelEmailChange(userId: string): Promise<void> {
+    await this.prisma.$transaction(async (tx) => {
+      await tx.user.update({
+        where: { id: userId },
+        data: { pendingEmail: null },
+      });
+
+      await tx.emailChangeToken.deleteMany({
+        where: { userId, type: EmailChangeTokenType.VERIFY },
+      });
+    });
   }
 
   async requestEmailChange(
@@ -90,7 +125,7 @@ export class AccountService {
     }
 
     const verifyToken = randomUUID();
-    const verifyTokenExpiresAt = this.addSeconds(
+    const verifyTokenExpiresAt = addSeconds(
       this.getEmailVerificationExpiresInSeconds(),
     );
 
@@ -131,6 +166,7 @@ export class AccountService {
       newEmail,
       verifyUrl.toString(),
       language,
+      secondsToHours(this.getEmailVerificationExpiresInSeconds()),
     );
   }
 
@@ -173,7 +209,7 @@ export class AccountService {
     }
 
     const restoreToken = randomUUID();
-    const restoreTokenExpiresAt = this.addSeconds(
+    const restoreTokenExpiresAt = addSeconds(
       this.getEmailRestoreExpiresInSeconds(),
     );
 
@@ -224,6 +260,7 @@ export class AccountService {
       verifyToken.oldEmail,
       restoreUrl.toString(),
       language,
+      secondsToDays(this.getEmailRestoreExpiresInSeconds()),
     );
 
     return this.buildFrontendAccountUrl('verified', language);
@@ -303,7 +340,7 @@ export class AccountService {
     }
 
     const token = randomUUID();
-    const expiresAt = this.addSeconds(this.getDeleteVerificationExpiresIn());
+    const expiresAt = addSeconds(this.getDeleteVerificationExpiresIn());
 
     await this.prisma.$transaction(async (tx) => {
       await tx.accountDeletionToken.deleteMany({
@@ -591,20 +628,10 @@ export class AccountService {
     return status === AccountStatus.PENDING_DELETION;
   }
 
-  private addSeconds(seconds: number): Date {
-    return new Date(Date.now() + seconds * 1000);
-  }
-
-  private addDays(date: Date, days: number): Date {
-    const next = new Date(date);
-    next.setDate(next.getDate() + days);
-    return next;
-  }
-
   private calculateScheduledDeletionAt(
     requestedAt: Date,
     gracePeriodDays: number,
   ): Date {
-    return this.addDays(requestedAt, gracePeriodDays);
+    return addDays(requestedAt, gracePeriodDays);
   }
 }

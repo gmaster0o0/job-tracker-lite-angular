@@ -66,12 +66,55 @@
           </hlm-field>
 
           @if (accountSettings().pendingEmail) {
-            <p class="text-sm text-muted-foreground">
-              {{
-                'settings.accountSettings.changeEmail.pendingEmailNotice'
-                  | transloco: { email: accountSettings().pendingEmail }
-              }}
-            </p>
+            <div
+              class="space-y-2 rounded-md border border-muted bg-muted/40 p-3"
+            >
+              <p class="text-sm text-muted-foreground">
+                {{
+                  'settings.accountSettings.changeEmail.pendingEmailNotice'
+                    | transloco: { email: accountSettings().pendingEmail }
+                }}
+              </p>
+
+              @if (formattedPendingEmailRequestedAt()) {
+                <p class="text-xs text-muted-foreground">
+                  {{
+                    'settings.accountSettings.changeEmail.pendingEmailSentAt'
+                      | transloco: { date: formattedPendingEmailRequestedAt() }
+                  }}
+                </p>
+              }
+
+              @if (formattedPendingEmailExpiresAt()) {
+                <p class="text-xs text-muted-foreground">
+                  {{
+                    'settings.accountSettings.changeEmail.pendingEmailExpiresAt'
+                      | transloco: { date: formattedPendingEmailExpiresAt() }
+                  }}
+                </p>
+              }
+
+              <button
+                hlmBtn
+                id="cancelEmailChangeButton"
+                type="button"
+                variant="outline"
+                size="sm"
+                [disabled]="isCancelingEmailChange()"
+                (click)="onCancelEmailChange()"
+              >
+                {{
+                  'settings.accountSettings.changeEmail.cancelButton'
+                    | transloco
+                }}
+              </button>
+
+              <app-server-error-alert
+                [errorMessage]="cancelEmailChangeError()"
+                translationPrefix="settings.accountSettings.changeEmail"
+                cssClass="w-full"
+              />
+            </div>
           }
 
           @if (changeEmailSuccess()) {

@@ -108,7 +108,51 @@ describe('AccountService', () => {
         /\/account\/verify-email-change\?token=.*&language=en/,
       ),
       'en',
+      24,
     );
+  });
+
+  it('returns pending email requested/expires timestamps from the active verify token', async () => {
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue(
+      accountSettingsFixtures.withPendingEmail,
+    );
+    prismaMock.emailChangeToken.findFirst.mockResolvedValue({
+      createdAt: emailChangeTokenFixtures.verify.createdAt,
+      expiresAt: emailChangeTokenFixtures.verify.expiresAt,
+    });
+
+    await expect(
+      service.getAccountSettings(accountUserFixtures.primary.id),
+    ).resolves.toEqual({
+      email: accountSettingsFixtures.withPendingEmail.email,
+      pendingEmail: accountSettingsFixtures.withPendingEmail.pendingEmail,
+      emailVerified: accountSettingsFixtures.withPendingEmail.emailVerified,
+      pendingEmailRequestedAt: emailChangeTokenFixtures.verify.createdAt,
+      pendingEmailExpiresAt: emailChangeTokenFixtures.verify.expiresAt,
+    });
+    expect(prismaMock.emailChangeToken.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          userId: accountUserFixtures.primary.id,
+          type: EmailChangeTokenType.VERIFY,
+        },
+      }),
+    );
+  });
+
+  it('cancels a pending email change by clearing pendingEmail and deleting the verify token', async () => {
+    await service.cancelEmailChange(accountUserFixtures.primary.id);
+
+    expect(prismaMock.user.update).toHaveBeenCalledWith({
+      where: { id: accountUserFixtures.primary.id },
+      data: { pendingEmail: null },
+    });
+    expect(prismaMock.emailChangeToken.deleteMany).toHaveBeenCalledWith({
+      where: {
+        userId: accountUserFixtures.primary.id,
+        type: EmailChangeTokenType.VERIFY,
+      },
+    });
   });
 
   it('verifies pending email change and sends restore email', async () => {
@@ -136,6 +180,7 @@ describe('AccountService', () => {
       emailChangeTokenFixtures.verify.oldEmail,
       expect.stringMatching(/\/account\/restore-email\?token=.*&language=en/),
       'en',
+      7,
     );
     expect(prismaMock.session.deleteMany).toHaveBeenCalledWith({
       where: {

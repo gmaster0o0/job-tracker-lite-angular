@@ -22,6 +22,9 @@ export class AccountSettingsHarness extends ComponentHarness {
   );
   private readonly togglePasswordVisibilityButtonLocator =
     this.locatorFor('button[aria-label]');
+  private readonly cancelEmailChangeButtonLocator = this.locatorForOptional(
+    'button#cancelEmailChangeButton',
+  );
 
   async getCurrentEmail(): Promise<string> {
     const input = await this.currentEmailInputLocator();
@@ -83,5 +86,14 @@ export class AccountSettingsHarness extends ComponentHarness {
   async submitChangePassword(): Promise<void> {
     const button = await this.changePasswordSubmitLocator();
     await button.click();
+  }
+
+  async hasCancelEmailChangeButton(): Promise<boolean> {
+    return (await this.cancelEmailChangeButtonLocator()) !== null;
+  }
+
+  async clickCancelEmailChangeButton(): Promise<void> {
+    const button = await this.cancelEmailChangeButtonLocator();
+    await button?.click();
   }
 }

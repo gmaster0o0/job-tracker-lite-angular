@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import {
   FormField,
   FormRoot,
@@ -76,11 +76,16 @@ export class AccountSettingsComponent {
   private readonly changePasswordSuccessMessage = translateSignal(
     'settings.accountSettings.changePassword.success',
   );
+  private readonly cancelEmailChangeSuccessMessage = translateSignal(
+    'settings.accountSettings.changeEmail.cancelSuccess',
+  );
 
   protected readonly accountSettings = signal({
     email: '',
     pendingEmail: null as string | null,
     emailVerified: false,
+    pendingEmailRequestedAt: null as Date | null,
+    pendingEmailExpiresAt: null as Date | null,
   });
 
   protected readonly isLoadingSettings = signal(true);
@@ -88,6 +93,19 @@ export class AccountSettingsComponent {
   protected readonly isChangingEmail = signal(false);
   protected readonly changeEmailError = signal<string | null>(null);
   protected readonly changeEmailSuccess = signal(false);
+
+  protected readonly isCancelingEmailChange = signal(false);
+  protected readonly cancelEmailChangeError = signal<string | null>(null);
+
+  protected readonly formattedPendingEmailRequestedAt = computed(() => {
+    const requestedAt = this.accountSettings().pendingEmailRequestedAt;
+    return requestedAt ? this.formatDateTime(requestedAt) : null;
+  });
+
+  protected readonly formattedPendingEmailExpiresAt = computed(() => {
+    const expiresAt = this.accountSettings().pendingEmailExpiresAt;
+    return expiresAt ? this.formatDateTime(expiresAt) : null;
+  });
 
   protected readonly isChangingPassword = signal(false);
   protected readonly changePasswordError = signal<string | null>(null);
@@ -125,12 +143,7 @@ export class AccountSettingsComponent {
             });
             this.changeEmailSuccess.set(true);
             this.notification.success(this.changeEmailSuccessMessage());
-
-            const current = this.accountSettings();
-            this.accountSettings.set({
-              ...current,
-              pendingEmail: data().value().newEmail,
-            });
+            await this.loadSettings();
           } catch (error) {
             this.changeEmailError.set(
               isBackendError(error) ? error.errorCode.toLowerCase() : 'unknown',
@@ -188,6 +201,40 @@ export class AccountSettingsComponent {
 
   protected toggleNewPasswordVisibility(): void {
     this.isNewPasswordVisible.update((v) => !v);
+  }
+
+  protected async onCancelEmailChange(): Promise<void> {
+    this.isCancelingEmailChange.set(true);
+    this.cancelEmailChangeError.set(null);
+
+    try {
+      await this.authDataAccess.cancelEmailChange();
+      this.changeEmailSuccess.set(false);
+      const current = this.accountSettings();
+      this.accountSettings.set({
+        ...current,
+        pendingEmail: null,
+        pendingEmailRequestedAt: null,
+        pendingEmailExpiresAt: null,
+      });
+      this.notification.success(this.cancelEmailChangeSuccessMessage());
+    } catch (error) {
+      this.cancelEmailChangeError.set(
+        isBackendError(error) ? error.errorCode.toLowerCase() : 'unknown',
+      );
+    } finally {
+      this.isCancelingEmailChange.set(false);
+    }
+  }
+
+  private formatDateTime(date: Date): string {
+    const locale =
+      this.translocoService.getActiveLang() === 'hu' ? 'hu-HU' : 'en-US';
+
+    return new Intl.DateTimeFormat(locale, {
+      dateStyle: 'long',
+      timeStyle: 'short',
+    }).format(date);
   }
 
   private async loadSettings(): Promise<void> {

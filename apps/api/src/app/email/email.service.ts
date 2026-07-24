@@ -116,8 +116,9 @@ export class EmailService {
     to: string,
     restoreUrl: string,
     lang: SupportLang = 'en',
+    expiresInDays: number,
   ): Promise<void> {
-    const template = getRestoreEmailTemplate(restoreUrl, lang);
+    const template = getRestoreEmailTemplate(restoreUrl, expiresInDays, lang);
 
     await this.send({
       to,
@@ -131,8 +132,13 @@ export class EmailService {
     to: string,
     confirmationUrl: string,
     lang: SupportLang = 'en',
+    expiresInHours: number,
   ): Promise<void> {
-    const template = getEmailChangeConfirmationTemplate(confirmationUrl, lang);
+    const template = getEmailChangeConfirmationTemplate(
+      confirmationUrl,
+      expiresInHours,
+      lang,
+    );
 
     await this.send({
       to,

@@ -7,6 +7,8 @@ export const accountSettingsSchema = z.object({
   email: z.email(),
   pendingEmail: z.email().nullable(),
   emailVerified: z.boolean(),
+  pendingEmailRequestedAt: z.coerce.date().nullable(),
+  pendingEmailExpiresAt: z.coerce.date().nullable(),
 });
 
 export type AccountSettingsDto = z.infer<typeof accountSettingsSchema>;
