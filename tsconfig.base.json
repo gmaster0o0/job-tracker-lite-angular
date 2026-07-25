@@ -89,5 +89,5 @@
       "@spartan-ng/helm/sonner": ["./libs/shared-ui/sonner/src/index.ts"]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["node_modules", "tmp", "dist", "coverage", "public","build"],
 }

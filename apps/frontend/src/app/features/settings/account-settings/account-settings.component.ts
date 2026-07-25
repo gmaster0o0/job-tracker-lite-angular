@@ -24,8 +24,8 @@ import {
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import {
-  SaveButtonComponent,
   ServerErrorAlertComponent,
+  SubmitButtonComponent,
 } from '@job-tracker-lite-angular/frontend-shared';
 import {
   accountSettingsSchema,
@@ -38,7 +38,6 @@ import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmInputImports } from '@spartan-ng/helm/input';
-import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { provideIcons } from '@ng-icons/core';
 import {
   lucideClock,
@@ -66,11 +65,10 @@ const RESEND_DEBOUNCE_MS = 600;
     HlmInputImports,
     HlmButtonImports,
     HlmIconImports,
-    HlmTooltipImports,
     FormRoot,
     FormField,
     ZodNgControlBridgeDirective,
-    SaveButtonComponent,
+    SubmitButtonComponent,
     ServerErrorAlertComponent,
   ],
   providers: [
@@ -168,19 +166,14 @@ export class AccountSettingsComponent {
     );
   });
 
-  protected readonly remainingResendCooldownSeconds = computed(() => {
-    const resendAvailableAt =
-      this.accountSettings().emailChangeResendAvailableAt;
-    if (!resendAvailableAt) {
-      return 0;
-    }
-    const remainingMs = resendAvailableAt.getTime() - this.now().getTime();
-    return Math.max(0, Math.ceil(remainingMs / 1000));
-  });
-
-  protected readonly isOnCooldown = computed(
-    () => this.remainingResendCooldownSeconds() > 0,
-  );
+  protected readonly getEmailChangeCooldownLabel = (
+    remainingSeconds: number,
+  ): string => {
+    const key = this.isResendMode()
+      ? 'settings.accountSettings.changeEmail.resendCountdownButton'
+      : 'settings.accountSettings.changeEmail.saveCountdownButton';
+    return this.translocoService.translate(key, { seconds: remainingSeconds });
+  };
 
   protected readonly formattedPendingEmailSentAt = computed(() => {
     const requestedAt = this.accountSettings().pendingEmailRequestedAt;

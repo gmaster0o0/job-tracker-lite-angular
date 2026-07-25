@@ -1,7 +1,7 @@
 import { ComponentHarness } from '@angular/cdk/testing';
 
-export class SaveButtonHarness extends ComponentHarness {
-  static hostSelector = 'app-save-button';
+export class SubmitButtonHarness extends ComponentHarness {
+  static hostSelector = 'app-submit-button';
 
   private readonly getSubmitButton = this.locatorFor('button[type="submit"]');
   private readonly getLoadingIcon = this.locatorForOptional(

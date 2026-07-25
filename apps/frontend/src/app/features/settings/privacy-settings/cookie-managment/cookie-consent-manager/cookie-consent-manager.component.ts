@@ -12,7 +12,7 @@ import { CookiePreferences } from '../cookie-consent.types';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import {
   CancelButtonComponent,
-  SaveButtonComponent,
+  SubmitButtonComponent,
 } from '@job-tracker-lite-angular/frontend-shared';
 import { TranslocoModule } from '@jsverse/transloco';
 
@@ -27,7 +27,7 @@ import { TranslocoModule } from '@jsverse/transloco';
     HlmIconImports,
     HlmBadgeImports,
     CancelButtonComponent,
-    SaveButtonComponent,
+    SubmitButtonComponent,
     TranslocoModule,
   ],
   providers: [provideIcons({ lucideCookie })],

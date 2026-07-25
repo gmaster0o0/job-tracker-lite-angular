@@ -8,7 +8,7 @@ import {
 } from '../profile.hlmimports';
 import {
   EditButtonComponent,
-  SaveButtonComponent,
+  SubmitButtonComponent,
   CancelButtonComponent,
   InlineInputComponent,
   ProfileVisibilitySettingsComponent,
@@ -27,7 +27,7 @@ import {
     layoutImports,
     EditButtonComponent,
     CancelButtonComponent,
-    SaveButtonComponent,
+    SubmitButtonComponent,
     TranslocoModule,
     CommonModule,
     InlineInputComponent,
