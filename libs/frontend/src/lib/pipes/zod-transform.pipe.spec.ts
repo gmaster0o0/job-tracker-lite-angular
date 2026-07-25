@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import type { ValidationError, WithFieldTree } from '@angular/forms/signals';
 import {
-  ZodTransformPipFirst,
+  ZodTransformPipeFirst,
   ZodTransformPipeAll,
 } from './zod-transform.pipe';
 import {
@@ -9,13 +10,13 @@ import {
   zodIssuePasswordTooShort,
 } from '@job-tracker-lite-angular/testing';
 
-describe('ZodTransformPipFirst', () => {
+describe('ZodTransformPipeFirst', () => {
   it('should transform the first Zod error item into a token', () => {
-    const pipe = new ZodTransformPipFirst();
+    const pipe = new ZodTransformPipeFirst();
     const errors = [
       { issue: zodIssueInvalidEmail },
       { issue: zodIssueWeakPassword },
-    ];
+    ] as unknown as WithFieldTree<ValidationError>[];
 
     const result = pipe.transform(errors, 'login');
 
@@ -30,7 +31,7 @@ describe('ZodTransformPipFirst', () => {
   });
 
   it('should return null when there are no errors', () => {
-    const pipe = new ZodTransformPipFirst();
+    const pipe = new ZodTransformPipeFirst();
 
     expect(pipe.transform([], 'login')).toBeNull();
     expect(pipe.transform(null, 'login')).toBeNull();
@@ -45,7 +46,7 @@ describe('ZodTransformPipeAll', () => {
       { issue: zodIssueInvalidEmail },
       { issue: zodIssueWeakPassword },
       { issue: zodIssuePasswordTooShort },
-    ];
+    ] as unknown as WithFieldTree<ValidationError>[];
 
     const result = pipe.transform(errors, 'register');
 
