@@ -10,7 +10,8 @@
     "@jsverse/transloco-messageformat": "^8.4.0",
     "@job-tracker-lite-angular/schemas": "0.0.1",
     "@job-tracker-lite-angular/prisma": "0.0.1",
-    "@spartan-ng/brain": "1.1.0"
+    "@spartan-ng/brain": "1.1.0",
+    "zod": "^4.4.3"
   },
   "sideEffects": false
 }
