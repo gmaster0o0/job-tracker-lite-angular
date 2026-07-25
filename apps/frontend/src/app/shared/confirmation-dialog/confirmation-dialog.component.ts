@@ -25,7 +25,7 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
 import {
   isBackendError,
-  ZodTransformPipFirst,
+  ZodTransformPipeFirst,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import { CancelButtonComponent } from '@job-tracker-lite-angular/frontend-shared';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
@@ -92,7 +92,7 @@ export type ConfirmationDialogContext = {
     FormRoot,
     FormField,
     TranslocoModule,
-    ZodTransformPipFirst,
+    ZodTransformPipeFirst,
   ],
   providers: [provideIcons({ lucideTrash })],
   templateUrl: './confirmation-dialog.component.html',
