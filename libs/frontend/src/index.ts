@@ -1,5 +1,6 @@
 export * from './lib/data-access';
 export * from './lib/utils/http.utils';
+export * from './lib/utils/date-format.util';
 export * from './lib/services';
 export * from './lib/pipes';
 export * from './lib/directives';

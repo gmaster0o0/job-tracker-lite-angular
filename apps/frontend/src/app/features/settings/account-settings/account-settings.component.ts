@@ -19,6 +19,8 @@ import {
 import {
   AuthDataAccessService,
   ZodNgControlBridgeDirective,
+  formatRelativeTime,
+  formatShortDateTime,
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import {
@@ -182,17 +184,21 @@ export class AccountSettingsComponent {
 
   protected readonly formattedPendingEmailSentAt = computed(() => {
     const requestedAt = this.accountSettings().pendingEmailRequestedAt;
-    return requestedAt ? this.formatShortDateTime(requestedAt) : null;
+    return requestedAt
+      ? formatShortDateTime(requestedAt, this.getLocale())
+      : null;
   });
 
   protected readonly formattedPendingEmailExpiresAt = computed(() => {
     const expiresAt = this.accountSettings().pendingEmailExpiresAt;
-    return expiresAt ? this.formatShortDateTime(expiresAt) : null;
+    return expiresAt ? formatShortDateTime(expiresAt, this.getLocale()) : null;
   });
 
   protected readonly formattedPendingEmailExpiresRelative = computed(() => {
     const expiresAt = this.accountSettings().pendingEmailExpiresAt;
-    return expiresAt ? this.formatRelativeTime(expiresAt) : null;
+    return expiresAt
+      ? formatRelativeTime(expiresAt, this.now(), this.getLocale())
+      : null;
   });
 
   protected readonly changeEmailForm = form(
@@ -300,28 +306,6 @@ export class AccountSettingsComponent {
 
   private getLocale(): string {
     return this.translocoService.getActiveLang() === 'hu' ? 'hu-HU' : 'en-US';
-  }
-
-  private formatShortDateTime(date: Date): string {
-    return new Intl.DateTimeFormat(this.getLocale(), {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(date);
-  }
-
-  private formatRelativeTime(target: Date): string {
-    const diffMs = target.getTime() - this.now().getTime();
-    const diffHours = diffMs / (1000 * 60 * 60);
-    const rtf = new Intl.RelativeTimeFormat(this.getLocale(), {
-      numeric: 'auto',
-    });
-
-    if (Math.abs(diffHours) >= 24) {
-      return rtf.format(Math.round(diffHours / 24), 'day');
-    }
-    return rtf.format(Math.round(diffHours), 'hour');
   }
 
   private async loadSettings(): Promise<void> {

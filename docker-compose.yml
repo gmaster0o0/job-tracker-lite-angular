@@ -18,6 +18,19 @@ services:
       - "1025:1025" # SMTP - point EMAIL_PROVIDER=mailpit at this
       - "8025:8025" # Web UI - view captured emails at http://localhost:8025
 
+  redis:
+    image: redis:7-alpine
+    container_name: job-tracker-redis
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+    command: sh -c 'if [ -n "$$REDIS_PASSWORD" ]; then exec redis-server --requirepass "$$REDIS_PASSWORD"; else exec redis-server; fi'
+    ports:
+      - "6379:6379"
+    volumes:
+      - job-tracker-redis-data:/data
+
 volumes:
   job-tracker-shared-data:
     name: job-tracker-universal-storage
+  job-tracker-redis-data:
+    name: job-tracker-redis-storage
