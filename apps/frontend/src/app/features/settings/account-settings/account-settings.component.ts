@@ -24,6 +24,7 @@ import {
   isBackendError,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import {
+  CancelButtonComponent,
   ServerErrorAlertComponent,
   SubmitButtonComponent,
 } from '@job-tracker-lite-angular/frontend-shared';
@@ -69,6 +70,7 @@ const RESEND_DEBOUNCE_MS = 600;
     FormField,
     ZodNgControlBridgeDirective,
     SubmitButtonComponent,
+    CancelButtonComponent,
     ServerErrorAlertComponent,
   ],
   providers: [

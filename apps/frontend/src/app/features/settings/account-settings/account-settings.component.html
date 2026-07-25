@@ -93,21 +93,15 @@
                 </p>
               }
 
-              <button
+              <app-cancel-button
                 hlmAlertAction
-                hlmBtn
-                id="cancelEmailChangeButton"
-                type="button"
-                variant="outline"
-                size="sm"
                 [disabled]="isCancelingEmailChange()"
-                (click)="onCancelEmailChange()"
-              >
-                {{
+                [cancelLabel]="
                   'settings.accountSettings.changeEmail.cancelButton'
                     | transloco
-                }}
-              </button>
+                "
+                (clicked)="onCancelEmailChange()"
+              />
             </hlm-alert>
 
             <app-server-error-alert

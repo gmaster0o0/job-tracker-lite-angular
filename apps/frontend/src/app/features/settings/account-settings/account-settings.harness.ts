@@ -1,4 +1,5 @@
 import { ComponentHarness } from '@angular/cdk/testing';
+import { CancelButtonHarness } from '@job-tracker-lite-angular/frontend-shared';
 
 export class AccountSettingsHarness extends ComponentHarness {
   static hostSelector = 'app-account-settings';
@@ -22,9 +23,8 @@ export class AccountSettingsHarness extends ComponentHarness {
   );
   private readonly togglePasswordVisibilityButtonLocator =
     this.locatorFor('button[aria-label]');
-  private readonly cancelEmailChangeButtonLocator = this.locatorForOptional(
-    'button#cancelEmailChangeButton',
-  );
+  private readonly cancelEmailChangeButtonLocator =
+    this.locatorForOptional(CancelButtonHarness);
 
   async getCurrentEmail(): Promise<string> {
     const input = await this.currentEmailInputLocator();
