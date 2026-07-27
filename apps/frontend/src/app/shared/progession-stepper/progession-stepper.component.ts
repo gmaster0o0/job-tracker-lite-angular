@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, output } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { BrnTooltip } from '@spartan-ng/brain/tooltip';
@@ -18,6 +23,7 @@ import { TranslocoModule } from '@jsverse/transloco';
     TranslocoModule,
   ],
   providers: [provideIcons({ lucideCheck })],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './progession-stepper.component.html',
 })
 export class ProgessionStepperComponent {

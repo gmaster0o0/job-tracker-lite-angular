@@ -1,4 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { AuthSessionService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 import {
@@ -38,6 +44,7 @@ import { HlmSwitch } from '@spartan-ng/helm/switch';
     HlmSwitch,
   ],
   providers: [provideIcons({ lucideDownload, lucideTrash })],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './data-management.component.html',
 })
 export class DataManagementComponent {

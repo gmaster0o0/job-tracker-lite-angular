@@ -1,4 +1,9 @@
-import { Component, computed, inject } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { provideIcons } from '@ng-icons/core';
@@ -16,6 +21,7 @@ interface LangOption {
   selector: 'app-language',
   imports: [HlmCardImports, HlmIconImports, HlmSelectImports, TranslocoModule],
   templateUrl: './language.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [provideIcons({ lucideGlobe })],
 })
 export class LanguageComponent {

@@ -19,5 +19,8 @@
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "src/seed.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "strictTemplates": false
+  }
 }

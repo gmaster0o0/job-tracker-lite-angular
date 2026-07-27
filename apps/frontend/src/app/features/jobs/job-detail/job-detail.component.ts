@@ -6,6 +6,7 @@ import {
   inject,
   signal,
   type Signal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -84,6 +85,7 @@ type JobTab = 'overview' | 'contacts' | 'notes' | 'cover-letter';
       lucideExternalLink,
     }),
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './job-detail.component.html',
 })
 export class JobDetailComponent {

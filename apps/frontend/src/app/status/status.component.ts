@@ -1,5 +1,10 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -36,6 +41,7 @@ import { TranslocoModule } from '@jsverse/transloco';
     }),
   ],
   selector: 'app-status',
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './status.component.html',
 })
 export class StatusComponent {

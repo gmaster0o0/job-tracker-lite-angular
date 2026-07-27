@@ -1,4 +1,9 @@
-import { Component, input, TemplateRef } from '@angular/core';
+import {
+  Component,
+  input,
+  TemplateRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HomeCard } from '../home-card.model';
 import { RouterLink } from '@angular/router';
@@ -12,6 +17,7 @@ import { lucideArrowRight } from '@ng-icons/lucide';
   standalone: true,
   providers: [provideIcons({ lucideArrowRight })],
   imports: [HlmCardImports, RouterLink, HlmIconImports, NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './home-card.component.html',
 })
 export class HomeCardComponent {

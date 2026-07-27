@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
@@ -33,6 +33,7 @@ import { TranslocoModule } from '@jsverse/transloco';
   providers: [provideIcons({ lucideCookie })],
   standalone: true,
   templateUrl: './cookie-consent-manager.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     class: 'flex flex-col gap-6',
   },

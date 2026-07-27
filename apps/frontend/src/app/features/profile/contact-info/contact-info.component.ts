@@ -1,4 +1,10 @@
-import { Component, input, model, output } from '@angular/core';
+import {
+  Component,
+  input,
+  model,
+  output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
 import {
@@ -33,6 +39,7 @@ import {
     InlineInputComponent,
     ProfileVisibilitySettingsComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './contact-info.component.html',
 })
 export class ContactInfoComponent {

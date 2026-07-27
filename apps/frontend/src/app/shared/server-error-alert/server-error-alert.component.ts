@@ -1,4 +1,9 @@
-import { Component, computed, input } from '@angular/core';
+import {
+  Component,
+  computed,
+  input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -11,6 +16,7 @@ import { TranslocoModule } from '@jsverse/transloco';
   selector: 'app-server-error-alert',
   imports: [CommonModule, HlmAlertImports, HlmIconImports, TranslocoModule],
   providers: [provideIcons({ lucideAlertCircle })],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './server-error-alert.component.html',
 })
 export class ServerErrorAlertComponent {

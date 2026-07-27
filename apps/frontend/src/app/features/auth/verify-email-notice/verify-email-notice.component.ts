@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   FormField,
   FormRoot,
@@ -46,6 +51,7 @@ import {
     ZodNgControlBridgeDirective,
     ServerErrorAlertComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './verify-email-notice.component.html',
 })
 export class VerifyEmailNoticeComponent {

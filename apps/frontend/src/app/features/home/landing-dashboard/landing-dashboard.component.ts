@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HomeCardComponent } from '../home-card/home-card.component';
 import { lucideBriefcase, lucideSettings, lucideUser } from '@ng-icons/lucide';
@@ -12,6 +17,7 @@ import { HomeCard } from '../home-card.model';
   selector: 'app-landing-dashboard',
   providers: [provideIcons({ lucideBriefcase, lucideUser, lucideSettings })],
   imports: [HlmCardImports, HomeCardComponent, HlmIconImports, TranslocoModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './landing-dashboard.component.html',
 })
 export class LandingDashboardComponent {

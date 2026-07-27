@@ -71,7 +71,10 @@
           </hlm-card-header>
           <div hlmCardContent>
             <p hlmCardDescription>
-              {{ healthData.details.server?.timestamp | date: 'medium' }}
+              {{
+                $safeNavigationMigration(healthData.details.server?.timestamp)
+                  | date: 'medium'
+              }}
             </p>
           </div>
           <span hlmCardFooter>

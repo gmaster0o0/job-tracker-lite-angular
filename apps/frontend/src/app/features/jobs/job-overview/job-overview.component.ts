@@ -1,4 +1,10 @@
-import { Component, computed, inject, input } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmScrollAreaImports } from '@spartan-ng/helm/scroll-area';
@@ -9,6 +15,7 @@ import { translateSignal } from '@jsverse/transloco';
   standalone: true,
   selector: 'app-job-overview',
   imports: [HlmCardImports, HlmScrollAreaImports],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './job-overview.component.html',
 })
 export class JobOverviewComponent {

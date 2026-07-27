@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { provideIcons } from '@ng-icons/core';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -30,6 +30,7 @@ export interface AppearanceCard {
   ],
   providers: [provideIcons({ lucideSun, lucideMoon, lucideMonitor })],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './appearance.component.html',
 })
 export class AppearanceComponent {

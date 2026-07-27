@@ -1,4 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { provideIcons } from '@ng-icons/core';
@@ -29,6 +35,7 @@ type SectionName = 'personal' | 'contact' | 'skills' | 'career-preference';
     TranslocoModule,
   ],
   providers: [provideIcons(profileIcons)],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './profile.component.html',
 })
 export class ProfileComponent {

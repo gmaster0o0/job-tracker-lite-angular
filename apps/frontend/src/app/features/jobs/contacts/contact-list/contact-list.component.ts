@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, output } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { ContactsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
@@ -11,6 +17,7 @@ import { ContactDto } from '@job-tracker-lite-angular/schemas';
   standalone: true,
   selector: 'app-contact-list',
   imports: [CommonModule, ContactListItemComponent, TranslocoModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './contact-list.component.html',
 })
 export class ContactListComponent {

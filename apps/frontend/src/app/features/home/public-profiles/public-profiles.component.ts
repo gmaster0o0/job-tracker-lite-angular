@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { NgIcon } from '@ng-icons/core';
@@ -24,6 +24,7 @@ interface PublicProfile {
     NgIcon,
   ],
   providers: [provideIcons({ lucideGithub, lucideLinkedin })],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './public-profiles.component.html',
 })
 export class PublicProfilesComponent {

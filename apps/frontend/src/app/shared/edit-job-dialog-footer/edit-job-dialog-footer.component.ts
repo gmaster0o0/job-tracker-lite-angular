@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmDialogClose, HlmDialogFooter } from '@spartan-ng/helm/dialog';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -19,6 +19,7 @@ import { TranslocoModule } from '@jsverse/transloco';
     TranslocoModule,
   ],
   providers: [provideIcons({ lucideUndo2 })],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './edit-job-dialog-footer.component.html',
 })
 export class EditJobDialogFooterComponent {

@@ -1,4 +1,11 @@
-import { Component, computed, inject, signal, effect } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  signal,
+  effect,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { JobStatusDto, JobStatus } from '@job-tracker-lite-angular/schemas';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
@@ -32,6 +39,7 @@ type FilterChip = {
     TranslocoModule,
   ],
   providers: [provideIcons({ lucideSearch, lucideGhost })],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './jobs-menu.component.html',
 })
 export class JobsMenuComponent {

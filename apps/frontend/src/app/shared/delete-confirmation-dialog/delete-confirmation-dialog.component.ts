@@ -1,4 +1,10 @@
-import { Component, inject, input, output } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -23,6 +29,7 @@ type DeleteConfirmationDialogContext = {
   selector: 'app-delete-confirmation-dialog',
   imports: [HlmAlertDialogImports, HlmButton, HlmDialogClose, HlmIconImports],
   providers: [provideIcons({ lucideUndo2, lucideTrash })],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './delete-confirmation-dialog.component.html',
 })
 export class DeleteConfirmationDialogComponent {

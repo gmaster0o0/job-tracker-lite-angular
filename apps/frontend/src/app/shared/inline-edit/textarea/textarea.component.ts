@@ -1,4 +1,10 @@
-import { Component, input, model, computed } from '@angular/core';
+import {
+  Component,
+  input,
+  model,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIconComponent } from '@ng-icons/core';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
@@ -15,6 +21,7 @@ type InputType = string | null | undefined;
     TranslocoModule,
     HlmInputGroupImports,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './textarea.component.html',
 })
 export class InlineTextareaComponent {

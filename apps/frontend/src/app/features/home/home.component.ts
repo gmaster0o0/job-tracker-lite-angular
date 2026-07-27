@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { AuthSessionService } from '@job-tracker-lite-angular/frontend-data-access';
 import { HeroComponent } from './hero/hero.component';
 import { LandingDashboardComponent } from './landing-dashboard/landing-dashboard.component';
@@ -8,6 +8,7 @@ import { PublicProfilesComponent } from './public-profiles/public-profiles.compo
   standalone: true,
   selector: 'app-home',
   imports: [HeroComponent, LandingDashboardComponent, PublicProfilesComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './home.component.html',
 })
 export class HomeComponent {

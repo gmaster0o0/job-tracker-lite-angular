@@ -1,4 +1,9 @@
-import { Component, input, output } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { HlmEmptyImports } from '@spartan-ng/helm/empty';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -8,6 +13,7 @@ import { lucideBookAlert, lucidePlus } from '@ng-icons/lucide';
   selector: 'app-empty-list',
   imports: [HlmButton, HlmEmptyImports, NgIcon],
   providers: [provideIcons({ lucideBookAlert, lucidePlus })],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './empty-list.component.html',
 })
 export class EmptyListComponent {

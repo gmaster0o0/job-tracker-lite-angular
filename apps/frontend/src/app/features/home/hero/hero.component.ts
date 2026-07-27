@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoModule, translateSignal } from '@jsverse/transloco';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -43,6 +43,7 @@ interface HeroFeatureCard {
     HlmBadgeImports,
     HlmIconImports,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './hero.component.html',
 })
 export class HeroComponent {
