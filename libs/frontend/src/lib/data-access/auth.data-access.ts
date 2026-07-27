@@ -152,6 +152,18 @@ export class AuthDataAccessService {
     );
   }
 
+  async cancelEmailChange(): Promise<void> {
+    await firstValueFrom(
+      this.http.post(
+        '/api/account/change-email/cancel',
+        {},
+        {
+          withCredentials: true,
+        },
+      ),
+    );
+  }
+
   async changePassword(dto: ChangePasswordDto): Promise<void> {
     await firstValueFrom(
       this.http.post(

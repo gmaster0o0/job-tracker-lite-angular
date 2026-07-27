@@ -25,7 +25,7 @@ export class PersonalInfoHarness extends ComponentHarness {
   private readonly editButtonLocator = this.locatorFor(EditButtonHarness);
   private readonly cancelButtonLocator = this.locatorFor(CancelButtonHarness);
   private readonly saveButtonLocator = this.locatorFor(
-    'app-save-button button[type="submit"]',
+    'app-submit-button button[type="submit"]',
   );
   private readonly visibilitySettingsLocator = this.locatorForOptional(
     ProfileVisibilitySettingsHarness,

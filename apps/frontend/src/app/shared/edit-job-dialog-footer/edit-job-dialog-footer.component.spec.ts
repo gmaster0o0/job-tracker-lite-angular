@@ -47,7 +47,7 @@ describe('EditJobDialogFooterComponent', () => {
     ).then(async (harness) => {
       const text = await harness.getTextContent();
       expect(text).toContain('Cancel');
-      expect(text).toContain('Save Changes');
+      expect(text).toContain('Save');
     });
   });
 

@@ -5,11 +5,13 @@ export type EmailServiceMock = {
     email: string,
     url: string,
     locale: SupportLang,
+    expiresInHours: number,
   ) => Promise<void>;
   sendEmailRestoreEmail: (
     email: string,
     url: string,
     locale: SupportLang,
+    expiresInDays: number,
   ) => Promise<void>;
   sendDeleteAccountVerificationEmail: (
     email: string,

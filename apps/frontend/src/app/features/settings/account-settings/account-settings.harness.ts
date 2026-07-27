@@ -1,4 +1,5 @@
 import { ComponentHarness } from '@angular/cdk/testing';
+import { CancelButtonHarness } from '@job-tracker-lite-angular/frontend-shared';
 
 export class AccountSettingsHarness extends ComponentHarness {
   static hostSelector = 'app-account-settings';
@@ -22,6 +23,8 @@ export class AccountSettingsHarness extends ComponentHarness {
   );
   private readonly togglePasswordVisibilityButtonLocator =
     this.locatorFor('button[aria-label]');
+  private readonly cancelEmailChangeButtonLocator =
+    this.locatorForOptional(CancelButtonHarness);
 
   async getCurrentEmail(): Promise<string> {
     const input = await this.currentEmailInputLocator();
@@ -41,9 +44,24 @@ export class AccountSettingsHarness extends ComponentHarness {
     }
   }
 
+  async getNewEmailValue(): Promise<string> {
+    const input = await this.newEmailInputLocator();
+    return String(await input.getProperty('value'));
+  }
+
   async submitChangeEmail(): Promise<void> {
     const button = await this.changeEmailSubmitLocator();
     await button.click();
+  }
+
+  async getChangeEmailButtonText(): Promise<string> {
+    const button = await this.changeEmailSubmitLocator();
+    return (await button.text()).trim();
+  }
+
+  async isChangeEmailButtonDisabled(): Promise<boolean> {
+    const button = await this.changeEmailSubmitLocator();
+    return button.getProperty('disabled');
   }
 
   async setCurrentPassword(password: string): Promise<void> {
@@ -83,5 +101,14 @@ export class AccountSettingsHarness extends ComponentHarness {
   async submitChangePassword(): Promise<void> {
     const button = await this.changePasswordSubmitLocator();
     await button.click();
+  }
+
+  async hasCancelEmailChangeButton(): Promise<boolean> {
+    return (await this.cancelEmailChangeButtonLocator()) !== null;
+  }
+
+  async clickCancelEmailChangeButton(): Promise<void> {
+    const button = await this.cancelEmailChangeButtonLocator();
+    await button?.click();
   }
 }

@@ -4,7 +4,7 @@ import { HlmDialogClose, HlmDialogFooter } from '@spartan-ng/helm/dialog';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { provideIcons } from '@ng-icons/core';
 import { lucideUndo2 } from '@ng-icons/lucide';
-import { SaveButtonComponent } from '../save-button/save-button.component';
+import { SubmitButtonComponent } from '../submit-button/submit-button.component';
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
@@ -15,7 +15,7 @@ import { TranslocoModule } from '@jsverse/transloco';
     HlmButton,
     HlmDialogClose,
     HlmIconImports,
-    SaveButtonComponent,
+    SubmitButtonComponent,
     TranslocoModule,
   ],
   providers: [provideIcons({ lucideUndo2 })],

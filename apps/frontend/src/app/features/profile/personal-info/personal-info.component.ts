@@ -8,7 +8,7 @@ import {
 } from '../profile.hlmimports';
 import {
   EditButtonComponent,
-  SaveButtonComponent,
+  SubmitButtonComponent,
   CancelButtonComponent,
   InlineInputComponent,
   InlineTextareaComponent,
@@ -28,7 +28,7 @@ import {
     layoutImports,
     EditButtonComponent,
     CancelButtonComponent,
-    SaveButtonComponent,
+    SubmitButtonComponent,
     TranslocoModule,
     CommonModule,
     InlineInputComponent,

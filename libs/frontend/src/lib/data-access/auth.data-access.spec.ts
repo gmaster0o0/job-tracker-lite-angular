@@ -133,6 +133,18 @@ describe('AuthDataAccessService', () => {
     await expect(requestPromise).resolves.toBeUndefined();
   });
 
+  it('should call account change-email cancel endpoint', async () => {
+    const cancelPromise = service.cancelEmailChange();
+
+    const req = httpMock.expectOne('/api/account/change-email/cancel');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.withCredentials).toBe(true);
+    expect(req.request.body).toEqual({});
+    req.flush({ status: true });
+
+    await expect(cancelPromise).resolves.toBeUndefined();
+  });
+
   it('should call auth change-password endpoint and revoke other sessions', async () => {
     const changePasswordPromise = service.changePassword(
       changePasswordFixtures.valid,

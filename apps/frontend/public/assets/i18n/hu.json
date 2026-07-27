@@ -463,13 +463,22 @@
         "description": "Adj meg új email címet. A megerősítő linket az új címre küldjük.",
         "currentEmail": "Jelenlegi email",
         "newEmail": "Új email",
-        "pendingEmailNotice": "Függő email módosítás: {{email}}. A befejezéshez erősítsd meg a postaládádból.",
+        "pendingEmailNotice": "Függő módosítás: {{email}}",
+        "pendingEmailTiming": "Küldve: {{sentDate}} · Lejár: {{expiresDate}} ({{relative}})",
+        "cancelButton": "Visszavonás",
+        "cancelSuccess": "A függő email módosítási kérés visszavonva.",
         "success": "Megerősítő email elküldve az új címre.",
         "submit": "Mentés",
         "submitting": "Mentés...",
+        "resendButton": "Újraküldés",
+        "resendCountdownButton": "Újraküldés ({{seconds}} mp)",
+        "resendSubmitting": "Küldés...",
+        "saveCountdownButton": "Mentés ({{seconds}} mp)",
+        "cooldownTooltip": "Rövid ideig várni kell két email küldése között, hogy elkerüljük a rendszer túlterhelését.",
         "error": {
           "title": "Email módosítás sikertelen",
           "unknown": "Most nem sikerült az email módosítása. Próbáld újra.",
+          "resend_cooldown_active": "Kérjük, várj egy kicsit, mielőtt újra megerősítő emailt kérsz.",
           "user_already_exists": "Ezzel az email címmel már létezik fiók.",
           "email_is_same": "Kérjük, a jelenlegitől eltérő email címet adjon meg."
         }

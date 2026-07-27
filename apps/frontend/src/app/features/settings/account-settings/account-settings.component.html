@@ -5,7 +5,7 @@
     <h1 class="text-3xl font-bold tracking-tight">{{ title() }}</h1>
     <p class="text-muted-foreground">{{ subtitle() }}</p>
   </div>
-
+  <!-- Change email -->
   <hlm-card>
     <hlm-card-header>
       <h2 hlmCardTitle>
@@ -19,7 +19,7 @@
     </hlm-card-header>
 
     <div hlmCardContent>
-      <form [formRoot]="changeEmailForm" id="changeEmailForm" class="space-y-2">
+      <form [formRoot]="changeEmailForm" id="changeEmailForm">
         <hlm-field-group>
           <hlm-field>
             <label hlmLabel for="currentEmail">{{
@@ -66,18 +66,49 @@
           </hlm-field>
 
           @if (accountSettings().pendingEmail) {
-            <p class="text-sm text-muted-foreground">
-              {{
-                'settings.accountSettings.changeEmail.pendingEmailNotice'
-                  | transloco: { email: accountSettings().pendingEmail }
-              }}
-            </p>
-          }
+            <hlm-alert
+              class="border-amber-500 bg-amber-300/30 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50"
+            >
+              <ng-icon name="lucideClock" />
+              <h4 hlmAlertTitle>
+                {{
+                  'settings.accountSettings.changeEmail.pendingEmailNotice'
+                    | transloco: { email: accountSettings().pendingEmail }
+                }}
+              </h4>
+              @if (
+                formattedPendingEmailSentAt() &&
+                formattedPendingEmailExpiresAt()
+              ) {
+                <p hlmAlertDescription>
+                  {{
+                    'settings.accountSettings.changeEmail.pendingEmailTiming'
+                      | transloco
+                        : {
+                            sentDate: formattedPendingEmailSentAt(),
+                            expiresDate: formattedPendingEmailExpiresAt(),
+                            relative: formattedPendingEmailExpiresRelative(),
+                          }
+                  }}
+                </p>
+              }
 
-          @if (changeEmailSuccess()) {
-            <p class="text-sm text-emerald-600">
-              {{ 'settings.accountSettings.changeEmail.success' | transloco }}
-            </p>
+              <app-cancel-button
+                hlmAlertAction
+                [disabled]="isCancelingEmailChange()"
+                [cancelLabel]="
+                  'settings.accountSettings.changeEmail.cancelButton'
+                    | transloco
+                "
+                (clicked)="onCancelEmailChange()"
+              />
+            </hlm-alert>
+
+            <app-server-error-alert
+              [errorMessage]="cancelEmailChangeError()"
+              translationPrefix="settings.accountSettings.changeEmail"
+              cssClass="w-full"
+            />
           }
 
           <app-server-error-alert
@@ -90,7 +121,7 @@
     </div>
 
     <hlm-card-footer class="justify-end">
-      <app-save-button
+      <app-submit-button
         [formId]="'changeEmailForm'"
         [disabled]="
           isLoadingSettings() ||
@@ -98,14 +129,27 @@
           isChangingEmail()
         "
         [isSubmitting]="isChangingEmail()"
-        [idleLabel]="'settings.accountSettings.changeEmail.submit' | transloco"
+        [cooldownUntil]="accountSettings().emailChangeResendAvailableAt"
+        [cooldownLabel]="getEmailChangeCooldownLabel"
+        [cooldownTooltip]="
+          'settings.accountSettings.changeEmail.cooldownTooltip' | transloco
+        "
+        [idleIcon]="isResendMode() ? 'lucideRefreshCw' : 'lucideSave'"
+        [idleLabel]="
+          isResendMode()
+            ? ('settings.accountSettings.changeEmail.resendButton' | transloco)
+            : ('settings.accountSettings.changeEmail.submit' | transloco)
+        "
         [submittingLabel]="
-          'settings.accountSettings.changeEmail.submitting' | transloco
+          isResendMode()
+            ? ('settings.accountSettings.changeEmail.resendSubmitting'
+              | transloco)
+            : ('settings.accountSettings.changeEmail.submitting' | transloco)
         "
       />
     </hlm-card-footer>
   </hlm-card>
-
+  <!-- Change password -->
   <hlm-card>
     <hlm-card-header>
       <h2 hlmCardTitle>
@@ -250,7 +294,7 @@
     </div>
 
     <hlm-card-footer class="justify-end">
-      <app-save-button
+      <app-submit-button
         [formId]="'changePasswordForm'"
         [disabled]="changePasswordForm().invalid() || isChangingPassword()"
         [isSubmitting]="isChangingPassword()"

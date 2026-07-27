@@ -76,6 +76,21 @@ export class AccountController {
     return { status: true };
   }
 
+  @Post('change-email/cancel')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Cancel a pending email change',
+    description:
+      'Cancels a pending, unverified email change request and discards its verification token.',
+  })
+  async cancelEmailChange(
+    @Session() session: UserSession,
+  ): Promise<{ status: true }> {
+    await this.accountService.cancelEmailChange(session.user.id);
+    return { status: true };
+  }
+
   @Get('verify-email-change')
   @AllowAnonymous()
   @ApiOperation({

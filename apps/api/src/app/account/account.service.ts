@@ -15,7 +15,11 @@ import { AccountStatus, EmailChangeTokenType } from '@prisma/client';
 import { EmailService } from '../email/email.service';
 import { randomUUID } from 'crypto';
 import {
+  addDays,
+  addSeconds,
   parseEnvValue,
+  secondsToDays,
+  secondsToHours,
   setLanguageOnUrl,
 } from '@job-tracker-lite-angular/core-utils';
 
@@ -25,6 +29,7 @@ export class AccountService {
   private readonly defaultAuthApiUrl = 'http://localhost:3000/api/auth';
   private readonly defaultEmailVerificationExpiresIn = 60 * 60 * 24; // 24 hours
   private readonly defaultEmailRestoreExpiresIn = 60 * 60 * 24 * 7; // 7 days
+  private readonly defaultEmailChangeResendCooldownSeconds = 60; // 1 minute
   private readonly defaultDeleteVerificationExpiresIn = 60 * 30; // 30 minutes
   private readonly defaultDeletionGracePeriodDays = 7; // 7 days;
 
@@ -41,14 +46,57 @@ export class AccountService {
         email: true,
         pendingEmail: true,
         emailVerified: true,
+        lastEmailChangeRequestedAt: true,
       },
     });
+
+    let pendingEmailRequestedAt: Date | null = null;
+    let pendingEmailExpiresAt: Date | null = null;
+
+    if (user.pendingEmail) {
+      const verifyToken = await this.prisma.emailChangeToken.findFirst({
+        where: { userId, type: EmailChangeTokenType.VERIFY },
+        orderBy: { createdAt: 'desc' },
+        select: { createdAt: true, expiresAt: true },
+      });
+
+      if (verifyToken) {
+        pendingEmailRequestedAt = verifyToken.createdAt;
+        pendingEmailExpiresAt = verifyToken.expiresAt;
+      }
+    }
+
+    const emailChangeResendAvailableAt = user.lastEmailChangeRequestedAt
+      ? addSeconds(
+          this.getEmailChangeResendCooldownSeconds(),
+          user.lastEmailChangeRequestedAt,
+        )
+      : null;
 
     return {
       email: user.email,
       pendingEmail: user.pendingEmail,
       emailVerified: user.emailVerified,
+      pendingEmailRequestedAt,
+      pendingEmailExpiresAt,
+      emailChangeResendAvailableAt,
     };
+  }
+
+  async cancelEmailChange(userId: string): Promise<void> {
+    // Intentionally does not reset lastEmailChangeRequestedAt: cancelling must
+    // not reset the resend cooldown, otherwise a request -> cancel -> request
+    // loop would bypass it and let a user spam verification emails.
+    await this.prisma.$transaction(async (tx) => {
+      await tx.user.update({
+        where: { id: userId },
+        data: { pendingEmail: null },
+      });
+
+      await tx.emailChangeToken.deleteMany({
+        where: { userId, type: EmailChangeTokenType.VERIFY },
+      });
+    });
   }
 
   async requestEmailChange(
@@ -62,6 +110,7 @@ export class AccountService {
       select: {
         id: true,
         email: true,
+        lastEmailChangeRequestedAt: true,
       },
     });
 
@@ -89,16 +138,36 @@ export class AccountService {
       });
     }
 
+    // Cooldown is global per user (not scoped to the target address) and
+    // lives on the User row rather than the EmailChangeToken, since the token
+    // gets deleted on cancel - if the cooldown depended on it, a
+    // request -> cancel -> request loop would bypass it entirely.
+    if (currentUser.lastEmailChangeRequestedAt) {
+      const resendAvailableAt = addSeconds(
+        this.getEmailChangeResendCooldownSeconds(),
+        currentUser.lastEmailChangeRequestedAt,
+      );
+
+      if (resendAvailableAt > new Date()) {
+        throw new BadRequestException({
+          errorCode: 'resend_cooldown_active',
+          message: 'Please wait before requesting another verification email',
+        });
+      }
+    }
+
     const verifyToken = randomUUID();
-    const verifyTokenExpiresAt = this.addSeconds(
+    const verifyTokenExpiresAt = addSeconds(
       this.getEmailVerificationExpiresInSeconds(),
     );
+    const requestedAt = new Date();
 
     await this.prisma.$transaction(async (tx) => {
       await tx.user.update({
         where: { id: userId },
         data: {
           pendingEmail: newEmail,
+          lastEmailChangeRequestedAt: requestedAt,
         },
       });
 
@@ -131,6 +200,7 @@ export class AccountService {
       newEmail,
       verifyUrl.toString(),
       language,
+      secondsToHours(this.getEmailVerificationExpiresInSeconds()),
     );
   }
 
@@ -173,7 +243,7 @@ export class AccountService {
     }
 
     const restoreToken = randomUUID();
-    const restoreTokenExpiresAt = this.addSeconds(
+    const restoreTokenExpiresAt = addSeconds(
       this.getEmailRestoreExpiresInSeconds(),
     );
 
@@ -224,6 +294,7 @@ export class AccountService {
       verifyToken.oldEmail,
       restoreUrl.toString(),
       language,
+      secondsToDays(this.getEmailRestoreExpiresInSeconds()),
     );
 
     return this.buildFrontendAccountUrl('verified', language);
@@ -303,7 +374,7 @@ export class AccountService {
     }
 
     const token = randomUUID();
-    const expiresAt = this.addSeconds(this.getDeleteVerificationExpiresIn());
+    const expiresAt = addSeconds(this.getDeleteVerificationExpiresIn());
 
     await this.prisma.$transaction(async (tx) => {
       await tx.accountDeletionToken.deleteMany({
@@ -565,6 +636,13 @@ export class AccountService {
     );
   }
 
+  private getEmailChangeResendCooldownSeconds(): number {
+    return parseEnvValue(
+      this.configService.get('EMAIL_CHANGE_RESEND_COOLDOWN_SECONDS'),
+      this.defaultEmailChangeResendCooldownSeconds,
+    );
+  }
+
   private getDeleteVerificationExpiresIn(): number {
     return parseEnvValue(
       this.configService.get('ACCOUNT_DELETION_CONFIRM_EXPIRES_IN_SECONDS'),
@@ -591,20 +669,10 @@ export class AccountService {
     return status === AccountStatus.PENDING_DELETION;
   }
 
-  private addSeconds(seconds: number): Date {
-    return new Date(Date.now() + seconds * 1000);
-  }
-
-  private addDays(date: Date, days: number): Date {
-    const next = new Date(date);
-    next.setDate(next.getDate() + days);
-    return next;
-  }
-
   private calculateScheduledDeletionAt(
     requestedAt: Date,
     gracePeriodDays: number,
   ): Date {
-    return this.addDays(requestedAt, gracePeriodDays);
+    return addDays(requestedAt, gracePeriodDays);
   }
 }

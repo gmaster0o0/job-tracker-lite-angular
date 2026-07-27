@@ -50,6 +50,7 @@ export function createPrismaServiceMock(mockFactory: () => any) {
     },
     emailChangeToken: {
       findUnique: mockFactory(),
+      findFirst: mockFactory(),
       delete: mockFactory(),
       deleteMany: mockFactory(),
       create: mockFactory(),

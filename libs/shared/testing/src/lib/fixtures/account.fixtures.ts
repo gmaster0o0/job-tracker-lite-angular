@@ -14,11 +14,17 @@ export const accountSettingsFixtures: {
     email: 'admin@example.com',
     pendingEmail: null,
     emailVerified: true,
+    pendingEmailRequestedAt: null,
+    pendingEmailExpiresAt: null,
+    emailChangeResendAvailableAt: null,
   },
   withPendingEmail: {
     email: 'admin@example.com',
     pendingEmail: 'new-admin@example.com',
     emailVerified: true,
+    pendingEmailRequestedAt: new Date('2026-01-01T00:00:00.000Z'),
+    pendingEmailExpiresAt: new Date('2026-01-02T00:00:00.000Z'),
+    emailChangeResendAvailableAt: new Date('2026-01-01T00:01:00.000Z'),
   },
 };
 
@@ -56,6 +62,7 @@ export const accountUserFixtures = {
     pendingEmail: null,
     emailVerified: true,
     status: 'ACTIVE',
+    lastEmailChangeRequestedAt: null,
   },
 };
 
@@ -99,6 +106,7 @@ export const emailChangeTokenFixtures = {
     type: 'VERIFY',
     oldEmail: 'admin@example.com',
     newEmail: 'new-admin@example.com',
+    createdAt: new Date('2026-01-01T00:00:00.000Z'),
     expiresAt: new Date('2099-01-01T00:00:00.000Z'),
   },
   restore: {
@@ -107,6 +115,7 @@ export const emailChangeTokenFixtures = {
     type: 'RESTORE',
     oldEmail: 'admin@example.com',
     newEmail: 'new-admin@example.com',
+    createdAt: new Date('2026-01-01T00:00:00.000Z'),
     expiresAt: new Date('2099-01-01T00:00:00.000Z'),
   },
 };

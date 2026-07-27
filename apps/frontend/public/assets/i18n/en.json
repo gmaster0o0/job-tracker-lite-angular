@@ -16,7 +16,7 @@
       "charactersLeft": "characters left"
     },
     "cancel": "Cancel",
-    "saveChanges": "Save Changes",
+    "saveChanges": "Save",
     "create": "Create",
     "reject": "Reject",
     "accept": "Accept",
@@ -466,13 +466,22 @@
         "description": "Enter a new email address. We will send a verification link to it.",
         "currentEmail": "Current email",
         "newEmail": "New email",
-        "pendingEmailNotice": "Pending email change: {{email}}. Verify it from your inbox to finish.",
+        "pendingEmailNotice": "Pending change: {{email}}",
+        "pendingEmailTiming": "Sent: {{sentDate}} · Expires: {{expiresDate}} ({{relative}})",
+        "cancelButton": "Cancel",
+        "cancelSuccess": "Pending email change request canceled.",
         "success": "Verification email sent to your new address.",
         "submit": "Save",
         "submitting": "Saving...",
+        "resendButton": "Resend",
+        "resendCountdownButton": "Resend ({{seconds}}s)",
+        "resendSubmitting": "Resending...",
+        "saveCountdownButton": "Save ({{seconds}}s)",
+        "cooldownTooltip": "There's a short wait between sending emails, to avoid overloading the system.",
         "error": {
           "title": "Email Update Failed",
           "unknown": "Unable to update email right now. Please try again.",
+          "resend_cooldown_active": "Please wait a bit before requesting another verification email.",
           "user_already_exists": "An account with this email already exists.",
           "email_is_same": "Please use a different email than your current one."
         }

@@ -21,6 +21,7 @@ model User {
   name          String
   email         String    @unique
   pendingEmail  String?
+  lastEmailChangeRequestedAt DateTime?
   emailVerified Boolean   @default(false)
   status        AccountStatus @default(ACTIVE)
   gracePeriodRequestedAt DateTime?

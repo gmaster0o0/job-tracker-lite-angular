@@ -48,6 +48,7 @@ describe('AccountController', () => {
         getAccountSettings: () =>
           Promise.resolve(accountSettingsFixtures.default),
         requestEmailChange: () => Promise.resolve(undefined),
+        cancelEmailChange: () => Promise.resolve(undefined),
         verifyEmailChange: () =>
           Promise.resolve(accountRedirectFixtures.emailChangeVerified),
       }),
@@ -95,6 +96,18 @@ describe('AccountController', () => {
       authSessionFixtures.authenticated?.user.id,
       changeEmailRequestFixtures.valid.newEmail,
       changeEmailRequestFixtures.valid.language,
+    );
+  });
+
+  it('delegates email change cancellation to service for the current session user', async () => {
+    authDataAccessMock.cancelEmailChange.mockResolvedValue(undefined);
+
+    await expect(
+      controller.cancelEmailChange(authSessionFixtures.authenticated as never),
+    ).resolves.toEqual({ status: true });
+
+    expect(authDataAccessMock.cancelEmailChange).toHaveBeenCalledWith(
+      authSessionFixtures.authenticated?.user.id,
     );
   });
 

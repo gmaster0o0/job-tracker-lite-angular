@@ -123,6 +123,7 @@ describe('EmailService', () => {
       testRestoreRecipient,
       testRestoreUrl,
       lang,
+      7,
     );
 
     expect(emailQueue.add).toHaveBeenCalledWith(
@@ -140,6 +141,7 @@ describe('EmailService', () => {
       testRestoreRecipient,
       testRestoreUrl,
       'en',
+      7,
     );
 
     expect(emailQueue.add).toHaveBeenCalledWith(
@@ -163,6 +165,7 @@ describe('EmailService', () => {
         testVerificationRecipient,
         testVerificationUrl,
         lang,
+        24,
       );
 
       expect(emailQueue.add).toHaveBeenCalledWith(
