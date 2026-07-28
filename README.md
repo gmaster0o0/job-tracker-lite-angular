@@ -25,6 +25,7 @@ A modern job tracking application built as an Nx monorepo, featuring a full-stac
 - **Dynamic Sidenav**: Sidebar navigation adapts based on the current route, providing quick access to job details and actions.
 ## Tech stack
 
+- Node.js `24.18.0` (LTS, pinned in `.nvmrc`)
 - Nx monorepo
 - Angular `~21.2.0`
 - NestJS `^11.0.0`
@@ -75,7 +76,19 @@ Seeded jobs are owned by this demo account:
 
 ## Install
 
-From the repository root:
+The Node version is pinned in `.nvmrc`. With [nvm](https://github.com/nvm-sh/nvm) (or [nvm-windows](https://github.com/coreybutler/nvm-windows)), from the repository root:
+
+```sh
+nvm install
+```
+
+```sh
+nvm use
+```
+
+On nvm-windows, `nvm use` reads `.nvmrc` too, but the version has to be installed first — run `nvm install 24.18.0` if `nvm use` reports it is missing.
+
+Then install dependencies:
 
 ```sh
 npm install
