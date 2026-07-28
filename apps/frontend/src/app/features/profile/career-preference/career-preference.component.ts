@@ -5,7 +5,6 @@ import {
   input,
   linkedSignal,
   output,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -48,7 +47,6 @@ import { SaveState } from '@job-tracker-lite-angular/frontend-data-access';
       lucideLoader,
     }),
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './career-preference.component.html',
 })
 export class CareerPreferenceComponent {

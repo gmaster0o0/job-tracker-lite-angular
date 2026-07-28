@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  inject,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmInputImports } from '@spartan-ng/helm/input';
@@ -57,7 +52,6 @@ type CreateContactDialogContext = {
     ZodNgControlBridgeDirective,
     ServerErrorAlertComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './create-contact.component.html',
 })
 export class CreateContactComponent {

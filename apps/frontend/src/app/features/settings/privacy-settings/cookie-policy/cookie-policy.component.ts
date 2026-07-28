@@ -1,11 +1,4 @@
-import {
-  Component,
-  effect,
-  input,
-  output,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, effect, input, output, signal } from '@angular/core';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -32,7 +25,6 @@ import { AppDatePipe } from '@job-tracker-lite-angular/frontend-data-access';
     AppDatePipe,
   ],
   providers: [provideIcons({ lucideScrollText })],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './cookie-policy.component.html',
 })
 export class CookiePolicyComponent {

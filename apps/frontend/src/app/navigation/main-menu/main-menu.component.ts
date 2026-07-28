@@ -1,9 +1,4 @@
-import {
-  Component,
-  inject,
-  type Signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, inject, type Signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
 import {
@@ -42,7 +37,6 @@ interface MainMenuItem extends MenuItem {
       lucideUserPlus,
     }),
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './main-menu.component.html',
 })
 export class MainMenuComponent {

@@ -1,9 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -55,7 +50,6 @@ type HealthState = 'ok' | 'warning';
     RouterLink,
     TranslocoModule,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './sidenav.component.html',
 })
 export class SidenavComponent {

@@ -1,11 +1,4 @@
-import {
-  Component,
-  effect,
-  input,
-  output,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, effect, input, output, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -28,7 +21,6 @@ import { AppDatePipe } from '@job-tracker-lite-angular/frontend-data-access';
     AppDatePipe,
   ],
   providers: [provideIcons({ lucideShieldCheck })],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './privacy-policy.component.html',
 })
 export class PrivacyPolicyComponent {

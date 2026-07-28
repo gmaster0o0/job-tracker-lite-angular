@@ -1,10 +1,4 @@
-import {
-  Component,
-  computed,
-  input,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
@@ -18,7 +12,6 @@ import { interval } from 'rxjs';
   selector: 'app-submit-button',
   imports: [HlmButton, HlmIconImports, HlmTooltipImports],
   providers: [provideIcons({ lucideSave, lucideLoader2, lucideRefreshCw })],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './submit-button.component.html',
 })
 /**

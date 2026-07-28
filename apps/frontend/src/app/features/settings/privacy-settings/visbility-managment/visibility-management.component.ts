@@ -4,7 +4,6 @@ import {
   inject,
   linkedSignal,
   signal,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 import { ProfileVisibilitySettingsComponent } from '@job-tracker-lite-angular/frontend-shared';
@@ -52,7 +51,6 @@ const marker = (key: string) => key;
       lucideAlertCircle,
     }),
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './visibility-management.component.html',
 })
 export class VisibilityManagementComponent {

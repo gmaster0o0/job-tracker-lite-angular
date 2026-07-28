@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { AppearanceComponent } from './appearance/appearance.component';
 import { LanguageComponent } from './language/language.component';
@@ -15,7 +15,6 @@ import { DateformatComponent } from './dateformat/dateformat.component';
     TranslocoModule,
     DateformatComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './preferences.component.html',
 })
 export class PreferencesComponent {}

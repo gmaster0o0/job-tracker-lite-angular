@@ -1,9 +1,4 @@
-import {
-  Component,
-  input,
-  output,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -16,7 +11,6 @@ import { lucidePencil } from '@ng-icons/lucide';
   selector: 'app-edit-button',
   imports: [CommonModule, HlmButton, HlmIconImports, TranslocoModule],
   providers: [provideIcons({ lucidePencil })],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './edit-button.component.html',
 })
 export class EditButtonComponent {

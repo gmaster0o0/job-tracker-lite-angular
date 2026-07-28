@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  inject,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmInputImports } from '@spartan-ng/helm/input';
@@ -57,7 +52,6 @@ type EditNoteDialogContext = {
     ZodNgControlBridgeDirective,
     ServerErrorAlertComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './edit-note.component.html',
 })
 export class EditNoteComponent {

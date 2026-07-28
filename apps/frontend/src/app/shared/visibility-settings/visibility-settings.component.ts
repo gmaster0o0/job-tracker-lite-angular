@@ -1,10 +1,4 @@
-import {
-  Component,
-  computed,
-  input,
-  model,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, computed, input, model } from '@angular/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { provideIcons, NgIcon } from '@ng-icons/core';
@@ -37,7 +31,6 @@ export enum VisibilityLevel {
       lucideLock,
     }),
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './visibility-settings.component.html',
 })
 export class ProfileVisibilitySettingsComponent {

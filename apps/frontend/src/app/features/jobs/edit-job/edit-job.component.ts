@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  inject,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
@@ -61,7 +56,6 @@ type EditJobDialogContext = {
     FormField,
     ZodNgControlBridgeDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './edit-job.component.html',
 })
 export class EditJobComponent {

@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  inject,
-  input,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { NoteDto } from '@job-tracker-lite-angular/schemas';
 import {
   JobsDataAccessService,
@@ -33,7 +28,6 @@ import { NotificationService } from '@job-tracker-lite-angular/frontend-data-acc
     TranslocoModule,
   ],
   providers: [provideIcons({ lucidePlus })],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './notes-tab.component.html',
 })
 export class NotesTabComponent {

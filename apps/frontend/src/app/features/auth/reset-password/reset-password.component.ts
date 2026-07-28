@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  inject,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   FormField,
   FormRoot,
@@ -44,7 +39,6 @@ import { resetPasswordSchema } from '@job-tracker-lite-angular/schemas';
     ZodNgControlBridgeDirective,
     ServerErrorAlertComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './reset-password.component.html',
 })
 export class ResetPasswordComponent {

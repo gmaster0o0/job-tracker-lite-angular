@@ -1,9 +1,4 @@
-import {
-  Component,
-  inject,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   TranslocoModule,
   TranslocoService,
@@ -38,7 +33,6 @@ import {
     ServerErrorAlertComponent,
   ],
   providers: [provideIcons({ lucideTrash2 })],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './delete-account.component.html',
 })
 export class DeleteAccountComponent {

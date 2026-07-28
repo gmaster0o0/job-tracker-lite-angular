@@ -1,10 +1,4 @@
-import {
-  Component,
-  input,
-  model,
-  computed,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, input, model, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIconComponent } from '@ng-icons/core';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
@@ -15,7 +9,6 @@ type InputType = string | null | undefined;
   selector: 'app-inline-input',
   standalone: true,
   imports: [FormsModule, NgIconComponent, HlmInputGroupImports],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './input.component.html',
 })
 export class InlineInputComponent {

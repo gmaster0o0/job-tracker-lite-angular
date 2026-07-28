@@ -6,7 +6,6 @@ import {
   linkedSignal,
   output,
   signal,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -70,7 +69,6 @@ type Suggestion = { value: string; label: string };
       lucideX,
     }),
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './skill-manager.component.html',
 })
 export class SkillManagerComponent {

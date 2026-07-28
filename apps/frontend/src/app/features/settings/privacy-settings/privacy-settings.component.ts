@@ -1,9 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
 import { CookieManagementComponent } from './cookie-managment/cookie-management.component';
@@ -33,7 +28,6 @@ import { HlmAccordionImports } from '@spartan-ng/helm/accordion';
     PrivacyPolicyComponent,
     HlmAccordionImports,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './privacy-settings.component.html',
 })
 export class PrivacySettingsComponent {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input } from '@angular/core';
 import {
   JobDto,
   JobStatusDto,
@@ -13,7 +13,6 @@ import { AppDatePipe } from '@job-tracker-lite-angular/frontend-data-access';
   standalone: true,
   selector: 'app-job-card',
   imports: [CommonModule, HlmBadgeImports, HlmCardImports, AppDatePipe],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './job-card.component.html',
 })
 export class JobCardComponent {

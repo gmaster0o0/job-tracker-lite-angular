@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  input,
-  output,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { ContactDto } from '@job-tracker-lite-angular/schemas';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
@@ -38,7 +33,6 @@ import {
       lucideTrash2,
     }),
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './contact-list-item.component.html',
 })
 export class ContactListItemComponent {

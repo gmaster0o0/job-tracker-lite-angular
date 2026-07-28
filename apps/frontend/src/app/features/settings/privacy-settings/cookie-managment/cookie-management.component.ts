@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { lucideSettings2 } from '@ng-icons/lucide';
@@ -17,7 +17,6 @@ import { TranslocoModule } from '@jsverse/transloco';
     TranslocoModule,
   ],
   providers: [provideIcons({ lucideSettings2 })],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './cookie-management.component.html',
 })
 export class CookieManagementComponent {

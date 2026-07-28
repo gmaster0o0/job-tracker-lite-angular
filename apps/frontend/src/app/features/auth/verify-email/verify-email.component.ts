@@ -1,10 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  inject,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   TranslocoModule,
@@ -27,7 +22,6 @@ import { supportLangSchema } from '@job-tracker-lite-angular/schemas';
     TranslocoModule,
     ServerErrorAlertComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './verify-email.component.html',
 })
 export class VerifyEmailComponent {

@@ -7,7 +7,6 @@ import {
   output,
   signal,
   untracked,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
@@ -96,7 +95,6 @@ export type ConfirmationDialogContext = {
     ZodTransformPipeFirst,
   ],
   providers: [provideIcons({ lucideTrash })],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './confirmation-dialog.component.html',
 })
 export class ConfirmationDialogComponent {

@@ -1,10 +1,4 @@
-import {
-  Component,
-  input,
-  model,
-  output,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, input, model, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
 import {
@@ -41,7 +35,6 @@ import {
     InlineTextareaComponent,
     ProfileVisibilitySettingsComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './personal-info.component.html',
 })
 export class PersonalInfoComponent {

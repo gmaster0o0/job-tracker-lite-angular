@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -20,7 +20,6 @@ type SettingsMenuItem = MenuItem & {
   selector: 'app-settings-menu',
   imports: [RouterLink, RouterLinkActive, HlmSidebarImports, HlmIconImports],
   providers: [provideIcons({ lucideShield, lucideSettings, lucideKey })],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './settings-menu.component.html',
 })
 export class SettingsMenuComponent {

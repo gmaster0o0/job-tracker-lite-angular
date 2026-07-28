@@ -1,10 +1,4 @@
-import {
-  Component,
-  computed,
-  output,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, computed, output, signal } from '@angular/core';
 import { form } from '@angular/forms/signals';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
@@ -22,7 +16,6 @@ export type CleanupSliderValue = 0 | 10 | 20 | 30 | 40 | 50;
     TranslocoModule,
   ],
   templateUrl: './cleanup-period-picker.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cleanup-period-picker.component.scss'],
 })
 export class CleanupPeriodPickerComponent {

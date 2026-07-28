@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  inject,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import {
   takeUntilDestroyed,
   toObservable,
@@ -88,7 +82,6 @@ const RESEND_DEBOUNCE_MS = 600;
       lucideClock,
     }),
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './account-settings.component.html',
 })
 export class AccountSettingsComponent {
