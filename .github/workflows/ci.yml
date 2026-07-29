@@ -118,7 +118,12 @@ jobs:
           nohup node dist/apps/api/main.js > /tmp/api-serve.log 2>&1 &
           echo "API_SERVE_PID=$!" >> "$GITHUB_ENV"
 
-          nohup npx nx run frontend:serve-e2e --skipRemoteCache --skipNxCache -- --port 4200 > /tmp/frontend-serve.log 2>&1 &
+          # PORT is set to 3000 for the api above, and Angular 22's dev-server
+          # reads PORT from the environment and lets it win over `--port`, so
+          # without overriding it here the frontend tries to bind 3000 and
+          # loses to the api ("Port 3000 is already in use"). Both are set to
+          # 4200 so the env var and the flag agree.
+          PORT=4200 nohup npx nx run frontend:serve-e2e --skipRemoteCache --skipNxCache -- --port 4200 > /tmp/frontend-serve.log 2>&1 &
           echo "FRONTEND_SERVE_PID=$!" >> "$GITHUB_ENV"
 
           wait_for_url() {
