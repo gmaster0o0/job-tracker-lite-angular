@@ -115,6 +115,7 @@
     "test": {
       "executor": "@angular/build:unit-test",
       "options": {
+        "runnerConfig": true,
         "setupFiles": [
           "libs/shared/testing/src/lib/setup/resize-observer.setup.ts"
         ],

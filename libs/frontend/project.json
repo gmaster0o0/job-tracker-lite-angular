@@ -23,7 +23,9 @@
     },
     "test": {
       "executor": "@nx/angular:unit-test",
-      "options": {}
+      "options": {
+        "runnerConfig": true
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint"

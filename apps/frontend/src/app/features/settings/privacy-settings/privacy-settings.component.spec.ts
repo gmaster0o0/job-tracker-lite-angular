@@ -1,6 +1,6 @@
 import { RouterTestingHarness } from '@angular/router/testing';
-import { TestBed } from '@angular/core/testing';
-import { NavigationEnd, provideRouter, Router } from '@angular/router';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { PrivacySettingsComponent } from './privacy-settings.component';
 import { PrivacyPolicyHarness } from './privacy-policy/privacy-policy.harness';
@@ -11,9 +11,41 @@ import {
   createProfileDataAccessMock,
   userProfileFixtures,
 } from '@job-tracker-lite-angular/testing';
-import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
-import { filter } from 'rxjs/operators';
 import { vi } from 'vitest';
+
+/**
+ * Opening or closing a policy dialog settles across several turns: the router
+ * navigation re-creates PrivacySettingsComponent, brn-dialog installs its
+ * `[state]` effect from an `afterNextRender`, and the CDK overlay is attached
+ * (or torn down) a microtask after that. A bare `whenStable()` has nothing to
+ * wait on until that render pass has created the effect, so change detection
+ * has to be pumped.
+ */
+const SETTLE_TIMEOUT_MS = 5_000;
+const SETTLE_INTERVAL_MS = 10;
+
+async function waitUntil(
+  fixture: ComponentFixture<unknown>,
+  condition: () => boolean | Promise<boolean>,
+  description: string,
+): Promise<void> {
+  const deadline = Date.now() + SETTLE_TIMEOUT_MS;
+
+  for (;;) {
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    if (await condition()) return;
+
+    if (Date.now() >= deadline) {
+      throw new Error(
+        `Timed out after ${SETTLE_TIMEOUT_MS}ms waiting for ${description}.`,
+      );
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, SETTLE_INTERVAL_MS));
+  }
+}
 
 describe('PrivacySettingsComponent (routing integration)', () => {
   let harness: RouterTestingHarness;
@@ -69,6 +101,12 @@ describe('PrivacySettingsComponent (routing integration)', () => {
       PrivacyPolicyHarness,
     );
 
+    await waitUntil(
+      harness.fixture,
+      () => policyHarness.isDialogVisible(),
+      'the privacy policy dialog to open',
+    );
+
     expect(await policyHarness.isDialogVisible()).toBe(true);
   });
 
@@ -83,6 +121,12 @@ describe('PrivacySettingsComponent (routing integration)', () => {
       CookiePolicyHarness,
     );
 
+    await waitUntil(
+      harness.fixture,
+      () => policyHarness.isDialogVisible(),
+      'the cookie policy dialog to open',
+    );
+
     expect(await policyHarness.isDialogVisible()).toBe(true);
   });
 
@@ -94,13 +138,18 @@ describe('PrivacySettingsComponent (routing integration)', () => {
       PrivacyPolicyHarness,
     );
 
-    const navigationEnd = firstValueFrom(
-      router.events.pipe(filter((e) => e instanceof NavigationEnd)),
-    );
-
     await policyHarness.clickOpenButton();
 
-    await navigationEnd;
+    await waitUntil(
+      harness.fixture,
+      () => router.url === '/settings/privacy/privacy-policy',
+      'the router to navigate to /settings/privacy/privacy-policy',
+    );
+    await waitUntil(
+      harness.fixture,
+      () => policyHarness.isDialogVisible(),
+      'the privacy policy dialog to open',
+    );
 
     expect(router.url).toBe('/settings/privacy/privacy-policy');
     expect(await policyHarness.isDialogVisible()).toBe(true);
@@ -114,19 +163,24 @@ describe('PrivacySettingsComponent (routing integration)', () => {
       CookiePolicyHarness,
     );
 
-    const navigationEnd = firstValueFrom(
-      router.events.pipe(filter((e) => e instanceof NavigationEnd)),
-    );
-
     await policyHarness.clickOpenButton();
 
-    await navigationEnd;
+    await waitUntil(
+      harness.fixture,
+      () => router.url === '/settings/privacy/cookie-policy',
+      'the router to navigate to /settings/privacy/cookie-policy',
+    );
+    await waitUntil(
+      harness.fixture,
+      () => policyHarness.isDialogVisible(),
+      'the cookie policy dialog to open',
+    );
 
     expect(router.url).toBe('/settings/privacy/cookie-policy');
     expect(await policyHarness.isDialogVisible()).toBe(true);
   });
 
-  it('navigates back to /settings/privacy when the privacydialog is closed', async () => {
+  it('navigates back to /settings/privacy when the privacy dialog is closed', async () => {
     await harness.navigateByUrl(
       '/settings/privacy/privacy-policy',
       PrivacySettingsComponent,
@@ -137,8 +191,26 @@ describe('PrivacySettingsComponent (routing integration)', () => {
       PrivacyPolicyHarness,
     );
 
+    // The close button lives in the overlay, and the harness locator throws
+    // rather than waits when it is not there yet.
+    await waitUntil(
+      harness.fixture,
+      () => policyHarness.isDialogVisible(),
+      'the privacy policy dialog to open',
+    );
+
     await policyHarness.close();
-    await harness.fixture.whenStable();
+
+    await waitUntil(
+      harness.fixture,
+      () => router.url === '/settings/privacy',
+      'the router to navigate back to /settings/privacy',
+    );
+    await waitUntil(
+      harness.fixture,
+      async () => !(await policyHarness.isDialogVisible()),
+      'the privacy policy dialog to be torn down',
+    );
 
     expect(router.url).toBe('/settings/privacy');
     expect(await policyHarness.isDialogVisible()).toBe(false);
@@ -155,8 +227,24 @@ describe('PrivacySettingsComponent (routing integration)', () => {
       CookiePolicyHarness,
     );
 
+    await waitUntil(
+      harness.fixture,
+      () => policyHarness.isDialogVisible(),
+      'the cookie policy dialog to open',
+    );
+
     await policyHarness.close();
-    await harness.fixture.whenStable();
+
+    await waitUntil(
+      harness.fixture,
+      () => router.url === '/settings/privacy',
+      'the router to navigate back to /settings/privacy',
+    );
+    await waitUntil(
+      harness.fixture,
+      async () => !(await policyHarness.isDialogVisible()),
+      'the cookie policy dialog to be torn down',
+    );
 
     expect(router.url).toBe('/settings/privacy');
     expect(await policyHarness.isDialogVisible()).toBe(false);
