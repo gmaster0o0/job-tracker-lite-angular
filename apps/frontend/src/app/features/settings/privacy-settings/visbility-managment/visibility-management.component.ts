@@ -1,9 +1,12 @@
 import {
   Component,
   computed,
+  debounced,
+  effect,
   inject,
   linkedSignal,
   signal,
+  untracked,
 } from '@angular/core';
 import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 import { ProfileVisibilitySettingsComponent } from '@job-tracker-lite-angular/frontend-shared';
@@ -26,6 +29,8 @@ import { HlmSpinner } from '@spartan-ng/helm/spinner';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 
 const marker = (key: string) => key;
+
+const SAVE_DEBOUNCE_MS = 1000;
 
 @Component({
   selector: 'app-visibility-management',
@@ -59,7 +64,6 @@ export class VisibilityManagementComponent {
 
   saveState = signal<SaveState>('idle');
 
-  // Signals for each visibility level
   readonly personalVisibilityLevel = linkedSignal(
     () => this.profileResource.value()?.personalVisibility ?? 0,
   );
@@ -81,6 +85,23 @@ export class VisibilityManagementComponent {
   );
   readonly restoreMode = signal<boolean>(false);
   private visibilitySnapshot: { [key: string]: number } | null = null;
+
+  // Debouncing a request count rather than the levels keeps saves
+  // user-initiated: the linked signals also change when the profile reloads.
+  private readonly saveRequests = signal(0);
+  private readonly settledSaveRequests = debounced(
+    this.saveRequests,
+    SAVE_DEBOUNCE_MS,
+  );
+
+  constructor() {
+    effect(() => {
+      if (this.settledSaveRequests.value() === 0) {
+        return;
+      }
+      untracked(() => void this.save());
+    });
+  }
 
   onVisibilityChange(
     type: 'all' | 'personal' | 'contact' | 'skills' | 'workPreferences',
@@ -155,18 +176,9 @@ export class VisibilityManagementComponent {
       this.restoreMode.set(true);
     }
   }
-  private saveTimeout: ReturnType<typeof setTimeout> | null = null;
 
   private debounceAndSave() {
-    // Clear existing timeout
-    if (this.saveTimeout) {
-      clearTimeout(this.saveTimeout);
-    }
-
-    // Set new timeout for 1s
-    this.saveTimeout = setTimeout(() => {
-      void this.save();
-    }, 1000);
+    this.saveRequests.update((count) => count + 1);
   }
 
   private async save() {

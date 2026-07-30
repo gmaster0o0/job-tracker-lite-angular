@@ -1,10 +1,13 @@
 import {
   Component,
+  debounced,
+  effect,
   inject,
   signal,
   input,
   linkedSignal,
   output,
+  untracked,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -26,6 +29,8 @@ import {
 import { HlmSpinner } from '@spartan-ng/helm/spinner';
 import { ProfileVisibilitySettingsComponent } from '@job-tracker-lite-angular/frontend-shared';
 import { SaveState } from '@job-tracker-lite-angular/frontend-data-access';
+
+const SAVE_DEBOUNCE_MS = 1000;
 
 @Component({
   standalone: true,
@@ -55,7 +60,6 @@ export class CareerPreferenceComponent {
   profile = input.required<UserProfileDto>();
   disabled = input<boolean>(false);
 
-  // Signals for each field
   experienceLevel = linkedSignal(() => this.profile().experienceLevel ?? null);
   workingStyle = linkedSignal(() => this.profile().workingStyle ?? null);
   careerType = linkedSignal(() => this.profile().careerType ?? null);
@@ -70,7 +74,6 @@ export class CareerPreferenceComponent {
     this.debounceAndSave();
   }
 
-  // SaveState
   saveState = signal<SaveState>('idle');
   saveStateChanged = output<SaveState>();
 
@@ -98,7 +101,6 @@ export class CareerPreferenceComponent {
     }, this.hideDelayMs);
   }
 
-  // Enums
   experienceLevels: ExperienceLevel[] = [
     'INTERN',
     'JUNIOR',
@@ -110,10 +112,21 @@ export class CareerPreferenceComponent {
   workingStyles: WorkingStyle[] = ['REMOTE', 'HYBRID', 'ON_SITE'];
   careerTypes: CareerPreferenceType[] = ['FULL_TIME', 'PART_TIME', 'CONTRACT'];
 
-  private saveTimeout: ReturnType<typeof setTimeout> | null = null;
+  // Debouncing a request count rather than the field values keeps saves
+  // user-initiated: the linked signals also change when the profile input does.
+  private readonly saveRequests = signal(0);
+  private readonly settledSaveRequests = debounced(
+    this.saveRequests,
+    SAVE_DEBOUNCE_MS,
+  );
 
   constructor() {
-    // Effect to reset saveState to 'idle' when profile changes
+    effect(() => {
+      if (this.settledSaveRequests.value() === 0) {
+        return;
+      }
+      untracked(() => void this.save());
+    });
   }
 
   onExperienceLevelChange(value: ExperienceLevel | null | undefined) {
@@ -135,15 +148,7 @@ export class CareerPreferenceComponent {
   }
 
   private debounceAndSave() {
-    // Clear existing timeout
-    if (this.saveTimeout) {
-      clearTimeout(this.saveTimeout);
-    }
-
-    // Set new timeout for 1s
-    this.saveTimeout = setTimeout(() => {
-      void this.save();
-    }, 1000);
+    this.saveRequests.update((count) => count + 1);
   }
 
   private async save() {
