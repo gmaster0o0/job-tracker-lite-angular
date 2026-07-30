@@ -1,10 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
-import {
-  takeUntilDestroyed,
-  toObservable,
-  toSignal,
-} from '@angular/core/rxjs-interop';
+import { Component, computed, debounced, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormField,
   FormRoot,
@@ -48,7 +44,6 @@ import {
   lucideMail,
 } from '@ng-icons/lucide';
 import { interval } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
 
@@ -139,14 +134,10 @@ export class AccountSettingsComponent {
 
   private readonly now = signal(new Date());
 
-  /**
-   * Debouncer for avoid the flickering resend buttion
-   */
-  private readonly debouncedTypedEmail = toSignal(
-    toObservable(computed(() => this.emailModel().newEmail)).pipe(
-      debounceTime(RESEND_DEBOUNCE_MS),
-    ),
-    { initialValue: '' },
+  // Keeps the button from flickering between Save and Resend while typing.
+  private readonly debouncedTypedEmail = debounced(
+    () => this.emailModel().newEmail,
+    RESEND_DEBOUNCE_MS,
   );
 
   /**
@@ -163,7 +154,7 @@ export class AccountSettingsComponent {
       return false;
     }
     return (
-      this.debouncedTypedEmail().trim().toLowerCase() ===
+      this.debouncedTypedEmail.value().trim().toLowerCase() ===
       pendingEmail.trim().toLowerCase()
     );
   });

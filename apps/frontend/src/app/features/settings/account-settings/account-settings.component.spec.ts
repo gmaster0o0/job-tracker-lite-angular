@@ -287,6 +287,25 @@ describe('AccountSettingsComponent', () => {
       expect(await harness.isChangeEmailButtonDisabled()).toBe(true);
     });
 
+    it('keeps the Resend label until the debounce settles after typing a different address', async () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2026-01-01T00:00:30.000Z'));
+
+      await setup(accountSettingsFixtures.withPendingEmail);
+      await vi.advanceTimersByTimeAsync(650);
+
+      expect(await harness.getChangeEmailButtonText()).toContain('Resend (');
+
+      await harness.setNewEmail('someone-else@example.com');
+      await vi.advanceTimersByTimeAsync(200); // still inside the debounce window
+
+      expect(await harness.getChangeEmailButtonText()).toContain('Resend (');
+
+      await vi.advanceTimersByTimeAsync(650);
+
+      expect(await harness.getChangeEmailButtonText()).toContain('Save (');
+    });
+
     it('shows an enabled Save button for a different address once the cooldown has elapsed', async () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2026-01-01T00:01:30.000Z')); // 30s past the 60s cooldown

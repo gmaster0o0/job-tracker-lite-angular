@@ -35,6 +35,15 @@ describe('VisibilityManagementComponent', () => {
     return { fixture, component, harness, dataAccessMock };
   }
 
+  // fixture.whenStable() deadlocks under fake timers while the save is in
+  // flight, so drive the effect that reacts to the settled value by hand.
+  async function settleDebounce(
+    fixture: Awaited<ReturnType<typeof setup>>['fixture'],
+  ): Promise<void> {
+    fixture.detectChanges();
+    await vi.advanceTimersByTimeAsync(0);
+  }
+
   afterEach(() => {
     vi.useRealTimers();
   });
@@ -123,7 +132,7 @@ describe('VisibilityManagementComponent', () => {
 
   it('persists the visibility levels after the debounce when a section changes', async () => {
     vi.useFakeTimers();
-    const { component, harness, dataAccessMock } = await setup();
+    const { fixture, component, harness, dataAccessMock } = await setup();
 
     const personal = await harness.getVisibilitySettingHarnessAt(0);
     await personal.clickIncrease();
@@ -132,6 +141,7 @@ describe('VisibilityManagementComponent', () => {
     expect(dataAccessMock.updateProfile).not.toHaveBeenCalled();
 
     await vi.advanceTimersByTimeAsync(1000);
+    await settleDebounce(fixture);
 
     expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -144,18 +154,77 @@ describe('VisibilityManagementComponent', () => {
     expect(component.saveState()).toBe('saved');
   });
 
+  it('holds the save while further changes keep arriving', async () => {
+    vi.useFakeTimers();
+    const { fixture, harness, dataAccessMock } = await setup();
+
+    const personal = await harness.getVisibilitySettingHarnessAt(0);
+    const contact = await harness.getVisibilitySettingHarnessAt(1);
+
+    await personal.clickIncrease();
+    await vi.advanceTimersByTimeAsync(600);
+    await contact.clickIncrease();
+    await vi.advanceTimersByTimeAsync(600);
+
+    expect(dataAccessMock.updateProfile).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(1000);
+    await settleDebounce(fixture);
+
+    expect(dataAccessMock.updateProfile).toHaveBeenCalledTimes(1);
+    expect(dataAccessMock.updateProfile).toHaveBeenCalledWith(
+      expect.objectContaining({
+        personalVisibility: VisibilityLevel.RECRUITER,
+        contactVisibility: VisibilityLevel.RECRUITER,
+      }),
+    );
+  });
+
+  it('still debounces a change made after an earlier save completed', async () => {
+    vi.useFakeTimers();
+    const { fixture, harness, dataAccessMock } = await setup();
+
+    const personal = await harness.getVisibilitySettingHarnessAt(0);
+    await personal.clickIncrease();
+    await vi.advanceTimersByTimeAsync(1000);
+    await settleDebounce(fixture);
+    expect(dataAccessMock.updateProfile).toHaveBeenCalledTimes(1);
+
+    const contact = await harness.getVisibilitySettingHarnessAt(1);
+    await contact.clickIncrease();
+    await settleDebounce(fixture);
+
+    expect(dataAccessMock.updateProfile).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(1000);
+    await settleDebounce(fixture);
+
+    expect(dataAccessMock.updateProfile).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not persist anything when the profile loads without a user change', async () => {
+    vi.useFakeTimers();
+    const { fixture, dataAccessMock } = await setup();
+
+    await vi.advanceTimersByTimeAsync(5000);
+    await settleDebounce(fixture);
+
+    expect(dataAccessMock.updateProfile).not.toHaveBeenCalled();
+  });
+
   it('sets the error save state when persisting fails', async () => {
     vi.useFakeTimers();
     const consoleError = vi
       .spyOn(console, 'error')
       .mockImplementation(() => undefined);
-    const { component, harness, dataAccessMock } = await setup();
+    const { fixture, component, harness, dataAccessMock } = await setup();
     dataAccessMock.updateProfile.mockRejectedValueOnce(new Error('boom'));
 
     const personal = await harness.getVisibilitySettingHarnessAt(0);
     await personal.clickIncrease();
 
     await vi.advanceTimersByTimeAsync(1000);
+    await settleDebounce(fixture);
 
     expect(component.saveState()).toBe('error');
     consoleError.mockRestore();

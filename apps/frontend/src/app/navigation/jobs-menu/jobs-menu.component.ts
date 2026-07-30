@@ -1,4 +1,11 @@
-import { Component, computed, inject, signal, effect } from '@angular/core';
+import {
+  Component,
+  computed,
+  debounced,
+  inject,
+  signal,
+  effect,
+} from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { JobStatusDto, JobStatus } from '@job-tracker-lite-angular/schemas';
 import { JobsDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
@@ -10,6 +17,8 @@ import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 import { provideIcons } from '@ng-icons/core';
 import { lucideSearch, lucideGhost } from '@ng-icons/lucide';
 import { translateSignal, TranslocoModule } from '@jsverse/transloco';
+
+const SEARCH_DEBOUNCE_MS = 250;
 
 type FilterValue = JobStatusDto | null;
 
@@ -39,7 +48,12 @@ export class JobsMenuComponent {
   private readonly jobsDataAccess = inject(JobsDataAccessService);
   protected readonly jobsResource = this.jobsDataAccess.jobsResource;
 
-  protected readonly searchQuery = signal('');
+  private readonly typedQuery = signal('');
+
+  // Filtering re-renders every job card. The input is uncontrolled, so only
+  // the list lags behind the debounce -- the visible text stays instant.
+  private readonly searchQuery = debounced(this.typedQuery, SEARCH_DEBOUNCE_MS);
+
   protected readonly activeFilter = signal<FilterValue>(null);
   protected readonly showRejected = signal(false);
 
@@ -76,7 +90,7 @@ export class JobsMenuComponent {
 
   protected readonly filteredJobs = computed(() => {
     const data = this.jobsResource.value() ?? [];
-    const query = this.searchQuery().toLowerCase().trim();
+    const query = this.searchQuery.value().toLowerCase().trim();
     const filter = this.activeFilter();
     const showRejected = this.showRejected();
 
@@ -104,6 +118,6 @@ export class JobsMenuComponent {
   }
 
   protected onSearch(event: Event): void {
-    this.searchQuery.set((event.target as HTMLInputElement).value);
+    this.typedQuery.set((event.target as HTMLInputElement).value);
   }
 }
