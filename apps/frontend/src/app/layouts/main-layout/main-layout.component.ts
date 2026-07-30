@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SidenavComponent } from '../../navigation/sidenav/sidenav.component';
-import { RouterOutlet } from "@angular/router";
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   standalone: true,

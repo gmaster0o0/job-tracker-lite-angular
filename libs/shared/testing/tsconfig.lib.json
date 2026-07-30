@@ -5,5 +5,11 @@
     "declaration": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "libs/shared/testing/src/lib/setup/resize-observer.setup.ts"]
+  "include": [
+    "src/**/*.ts",
+    "libs/shared/testing/src/lib/setup/resize-observer.setup.ts"
+  ],
+  "angularCompilerOptions": {
+    "strictTemplates": false
+  }
 }

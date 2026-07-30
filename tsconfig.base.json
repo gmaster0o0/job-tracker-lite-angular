@@ -87,7 +87,10 @@
       "@spartan-ng/helm/table": ["./libs/shared-ui/table/src/index.ts"],
       "@spartan-ng/helm/slider": ["./libs/shared-ui/slider/src/index.ts"],
       "@spartan-ng/helm/sonner": ["./libs/shared-ui/sonner/src/index.ts"]
-    }
+    },
+    "strict": false,
+    "noUncheckedSideEffectImports": false,
+    "ignoreDeprecations": "6.0"
   },
   "exclude": ["node_modules", "tmp", "dist", "coverage", "public", "build"]
 }

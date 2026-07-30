@@ -13,7 +13,7 @@ permissions:
 jobs:
   main:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     services:
       postgres:
         image: postgres:15-alpine
@@ -68,6 +68,15 @@ jobs:
           DATABASE_URL: postgresql://user:password@localhost:5432/test_db?schema=public
         run: npm run prisma:generate
       - uses: nrwl/nx-set-shas@v4
+      - name: Build api for e2e
+        # Built in its own step so a build failure is reported as a build
+        # failure, instead of surfacing later as an unexplained "the server
+        # never came up".
+        timeout-minutes: 6
+        shell: bash
+        env:
+          NX_NO_CLOUD: 'true'
+        run: npx nx run api:build:development --skipRemoteCache --skipNxCache
       - name: Start e2e dev servers
         # Started here, outside of any nx process, so the e2e task never
         # has to invoke `nx run ...` itself to bring them up - a nested nx
@@ -75,6 +84,17 @@ jobs:
         # daemon that would otherwise coordinate that is disabled whenever
         # CI=true). See playwright.config.ts and frontend-e2e/project.json
         # for the other halves of this fix.
+        #
+        # The api runs from its built bundle via plain `node` for that same
+        # reason: @nx/js:node executes its buildTarget as a nested `nx run`
+        # inside the already-running nx process, which is the deadlock above.
+        # The frontend dev-server is an Angular builder and does not nest, so
+        # it still goes through nx.
+        #
+        # timeout-minutes keeps a hang from silently eating the whole job
+        # budget - without it the job dies at its own 10m cap and this step's
+        # output is never flushed, which hides the actual error.
+        timeout-minutes: 6
         shell: bash
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/test_db?schema=public
@@ -95,16 +115,21 @@ jobs:
         run: |
           set -o pipefail
 
-          nohup npx nx run api:serve:development --skipRemoteCache --skipNxCache > /tmp/api-serve.log 2>&1 &
+          nohup node dist/apps/api/main.js > /tmp/api-serve.log 2>&1 &
           echo "API_SERVE_PID=$!" >> "$GITHUB_ENV"
 
-          nohup npx nx run frontend:serve-e2e --skipRemoteCache --skipNxCache -- --port 4200 > /tmp/frontend-serve.log 2>&1 &
+          # PORT is set to 3000 for the api above, and Angular 22's dev-server
+          # reads PORT from the environment and lets it win over `--port`, so
+          # without overriding it here the frontend tries to bind 3000 and
+          # loses to the api ("Port 3000 is already in use"). Both are set to
+          # 4200 so the env var and the flag agree.
+          PORT=4200 nohup npx nx run frontend:serve-e2e --skipRemoteCache --skipNxCache -- --port 4200 > /tmp/frontend-serve.log 2>&1 &
           echo "FRONTEND_SERVE_PID=$!" >> "$GITHUB_ENV"
 
           wait_for_url() {
             local url="$1" label="$2" log="$3"
             for _ in $(seq 1 60); do
-              if curl -fsS "$url" >/dev/null 2>&1; then
+              if curl -fsS --max-time 5 "$url" >/dev/null 2>&1; then
                 echo "$label is up."
                 return 0
               fi
@@ -112,7 +137,7 @@ jobs:
             done
             echo "$label did not become ready in time." >&2
             echo "--- $label log ---"
-            cat "$log"
+            cat "$log" || true
             return 1
           }
 
