@@ -180,6 +180,28 @@ describe('VisibilityManagementComponent', () => {
     );
   });
 
+  it('still debounces a change made after an earlier save completed', async () => {
+    vi.useFakeTimers();
+    const { fixture, harness, dataAccessMock } = await setup();
+
+    const personal = await harness.getVisibilitySettingHarnessAt(0);
+    await personal.clickIncrease();
+    await vi.advanceTimersByTimeAsync(1000);
+    await settleDebounce(fixture);
+    expect(dataAccessMock.updateProfile).toHaveBeenCalledTimes(1);
+
+    const contact = await harness.getVisibilitySettingHarnessAt(1);
+    await contact.clickIncrease();
+    await settleDebounce(fixture);
+
+    expect(dataAccessMock.updateProfile).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(1000);
+    await settleDebounce(fixture);
+
+    expect(dataAccessMock.updateProfile).toHaveBeenCalledTimes(2);
+  });
+
   it('does not persist anything when the profile loads without a user change', async () => {
     vi.useFakeTimers();
     const { fixture, dataAccessMock } = await setup();

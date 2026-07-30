@@ -135,6 +135,25 @@ describe('CareerPreferenceComponent', () => {
       );
     });
 
+    it('still debounces an edit made after an earlier save completed', async () => {
+      vi.useFakeTimers();
+
+      component.onExperienceLevelChange('SENIOR');
+      await vi.advanceTimersByTimeAsync(1000);
+      await settleDebounce();
+      expect(profileDataServiceSpy.updateProfile).toHaveBeenCalledTimes(1);
+
+      component.onWorkingStyleChange('HYBRID');
+      await settleDebounce();
+
+      expect(profileDataServiceSpy.updateProfile).toHaveBeenCalledTimes(1);
+
+      await vi.advanceTimersByTimeAsync(1000);
+      await settleDebounce();
+
+      expect(profileDataServiceSpy.updateProfile).toHaveBeenCalledTimes(2);
+    });
+
     it('never saves when the profile input seeds the fields but nothing is edited', async () => {
       vi.useFakeTimers();
 
