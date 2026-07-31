@@ -23,6 +23,11 @@ import {
   setLanguageOnUrl,
 } from '@job-tracker-lite-angular/core-utils';
 
+export interface ExpiredEmailChangeTokenPurgeResult {
+  deletedTokens: number;
+  clearedPendingEmails: number;
+}
+
 @Injectable()
 export class AccountService {
   private readonly defaultFrontendUrl = 'http://localhost:4200';
@@ -556,6 +561,33 @@ export class AccountService {
     });
 
     return result.count;
+  }
+
+  async purgeExpiredEmailChangeTokens(): Promise<ExpiredEmailChangeTokenPurgeResult> {
+    const now = new Date();
+
+    return this.prisma.$transaction(async (tx) => {
+      const deleted = await tx.emailChangeToken.deleteMany({
+        where: { expiresAt: { lte: now } },
+      });
+
+      // pendingEmail is only ever set alongside a VERIFY token, so purging one
+      // orphans the address. Matching on users left without a VERIFY token
+      // rather than on the ids just deleted keeps a concurrent
+      // requestEmailChange from losing its fresh pendingEmail.
+      const cleared = await tx.user.updateMany({
+        where: {
+          pendingEmail: { not: null },
+          emailChangeTokens: { none: { type: EmailChangeTokenType.VERIFY } },
+        },
+        data: { pendingEmail: null },
+      });
+
+      return {
+        deletedTokens: deleted.count,
+        clearedPendingEmails: cleared.count,
+      };
+    });
   }
 
   private getApiBaseUrl(): string {
