@@ -34,6 +34,17 @@ jobs:
         ports:
           - '1025:1025'
           - '8025:8025'
+      # Redis is infrastructure we own, so e2e runs the real thing rather than
+      # a fake queue driver - see docs/adr/0003.
+      redis:
+        image: redis:7-alpine
+        ports:
+          - '6379:6379'
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
         with:
@@ -109,7 +120,10 @@ jobs:
           EMAIL_PROVIDER: mailpit
           MAILPIT_HOST: localhost
           MAILPIT_PORT: 1025
-          QUEUE_DRIVER: memory
+          REDIS_HOST: localhost
+          REDIS_PORT: '6379'
+          # QUEUE_DRIVER is deliberately unset: e2e uses real Redis so BullMQ
+          # scheduling, retries and the worker are actually exercised.
           PORT: '3000'
           API_PORT: '3000'
           # NX_CLOUD=false doesn't stop nx from trying (and, right now,
