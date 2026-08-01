@@ -2,6 +2,18 @@
 
 Thank you for contributing! This document covers the recommended workflow for schema changes (Prisma migrations) and a concise checklist for adding a new component that requires a database field.
 
+## PR and commit templates
+
+- The general PR template (`.github/pull_request_template.md`) is filled in automatically. For the specialised ones, append a query parameter to the compare URL:
+  - `?template=feature.md` — new functionality
+  - `?template=bugfix.md` — bug fix
+- Every template has a "Related PRs / issues" section: fill it in whenever the PR depends on, follows up on, or otherwise relates to another PR or issue, and delete the rows that don't apply.
+- The squash-merge commit message template lives in `.github/commit_template.txt`. It documents the header/body/footer rules enforced by commitlint (`@commitlint/config-angular`) and requires the `PR:` / `Closes:` footer to use full URLs, so the commit stays traceable outside the GitHub UI. Enable it locally with:
+
+```bash
+git config commit.template .github/commit_template.txt
+```
+
 ## Prisma migrations (recommended workflow)
 
 1. Update the schema
