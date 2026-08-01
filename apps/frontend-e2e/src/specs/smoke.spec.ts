@@ -8,15 +8,23 @@ test.describe('smoke', () => {
     await expect(firstH1).toBeVisible();
     // Accept either a welcome message or the app title used in this repo
     await expect(firstH1).toContainText(/Job Tracker Lite/i);
+  });
 
-    // navigate to login page and assert login form exists
-    await page.goto('/auth/login');
-    const form = page.locator('#loginForm');
-    await expect(form).toBeVisible();
+  // /auth/login sits behind guestGuard, so an authenticated session - the
+  // default in the mocked lane - is redirected away and the form never
+  // renders. This block needs a signed-out session.
+  test.describe('signed out', () => {
+    test.use({ scenarios: { auth: 'unauthenticated' } });
 
-    // submit button should be present and initially disabled
-    const submit = page.locator('button[type="submit"]');
-    await expect(submit).toBeVisible();
-    await expect(submit).toBeDisabled();
+    test('login page renders its form', async ({ page }) => {
+      await page.goto('/auth/login');
+      const form = page.locator('#loginForm');
+      await expect(form).toBeVisible();
+
+      // submit button should be present and initially disabled
+      const submit = page.locator('button[type="submit"]');
+      await expect(submit).toBeVisible();
+      await expect(submit).toBeDisabled();
+    });
   });
 });
