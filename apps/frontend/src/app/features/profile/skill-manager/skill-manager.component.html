@@ -161,7 +161,7 @@
     <div class="flex justify-start w-full">
       <app-profile-visibility-settings
         class="w-full block"
-        [(visibilityLevel)]="profile().skillsVisibility"
+        [visibilityLevel]="draftVisibility()"
         [visibilityHint]="'profile.skills.visibilityLabel' | transloco"
         (visibilityLevelChange)="onVisibilityChange($event)"
         [interactive]="isDirty()"

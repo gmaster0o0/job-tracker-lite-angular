@@ -1,4 +1,4 @@
-import { Component, input, model, output } from '@angular/core';
+import { Component, computed, input, model, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
 import {
@@ -46,6 +46,13 @@ export class ContactInfoComponent {
   edit = output<void>();
   cancelEdit = output<void>();
   save = output<UpdateUserProfileDto>();
+
+  visibilityLevel = computed(
+    () =>
+      this.editData().contactVisibility ??
+      this.profile().contactVisibility ??
+      0,
+  );
 
   updateField<K extends keyof UserProfileDto>(
     field: K,

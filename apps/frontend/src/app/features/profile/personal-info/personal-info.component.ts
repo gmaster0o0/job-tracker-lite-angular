@@ -1,4 +1,4 @@
-import { Component, input, model, output } from '@angular/core';
+import { Component, computed, input, model, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
 import {
@@ -52,6 +52,12 @@ export class PersonalInfoComponent {
   edit = output<void>();
   cancelEdit = output<void>();
   save = output<UpdateUserProfileDto>();
+  visibilityLevel = computed(
+    () =>
+      this.editData().personalVisibility ??
+      this.profile().personalVisibility ??
+      0,
+  );
   // Updates the editData model when an input field changes. This allows for two-way binding between the form inputs and the editData model.
   updateField<K extends keyof UserProfileDto>(
     field: K,
