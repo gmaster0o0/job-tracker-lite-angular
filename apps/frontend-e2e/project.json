@@ -15,6 +15,15 @@
     "e2e": {
       "// dependsOn": "CI starts api:serve and frontend:serve-e2e itself, outside of any nx process, before this target runs (see .github/workflows/ci.yml). Clearing this stops @nx/playwright/plugin from also scheduling api:serve as a task here, which would otherwise race the CI-started one for port 3000.",
       "dependsOn": []
+    },
+    "e2e-mocked": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx playwright test -c apps/frontend-e2e/playwright.config.ts --project=mocked",
+        "env": {
+          "E2E_MOCKED": "true"
+        }
+      }
     }
   }
 }

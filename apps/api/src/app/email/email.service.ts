@@ -52,6 +52,22 @@ export class EmailService {
   }
 
   async send(options: SendEmailOptions): Promise<void> {
+    const isMemoryQueue =
+      process.env.QUEUE_DRIVER === 'memory' ||
+      process.env.QUEUE_DRIVER === 'inline';
+
+    if (isMemoryQueue) {
+      this.logger.debug(
+        `Memory queue driver active, sending email synchronously to ${options.to}`,
+      );
+      try {
+        await this.emailProvider.send(options);
+      } catch (sendError) {
+        throw new EmailSendException(sendError);
+      }
+      return;
+    }
+
     try {
       await this.emailQueue.add(EmailJobName.SEND, options, {
         attempts: 3,

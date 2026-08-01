@@ -5,10 +5,10 @@ export class VisibilityManagementHarness extends ComponentHarness {
   static hostSelector = 'app-visibility-management';
 
   private readonly actionButton = this.locatorFor(
-    '[data-testid="visibilityManagementActionButton"]',
+    '[data-testid="visibility-management-action-button"]',
   );
   private readonly saveStateIndicator = this.locatorFor(
-    '[data-testid="saveStateIndicator"]',
+    '[data-testid="save-state-indicator"]',
   );
   private readonly visibilitySettings = this.locatorForAll(
     ProfileVisibilitySettingsHarness,
