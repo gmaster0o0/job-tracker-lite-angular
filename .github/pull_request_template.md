@@ -18,9 +18,6 @@ Closes #
 - [ ] Manual testing
 - [ ] Not applicable
 
-## Screenshots / GIFs (if there is a UI change)
-
-
 ## Checklist
 - [ ] Code builds and tests are green
 - [ ] Self-review done

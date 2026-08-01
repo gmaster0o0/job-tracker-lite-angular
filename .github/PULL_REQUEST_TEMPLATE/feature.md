@@ -13,6 +13,9 @@ labels: enhancement
 
 ## Design / approach
 <!-- Short rationale if there was a choice to make (e.g. alternative implementations, why you picked this one) -->
+<!-- If the decision is recorded in an ADR, link it here instead of repeating it (docs/adr/README.md).
+     If it deserves one and none exists yet, write it — see docs/skills/adr/SKILL.md -->
+- ADR:
 
 ## Scope
 - [ ] Is this PR self-contained, or part of a series?
@@ -20,9 +23,6 @@ labels: enhancement
 
 ## UX / API change
 <!-- If it touches the user interface or the public API -->
-
-## Screenshots / demo
-
 
 ## Testing
 - [ ] Unit tests
