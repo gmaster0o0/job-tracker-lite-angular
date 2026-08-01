@@ -6,6 +6,7 @@
         [hlmTooltip]="
           'jobs.progression.setStatusTooltip' | transloco: { label: label }
         "
+        data-testid="stepper-step"
         [class]="stepClasses(i)"
         (click)="selectStep(i)"
         [disabled]="disabled()"
@@ -21,6 +22,7 @@
         [hlmTooltip]="
           'jobs.progression.setStatusTooltip' | transloco: { label: label }
         "
+        data-testid="stepper-label"
         [class]="labelClasses(i)"
         (click)="selectStep(i)"
         [disabled]="disabled()"
@@ -29,7 +31,10 @@
       </button>
 
       @if (i < labels().length - 1) {
-        <div [class]="connectorClasses(i)"></div>
+        <div
+          data-testid="stepper-connector"
+          [class]="connectorClasses(i)"
+        ></div>
       }
     </div>
   }
