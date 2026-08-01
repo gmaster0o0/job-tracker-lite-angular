@@ -1,6 +1,7 @@
-import { APIRequestContext } from '@playwright/test';
+import { APIRequestContext, APIResponse } from '@playwright/test';
 import { MIN_PASSWORD_LENGTH } from '@job-tracker-lite-angular/schemas';
 import { waitForEmail, extractLink } from './mailpit.helper';
+import { allJobDtoFixtures } from '@job-tracker-lite-angular/testing';
 
 export interface ProvisionedUser {
   id: string;
@@ -17,6 +18,17 @@ export interface ProvisionedUser {
  */
 const authHeaders = (origin?: string) =>
   origin ? { Origin: origin } : undefined;
+
+/** A bare body is useless when a call fails: better-auth answers some rejections with an empty one. */
+async function describeFailure(
+  action: string,
+  res: APIResponse,
+): Promise<string> {
+  const body = await res.text().catch(() => '<unreadable>');
+  return `Failed to ${action}: ${res.status()} ${res.statusText()} ${res.url()} ${
+    body || '<empty body>'
+  }`;
+}
 
 export async function provisionUser(
   api: APIRequestContext,
@@ -39,7 +51,7 @@ export async function provisionUser(
   });
 
   if (!res.ok()) {
-    throw new Error(`Failed to provision user ${email}: ${await res.text()}`);
+    throw new Error(await describeFailure(`provision user ${email}`, res));
   }
 
   const data = await res.json();
@@ -60,9 +72,7 @@ export async function provisionUser(
 
   const verifyRes = await api.get(verifyLink);
   if (!verifyRes.ok()) {
-    throw new Error(
-      `Failed to verify user ${email}: ${await verifyRes.text()}`,
-    );
+    throw new Error(await describeFailure(`verify user ${email}`, verifyRes));
   }
 
   // autoSignIn at sign-up is not enough: the verification link targets the API
@@ -76,7 +86,7 @@ export async function provisionUser(
 
   if (!signInRes.ok()) {
     throw new Error(
-      `Failed to sign in provisioned user ${email}: ${await signInRes.text()}`,
+      await describeFailure(`sign in provisioned user ${email}`, signInRes),
     );
   }
 
@@ -87,11 +97,6 @@ export async function provisionUser(
     password,
   };
 }
-
-/**
- * Deletes the user from the backend. Requires the user's password.
- */
-import { allJobDtoFixtures } from '@job-tracker-lite-angular/testing';
 
 export async function seedUser(
   api: APIRequestContext,
@@ -113,9 +118,7 @@ export async function seedUser(
     };
     const res = await api.post('/api/jobs', { data: createData });
     if (!res.ok()) {
-      throw new Error(
-        `Failed to seed job for ${user.email}: ${await res.text()}`,
-      );
+      throw new Error(await describeFailure(`seed job for ${user.email}`, res));
     }
   }
 }
@@ -144,7 +147,7 @@ export async function deleteUser(
 
   if (!res.ok()) {
     console.warn(
-      `[Teardown Warning] Failed to delete user ${user.email}: ${await res.text()}`,
+      `[Teardown] ${await describeFailure(`delete user ${user.email}`, res)}`,
     );
   }
 }
