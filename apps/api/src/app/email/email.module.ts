@@ -11,7 +11,8 @@ import { emailProviderFactory } from './providers/email-provider.factory';
 import { EMAIL_QUEUE } from './email.queue';
 import { EmailService } from './email.service';
 import { EmailProcessor } from './email.processor';
-import { QueueModule, isFakeQueueDriver } from '../queue/queue.module';
+import { QueueModule } from '../queue/queue.module';
+import { isFakeQueueDriver } from '../queue/queue.driver';
 import { QueueConfigFactory } from '../queue/queue.config.factory';
 
 // NODE_ENV alone isn't a reliable signal here - the staging server on Render
