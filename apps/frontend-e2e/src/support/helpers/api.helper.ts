@@ -137,7 +137,20 @@ export async function deleteUser(
   user: ProvisionedUser,
   origin?: string,
 ): Promise<void> {
-  // Try to use the standard better-auth delete-user endpoint
+  // better-auth's delete-user endpoint is disabled in this app's config, and
+  // enabling it would add a second, immediate deletion path alongside the
+  // product's own request/grace-period flow - not a change to make for the
+  // benefit of tests. Every call was failing and logging a warning per
+  // worker.
+  //
+  // Nothing is leaked by skipping it: globalTeardown drops the test stack
+  // with `down -v` after the run, and CI throws its database away with the
+  // job. Set E2E_DELETE_USERS=true to attempt it anyway - useful only if
+  // this suite is ever pointed at a long-lived environment.
+  if (process.env['E2E_DELETE_USERS'] !== 'true') {
+    return;
+  }
+
   const res = await api.post('/api/auth/delete-user', {
     headers: authHeaders(origin),
     data: {
@@ -147,7 +160,7 @@ export async function deleteUser(
 
   if (!res.ok()) {
     console.warn(
-      `[Teardown Warning] Failed to delete user ${user.email} (might already be deleted): ${await res.text()}`,
+      `[Teardown Warning] Failed to delete user ${user.email}: ${await res.text()}`,
     );
   }
 }
