@@ -1,6 +1,6 @@
 import { APIRequestContext } from '@playwright/test';
 
-const MAILPIT = process.env.MAILPIT_API ?? 'http://localhost:8025/api/v1';
+const MAILPIT = process.env['MAILPIT_API'] ?? 'http://localhost:8025/api/v1';
 
 export async function waitForEmail(
   api: APIRequestContext,

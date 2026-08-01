@@ -59,9 +59,7 @@ test.describe('account settings', { tag: '@full-stack-only' }, () => {
     // Let's assert based on UI or simply logging in with the new email
     await page.goto('/auth/login');
     await page.getByLabel(/email/i).fill(newEmail);
-    await page
-      .locator('input[type="password"]')
-      .fill(workerUser!.user.password);
+    await page.locator('input[type="password"]').fill(workerUser!.password);
     await page.getByRole('button', { name: /sign in|login/i }).click();
 
     await expect(page).toHaveURL('/jobs');

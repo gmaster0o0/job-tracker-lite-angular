@@ -28,7 +28,7 @@ test.describe('forgot password flow', { tag: '@full-stack-only' }, () => {
     await expect(page.getByRole('heading', { name: /forgot/i })).toBeVisible();
 
     // Fill in email
-    await page.getByLabel(/email/i).fill(workerUser!.user.email);
+    await page.getByLabel(/email/i).fill(workerUser!.email);
     // Submit
     await page.getByRole('button', { name: /submit/i }).click();
 
@@ -42,7 +42,7 @@ test.describe('forgot password flow', { tag: '@full-stack-only' }, () => {
     // Wait for the reset password email via Mailpit
     const email = await waitForEmail(
       request,
-      workerUser!.user.email,
+      workerUser!.email,
       /Reset your password/i,
     );
 
@@ -74,7 +74,7 @@ test.describe('forgot password flow', { tag: '@full-stack-only' }, () => {
     await page.getByRole('link', { name: /back to login/i }).click();
     await expect(page.getByRole('heading', { name: /login/i })).toBeVisible();
 
-    await page.getByLabel(/email/i).fill(workerUser!.user.email);
+    await page.getByLabel(/email/i).fill(workerUser!.email);
     await page.getByLabel(/password/i).fill(newPassword);
     await page.getByRole('button', { name: /login/i }).click();
 
