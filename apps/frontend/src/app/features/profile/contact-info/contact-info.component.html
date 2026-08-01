@@ -97,7 +97,7 @@
     <div class="flex justify-start w-full">
       <app-profile-visibility-settings
         class="w-full block"
-        [(visibilityLevel)]="profile().contactVisibility"
+        [visibilityLevel]="visibilityLevel()"
         [visibilityHint]="'profile.contact.visibilityLabel' | transloco"
         [interactive]="isEditing()"
         (visibilityLevelChange)="updateField('contactVisibility', $event)"

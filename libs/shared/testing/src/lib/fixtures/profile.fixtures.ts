@@ -4,8 +4,19 @@ import {
 } from '@job-tracker-lite-angular/schemas';
 import { authUserIdFixture } from './auth.fixtures';
 
+// Vitest runs with `isolate: false`, so specs share this module and a fixture
+// mutated in place leaks into every later spec file.
+const frozen = <T>(profile: T): T => {
+  Object.values(profile as Record<string, unknown>).forEach((value) => {
+    if (Array.isArray(value)) {
+      Object.freeze(value);
+    }
+  });
+  return Object.freeze(profile);
+};
+
 export const userProfileFixtures = {
-  johnDoe: {
+  johnDoe: frozen({
     id: 'profile_1',
     userId: authUserIdFixture,
     name: 'John Doe',
@@ -26,8 +37,8 @@ export const userProfileFixtures = {
     preferenceVisibility: 0,
     createdAt: new Date(),
     updatedAt: new Date(),
-  } as UserProfileDto,
-  empty: {
+  } as UserProfileDto),
+  empty: frozen({
     id: 'profile_2',
     userId: authUserIdFixture,
     coreSkills: [],
@@ -48,7 +59,7 @@ export const userProfileFixtures = {
     experienceLevel: null,
     workingStyle: null,
     careerType: null,
-  } as UserProfileDto,
+  } as UserProfileDto),
 };
 
 export const updateUserProfileFixtures = {
