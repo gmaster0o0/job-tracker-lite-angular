@@ -55,28 +55,36 @@ export const test = base.extend<TestOptions & E2EFixtures, WorkerFixtures>({
         return;
       }
 
-      const ctx = await browser.newContext();
+      // browser.newContext() does NOT inherit baseURL from the config `use`
+      // block - only Playwright's built-in `context` fixture applies that.
+      // Without it every relative request here throws "Invalid URL", and
+      // because this is a worker fixture that failure takes down every test
+      // in the worker, including ones that need no session at all.
+      const baseURL = workerInfo.project.use.baseURL;
+
+      const ctx = await browser.newContext({ baseURL });
       const api = ctx.request;
 
       const user = await provisionUser(
         api,
         `w${workerInfo.workerIndex}_${Date.now()}`,
+        baseURL,
       );
 
-      // We assume the user is somewhat authenticated upon sign up depending on better auth
-      // or we sign in here if autoSignIn is off, but autoSignIn is ON for BetterAuth here.
-      // E2E helper requires user's session in the ctx:
-      await seedUser(api);
+      // better-auth is configured with autoSignIn, so the context now holds a
+      // session cookie and can seed data as the freshly created user.
+      await seedUser(api, user);
 
       const storageState = await ctx.storageState();
       await ctx.close();
 
       await use({ ...user, storageState });
 
-      // Teardown
-      const tdCtx = await browser.newContext();
+      // Teardown runs in its own context, restoring the session first so the
+      // delete-user call is authenticated.
+      const tdCtx = await browser.newContext({ baseURL, storageState });
       const tdApi = tdCtx.request;
-      await deleteUser(tdApi, user);
+      await deleteUser(tdApi, user, baseURL);
       await tdCtx.close();
     },
     { scope: 'worker' },

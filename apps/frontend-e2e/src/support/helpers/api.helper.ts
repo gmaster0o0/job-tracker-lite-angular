@@ -13,9 +13,20 @@ export interface ProvisionedUser {
  * Provisions a real user in the backend using the sign-up endpoint.
  * In Phase 3, this also verifies the email via Mailpit.
  */
+/**
+ * better-auth rejects state-changing calls that arrive without an Origin
+ * header (MISSING_OR_NULL_ORIGIN), and APIRequestContext does not send one.
+ * It goes on these requests specifically rather than on the whole context:
+ * a context-wide Origin is also sent to Mailpit, which blocks cross-origin
+ * calls to its API.
+ */
+const authHeaders = (origin?: string) =>
+  origin ? { Origin: origin } : undefined;
+
 export async function provisionUser(
   api: APIRequestContext,
   username: string,
+  origin?: string,
 ): Promise<ProvisionedUser> {
   const email = `${username}@example.com`;
   const password = `Password123`;
@@ -23,6 +34,7 @@ export async function provisionUser(
 
   // Sign up
   const res = await api.post('/api/auth/sign-up/email', {
+    headers: authHeaders(origin),
     data: {
       name,
       email,
@@ -58,6 +70,23 @@ export async function provisionUser(
     );
   }
 
+  // Sign in explicitly rather than relying on autoSignIn at sign-up. The
+  // verification link points straight at the API origin, so any session it
+  // establishes lands in a different cookie jar than the app's - and a
+  // session issued before verification is not usable anyway. This request
+  // goes through baseURL, so the cookie lands on the origin the browser and
+  // the seeding calls below actually use.
+  const signInRes = await api.post('/api/auth/sign-in/email', {
+    headers: authHeaders(origin),
+    data: { email, password },
+  });
+
+  if (!signInRes.ok()) {
+    throw new Error(
+      `Failed to sign in provisioned user ${email}: ${await signInRes.text()}`,
+    );
+  }
+
   return {
     id: userId,
     name,
@@ -71,19 +100,31 @@ export async function provisionUser(
  */
 import { allJobDtoFixtures } from '@job-tracker-lite-angular/testing';
 
-export async function seedUser(api: APIRequestContext): Promise<void> {
-  // Use the provided APIRequestContext (which has the user's cookies) to seed data
+export async function seedUser(
+  api: APIRequestContext,
+  user: ProvisionedUser,
+): Promise<void> {
+  // Use the provided APIRequestContext (which has the user's cookies) to seed
+  // data. `link` is globally unique, so per-worker users are not enough on
+  // their own - every worker seeding the same fixture links would collide
+  // with P2002. Discriminate by the owner's address.
   for (const job of allJobDtoFixtures) {
+    const link = job.link
+      ? `${job.link}?owner=${encodeURIComponent(user.email)}`
+      : null;
+
     const createData = {
       position: job.position,
-      link: job.link,
+      link,
       description: job.description,
       company: job.company,
       status: job.status,
     };
     const res = await api.post('/api/jobs', { data: createData });
     if (!res.ok()) {
-      console.warn(`[Seed Warning] Failed to seed job: ${await res.text()}`);
+      throw new Error(
+        `Failed to seed job for ${user.email}: ${await res.text()}`,
+      );
     }
   }
 }
@@ -94,9 +135,11 @@ export async function seedUser(api: APIRequestContext): Promise<void> {
 export async function deleteUser(
   api: APIRequestContext,
   user: ProvisionedUser,
+  origin?: string,
 ): Promise<void> {
   // Try to use the standard better-auth delete-user endpoint
   const res = await api.post('/api/auth/delete-user', {
+    headers: authHeaders(origin),
     data: {
       password: user.password,
     },

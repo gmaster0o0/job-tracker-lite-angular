@@ -9,10 +9,13 @@
 #
 # CI uses service containers instead of this file, on default ports.
 
+# Distinct project name so this stack and the dev stack in docker-compose.yml
+# do not treat each other's containers as orphans.
+name: job-tracker-test
+
 services:
   postgres-test:
     image: postgres:15-alpine
-    container_name: job-tracker-test-db
     environment:
       POSTGRES_USER: ${TEST_DB_USER:-test}
       POSTGRES_PASSWORD: ${TEST_DB_PASSWORD:-test}
@@ -31,7 +34,6 @@ services:
 
   redis-test:
     image: redis:7-alpine
-    container_name: job-tracker-test-redis
     ports:
       - '${TEST_REDIS_PORT:-6380}:6379'
     healthcheck:
@@ -42,7 +44,6 @@ services:
 
   mailpit-test:
     image: axllent/mailpit:latest
-    container_name: job-tracker-test-mailpit
     ports:
       - '${TEST_SMTP_PORT:-1026}:1025' # SMTP - point EMAIL_PROVIDER=mailpit here
       - '${TEST_MAILPIT_UI_PORT:-8026}:8025' # REST API + web UI, used by the e2e mail helper
