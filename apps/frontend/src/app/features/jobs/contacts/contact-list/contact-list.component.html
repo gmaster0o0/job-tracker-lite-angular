@@ -1,13 +1,13 @@
 <div class="space-y-4">
   @if (contactsResource.isLoading()) {
     <div
-      class="rounded-xl border border-slate-200 border-dashed p-12 text-center text-sm text-muted-foreground"
+      class="rounded-xl border border-border border-dashed p-12 text-center text-sm text-muted-foreground"
     >
       {{ 'contacts.list.loading' | transloco }}
     </div>
   } @else if ((contactsResource.value()?.length ?? 0) === 0) {
     <div
-      class="space-y-4 rounded-xl border border-slate-200 border-dashed p-12 text-center text-lg text-slate-500"
+      class="space-y-4 rounded-xl border border-border border-dashed p-12 text-center text-lg text-muted-foreground"
     >
       <p>{{ 'contacts.list.empty' | transloco }}</p>
     </div>

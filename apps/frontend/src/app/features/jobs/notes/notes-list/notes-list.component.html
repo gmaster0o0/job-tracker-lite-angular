@@ -1,13 +1,13 @@
 <div class="space-y-4">
   @if (notesResource.isLoading()) {
     <div
-      class="rounded-xl border border-slate-200 border-dashed p-12 text-center text-sm text-muted-foreground"
+      class="rounded-xl border border-border border-dashed p-12 text-center text-sm text-muted-foreground"
     >
       {{ 'jobs.notes.loading' | transloco }}
     </div>
   } @else if ((notesResource.value()?.length ?? 0) === 0) {
     <div
-      class="space-y-4 rounded-xl border border-slate-200 border-dashed p-12 text-center text-lg text-slate-500"
+      class="space-y-4 rounded-xl border border-border border-dashed p-12 text-center text-lg text-muted-foreground"
     >
       <p>{{ 'jobs.notes.empty' | transloco }}</p>
     </div>

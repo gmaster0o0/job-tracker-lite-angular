@@ -1,6 +1,7 @@
 @if (confirmationSent()) {
   <hlm-alert
-    class="max-w-md border-green-200 bg-green-50 text-green-900 dark:border-green-900 dark:bg-green-950 dark:text-green-50"
+    data-testid="delete-account-confirmation-sent"
+    class="max-w-md border-success/30 bg-success/10 text-success"
   >
     <ng-icon name="lucideAlertTriangle" />
     <h4 hlmAlertTitle>
@@ -13,7 +14,10 @@
     </p>
   </hlm-alert>
 } @else {
-  <hlm-alert variant="destructive" class="border-red-500/30 bg-red-500/5">
+  <hlm-alert
+    variant="destructive"
+    class="border-destructive/30 bg-destructive/5"
+  >
     <div
       class="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-4 items-center"
     >

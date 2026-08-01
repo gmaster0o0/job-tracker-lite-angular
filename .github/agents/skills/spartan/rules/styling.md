@@ -27,6 +27,31 @@ placed on top of it:
 
 These tokens automatically flip in dark mode, so you never write dark-mode color overrides by hand.
 
+### Status accents
+
+The preset has no token for "this went well" / "heads up" / "informational", so
+`apps/frontend/src/styles.scss` adds four more that follow the same rules: `success`, `warning`,
+`info`, and `highlight` (a distinct accent used for in-progress stages), each with a `-foreground`
+pair. `destructive-foreground` is defined there too.
+
+Each one is a single solid colour that flips with the theme. Use it directly for text, and use an
+alpha variant for a tinted chip - never a raw palette value, and never a hand-written `dark:`
+override:
+
+```html
+<!-- Good -->
+<p class="text-success">Saved</p>
+<span hlmBadge class="bg-warning/10 text-warning border-warning/20">Applied</span>
+
+<!-- Bad -->
+<p class="text-green-600 dark:text-green-400">Saved</p>
+<span hlmBadge class="bg-amber-100 text-amber-700 border-amber-200">Applied</span>
+```
+
+Job status badges already have a shared map -
+`apps/frontend/src/app/features/jobs/job-status-badge-classes.ts`. Import it rather than rebuilding
+the per-status classes.
+
 ## Prefer built-in variants
 
 Components expose `variant` and `size` inputs. Use them instead of re-styling with classes.
@@ -43,8 +68,47 @@ Button sizes: `default | xs | sm | lg | icon | icon-xs | icon-sm | icon-lg`.
 ## `class` is for layout only
 
 Use the `class` attribute to position and space components (flex, grid, gap, margins, widths). Do
-not use it to override a component's own colors, typography, or internal padding - change the copied
-Helm file or a CSS variable instead.
+not use it to override a component's own colors, typography, or internal padding - retune the CSS
+variable it is built from instead.
+
+## Never edit `libs/shared-ui/`
+
+The copied Helm files under `libs/shared-ui/` are off limits - see the constraint in
+`.github/agents/angular-developer.agent.md`. Upstream spartan docs tell you to edit them; in this
+repo you do not. Retune the token in `apps/frontend/src/styles.scss` and every component that
+consumes it follows.
+
+### When a Helm file hardcodes a literal
+
+Occasionally a Helm component hardcodes a colour with no variable behind it, so there is no token to
+retune (`hlm-slider.ts` paints its thumb `bg-white`). Reach for the last-resort override block at the
+bottom of `styles.scss`:
+
+```css
+[data-slot='slider-thumb'][data-slot] {
+  background-color: var(--background);
+}
+```
+
+Three things make that selector look the way it does, and all three matter:
+
+- **Unlayered, not in a `@layer`.** This project imports `tailwindcss/utilities.css` *without*
+  `layer(...)`, so every Tailwind utility is unlayered - and unlayered rules beat every layered rule
+  no matter what order the layers are declared in. A `@layer my-overrides { ... }` block here loses
+  to `bg-white` and silently does nothing.
+- **The attribute is repeated** to raise specificity to `0,2,0`, above the `0,1,0` of the single
+  utility class. Equal specificity would leave you relying on source order, which breaks quietly the
+  first time somebody reorders the file.
+- **Keyed off `data-slot`, not a Tailwind class.** `data-slot` is set by the `@spartan-ng/brain`
+  directive, so it survives the Helm file being regenerated; the utility classes do not.
+
+Keep the block small and say why in a comment. This is an escape hatch, not a second stylesheet -
+anything reachable through a token belongs in the token. Verify in the browser rather than by reading
+the compiled CSS: check `getComputedStyle` in both themes, and confirm an element carrying the same
+utility *without* `data-slot` is left alone, so you know the override is scoped.
+
+Worth reporting the hardcoded literal upstream at https://github.com/goetzrobin/spartan too, so the
+override can eventually go away.
 
 ## Spacing: `gap-*`, not `space-*`
 

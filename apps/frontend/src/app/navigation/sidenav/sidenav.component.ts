@@ -104,9 +104,7 @@ export class SidenavComponent {
 
   // Only the icon carries the status color - the badge itself stays neutral.
   protected readonly statusIconClass = computed(() =>
-    this.healthState() === 'ok'
-      ? 'text-green-600 dark:text-green-400'
-      : 'text-amber-600 dark:text-amber-400',
+    this.healthState() === 'ok' ? 'text-success' : 'text-warning',
   );
 
   private readonly statusTooltipCopyRaw = translateObjectSignal(
