@@ -44,10 +44,17 @@
         <div class="flex flex-wrap items-start justify-between gap-4">
           <div class="space-y-1">
             <div class="flex items-center gap-3">
-              <h1 class="text-3xl font-bold tracking-tight text-foreground">
+              <h1
+                data-testid="job-title"
+                class="text-3xl font-bold tracking-tight text-foreground"
+              >
                 {{ job()!.position }}
               </h1>
-              <span hlmBadge [ngClass]="statusBadgeClasses[job()!.status]">
+              <span
+                hlmBadge
+                data-testid="job-status-badge"
+                [ngClass]="statusBadgeClasses[job()!.status]"
+              >
                 {{ statusLabelKeys[job()!.status] | transloco }}
               </span>
               <div
@@ -89,6 +96,7 @@
             }
             <button
               hlmBtn
+              data-testid="create-job-btn"
               variant="outline"
               size="sm"
               type="button"
@@ -100,6 +108,7 @@
 
             <button
               hlmBtn
+              data-testid="job-actions-btn"
               [hlmTooltip]="moreOptionsTooltip()"
               variant="outline"
               size="icon-sm"
@@ -115,6 +124,7 @@
                 <div brnMenuContent align="end" class="w-48">
                   <button
                     hlmDropdownMenuItem
+                    data-testid="edit-job-btn"
                     (click)="openEditJobDialog(job()!)"
                   >
                     <ng-icon
@@ -128,6 +138,7 @@
                   <div hlmDropdownMenuSeparator></div>
                   <button
                     hlmDropdownMenuItem
+                    data-testid="delete-job-btn"
                     class="text-destructive focus:text-destructive"
                     (click)="openDeleteJobDialog(job()!)"
                   >
