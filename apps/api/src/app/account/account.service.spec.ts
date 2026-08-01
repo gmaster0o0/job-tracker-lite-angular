@@ -487,6 +487,58 @@ describe('AccountService', () => {
     );
   });
 
+  describe('purgeExpiredEmailChangeTokens', () => {
+    it('deletes every expired token and clears the orphaned pending emails', async () => {
+      prismaMock.emailChangeToken.deleteMany.mockResolvedValue({ count: 4 });
+      prismaMock.user.updateMany.mockResolvedValue({ count: 2 });
+
+      await expect(service.purgeExpiredEmailChangeTokens()).resolves.toEqual({
+        deletedTokens: 4,
+        clearedPendingEmails: 2,
+      });
+
+      expect(prismaMock.emailChangeToken.deleteMany).toHaveBeenCalledWith({
+        where: { expiresAt: { lte: expect.any(Date) } },
+      });
+    });
+
+    it('purges RESTORE tokens too, not just VERIFY ones', async () => {
+      prismaMock.emailChangeToken.deleteMany.mockResolvedValue({ count: 1 });
+      prismaMock.user.updateMany.mockResolvedValue({ count: 0 });
+
+      await service.purgeExpiredEmailChangeTokens();
+
+      const [deleteCall] =
+        prismaMock.emailChangeToken.deleteMany.mock.calls.at(-1) ?? [];
+      expect(deleteCall?.where).not.toHaveProperty('type');
+    });
+
+    it('only clears pending emails for users left without a VERIFY token', async () => {
+      prismaMock.emailChangeToken.deleteMany.mockResolvedValue({ count: 1 });
+      prismaMock.user.updateMany.mockResolvedValue({ count: 1 });
+
+      await service.purgeExpiredEmailChangeTokens();
+
+      expect(prismaMock.user.updateMany).toHaveBeenCalledWith({
+        where: {
+          pendingEmail: { not: null },
+          emailChangeTokens: { none: { type: EmailChangeTokenType.VERIFY } },
+        },
+        data: { pendingEmail: null },
+      });
+    });
+
+    it('reports nothing purged when no token has expired', async () => {
+      prismaMock.emailChangeToken.deleteMany.mockResolvedValue({ count: 0 });
+      prismaMock.user.updateMany.mockResolvedValue({ count: 0 });
+
+      await expect(service.purgeExpiredEmailChangeTokens()).resolves.toEqual({
+        deletedTokens: 0,
+        clearedPendingEmails: 0,
+      });
+    });
+  });
+
   describe('exportUserData', () => {
     it('returns the user with profile and jobs (including notes and contacts)', async () => {
       const exportDataMock = { id: 'user-id', profile: {}, jobs: [] };
