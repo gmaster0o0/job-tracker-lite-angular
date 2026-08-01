@@ -3,7 +3,6 @@ import { HttpMethod, MockResponse } from './registry';
 import {
   jobSchema,
   authSessionResponseSchema,
-  authUserSchema,
 } from '@job-tracker-lite-angular/schemas';
 
 // Simple mapping from path/method to Zod schemas.
@@ -31,8 +30,8 @@ export function schemaFor(
   }
 
   if (
-    path.match(/^\/api\/auth\/sign-in$/) ||
-    path.match(/^\/api\/auth\/sign-up$/)
+    path.match(/^\/api\/auth\/sign-in\/email$/) ||
+    path.match(/^\/api\/auth\/sign-up\/email$/)
   ) {
     if (method === 'POST') return authSessionResponseSchema;
   }
