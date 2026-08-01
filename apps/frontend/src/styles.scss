@@ -121,3 +121,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Last resort for Helm components that hardcode a colour literal with no
+   variable behind it, since `libs/shared-ui/` is off limits.
+   These rules stay UNLAYERED on purpose: `tailwindcss/utilities.css` is imported
+   above without `layer(...)`, so the utilities are unlayered too and beat any
+   `@layer` no matter where it is declared. The attribute is repeated to lift
+   specificity above the single utility class, so this cannot break silently if
+   the file is ever reordered.
+   Keyed off `data-slot` (set by `@spartan-ng/brain`) so it survives a Helm file
+   being regenerated. Keep this block small - see skills/spartan/rules/styling.md. */
+
+/* hlm-slider paints its thumb `bg-white`, which stays white in dark mode. */
+[data-slot='slider-thumb'][data-slot] {
+  background-color: var(--background);
+}

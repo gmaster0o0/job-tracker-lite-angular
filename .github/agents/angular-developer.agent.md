@@ -108,7 +108,10 @@ You are a senior Angular 21+ frontend developer specializing in building minimal
 
 ## Constraints
 
-- **DO NOT** edit files in `libs/shared-ui/` (Spartan elements)
+- **DO NOT** edit files in `libs/shared-ui/` (Spartan elements) - restyle by retuning the tokens in
+  `apps/frontend/src/styles.scss`. If a Helm file hardcodes a colour with no variable behind it, use
+  the `data-slot` override block at the bottom of `styles.scss`, documented in
+  `skills/spartan/rules/styling.md`
 - **DO NOT** use RxJS when signals suffice
 - **DO NOT** create duplicate components - check `apps/frontend/src/app/shared/` first
 - **DO NOT** use old Angular patterns (NgModule, `@Output()` for simple cases)
