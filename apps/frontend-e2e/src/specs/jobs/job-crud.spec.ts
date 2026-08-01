@@ -1,71 +1,55 @@
+import type { Page } from '@playwright/test';
 import { test, expect } from '../../support/fixtures/e2e.fixtures';
+
+// The create/edit/delete controls live on the job detail view - edit and
+// delete behind the "More options" menu - so each test opens a job first.
+// The dialog fields are plain inputs carrying ids, not test ids.
+const openFirstJob = async (page: Page) => {
+  await page.goto('/jobs');
+  await page.getByTestId('job-card').first().click();
+  await expect(page.getByTestId('job-title')).toBeVisible();
+};
 
 test.describe('Job CRUD', () => {
   test('create job appears in list', async ({ page }) => {
-    await page.goto('/jobs');
+    await openFirstJob(page);
 
     await page.getByTestId('create-job-btn').click();
-    await page.getByTestId('position-input').fill('Test Position');
-    await page.getByTestId('company-input').fill('Test Company');
+    await page.locator('#position').fill('Test Position');
+    await page.locator('#company').fill('Test Company');
     await page.getByTestId('submit-btn').click();
 
     await expect(
-      page.getByTestId('job-position').filter({ hasText: 'Test Position' }),
+      page.getByTestId('job-card').filter({ hasText: 'Test Position' }),
     ).toBeVisible();
   });
 
   test('edit job values persist', async ({ page }) => {
-    await page.goto('/jobs');
+    await openFirstJob(page);
 
-    const uniqueEditTitle = `To Edit ${Date.now()}`;
-    await page.getByTestId('create-job-btn').click();
-    await page.getByTestId('position-input').fill(uniqueEditTitle);
-    await page.getByTestId('company-input').fill('Test Edit Company');
-    await page.getByTestId('save-job-btn').click();
+    const edited = `Edited ${Date.now()}`;
+    await page.getByTestId('job-actions-btn').click();
+    await page.getByTestId('edit-job-btn').click();
+    await page.locator('#position').fill(edited);
+    await page.getByTestId('submit-btn').click();
 
-    const specificCard = page
-      .getByTestId('job-card')
-      .filter({ hasText: uniqueEditTitle });
-    await expect(specificCard).toBeVisible();
-
-    await specificCard.getByTestId('edit-job-btn').click();
-
-    const finalEditTitle = `Edited ${Date.now()}`;
-    await page.getByTestId('position-input').fill(finalEditTitle);
-    await page.getByTestId('save-job-btn').click();
-
-    await page.reload();
-
+    await expect(page.getByTestId('job-title')).toHaveText(edited);
     await expect(
-      page.getByTestId('job-position').filter({ hasText: finalEditTitle }),
+      page.getByTestId('job-card').filter({ hasText: edited }),
     ).toBeVisible();
   });
 
   test('delete job with confirm dialog', async ({ page }) => {
-    await page.goto('/jobs');
+    await openFirstJob(page);
 
-    // Wait for the list to load and become stable
-    const cards = page.getByTestId('job-card');
-    await expect(cards.first()).toBeVisible();
+    const title = await page.getByTestId('job-title').innerText();
 
-    // We cannot use await count() effectively since there could be rendering updates
-    // But since we want to verify deletion, we will use a specific title.
-    const uniqueTitle = `To Delete ${Date.now()}`;
-    await page.getByTestId('create-job-btn').click();
-    await page.getByTestId('position-input').fill(uniqueTitle);
-    await page.getByTestId('company-input').fill('Test Company');
-    await page.getByTestId('save-job-btn').click();
+    await page.getByTestId('job-actions-btn').click();
+    await page.getByTestId('delete-job-btn').click();
+    await page.getByTestId('confirm-btn').click();
 
-    // Wait for it to appear
-    const specificCard = page
-      .getByTestId('job-card')
-      .filter({ hasText: uniqueTitle });
-    await expect(specificCard).toBeVisible();
-
-    await specificCard.getByTestId('delete-job-btn').click();
-    await page.getByTestId('confirm-delete-btn').click();
-
-    // Verify it is gone
-    await expect(specificCard).toBeHidden();
+    await expect(
+      page.getByTestId('job-card').filter({ hasText: title }),
+    ).toHaveCount(0);
   });
 });

@@ -1,5 +1,6 @@
 import { MockRoute } from '../registry';
 import { CreateJobDto } from '@job-tracker-lite-angular/schemas';
+import { JobStatus } from '@prisma/client';
 import { jobFixtureTimestamp } from '@job-tracker-lite-angular/testing';
 import { createId } from '@paralleldrive/cuid2';
 
@@ -18,8 +19,14 @@ export const jobsRoutes: MockRoute[] = [
     method: 'POST',
     pattern: /^\/api\/jobs$/,
     resolve: ({ state, body }) => {
+      const dto = body as CreateJobDto;
       const created = {
-        ...(body as CreateJobDto),
+        ...dto,
+        // The API defaults a new job to SAVED, and jobSchema requires it.
+        // The optional fields are nullable, not empty strings.
+        status: JobStatus.SAVED,
+        link: dto.link || null,
+        description: dto.description || null,
         id: createId(),
         createdAt: new Date(jobFixtureTimestamp).toISOString(),
         updatedAt: new Date(jobFixtureTimestamp).toISOString(),
