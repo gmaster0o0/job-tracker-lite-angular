@@ -1,3 +1,4 @@
+import type { BrowserContext } from '@playwright/test';
 import { test as base, expect } from '@playwright/test';
 import { defaultScenarios, ScenarioMap } from '../scenarios';
 import { createMockState, MockState } from '../mocks/state';
@@ -9,23 +10,42 @@ import {
   ProvisionedUser,
 } from '../helpers/api.helper';
 
-export interface E2EOptions {
+export type StorageStateValue = Awaited<
+  ReturnType<BrowserContext['storageState']>
+>;
+
+export interface RecordedRequest {
+  method: string;
+  path: string;
+  body: unknown;
+}
+
+// `useMocks` is worker-scoped: `workerUser` is a worker fixture, and a
+// worker-scoped fixture may only depend on other worker-scoped ones.
+// `scenarios` stays test-scoped so a describe block can override it.
+export interface WorkerOptions {
   useMocks: boolean;
+}
+
+export interface TestOptions {
   scenarios: Partial<ScenarioMap>;
 }
 
+// The shape playwright.config.ts declares via defineConfig<E2EOptions>.
+export type E2EOptions = WorkerOptions & TestOptions;
+
 export type E2EFixtures = {
-  mockApi: { requests: any[] };
+  mockApi: { requests: RecordedRequest[] };
   state: MockState | undefined;
+  storageState: StorageStateValue | undefined;
 };
 
-export type WorkerFixtures = {
-  workerUser: (ProvisionedUser & { storageState: any }) | null;
-  storageState: any | undefined;
+export type WorkerFixtures = WorkerOptions & {
+  workerUser: (ProvisionedUser & { storageState: StorageStateValue }) | null;
 };
 
-export const test = base.extend<E2EOptions & E2EFixtures, WorkerFixtures>({
-  useMocks: [false, { option: true }],
+export const test = base.extend<TestOptions & E2EFixtures, WorkerFixtures>({
+  useMocks: [false, { scope: 'worker', option: true }],
   scenarios: [defaultScenarios, { option: true }],
 
   workerUser: [
@@ -78,7 +98,7 @@ export const test = base.extend<E2EOptions & E2EFixtures, WorkerFixtures>({
 
   mockApi: [
     async ({ page, useMocks, scenarios, state }, use) => {
-      const requests: any[] = [];
+      const requests: RecordedRequest[] = [];
       if (useMocks && state) {
         const mergedScenarios = { ...defaultScenarios, ...scenarios };
         await setupMockApi(page, mergedScenarios, state, requests);
