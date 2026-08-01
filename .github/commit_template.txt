@@ -1,0 +1,50 @@
+<type>(<scope>): <short summary in the imperative mood>
+
+- <change / implementation detail 1>
+- <change / implementation detail 2>
+- <change / implementation detail 3>
+
+PR: <full PR URL>
+Closes: <full issue URL>
+
+# ---------------------------------------------------------------------------
+# Squash-merge commit message template (lines starting with `#` are stripped).
+#
+# Enable locally:
+#   git config commit.template .github/commit_template.txt
+#
+# HEADER (max 72 chars, enforced by commitlint / @commitlint/config-angular)
+#   type:  build | ci | docs | feat | fix | perf | refactor | revert | style | test
+#   scope: optional, the area of the change, e.g. profile, account, email, ui, deps
+#   summary: lowercase, imperative mood ("add", "fix" - not "added"/"fixes"),
+#            no trailing period
+#   On squash merge GitHub appends the PR number to the header: `... (#159)`
+#
+# BODY (wrap at 100 chars)
+#   What and WHY, not how. Use a bullet list for several independent changes,
+#   prose is fine for one coherent change.
+#
+# FOOTER - every reference as a FULL URL, so the commit stays traceable on its
+#   own (`#159` is only a link in the GitHub UI, not in `git log`):
+#
+#   PR:       https://github.com/gmaster0o0/job-tracker-lite-angular/pull/159
+#   Closes:   https://github.com/gmaster0o0/job-tracker-lite-angular/issues/156
+#
+#   For multiple issues, use one `Closes:` line each.
+#   `Fixes` / `Resolves` work the same as `Closes` and also close the issue
+#   once the commit lands on the default branch.
+#
+# RELATIONS (optional, only if there are any - also full URLs):
+#   Related:  https://github.com/gmaster0o0/job-tracker-lite-angular/issues/54
+#             (related, but does NOT close it)
+#   Refs:     https://github.com/gmaster0o0/job-tracker-lite-angular/pull/152
+#             (prior art / dependency / earlier part of a series)
+#   Reverts:  https://github.com/gmaster0o0/job-tracker-lite-angular/commit/<sha>
+#   Follow-up to: https://github.com/gmaster0o0/job-tracker-lite-angular/pull/152
+#
+# BREAKING CHANGE (if any), in its own paragraph before the footer:
+#   BREAKING CHANGE: <what broke and what callers have to change>
+#
+# Co-author (for shared work), at the very end of the footer:
+#   Co-authored-by: Name <email>
+# ---------------------------------------------------------------------------
