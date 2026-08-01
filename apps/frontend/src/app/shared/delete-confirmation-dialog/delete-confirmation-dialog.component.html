@@ -10,12 +10,19 @@
   </hlm-alert-dialog-header>
 
   <hlm-alert-dialog-footer>
-    <button hlmBtn hlmDialogClose type="button" variant="outline">
+    <button
+      hlmBtn
+      hlmDialogClose
+      type="button"
+      variant="outline"
+      data-testid="cancel-btn"
+    >
       <ng-icon hlm name="lucideUndo2" size="sm" />
       {{ cancelLabel }}
     </button>
     <button
       hlmAlertDialogAction
+      data-testid="confirm-btn"
       [variant]="variant"
       type="button"
       [disabled]="effectiveIsBusy"

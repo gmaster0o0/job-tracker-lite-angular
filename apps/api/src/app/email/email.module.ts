@@ -11,7 +11,7 @@ import { emailProviderFactory } from './providers/email-provider.factory';
 import { EMAIL_QUEUE } from './email.queue';
 import { EmailService } from './email.service';
 import { EmailProcessor } from './email.processor';
-import { QueueConfigFactory } from '../queue/queue.config.factory';
+import { QueueModule } from '../queue/queue.module';
 
 // NODE_ENV alone isn't a reliable signal here - the staging server on Render
 // also runs with NODE_ENV=production. Use a dedicated flag instead, so the
@@ -27,7 +27,10 @@ import { QueueConfigFactory } from '../queue/queue.config.factory';
 // has no effect. See getEmailConfig()'s ConfigService-based pattern in
 // email.config.ts for the fix - move this behind an injected ConfigService
 // instead of a raw process.env read.
-const isDashboardEnabled = process.env.ENABLE_QUEUE_DASHBOARD === 'true';
+const isDashboardEnabled =
+  process.env.ENABLE_QUEUE_DASHBOARD === 'true' &&
+  process.env.QUEUE_DRIVER !== 'memory' &&
+  process.env.QUEUE_DRIVER !== 'inline';
 
 @Module({
   imports: [
@@ -38,9 +41,7 @@ const isDashboardEnabled = process.env.ENABLE_QUEUE_DASHBOARD === 'true';
     }),
     // The Redis connection (BullModule.forRootAsync) is configured once in
     // QueueModule; here we only register this module's queue.
-    BullModule.registerQueue({
-      name: EMAIL_QUEUE,
-    }),
+    QueueModule.registerQueue(EMAIL_QUEUE),
     // Bull Board's forRootAsync (dashboard instance) and forFeature (queue
     // registration) must live in the SAME module - the package can't
     // resolve "bull_board_instance" across module boundaries even with

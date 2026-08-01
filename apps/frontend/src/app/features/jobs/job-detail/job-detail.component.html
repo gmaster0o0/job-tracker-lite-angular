@@ -161,16 +161,19 @@
       <section class="flex-1 min-h-0">
         <div hlmTabs [tab]="activeTab()" class="flex flex-col h-full w-full">
           <hlm-tabs-list variant="line" class="flex-none">
-            <button hlmTabsTrigger="overview">
+            <button hlmTabsTrigger="overview" data-testid="overview-tab">
               {{ 'common.overview' | transloco }}
             </button>
-            <button hlmTabsTrigger="contacts">
+            <button hlmTabsTrigger="contacts" data-testid="contacts-tab">
               {{ 'common.contacts' | transloco }}
             </button>
-            <button hlmTabsTrigger="notes">
+            <button hlmTabsTrigger="notes" data-testid="notes-tab">
               {{ 'common.notes' | transloco }}
             </button>
-            <button hlmTabsTrigger="cover-letter">
+            <button
+              hlmTabsTrigger="cover-letter"
+              data-testid="cover-letter-tab"
+            >
               {{ 'jobs.detail.coverLetter' | transloco }}
             </button>
           </hlm-tabs-list>
