@@ -3,6 +3,7 @@ import {
   extractLink,
   waitForEmail,
 } from '../../support/helpers/mailpit.helper';
+import { signInThroughUi } from '../../support/helpers/auth.helper';
 
 test.describe('account settings', { tag: '@full-stack-only' }, () => {
   test('change email → confirm link from Mailpit → email updated', async ({
@@ -52,14 +53,8 @@ test.describe('account settings', { tag: '@full-stack-only' }, () => {
     // Navigate to the link
     await page.goto(confirmLink!);
 
-    // That link should verify the email and redirect, maybe to verify-email success or directly login
-    // The current better-auth behavior for email change verification is to verify and redirect
-    // Let's assert based on UI or simply logging in with the new email
-    await page.goto('/auth/login');
-    await page.getByLabel(/email/i).fill(newEmail);
-    await page.locator('input[type="password"]').fill(workerUser!.password);
-    await page.getByRole('button', { name: /sign in|login/i }).click();
-
-    await expect(page).toHaveURL('/jobs');
+    // Confirming the change signs the session out, so the proof that the new
+    // address took effect is that it can be used to sign in.
+    await signInThroughUi(page, newEmail, workerUser!.password);
   });
 });

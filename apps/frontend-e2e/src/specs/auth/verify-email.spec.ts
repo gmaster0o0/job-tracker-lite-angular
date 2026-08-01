@@ -3,6 +3,7 @@ import {
   extractLink,
   waitForEmail,
 } from '../../support/helpers/mailpit.helper';
+import { signInThroughUi } from '../../support/helpers/auth.helper';
 
 test.describe('verify email flow', { tag: '@full-stack-only' }, () => {
   test.use({ storageState: undefined });
@@ -47,11 +48,6 @@ test.describe('verify email flow', { tag: '@full-stack-only' }, () => {
     // frontend's verify-email page. Asserting that landing page makes this
     // test about better-auth's redirect config; assert the outcome that
     // actually matters instead - the account can now sign in.
-    await page.goto('/auth/login');
-    await page.locator('#email').fill(email);
-    await page.locator('#password').fill(password);
-    await page.locator('button[form="loginForm"]').click();
-
-    await expect(page).not.toHaveURL(/\/auth\/login/);
+    await signInThroughUi(page, email, password);
   });
 });

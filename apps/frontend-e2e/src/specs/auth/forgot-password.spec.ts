@@ -4,6 +4,7 @@ import {
   waitForEmail,
 } from '../../support/helpers/mailpit.helper';
 import { provisionUser } from '../../support/helpers/api.helper';
+import { signInThroughUi } from '../../support/helpers/auth.helper';
 
 test.describe('forgot password flow', { tag: '@full-stack-only' }, () => {
   // test needs unauthenticated start
@@ -75,15 +76,7 @@ test.describe('forgot password flow', { tag: '@full-stack-only' }, () => {
       page.getByText(/password reset successful/i).first(),
     ).toBeVisible();
 
-    // Sign in with the new password. The form's submit button is bound by the
-    // `form` attribute rather than nested inside it.
-    await page.goto('/auth/login');
-    await page.locator('#email').fill(owner.email);
-    await page.locator('#password').fill(newPassword);
-    await page.locator('button[form="loginForm"]').click();
-
-    // Signing in lands on the home route, not /jobs; what this test is
-    // proving is that the new password works, so assert we left the form.
-    await expect(page).not.toHaveURL(/\/auth\/login/);
+    // What this test proves is that the new password works.
+    await signInThroughUi(page, owner.email, newPassword);
   });
 });
