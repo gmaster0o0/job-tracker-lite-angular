@@ -23,7 +23,7 @@ describe('HomeCardComponent', () => {
         description: () => 'Test',
         link: '/test',
         iconName: 'test',
-        iconBgClass: 'bg-blue-100',
+        iconBgClass: 'bg-info/10',
       };
     }
 
@@ -43,11 +43,11 @@ describe('HomeCardComponent', () => {
     expect(await harness.getTitle()).toBe('Test');
     expect(await harness.getDescription()).toBe('Test');
     expect(await harness.getCardLink()).toBe('/test');
-    expect(await harness.getIconBackgroundClass()).toContain('bg-blue-100');
+    expect(await harness.getIconBackgroundClass()).toContain('bg-info/10');
   });
 
   it('should apply the correct background class to the icon wrapper', async () => {
     const bgClass = await harness.getIconBackgroundClass();
-    expect(bgClass).toContain('bg-blue-100');
+    expect(bgClass).toContain('bg-info/10');
   });
 });

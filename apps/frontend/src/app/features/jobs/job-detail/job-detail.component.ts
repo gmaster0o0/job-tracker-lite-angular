@@ -33,6 +33,7 @@ import { CreateJobComponent } from '../create-job/create-job.component';
 import { EditJobComponent } from '../edit-job/edit-job.component';
 import { ContactsTabComponent } from '../contacts/contacts-tab/contacts-tab.component';
 import { JobOverviewComponent } from '../job-overview/job-overview.component';
+import { JOB_STATUS_BADGE_CLASSES } from '../job-status-badge-classes';
 import {
   ProgessionStepperComponent,
   EmptyListComponent,
@@ -204,14 +205,7 @@ export class JobDetailComponent {
     this.progressionLabelSignals.map((s) => s()),
   );
 
-  protected readonly statusBadgeClasses: Record<JobStatusDto, string> = {
-    [JobStatus.SAVED]: 'bg-sky-100 text-sky-700 border-sky-200',
-    [JobStatus.APPLIED]: 'bg-amber-100 text-amber-700 border-amber-200',
-    [JobStatus.INTERVIEW]: 'bg-violet-100 text-violet-700 border-violet-200',
-    [JobStatus.JOB_OFFERED]:
-      'bg-emerald-100 text-emerald-700 border-emerald-200',
-    [JobStatus.REJECTED]: 'bg-red-100 text-red-700 border-red-200',
-  };
+  protected readonly statusBadgeClasses = JOB_STATUS_BADGE_CLASSES;
 
   constructor() {
     effect(() => {

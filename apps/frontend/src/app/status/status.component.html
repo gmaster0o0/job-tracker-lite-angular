@@ -20,9 +20,10 @@
             <div hlmCardContent>
               <span
                 hlmBadge
-                class="text-white"
-                [class.bg-green-500]="apiStatus() === 'ok'"
-                [class.bg-red-500]="apiStatus() === 'error'"
+                [class.bg-success]="apiStatus() === 'ok'"
+                [class.text-success-foreground]="apiStatus() === 'ok'"
+                [class.bg-destructive]="apiStatus() === 'error'"
+                [class.text-destructive-foreground]="apiStatus() === 'error'"
               >
                 {{ apiStatus().toUpperCase() }}
               </span>
@@ -38,9 +39,10 @@
                 healthData.error.database?.status;
               <span
                 hlmBadge
-                class="text-white"
-                [class.bg-green-500]="dbStatus === 'up'"
-                [class.bg-red-500]="dbStatus === 'down'"
+                [class.bg-success]="dbStatus === 'up'"
+                [class.text-success-foreground]="dbStatus === 'up'"
+                [class.bg-destructive]="dbStatus === 'down'"
+                [class.text-destructive-foreground]="dbStatus === 'down'"
               >
                 {{ dbStatus?.toUpperCase() || 'UNKNOWN' }}
               </span>
@@ -55,9 +57,10 @@
                 healthData.info.redis?.status ?? healthData.error.redis?.status;
               <span
                 hlmBadge
-                class="text-white"
-                [class.bg-green-500]="redisStatus === 'up'"
-                [class.bg-red-500]="redisStatus === 'down'"
+                [class.bg-success]="redisStatus === 'up'"
+                [class.text-success-foreground]="redisStatus === 'up'"
+                [class.bg-destructive]="redisStatus === 'down'"
+                [class.text-destructive-foreground]="redisStatus === 'down'"
               >
                 {{ redisStatus?.toUpperCase() || 'UNKNOWN' }}
               </span>
@@ -93,11 +96,11 @@
         </div>
       } @else if (isUnreachable()) {
         <div>
-          <p class="text-red-500">{{ 'status.offline' | transloco }}</p>
+          <p class="text-destructive">{{ 'status.offline' | transloco }}</p>
         </div>
       } @else {
         <div>
-          <p class="text-red-500">{{ 'status.loadFailed' | transloco }}</p>
+          <p class="text-destructive">{{ 'status.loadFailed' | transloco }}</p>
         </div>
       }
     </div>

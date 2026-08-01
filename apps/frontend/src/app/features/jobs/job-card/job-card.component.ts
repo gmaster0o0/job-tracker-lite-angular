@@ -1,13 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
-import {
-  JobDto,
-  JobStatusDto,
-  JobStatus,
-} from '@job-tracker-lite-angular/schemas';
+import { JobDto } from '@job-tracker-lite-angular/schemas';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { AppDatePipe } from '@job-tracker-lite-angular/frontend-data-access';
+import { JOB_STATUS_BADGE_CLASSES } from '../job-status-badge-classes';
 
 @Component({
   standalone: true,
@@ -20,12 +17,5 @@ export class JobCardComponent {
   readonly selected = input<boolean>(false);
   readonly variant = input<'compact' | 'default'>('compact');
 
-  protected readonly statusBadgeClasses: Record<JobStatusDto, string> = {
-    [JobStatus.SAVED]: 'bg-sky-100 text-sky-700 border-sky-200',
-    [JobStatus.APPLIED]: 'bg-amber-100 text-amber-700 border-amber-200',
-    [JobStatus.INTERVIEW]: 'bg-violet-100 text-violet-700 border-violet-200',
-    [JobStatus.JOB_OFFERED]:
-      'bg-emerald-100 text-emerald-700 border-emerald-200',
-    [JobStatus.REJECTED]: 'bg-red-100 text-red-700 border-red-200',
-  };
+  protected readonly statusBadgeClasses = JOB_STATUS_BADGE_CLASSES;
 }

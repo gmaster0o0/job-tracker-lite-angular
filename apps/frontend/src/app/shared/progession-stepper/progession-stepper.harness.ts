@@ -21,6 +21,6 @@ export class ProgessionStepperHarness extends ComponentHarness {
   async stepHasRejectedStyling(index: number): Promise<boolean> {
     const buttons = await this.getStepButtons();
     const className = await buttons[index].getAttribute('class');
-    return className?.includes('border-red-500') ?? false;
+    return className?.includes('border-destructive') ?? false;
   }
 }

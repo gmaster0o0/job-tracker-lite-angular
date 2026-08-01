@@ -27,6 +27,31 @@ placed on top of it:
 
 These tokens automatically flip in dark mode, so you never write dark-mode color overrides by hand.
 
+### Status accents
+
+The preset has no token for "this went well" / "heads up" / "informational", so
+`apps/frontend/src/styles.scss` adds four more that follow the same rules: `success`, `warning`,
+`info`, and `highlight` (a distinct accent used for in-progress stages), each with a `-foreground`
+pair. `destructive-foreground` is defined there too.
+
+Each one is a single solid colour that flips with the theme. Use it directly for text, and use an
+alpha variant for a tinted chip - never a raw palette value, and never a hand-written `dark:`
+override:
+
+```html
+<!-- Good -->
+<p class="text-success">Saved</p>
+<span hlmBadge class="bg-warning/10 text-warning border-warning/20">Applied</span>
+
+<!-- Bad -->
+<p class="text-green-600 dark:text-green-400">Saved</p>
+<span hlmBadge class="bg-amber-100 text-amber-700 border-amber-200">Applied</span>
+```
+
+Job status badges already have a shared map -
+`apps/frontend/src/app/features/jobs/job-status-badge-classes.ts`. Import it rather than rebuilding
+the per-status classes.
+
 ## Prefer built-in variants
 
 Components expose `variant` and `size` inputs. Use them instead of re-styling with classes.

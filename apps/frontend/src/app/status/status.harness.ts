@@ -9,7 +9,7 @@ export class StatusHarness extends ComponentHarness {
   private readonly dbBadgesLocator = this.locatorForAll('span[hlmBadge]');
   private readonly spinnerLocator = this.locatorForOptional('hlm-spinner');
   private readonly errorMessageLocator =
-    this.locatorForOptional('.text-red-500');
+    this.locatorForOptional('.text-destructive');
   private readonly timestampLocator = this.locatorForOptional(
     'p[hlmCardDescription]',
   );

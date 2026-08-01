@@ -37,7 +37,7 @@ describe('LandingDashboardComponent', () => {
     );
     expect(await profileCard?.getCardLink()).toBe('/profile');
     expect(await profileCard?.getIconBackgroundClass()).toContain(
-      'bg-purple-100',
+      'bg-highlight/10',
     );
   });
 });

@@ -39,13 +39,13 @@
           </span>
         }
         @case ('saved') {
-          <div class="flex items-center gap-2 text-sm text-green-600">
+          <div class="flex items-center gap-2 text-sm text-success">
             <ng-icon name="lucideCheck" class="h-4 w-4"></ng-icon>
             <span>{{ 'common.saved' | transloco }}</span>
           </div>
         }
         @case ('error') {
-          <div class="flex items-center gap-2 text-sm text-red-600">
+          <div class="flex items-center gap-2 text-sm text-destructive">
             <ng-icon name="lucideAlertCircle" class="h-4 w-4"></ng-icon>
             <span>{{ 'common.error' | transloco }}</span>
           </div>

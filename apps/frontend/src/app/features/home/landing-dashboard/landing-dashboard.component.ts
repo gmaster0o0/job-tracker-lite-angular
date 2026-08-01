@@ -25,21 +25,21 @@ export class LandingDashboardComponent {
       description: translateSignal('home.jobs.description'),
       link: '/jobs',
       iconName: 'jobs',
-      iconBgClass: 'bg-blue-100',
+      iconBgClass: 'bg-info/10',
     },
     {
       title: translateSignal('common.profile'),
       description: translateSignal('home.profile.description'),
       link: '/profile',
       iconName: 'profile',
-      iconBgClass: 'bg-purple-100',
+      iconBgClass: 'bg-highlight/10',
     },
     {
       title: translateSignal('common.settings'),
       description: translateSignal('home.settings.description'),
       link: '/settings',
       iconName: 'settings',
-      iconBgClass: 'bg-slate-100',
+      iconBgClass: 'bg-muted',
     },
   ];
 
