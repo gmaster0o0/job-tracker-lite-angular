@@ -14,7 +14,13 @@ test.describe('smoke', () => {
   // default in the mocked lane - is redirected away and the form never
   // renders. This block needs a signed-out session.
   test.describe('signed out', () => {
-    test.use({ scenarios: { auth: 'unauthenticated' } });
+    // `scenarios` only drives the mock layer. In the full-stack lane the
+    // session comes from the worker user's storageState, so being signed out
+    // means dropping that too - otherwise guestGuard redirects away.
+    test.use({
+      scenarios: { auth: 'unauthenticated' },
+      storageState: undefined,
+    });
 
     test('login page renders its form', async ({ page }) => {
       await page.goto('/auth/login');
