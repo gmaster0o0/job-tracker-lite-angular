@@ -366,18 +366,67 @@ export const test = base.extend<E2EOptions & E2EFixtures, WorkerFixtures>({
 
 ## 9. Third-party and hard-to-test surfaces
 
-**The rule: every outbound integration sits behind an interface and an env-selected factory; e2e picks the fake.** The app already follows this for email; the queue needs the same treatment.
+Two rules govern every dependency.
+
+**Rule 1 — ownership decides real-vs-fake.** Infrastructure *we* run (Postgres, Redis, the SMTP catcher) runs for real, as a container, in every lane that has a backend at all. Only services a *vendor* runs (Resend today, any future external API) get substituted. Faking infrastructure we own does not reduce risk, it hides it: the existing `QUEUE_DRIVER=memory` fake in `queue.module.ts` returns `{ id: 'memory-job' }` and drops the job, so an e2e test for "register → verification email arrives" would pass while nothing was ever processed.
+
+**Rule 2 — substitute from outside the process, never by in-process patching.** In the full-stack lane the API is a separate OS process; `jest.mock`, `nock` and `msw/node` in the test runner cannot reach it. Only two levers cross that boundary: an env-selected DI provider (the `EmailProviderFactory` pattern) and an env-configurable base URL pointed at a stub. **Every third-party client must expose both, or it cannot be tested end to end.**
 
 | Surface | Today | E2E strategy |
 |---|---|---|
 | **Email** (Resend / SMTP) | `EmailProviderFactory` with `resend` \| `mailtrap` \| `mailpit`, selected by `EMAIL_PROVIDER` | ✅ already swappable. Full-stack: `EMAIL_PROVIDER=mailpit`, assert and extract links through Mailpit's REST API. Mocked: handler returns 2xx, spec asserts the UI notice only |
 | **better-auth session** | cookies under `/api/auth/*` | Mocked: fake `GET /api/auth/get-session`. Full-stack: real cookies in `storageState` |
-| **Redis / BullMQ** | `QueueModule` + `queue.config.factory` | ⚠️ **action item**: add a `QUEUE_DRIVER=memory` (or `inline`) branch so e2e needs no Redis and queued work runs synchronously → deterministic. Otherwise add a Redis service container to CI |
-| **Postgres** | Prisma | Full-stack only. Reuse the existing CI `postgres` service + `db:migrate:deploy`, seed via `nx run prisma:seed` |
+| **Redis / BullMQ** | `QueueModule` + `queue.config.factory`; a `QUEUE_DRIVER=memory` fake already exists | **We own it → run it.** Real Redis container in every backend lane, isolated per worker by BullMQ `prefix`. The memory fake is scoped to API unit tests only and must never be set in an e2e run |
+| **Postgres** | Prisma | **We own it → run it.** Real Postgres container; database-per-worker cloned from a migrated template. `TEST_DATABASE_URL` / `TEST_DB_NAME` / `TEST_DB_PORT` already exist in `.env.example` for exactly this |
 | **Healthcheck** (`@nestjs/axios` in `HealthcheckModule`) | outbound HTTP probe | Mocked: `health.handler.ts`. Full-stack: leave real; pin the `degraded` case to `@mock-only` |
 | **Time / dates** | `Date.now()` in date-format rendering and relative dates | `page.clock.install({ time: jobFixtureTimestamp })` in the fixture, so "2 days ago" and the date-format preference are assertable |
 | **Browser APIs** | `matchMedia` (theme), `localStorage` (preferences, cookie consent) | `emulateMedia({ colorScheme })` + `addInitScript` |
 | **Anything else external** | — | Backstop: `page.route(/^https?:\/\/(?!localhost)/, r => r.abort())` in mocked mode, so an accidental real outbound call **fails the test** instead of flaking |
+
+### 9.1 Where each double lives
+
+A dependency does not have *a* mock — it has one per layer. Empty cells are structural, not gaps.
+
+| Layer | Postgres | Redis / BullMQ | Mail | 3rd-party HTTP |
+|---|---|---|---|---|
+| Frontend unit / component | — | — | — | — |
+| Frontend e2e `mocked` | — | — | — | — |
+| API unit (`TestingModule`) | `prisma-service.mock` | queue-token fake (`QUEUE_DRIVER`) | `email-service.mock` | client mock |
+| API integration (in-process) | **real, Docker** — tx rollback per test | **real, Docker** | **Mailpit** | in-process stub acceptable |
+| Full-stack e2e (black box) | **real, Docker** — db per worker | **real, Docker** — prefix per worker | **Mailpit** | **stub container**, env-pointed |
+
+The first two rows are empty deliberately: in the frontend mocked lane there is no API process, so there is nothing for a database or queue double to attach to — `page.route` already subsumes everything below the HTTP boundary. Database and queue doubles are an API-layer concern. The corollary is that the mocked lane structurally cannot catch persistence or queue bugs, which is why untagged tests also run in the full-stack lane.
+
+### 9.2 Test stack and worker isolation
+
+A `docker-compose.test.yml` overlay runs the owned services on test-only ports so the dev stack can stay up alongside it. CI uses service containers instead of the overlay.
+
+- **Postgres — database per worker, cloned from a migrated template.** `CREATE DATABASE jt_e2e_w0 TEMPLATE jt_e2e_tpl` clones in roughly 100 ms, giving full isolation with one migration run per CI job.
+
+  Transaction-rollback-per-test is **not available at this layer**: the HTTP request runs on the API process's own connection pool, so the test holds no handle on that transaction. Rollback stays an API-integration technique.
+- **Redis — one container, a BullMQ `prefix` per worker** (`{e2e-w0}`). Cleaner than juggling logical database indices, and supported natively by BullMQ.
+- **Mailpit — one instance**, isolated by unique per-worker recipient addresses.
+
+### 9.3 Third-party stub
+
+Third parties are substituted with a small in-repo Express app (`apps/thirdparty-stub`) rather than WireMock: it is one more Nx target instead of a new tool, and it can carry a control endpoint —
+
+```
+POST /__control/scenario  { "resend": "rateLimited" }
+```
+
+— so the full-stack lane can drive vendor failure modes (429, timeout, malformed response) instead of only happy paths. Each third-party client's base URL is pointed at it by env.
+
+Nothing needs the stub today: `EMAIL_PROVIDER=mailpit` sidesteps Resend entirely, and the Resend provider is covered at the unit layer with a stubbed client. The stub earns its keep the moment a real outbound integration lands — but the env-configurable base URL requirement applies from the first one.
+
+### 9.4 Queue driver, corrected
+
+`QUEUE_DRIVER` currently collapses two different needs onto one fake that drops the job. Split them, and scope both to API unit tests:
+
+- `inline` — **execute** the processor synchronously, so the effect is assertable
+- `memory` — **record** enqueued jobs for `expect(queue.added).toContainEqual(…)`
+
+Neither value may be set in an e2e run; the full-stack lane always uses real Redis.
 
 ### Mailpit helper
 
@@ -550,7 +599,7 @@ Legend: **M** = mocked lane, **F** = full-stack lane, **M!** = `@mock-only`, **F
 | **0** | `support/` skeleton, `scenarios.ts`, config with 3 projects, `e2e-mocked` Nx target, `testIdAttribute`, outbound backstop. Move `smoke.spec.ts` and the existing `preferences-persistence.spec.ts` onto the new `test` export with behaviour unchanged. | 0.5 d |
 | **1** | `mock-api.fixture` + registry + `state.ts` + `auth.handler` + `jobs.handler` + contract guard. Jobs list/CRUD/status specs, mocked lane only. | 1.5 d |
 | **2** | Full-stack lane: `api.helper` provisioning, worker-scoped user, `storageState`, cleanup registry. Run the phase-1 specs in full-stack and resolve the assertion asymmetries. Enable `fullyParallel`. | 1.5 d |
-| **3** | Mailpit helper + `QUEUE_DRIVER=memory`. Email flows: verify-email, forgot/reset password, change-email. Add the Mailpit service to CI. | 1 d |
+| **3** | `docker-compose.test.yml` overlay (Postgres, Redis, Mailpit on test ports), template-database provisioning, per-worker BullMQ prefix, Mailpit helper. Email flows: verify-email, forgot/reset password, change-email. Add the Redis and Mailpit services to CI. Split `QUEUE_DRIVER` into `inline` / `memory` and scope both to unit tests. | 1.5 d |
 | **4** | Remaining handlers and specs: contacts, notes, profile, preferences, account, privacy. `data-testid` sweep and kebab-case normalisation. | 2–3 d |
 | **5** | CI split, blob-report merge, `docs/e2e.md` conventions guide + PR checklist, flake policy. | 0.5 d |
 
@@ -564,17 +613,25 @@ Phases 0–2 are load-bearing; 3–5 are additive and can land independently.
 # every PR — fast, no infrastructure
 - run: npx nx run frontend-e2e:e2e-mocked
 
-# main / nightly — full lane
+# main / nightly — full lane, every owned service real
 services:
   postgres: …          # already present
+  redis:
+    image: redis:7-alpine
+    ports: ['6379:6379']
+    options: >-
+      --health-cmd "redis-cli ping" --health-interval 10s
+      --health-timeout 5s --health-retries 5
   mailpit:
     image: axllent/mailpit:latest
     ports: ['1025:1025', '8025:8025']
 env:
-  EMAIL_PROVIDER: mailpit
+  EMAIL_PROVIDER: mailpit          # the SMTP catcher we own — not a mock of one
   MAILPIT_HOST: localhost
   MAILPIT_PORT: 1025
-  QUEUE_DRIVER: memory
+  REDIS_HOST: localhost
+  REDIS_PORT: 6379
+  # QUEUE_DRIVER is deliberately unset: the full-stack lane always uses real Redis.
 - run: npx nx run frontend-e2e:e2e     # full-stack + full-stack-mocked
 ```
 

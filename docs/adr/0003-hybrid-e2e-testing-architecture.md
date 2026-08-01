@@ -28,7 +28,9 @@ The workspace has assets that make a better design cheap: `libs/shared/testing` 
 - **Mock responses are validated against their zod schema before being fulfilled.** A DTO change that outdates a mock fails the mocked lane with a readable schema error instead of producing a green-but-wrong test.
 - **The full-stack lane provisions one real user per Playwright worker**, reused across tests via `storageState`. Because every domain row is user-scoped in the Prisma schema, this gives real isolation and lets the lane run `fullyParallel: true`.
 - **Playwright code stays out of `libs/shared/testing`.** That library is imported by unit tests and by `libs/shared/prisma/src/seed.ts`; an `@playwright/test` import there would pull Playwright into both graphs. All Playwright code lives in `apps/frontend-e2e/src/support/`; only plain data fixtures cross the boundary.
-- **Every outbound integration must sit behind an interface and an env-selected factory.** Email already does; the queue does not, and gains a `QUEUE_DRIVER=memory` branch so e2e needs no Redis. Mocked mode additionally installs a backstop route that aborts any non-localhost request, so an accidental real outbound call fails the test instead of flaking.
+- **Substitution is governed by ownership, not convenience.** Infrastructure we run — Postgres, Redis, the SMTP catcher — runs for real, as a container, in every lane that has a backend. Only vendor-run services (Resend today, any future external API) are substituted. Faking owned infrastructure hides risk rather than reducing it: the existing `QUEUE_DRIVER=memory` fake drops the job it is given, so an e2e test asserting "verification email arrives" would pass while nothing was processed. `QUEUE_DRIVER` is therefore split into `inline` (executes the processor) and `memory` (records jobs), and both are scoped to API unit tests; e2e never sets either.
+- **Third parties are substituted from outside the process.** In the full-stack lane the API is a separate OS process, so in-process interception (`jest.mock`, `nock`, `msw/node`) cannot reach it. Every third-party client must expose an env-selected DI provider *and* an env-configurable base URL, pointed in e2e at a small in-repo stub app with a control endpoint for driving vendor failure modes. Mocked mode additionally installs a backstop route that aborts any non-localhost request, so an accidental real outbound call fails the test instead of flaking.
+- **Each dependency gets one double per layer, not one overall.** In-process fakes at the API unit layer; real containers at the integration and e2e layers. In the frontend mocked lane there is no API process, so no database or queue double exists there at all — `page.route` subsumes everything below the HTTP boundary. Worker isolation is by database-per-worker (Postgres, cloned from a migrated template), BullMQ `prefix` per worker (Redis), and unique recipient addresses (Mailpit).
 
 The full design, file layout, scenario catalogue and phased rollout are in [`docs/e2e-hybrid-architecture.md`](../e2e-hybrid-architecture.md).
 
@@ -91,7 +93,15 @@ Formalise the frontend/API contract with a broker instead of hybrid e2e.
 - Cons: substantial infrastructure and process overhead; verifies request/response pairs, not user flows across screens; a second contract artefact to keep in sync with the zod schemas that already exist.
 - Why not: disproportionate for a single-team monorepo where both sides ship together and zod schemas already serve as the shared contract. The zod guard captures most of the value at a fraction of the cost. Worth revisiting if the API ever gains external consumers.
 
-### Alternative 5: A mock server process (MSW, WireMock) instead of `page.route`
+### Alternative 5: Fake the owned infrastructure too (in-memory queue, in-memory database)
+
+Replace Redis and Postgres with in-process fakes in the full-stack lane, so e2e needs no containers at all.
+
+- Pros: no Docker anywhere; fastest possible full-stack run; no worker-isolation problem to solve.
+- Cons: the fakes have different semantics from the real thing — job scheduling and retries, transaction isolation, constraint enforcement, TTL and eviction — so the lane stops proving what it exists to prove.
+- Why not: this was the plan's original position and it is wrong. The `QUEUE_DRIVER=memory` fake already in the tree demonstrates the failure mode concretely: it accepts a job, returns a fake id and discards it, so any test asserting a queued side effect passes for the wrong reason. Containers for owned services are cheap; false confidence is not.
+
+### Alternative 6: A mock server process (MSW, WireMock) instead of `page.route`
 
 Run a standalone mock backend that the frontend proxies to.
 
@@ -103,7 +113,8 @@ Run a standalone mock backend that the frontend proxies to.
 
 - Plan and full design: [`docs/e2e-hybrid-architecture.md`](../e2e-hybrid-architecture.md) — file layout in §5, mock layer in §7, scenario catalogue in §11.
 - Phased rollout (§13): phases 0–2 are load-bearing (skeleton and config; mock layer and jobs specs; full-stack lane and worker-scoped users); phases 3–5 are additive (email flows, remaining domains, CI split) and can land independently.
-- Supporting change in `apps/api`: a `QUEUE_DRIVER=memory` branch in `queue.config.factory.ts` so the e2e stack needs no Redis and queued work runs synchronously.
+- Supporting change in `apps/api`: split the existing `QUEUE_DRIVER` fake in `queue.module.ts` into `inline` (runs the processor synchronously) and `memory` (records enqueued jobs), and scope both to unit tests — today a single fake silently discards the job.
+- Test infrastructure: a `docker-compose.test.yml` overlay running Postgres, Redis and Mailpit on test-only ports, plus template-database provisioning so each Playwright worker gets its own database. `TEST_DATABASE_URL`, `TEST_DB_NAME` and `TEST_DB_PORT` already exist unused in `.env.example` for this purpose.
 - Supporting change across `apps/frontend` and `libs/frontend`: normalise `data-testid` attributes to kebab-case and set `testIdAttribute` in the Playwright config.
 - CI split: `frontend-e2e:e2e-mocked` on every PR with no services; `frontend-e2e:e2e` on main and nightly with `postgres` and `mailpit` service containers. The existing "start dev servers outside Nx, `dependsOn: []`" arrangement is preserved.
 - Testing approach: the architecture is validated by its own definition of done (§15) — the mocked lane green with no infrastructure in under ~90 s, the full-stack lane green with `fullyParallel: true`, and a deliberately outdated mock proving the zod guard fails the run.
