@@ -32,7 +32,21 @@ The workspace has assets that make a better design cheap: `libs/shared/testing` 
 - **Third parties are substituted from outside the process.** In the full-stack lane the API is a separate OS process, so in-process interception (`jest.mock`, `nock`, `msw/node`) cannot reach it. Every third-party client must expose an env-selected DI provider *and* an env-configurable base URL, pointed in e2e at a small in-repo stub app with a control endpoint for driving vendor failure modes. Mocked mode additionally installs a backstop route that aborts any non-localhost request, so an accidental real outbound call fails the test instead of flaking.
 - **Each dependency gets one double per layer, not one overall.** In-process fakes at the API unit layer; real containers at the integration and e2e layers. In the frontend mocked lane there is no API process, so no database or queue double exists there at all — `page.route` subsumes everything below the HTTP boundary. Worker isolation is by database-per-worker (Postgres, cloned from a migrated template), BullMQ `prefix` per worker (Redis), and unique recipient addresses (Mailpit).
 
-The full design, file layout, scenario catalogue and phased rollout are in [`docs/e2e-hybrid-architecture.md`](../e2e-hybrid-architecture.md).
+### Where each double lives
+
+A dependency does not have *a* double — it has one per layer. Empty cells are structural, not gaps: in the frontend mocked lane there is no API process, so nothing exists for a database or queue double to attach to.
+
+| Layer | Postgres | Redis / BullMQ | Mail | 3rd-party HTTP |
+| --- | --- | --- | --- | --- |
+| Frontend unit / component | — | — | — | — |
+| Frontend e2e `mocked` | — | — | — | — |
+| API unit (`TestingModule`) | `prisma-service.mock` | queue-token fake | `email-service.mock` | client mock |
+| API integration (in-process) | **real, Docker** — tx rollback | **real, Docker** | **Mailpit** | in-process stub OK |
+| Full-stack e2e (black box) | **real, Docker** — db per worker | **real, Docker** — prefix per worker | **Mailpit** | **stub container**, env-pointed |
+
+Worker isolation is by database-per-worker cloned from a migrated template (Postgres), BullMQ `prefix` per worker (Redis), and unique recipient addresses (Mailpit). Transaction-rollback-per-test is unavailable at the e2e layer: the request runs on the API process's own connection pool, so the test holds no handle on that transaction.
+
+The full design — file layout, mock route table, scenario catalogue and phased rollout — is published as an artifact: <https://claude.ai/code/artifact/4cbed805-8c1a-4cf3-82c4-fa9786471854>
 
 ## Consequences
 
@@ -111,8 +125,8 @@ Run a standalone mock backend that the frontend proxies to.
 
 ## Implementation
 
-- Plan and full design: [`docs/e2e-hybrid-architecture.md`](../e2e-hybrid-architecture.md) — file layout in §5, mock layer in §7, scenario catalogue in §11.
-- Phased rollout (§13): phases 0–2 are load-bearing (skeleton and config; mock layer and jobs specs; full-stack lane and worker-scoped users); phases 3–5 are additive (email flows, remaining domains, CI split) and can land independently.
+- Full design — file layout, mock route table, scenario catalogue: <https://claude.ai/code/artifact/4cbed805-8c1a-4cf3-82c4-fa9786471854>
+- Phased rollout. Phases 0–2 are load-bearing: (0) `support/` skeleton, scenarios, three-project config, `e2e-mocked` target; (1) mock route table, stateful store, contract guard, jobs specs in the mocked lane; (2) full-stack lane with worker-scoped users and `storageState`. Phases 3–5 are additive and can land independently: (3) test-stack compose overlay and email flows; (4) remaining domains and the `data-testid` sweep; (5) CI split and conventions guide.
 - Supporting change in `apps/api`: split the existing `QUEUE_DRIVER` fake in `queue.module.ts` into `inline` (runs the processor synchronously) and `memory` (records enqueued jobs), and scope both to unit tests — today a single fake silently discards the job.
 - Test infrastructure: a `docker-compose.test.yml` overlay running Postgres, Redis and Mailpit on test-only ports, plus template-database provisioning so each Playwright worker gets its own database. `TEST_DATABASE_URL`, `TEST_DB_NAME` and `TEST_DB_PORT` already exist unused in `.env.example` for this purpose.
 - Supporting change across `apps/frontend` and `libs/frontend`: normalise `data-testid` attributes to kebab-case and set `testIdAttribute` in the Playwright config.
@@ -127,8 +141,8 @@ Run a standalone mock backend that the frontend proxies to.
 ## References
 
 - Branch: `feat/81-hybrid-e2e-test-framework`
-- Plan: `docs/e2e-hybrid-architecture.md`
-- Existing e2e app: `apps/frontend-e2e/`
+- Full design (artifact): <https://claude.ai/code/artifact/4cbed805-8c1a-4cf3-82c4-fa9786471854>
+- E2E app: `apps/frontend-e2e/`
 - Shared fixtures: `libs/shared/testing/src/index.ts`
 - Shared schemas: `libs/shared/schemas/src/index.ts`
 
