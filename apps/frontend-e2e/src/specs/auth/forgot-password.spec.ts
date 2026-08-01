@@ -1,26 +1,27 @@
 import { test, expect } from '../../support/fixtures/e2e.fixtures';
 import {
   extractLink,
-  purgeInbox,
   waitForEmail,
 } from '../../support/helpers/mailpit.helper';
+import { provisionUser } from '../../support/helpers/api.helper';
 
 test.describe('forgot password flow', { tag: '@full-stack-only' }, () => {
   // test needs unauthenticated start
   test.use({ storageState: undefined });
-
-  test.beforeEach(async ({ request }) => {
-    await purgeInbox(request);
-  });
-
   test('forgot password → email arrives → reset link → new password → login with it', async ({
     page,
     request,
-    workerUser,
+    baseURL,
   }) => {
-    test.skip(!workerUser, 'Worker user is required for full-stack only tests');
-
-    // Make sure we have a known password for the worker user initially
+    // This test changes a password, so it provisions its own account rather
+    // than mutating the worker-scoped user. Sharing that user makes the run
+    // order-dependent: the reset invalidates the session every other test in
+    // the worker is carrying in storageState.
+    const owner = await provisionUser(
+      request,
+      `reset_${Date.now()}`,
+      baseURL ?? undefined,
+    );
     const newPassword = 'NewSecretPassword123!';
 
     // Navigate to forgot password page
@@ -28,21 +29,25 @@ test.describe('forgot password flow', { tag: '@full-stack-only' }, () => {
     await expect(page.getByRole('heading', { name: /forgot/i })).toBeVisible();
 
     // Fill in email
-    await page.getByLabel(/email/i).fill(workerUser!.email);
-    // Submit
-    await page.getByRole('button', { name: /submit/i }).click();
+    await page.getByLabel(/email/i).fill(owner.email);
+    // The submit button sits outside the <form>, wired to it by the `form`
+    // attribute, so scoping the lookup inside the form finds nothing. Its
+    // label is "Send reset link", not "Submit".
+    await page.locator('button[form="forgotPasswordForm"]').click();
 
-    // Expect success message
+    // The copy appears in more than one node, so scope to the first match.
     await expect(
-      page.getByText(
-        'If an account exists for this email, a reset link has been sent',
-      ),
+      page
+        .getByText(
+          'If an account exists for this email, a reset link has been sent',
+        )
+        .first(),
     ).toBeVisible();
 
     // Wait for the reset password email via Mailpit
     const email = await waitForEmail(
       request,
-      workerUser!.email,
+      owner.email,
       /Reset your password/i,
     );
 
@@ -65,20 +70,20 @@ test.describe('forgot password flow', { tag: '@full-stack-only' }, () => {
     // Submit
     await page.getByRole('button', { name: /reset/i }).click();
 
-    // Expect success
+    // auth.resetPassword.success - the page redirects to sign in on its own.
     await expect(
-      page.getByText(/password has been reset successfully/i),
+      page.getByText(/password reset successful/i).first(),
     ).toBeVisible();
 
-    // Go to login page and login with new password
-    await page.getByRole('link', { name: /back to login/i }).click();
-    await expect(page.getByRole('heading', { name: /login/i })).toBeVisible();
+    // Sign in with the new password. The form's submit button is bound by the
+    // `form` attribute rather than nested inside it.
+    await page.goto('/auth/login');
+    await page.locator('#email').fill(owner.email);
+    await page.locator('#password').fill(newPassword);
+    await page.locator('button[form="loginForm"]').click();
 
-    await page.getByLabel(/email/i).fill(workerUser!.email);
-    await page.getByLabel(/password/i).fill(newPassword);
-    await page.getByRole('button', { name: /login/i }).click();
-
-    // We should be logged in (e.g. redirected to /jobs or no longer on login)
-    await expect(page).toHaveURL('/jobs');
+    // Signing in lands on the home route, not /jobs; what this test is
+    // proving is that the new password works, so assert we left the form.
+    await expect(page).not.toHaveURL(/\/auth\/login/);
   });
 });

@@ -1,15 +1,10 @@
 import { test, expect } from '../../support/fixtures/e2e.fixtures';
 import {
   extractLink,
-  purgeInbox,
   waitForEmail,
 } from '../../support/helpers/mailpit.helper';
 
 test.describe('account settings', { tag: '@full-stack-only' }, () => {
-  test.beforeEach(async ({ request }) => {
-    await purgeInbox(request);
-  });
-
   test('change email → confirm link from Mailpit → email updated', async ({
     page,
     request,
@@ -28,12 +23,11 @@ test.describe('account settings', { tag: '@full-stack-only' }, () => {
     // Fill the new email
     await page.locator('#newEmail').fill(newEmail);
 
-    // Save
-    // We select the button within the change email form
-    await page
-      .locator('#changeEmailForm')
-      .getByRole('button', { name: /save/i })
-      .click();
+    // The submit button is rendered outside the <form> and bound to it with
+    // the `form` attribute, so it is not a descendant of #changeEmailForm.
+    // Selecting on that attribute also disambiguates it from the
+    // change-password form's button on the same page.
+    await page.locator('button[form="changeEmailForm"]').click();
 
     // Verification sent notice
     await expect(
@@ -47,8 +41,12 @@ test.describe('account settings', { tag: '@full-stack-only' }, () => {
       /Confirm your email change/i,
     );
 
-    // Extract link
-    const confirmLink = extractLink(emailMsg.HTML, '/api/auth');
+    // The confirmation endpoint is on the account controller
+    // (@Get('verify-email-change')), not under /api/auth.
+    const confirmLink = extractLink(
+      emailMsg.HTML,
+      '/api/account/verify-email-change',
+    );
     expect(confirmLink).toBeTruthy();
 
     // Navigate to the link
