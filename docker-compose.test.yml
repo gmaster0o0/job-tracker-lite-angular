@@ -42,8 +42,16 @@ services:
       timeout: 5s
       retries: 10
 
-  mailpit-test:
-    image: axllent/mailpit:latest
-    ports:
-      - '${TEST_SMTP_PORT:-1026}:1025' # SMTP - point EMAIL_PROVIDER=mailpit here
-      - '${TEST_MAILPIT_UI_PORT:-8026}:8025' # REST API + web UI, used by the e2e mail helper
+# Deliberately no Mailpit here: the e2e lane shares the one in
+# docker-compose.yml on 1025/8025.
+#
+# The API resolves EMAIL_PROVIDER and MAILPIT_* through Nest's ConfigService,
+# where values from .env take precedence over the environment we hand the
+# process - so an offset SMTP port would be ignored and mail would land in the
+# dev inbox while the mail helper polled an empty one. Prisma reads
+# DATABASE_URL from process.env directly, which is why the database override
+# above does work.
+#
+# Sharing is safe here in a way sharing the database is not: mail is
+# ephemeral, and every worker provisions a unique recipient address, so
+# waitForEmail's `to:` search never crosses runs.

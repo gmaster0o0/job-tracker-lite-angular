@@ -18,20 +18,22 @@ const baseURL = process.env['BASE_URL'] || 'http://localhost:4200';
 //
 // CI sets all of these explicitly (service containers, default ports), and an
 // already-set value always wins, so the same config serves both.
+// Only the stores that hold persistent state are redirected. Mail is shared
+// with the dev stack on purpose - see the note in docker-compose.test.yml:
+// the API reads EMAIL_PROVIDER and MAILPIT_* through Nest's ConfigService,
+// where .env outranks anything passed here, so an offset SMTP port would be
+// silently ignored. DATABASE_URL works because Prisma reads process.env.
 const testStackEnv = {
   DATABASE_URL:
     process.env['DATABASE_URL'] ??
     'postgresql://test:test@localhost:5433/job_tracker_test?schema=public',
   REDIS_HOST: process.env['REDIS_HOST'] ?? 'localhost',
   REDIS_PORT: process.env['REDIS_PORT'] ?? '6380',
-  EMAIL_PROVIDER: process.env['EMAIL_PROVIDER'] ?? 'mailpit',
-  MAILPIT_HOST: process.env['MAILPIT_HOST'] ?? 'localhost',
-  MAILPIT_PORT: process.env['MAILPIT_PORT'] ?? '1026',
 };
 
 // Read by mailpit.helper in the test process, not by the API.
 process.env['MAILPIT_API'] ??= `http://localhost:${
-  process.env['MAILPIT_UI_PORT'] ?? '8026'
+  process.env['MAILPIT_UI_PORT'] ?? '8025'
 }/api/v1`;
 
 const apiServer = {
@@ -44,7 +46,12 @@ const apiServer = {
     NX_NO_CLOUD: 'true',
     NODE_OPTIONS: '',
   },
-  reuseExistingServer: true,
+  // Reuse only in CI, where the workflow starts this server itself with the
+  // right env. Locally an already-running API is a trap: reuse ignores the
+  // env entirely, so a dev server still bound to 3000 would be tested
+  // against instead - pointed at the dev database and the dev Mailpit, while
+  // the mail helper polls the test one and every provisioning call times out.
+  reuseExistingServer: !!process.env['CI'],
   timeout: 120000,
   cwd: workspaceRoot,
 };
