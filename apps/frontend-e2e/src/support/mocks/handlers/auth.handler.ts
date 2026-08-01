@@ -6,7 +6,6 @@ export const authRoutes: MockRoute[] = [
     method: 'GET',
     pattern: /^\/api\/auth\/get-session$/,
     resolve: ({ state, scenarios }) => {
-      // simulate network delay for testing loading skeleton if needed
       if (scenarios.auth === 'loading') {
         return { status: 200, body: state.session, delayMs: 2000 };
       }
@@ -14,8 +13,7 @@ export const authRoutes: MockRoute[] = [
     },
   },
   {
-    // better-auth namespaces the credential endpoints: the app posts to
-    // /api/auth/sign-in/email, not /api/auth/sign-in.
+    // better-auth namespaces the credential endpoints under /email.
     method: 'POST',
     pattern: /^\/api\/auth\/sign-in\/email$/,
     resolve: ({ state, scenarios }) => {
@@ -52,8 +50,8 @@ export const authRoutes: MockRoute[] = [
     },
   },
   {
-    // Password reset request. The real endpoint answers 200 whether or not the
-    // address exists, so the UI cannot be used to enumerate accounts.
+    // Answers 200 whether or not the address exists, so the UI cannot be
+    // used to enumerate accounts.
     method: 'POST',
     pattern: /^\/api\/auth\/request-password-reset$/,
     resolve: ({ scenarios }) => {

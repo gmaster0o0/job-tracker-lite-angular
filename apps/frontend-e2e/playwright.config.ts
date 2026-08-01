@@ -12,15 +12,8 @@ export interface E2EOptions {
 // For CI, you may want to set BASE_URL to the deployed application.
 const baseURL = process.env['BASE_URL'] || 'http://localhost:4200';
 
-// The full-stack lane must not run against the dev stack: it creates and
-// deletes real users and jobs. docker-compose.test.yml exposes Postgres,
-// Redis and Mailpit on offset ports, and these defaults point the API there.
-//
-// CI sets all of these explicitly (service containers, default ports), and an
-// already-set value always wins, so the same config serves both.
-// Only the stores that hold persistent state are redirected. Mail is shared
-// with the dev stack on purpose - see the note in docker-compose.test.yml:
-// the API reads EMAIL_PROVIDER and MAILPIT_* through Nest's ConfigService,
+// Points the API at docker-compose.test.yml instead of the dev stack. Mail is
+// deliberately absent: the API reads MAILPIT_* through Nest's ConfigService,
 // where .env outranks anything passed here, so an offset SMTP port would be
 // silently ignored. DATABASE_URL works because Prisma reads process.env.
 const testStackEnv = {
@@ -46,11 +39,8 @@ const apiServer = {
     NX_NO_CLOUD: 'true',
     NODE_OPTIONS: '',
   },
-  // Reuse only in CI, where the workflow starts this server itself with the
-  // right env. Locally an already-running API is a trap: reuse ignores the
-  // env entirely, so a dev server still bound to 3000 would be tested
-  // against instead - pointed at the dev database and the dev Mailpit, while
-  // the mail helper polls the test one and every provisioning call times out.
+  // Reuse ignores the env a server was started with, so locally an API left
+  // running against the dev database would be silently tested instead.
   reuseExistingServer: !!process.env['CI'],
   timeout: 120000,
   cwd: workspaceRoot,
@@ -76,8 +66,6 @@ const frontendServer = {
 export default defineConfig<E2EOptions>({
   ...nxE2EPreset(__filename, { testDir: './src/specs' }),
   fullyParallel: true,
-  // Stops the local test stack after the run, pass or fail. No-ops in CI and
-  // in the mocked lane. See src/support/global-teardown.ts.
   globalTeardown: require.resolve('./src/support/global-teardown'),
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {

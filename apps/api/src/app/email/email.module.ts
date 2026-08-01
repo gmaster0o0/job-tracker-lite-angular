@@ -28,8 +28,7 @@ import { QueueConfigFactory } from '../queue/queue.config.factory';
 // has no effect. See getEmailConfig()'s ConfigService-based pattern in
 // email.config.ts for the fix - move this behind an injected ConfigService
 // instead of a raw process.env read.
-// The dashboard reads job state straight out of Redis, so it can only be
-// mounted when the real BullMQ queue is in play.
+// The dashboard reads job state straight out of Redis.
 const isDashboardEnabled =
   process.env.ENABLE_QUEUE_DASHBOARD === 'true' && !isFakeQueueDriver();
 

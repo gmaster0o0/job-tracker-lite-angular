@@ -31,7 +31,6 @@ export interface TestOptions {
   scenarios: Partial<ScenarioMap>;
 }
 
-// The shape playwright.config.ts declares via defineConfig<E2EOptions>.
 export type E2EOptions = WorkerOptions & TestOptions;
 
 export type E2EFixtures = {
@@ -55,11 +54,8 @@ export const test = base.extend<TestOptions & E2EFixtures, WorkerFixtures>({
         return;
       }
 
-      // browser.newContext() does NOT inherit baseURL from the config `use`
-      // block - only Playwright's built-in `context` fixture applies that.
-      // Without it every relative request here throws "Invalid URL", and
-      // because this is a worker fixture that failure takes down every test
-      // in the worker, including ones that need no session at all.
+      // browser.newContext() does not inherit baseURL from the config `use`
+      // block; only Playwright's built-in `context` fixture applies that.
       const baseURL = workerInfo.project.use.baseURL;
 
       const ctx = await browser.newContext({ baseURL });
@@ -71,8 +67,6 @@ export const test = base.extend<TestOptions & E2EFixtures, WorkerFixtures>({
         baseURL,
       );
 
-      // better-auth is configured with autoSignIn, so the context now holds a
-      // session cookie and can seed data as the freshly created user.
       await seedUser(api, user);
 
       const storageState = await ctx.storageState();
@@ -80,8 +74,6 @@ export const test = base.extend<TestOptions & E2EFixtures, WorkerFixtures>({
 
       await use({ ...user, storageState });
 
-      // Teardown runs in its own context, restoring the session first so the
-      // delete-user call is authenticated.
       const tdCtx = await browser.newContext({ baseURL, storageState });
       const tdApi = tdCtx.request;
       await deleteUser(tdApi, user, baseURL);
@@ -95,7 +87,6 @@ export const test = base.extend<TestOptions & E2EFixtures, WorkerFixtures>({
 
   state: async ({ useMocks, scenarios }, use) => {
     if (useMocks) {
-      // Merge user scenarios with defaults
       const mergedScenarios = { ...defaultScenarios, ...scenarios };
       const state = createMockState(mergedScenarios);
       await use(state);

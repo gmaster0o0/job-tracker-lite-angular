@@ -5,7 +5,6 @@ import { ScenarioMap } from '../scenarios';
 import { MockState } from '../mocks/state';
 import { HttpMethod } from '../mocks/registry';
 
-// Registry of all routes
 const mockRoutes = allRoutes;
 
 export async function setupMockApi(

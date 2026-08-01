@@ -26,7 +26,7 @@
       }
     },
     "test-stack-up": {
-      "//": "Postgres, Redis and Mailpit on offset ports, so the full-stack lane never touches the dev stack - it creates and deletes real users and jobs. CI uses service containers on default ports instead.",
+      "//": "Keeps the full-stack lane off the dev stack. CI uses service containers instead.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
@@ -40,14 +40,14 @@
       }
     },
     "test-stack-down": {
-      "//": "Wipes the test database. Not run automatically after e2e-local: leaving the stack up keeps repeat runs fast, since a fresh volume means re-running every migration.",
+      "//": "Wipes the test database. globalTeardown already does this after a run; this is for a manual reset.",
       "executor": "nx:run-commands",
       "options": {
         "command": "docker compose -f docker-compose.test.yml down -v"
       }
     },
     "e2e-local": {
-      "//": "One command for a local full-stack run: brings the test stack up, migrates it, then runs the lanes that need a backend. The docker and prisma steps are inlined rather than calling `nx run test-stack-up`, to avoid a nested Nx CLI invocation. `e2e` stays untouched for CI, which supplies its own service containers.",
+      "//": "Local full-stack run. The docker and prisma steps are inlined rather than calling `nx run test-stack-up`, to avoid a nested Nx CLI invocation.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [

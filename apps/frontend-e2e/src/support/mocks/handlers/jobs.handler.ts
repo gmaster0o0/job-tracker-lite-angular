@@ -22,8 +22,8 @@ export const jobsRoutes: MockRoute[] = [
       const dto = body as CreateJobDto;
       const created = {
         ...dto,
-        // The API defaults a new job to SAVED, and jobSchema requires it.
-        // The optional fields are nullable, not empty strings.
+        // jobSchema requires status, and treats the optional fields as
+        // nullable rather than empty strings.
         status: JobStatus.SAVED,
         link: dto.link || null,
         description: dto.description || null,

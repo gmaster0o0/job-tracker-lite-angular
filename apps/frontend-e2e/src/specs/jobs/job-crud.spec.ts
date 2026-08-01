@@ -1,9 +1,8 @@
 import type { Page } from '@playwright/test';
 import { test, expect } from '../../support/fixtures/e2e.fixtures';
 
-// The create/edit/delete controls live on the job detail view - edit and
-// delete behind the "More options" menu - so each test opens a job first.
-// The dialog fields are plain inputs carrying ids, not test ids.
+// Create, edit and delete all live on the detail view, with edit and delete
+// behind the "More options" menu.
 const openFirstJob = async (page: Page) => {
   await page.goto('/jobs');
   await page.getByTestId('job-card').first().click();

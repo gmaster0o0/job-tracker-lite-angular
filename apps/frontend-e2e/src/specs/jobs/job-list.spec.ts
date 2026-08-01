@@ -5,10 +5,8 @@ test.describe('Job List', () => {
   test('list renders cards from fixtures', async ({ page }) => {
     await page.goto('/jobs');
 
-    // Asserts shape - we expect at least one card to be visible
     await expect(page.getByTestId('job-card').first()).toBeVisible();
 
-    // Check one of the known fixtures is rendered instead of enforcing strict index order
     await expect(
       page
         .getByTestId('job-card')

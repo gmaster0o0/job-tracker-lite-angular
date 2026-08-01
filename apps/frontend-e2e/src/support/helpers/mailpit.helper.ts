@@ -28,13 +28,9 @@ export const extractLink = (html: string, path: string) =>
   html.match(new RegExp(`https?://[^\\s"']*${path}[^\\s"']*`))?.[0];
 
 /**
- * Deletes EVERY message in the shared inbox.
- *
- * Do not call this from a spec. Workers run in parallel against one Mailpit,
- * so purging mid-run deletes mail another worker is waiting on - which is
- * what made the mail specs fail intermittently. Isolation comes instead from
- * each worker provisioning a unique recipient, with waitForEmail filtering
- * on `to:`. Kept for manual cleanup between full runs.
+ * Deletes EVERY message in the shared inbox, so it must not be called from a
+ * spec: workers run in parallel against one Mailpit and would delete mail
+ * another is waiting on. Specs isolate by unique recipient instead.
  */
 export const purgeInbox = (api: APIRequestContext) =>
   api.delete(`${MAILPIT}/messages`);

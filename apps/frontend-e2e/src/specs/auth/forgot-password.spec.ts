@@ -7,17 +7,15 @@ import { provisionUser } from '../../support/helpers/api.helper';
 import { signInThroughUi } from '../../support/helpers/auth.helper';
 
 test.describe('forgot password flow', { tag: '@full-stack-only' }, () => {
-  // test needs unauthenticated start
   test.use({ storageState: undefined });
+
   test('forgot password → email arrives → reset link → new password → login with it', async ({
     page,
     request,
     baseURL,
   }) => {
-    // This test changes a password, so it provisions its own account rather
-    // than mutating the worker-scoped user. Sharing that user makes the run
-    // order-dependent: the reset invalidates the session every other test in
-    // the worker is carrying in storageState.
+    // Provisions its own account: resetting the worker user's password would
+    // invalidate the session every other test in the worker carries.
     const owner = await provisionUser(
       request,
       `reset_${Date.now()}`,
@@ -25,18 +23,13 @@ test.describe('forgot password flow', { tag: '@full-stack-only' }, () => {
     );
     const newPassword = 'NewSecretPassword123!';
 
-    // Navigate to forgot password page
     await page.goto('/auth/forgot-password');
     await expect(page.getByRole('heading', { name: /forgot/i })).toBeVisible();
 
-    // Fill in email
     await page.getByLabel(/email/i).fill(owner.email);
-    // The submit button sits outside the <form>, wired to it by the `form`
-    // attribute, so scoping the lookup inside the form finds nothing. Its
-    // label is "Send reset link", not "Submit".
+    // Submit buttons are rendered outside their form and bound by `form`.
     await page.locator('button[form="forgotPasswordForm"]').click();
 
-    // The copy appears in more than one node, so scope to the first match.
     await expect(
       page
         .getByText(
@@ -45,38 +38,28 @@ test.describe('forgot password flow', { tag: '@full-stack-only' }, () => {
         .first(),
     ).toBeVisible();
 
-    // Wait for the reset password email via Mailpit
     const email = await waitForEmail(
       request,
       owner.email,
       /Reset your password/i,
     );
 
-    // Get the reset link from the HTML body
     const resetLink = extractLink(email.HTML, '/auth/reset-password');
     expect(resetLink).toBeTruthy();
 
-    // Navigate to reset link
     await page.goto(resetLink!);
-
-    // Check we are on reset password page
     await expect(
       page.getByRole('heading', { name: /reset password/i }),
     ).toBeVisible();
 
-    // Fill new password
     await page.locator('#newPassword').fill(newPassword);
     await page.locator('#confirmPassword').fill(newPassword);
-
-    // Submit
     await page.getByRole('button', { name: /reset/i }).click();
 
-    // auth.resetPassword.success - the page redirects to sign in on its own.
     await expect(
       page.getByText(/password reset successful/i).first(),
     ).toBeVisible();
 
-    // What this test proves is that the new password works.
     await signInThroughUi(page, owner.email, newPassword);
   });
 });

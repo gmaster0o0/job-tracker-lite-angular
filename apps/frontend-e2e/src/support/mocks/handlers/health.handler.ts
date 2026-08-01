@@ -1,9 +1,7 @@
 import { MockRoute } from '../registry';
 import { healthFixture } from '@job-tracker-lite-angular/testing';
 
-// The app calls /api/health/detailed (the /status dashboard) and
-// /api/health/ready (the navbar indicator). There is no bare /api/health
-// route on the backend, so matching one would mock nothing.
+// There is no bare /api/health route on the backend.
 const HEALTH_PATH = /^\/api\/health\/(live|ready|detailed)$/;
 
 export const healthRoutes: MockRoute[] = [

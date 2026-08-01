@@ -52,9 +52,6 @@ export class EmailService {
   }
 
   async send(options: SendEmailOptions): Promise<void> {
-    // No driver-specific branch here on purpose: whether a job is executed
-    // inline, recorded, or handed to Redis is the queue's business. Compensating
-    // per call site means every new producer has to remember to do the same.
     try {
       await this.emailQueue.add(EmailJobName.SEND, options, {
         attempts: 3,

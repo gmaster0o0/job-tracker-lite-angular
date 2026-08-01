@@ -6,18 +6,8 @@ import { BullModule, getQueueToken } from '@nestjs/bullmq';
 import { QueueConfigFactory } from './queue.config.factory';
 
 /**
- * How queued work is executed.
- *
- * - `redis`  - the real thing: BullMQ against Redis. Production, and every
- *              test lane that runs a backend (see ADR-0003: infrastructure we
- *              own runs for real).
- * - `inline` - runs the registered processor synchronously inside `add()`, so
- *              a unit test can assert the *effect* without Redis.
- * - `memory` - records jobs without running them, so a unit test can assert
- *              what was *enqueued*.
- *
- * `inline` and `memory` are for API unit tests only. They must not be set for
- * e2e: neither exercises BullMQ scheduling, retries, backoff or the worker.
+ * `inline` and `memory` are for API unit tests only. Neither exercises BullMQ
+ * scheduling, retries, backoff or the worker, so e2e must run against Redis.
  */
 export type QueueDriver = 'redis' | 'inline' | 'memory';
 
@@ -45,12 +35,8 @@ interface ProcessorLike<T> {
   }): Promise<unknown>;
 }
 
-/**
- * Stand-in for a BullMQ Queue. Extends EventEmitter because callers attach an
- * 'error' listener to the real Queue.
- */
+/** Extends EventEmitter because callers attach an 'error' listener to the real Queue. */
 export class MemoryQueue<T = unknown> extends EventEmitter {
-  /** Jobs handed to `add()`, in order. Assert against this under `memory`. */
   readonly jobs: RecordedJob<T>[] = [];
   private counter = 0;
 
@@ -80,7 +66,6 @@ export class MemoryQueue<T = unknown> extends EventEmitter {
     return { id, name, data };
   }
 
-  /** Drop everything recorded so far - useful between unit tests. */
   clear(): void {
     this.jobs.length = 0;
   }
@@ -122,11 +107,7 @@ export class QueueModule {
     };
   }
 
-  /**
-   * @param processor the `WorkerHost` handling this queue. Only needed for
-   * `QUEUE_DRIVER=inline`, which calls it directly; resolved lazily so the
-   * processor's own dependencies are constructed normally.
-   */
+  /** `processor` is resolved lazily so its own dependencies construct normally. */
   static registerQueue(name: string, processor?: Type<unknown>) {
     const driver = getQueueDriver();
 
