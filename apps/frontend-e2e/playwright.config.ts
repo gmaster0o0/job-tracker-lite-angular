@@ -76,6 +76,9 @@ const frontendServer = {
 export default defineConfig<E2EOptions>({
   ...nxE2EPreset(__filename, { testDir: './src/specs' }),
   fullyParallel: true,
+  // Stops the local test stack after the run, pass or fail. No-ops in CI and
+  // in the mocked lane. See src/support/global-teardown.ts.
+  globalTeardown: require.resolve('./src/support/global-teardown'),
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL,
