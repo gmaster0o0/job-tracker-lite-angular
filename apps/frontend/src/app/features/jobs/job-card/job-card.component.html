@@ -15,7 +15,7 @@
           [ngClass]="statusBadgeClasses[job().status]"
           class="shrink-0 text-xs uppercase tracking-[0.02em]"
         >
-          {{ job().status }}
+          {{ statusLabelKeys[job().status] | transloco }}
         </span>
       </div>
     </div>
@@ -48,7 +48,7 @@
         [ngClass]="statusBadgeClasses[job().status]"
         class="shrink-0 text-[10px] uppercase tracking-[0.02em]"
       >
-        {{ job().status }}
+        {{ statusLabelKeys[job().status] | transloco }}
       </span>
     </div>
 
