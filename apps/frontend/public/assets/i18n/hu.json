@@ -177,7 +177,8 @@
       "offer": "Ajánlat"
     },
     "overview": {
-      "noDescription": "Nincs leírás megadva."
+      "noDescription": "Nincs leírás megadva.",
+      "editTooltip": "Állás szerkesztése"
     },
     "deleteDialog": {
       "description": "Biztosan törölni szeretné ezt az állás jelentkezést?",

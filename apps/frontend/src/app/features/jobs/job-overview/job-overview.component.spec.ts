@@ -39,4 +39,23 @@ describe('JobOverviewComponent', () => {
       'No description provided.',
     );
   });
+
+  it('should emit edit when the edit button is clicked', async () => {
+    const fixture = TestBed.createComponent(JobOverviewComponent);
+    fixture.componentRef.setInput('description', jobOverviewMarkdown);
+
+    const edits: unknown[] = [];
+    fixture.componentInstance.edit.subscribe(() => edits.push(true));
+
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      JobOverviewHarness,
+    );
+
+    expect(await harness.getEditTooltip()).toBe('Edit job');
+
+    await harness.clickEdit();
+
+    expect(edits).toHaveLength(1);
+  });
 });
