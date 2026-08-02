@@ -71,8 +71,11 @@ export default defineConfig<E2EOptions>({
   use: {
     baseURL,
     testIdAttribute: 'data-testid',
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    // Attached to the html report, which is what makes a CI failure
+    // reproducible without re-running it locally.
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
     useMocks: false,
     scenarios: {},
   },
