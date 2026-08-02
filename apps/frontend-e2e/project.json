@@ -31,6 +31,7 @@
       "options": {
         "commands": [
           "docker compose -f docker-compose.test.yml up -d --wait",
+          "docker compose -f docker-compose.yml up -d --wait redis mailpit",
           "cd libs/shared/prisma && npx prisma migrate deploy"
         ],
         "parallel": false,
@@ -52,6 +53,7 @@
       "options": {
         "commands": [
           "docker compose -f docker-compose.test.yml up -d --wait",
+          "docker compose -f docker-compose.yml up -d --wait redis mailpit",
           "cd libs/shared/prisma && npx prisma migrate deploy",
           "npx playwright test -c apps/frontend-e2e/playwright.config.ts --project=full-stack --project=full-stack-mocked"
         ],

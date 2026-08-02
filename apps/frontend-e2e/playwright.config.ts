@@ -12,16 +12,15 @@ export interface E2EOptions {
 // For CI, you may want to set BASE_URL to the deployed application.
 const baseURL = process.env['BASE_URL'] || 'http://localhost:4200';
 
-// Points the API at docker-compose.test.yml instead of the dev stack. Mail is
-// deliberately absent: the API reads MAILPIT_* through Nest's ConfigService,
-// where .env outranks anything passed here, so an offset SMTP port would be
-// silently ignored. DATABASE_URL works because Prisma reads process.env.
+// Points the API at the test database. Redis and mail are not redirected: the
+// API reads those through Nest's ConfigService, where .env outranks anything
+// passed here, so an offset port would be silently ignored. Only DATABASE_URL
+// takes effect, because Prisma reads process.env directly - and that is the
+// one that has to be isolated. CI has no .env, so its own values apply.
 const testStackEnv = {
   DATABASE_URL:
     process.env['DATABASE_URL'] ??
     'postgresql://test:test@localhost:5433/job_tracker_test?schema=public',
-  REDIS_HOST: process.env['REDIS_HOST'] ?? 'localhost',
-  REDIS_PORT: process.env['REDIS_PORT'] ?? '6380',
 };
 
 // Read by mailpit.helper in the test process, not by the API.

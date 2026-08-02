@@ -24,17 +24,12 @@ services:
       timeout: 5s
       retries: 10
 
-  redis-test:
-    image: redis:7-alpine
-    ports:
-      - '${TEST_REDIS_PORT:-6380}:6379'
-    healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
-# No Mailpit here: the e2e lane shares the one in docker-compose.yml. The API
-# resolves MAILPIT_* through Nest's ConfigService, where .env takes precedence
-# over the environment handed to the process, so an offset SMTP port would be
-# ignored. Sharing is safe because every worker provisions a unique recipient.
+# Postgres only. Redis and Mailpit are shared with docker-compose.yml, which
+# the test-stack-up and e2e-local targets start alongside this file.
+#
+# The API reads REDIS_* and MAILPIT_* through Nest's ConfigService, where .env
+# takes precedence over the environment handed to the process, so offset ports
+# for those would be silently ignored - the API would keep dialling 6379 and
+# 1025. Only DATABASE_URL can be redirected, because Prisma reads process.env
+# directly. That is also the one that has to be isolated: it holds persistent
+# state, while a queue and an inbox do not.
