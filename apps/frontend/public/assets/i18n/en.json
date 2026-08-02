@@ -42,6 +42,13 @@
     "add": "Add"
   },
   "jobs": {
+    "status": {
+      "saved": "Saved",
+      "applied": "Applied",
+      "interview": "Interview",
+      "offered": "Offered",
+      "rejected": "Rejected"
+    },
     "progression": {
       "setStatusTooltip": "Set status to {{label}}",
       "saved": "Saved",

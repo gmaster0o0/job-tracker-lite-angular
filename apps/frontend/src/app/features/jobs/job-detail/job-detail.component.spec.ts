@@ -30,7 +30,6 @@ import { JobDetailHarness } from './job-detail.harness';
 type JobDetailTestComponent = {
   activeTab: () => string;
   onTabSelected: (tab: string) => void;
-  formatStatus: (status: JobStatusDto) => string;
   isRejected: (job: JobDto) => boolean;
   currentProgressIndex: (job: JobDto) => number;
   moveToStatus: (status: JobStatusDto, job: JobDto) => Promise<void>;
@@ -239,16 +238,16 @@ describe('JobDetailComponent', () => {
     expect(component.activeTab()).toBe('notes');
   });
 
-  it('should format job status to uppercase', async () => {
-    const { fixture } = await setup({
+  it('should render a translated status label instead of the raw enum value', async () => {
+    const { harness } = await setup({
       id: baseJob.id,
       jobs: [baseJob],
     });
 
-    const component =
-      fixture.componentInstance as unknown as JobDetailTestComponent;
+    const text = await harness.getTextContent();
 
-    expect(component.formatStatus(JobStatus.APPLIED)).toBe('APPLIED');
+    expect(text).toContain('Offered');
+    expect(text).not.toContain(JobStatus.JOB_OFFERED);
   });
 
   it('should identify rejected jobs and return -1 for rejected progress index', async () => {

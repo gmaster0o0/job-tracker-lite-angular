@@ -33,7 +33,10 @@ import { CreateJobComponent } from '../create-job/create-job.component';
 import { EditJobComponent } from '../edit-job/edit-job.component';
 import { ContactsTabComponent } from '../contacts/contacts-tab/contacts-tab.component';
 import { JobOverviewComponent } from '../job-overview/job-overview.component';
-import { JOB_STATUS_BADGE_CLASSES } from '../job-status-badge-classes';
+import {
+  JOB_STATUS_BADGE_CLASSES,
+  JOB_STATUS_LABEL_KEYS,
+} from '../job-status-badge-classes';
 import {
   ProgessionStepperComponent,
   EmptyListComponent,
@@ -206,6 +209,7 @@ export class JobDetailComponent {
   );
 
   protected readonly statusBadgeClasses = JOB_STATUS_BADGE_CLASSES;
+  protected readonly statusLabelKeys = JOB_STATUS_LABEL_KEYS;
 
   constructor() {
     effect(() => {
@@ -316,9 +320,5 @@ export class JobDetailComponent {
     } finally {
       this.isUpdatingStatus.set(false);
     }
-  }
-
-  protected formatStatus(status: JobStatusDto): string {
-    return status.toUpperCase();
   }
 }

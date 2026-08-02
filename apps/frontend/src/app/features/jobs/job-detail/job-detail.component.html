@@ -48,7 +48,7 @@
                 {{ job()!.position }}
               </h1>
               <span hlmBadge [ngClass]="statusBadgeClasses[job()!.status]">
-                {{ formatStatus(job()!.status) }}
+                {{ statusLabelKeys[job()!.status] | transloco }}
               </span>
               <div
                 [hlmTooltip]="changeStatusTooltip()"

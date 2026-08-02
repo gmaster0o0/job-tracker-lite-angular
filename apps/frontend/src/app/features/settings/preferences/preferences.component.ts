@@ -4,6 +4,7 @@ import { AppearanceComponent } from './appearance/appearance.component';
 import { LanguageComponent } from './language/language.component';
 import { TranslocoModule } from '@jsverse/transloco';
 import { DateformatComponent } from './dateformat/dateformat.component';
+import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 
 @Component({
   selector: 'app-preferences',
@@ -14,6 +15,7 @@ import { DateformatComponent } from './dateformat/dateformat.component';
     LanguageComponent,
     TranslocoModule,
     DateformatComponent,
+    HlmTypographyImports,
   ],
   templateUrl: './preferences.component.html',
 })

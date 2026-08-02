@@ -42,6 +42,13 @@
     "add": "Hozzáadás"
   },
   "jobs": {
+    "status": {
+      "saved": "Mentve",
+      "applied": "Jelentkezve",
+      "interview": "Interjú",
+      "offered": "Ajánlat kapva",
+      "rejected": "Elutasítva"
+    },
     "progression": {
       "setStatusTooltip": "Státusz módosítása erre: {{label}}",
       "saved": "Mentve",

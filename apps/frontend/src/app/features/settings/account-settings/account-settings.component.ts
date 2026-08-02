@@ -46,6 +46,7 @@ import {
 import { interval } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationService } from '@job-tracker-lite-angular/frontend-data-access';
+import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 
 const RESEND_DEBOUNCE_MS = 600;
 
@@ -61,6 +62,7 @@ const RESEND_DEBOUNCE_MS = 600;
     HlmInputImports,
     HlmButtonImports,
     HlmIconImports,
+    HlmTypographyImports,
     FormRoot,
     FormField,
     ZodNgControlBridgeDirective,
