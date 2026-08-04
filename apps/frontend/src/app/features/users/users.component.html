@@ -1,0 +1,53 @@
+<div class="container mx-auto max-w-6xl px-4 py-8">
+  <div class="mb-6 flex items-center justify-between gap-4">
+    <h1 class="text-3xl font-bold tracking-tight">
+      {{ 'users.title' | transloco }}
+    </h1>
+  </div>
+
+  @if (isLoading()) {
+    <div class="space-y-3" data-testid="users-loading">
+      @for (_ of [1, 2, 3, 4]; track $index) {
+        <hlm-skeleton class="h-12 w-full" />
+      }
+    </div>
+  } @else {
+    <div hlmTableContainer>
+      <table hlmTable>
+        <thead hlmTableHeader class="bg-muted">
+          <tr hlmTableRow>
+            <th hlmTableHead>{{ 'users.table.name' | transloco }}</th>
+            <th hlmTableHead>{{ 'users.table.email' | transloco }}</th>
+            <th hlmTableHead>{{ 'users.table.role' | transloco }}</th>
+            <th hlmTableHead class="text-right">
+              {{ 'users.table.viewProfile' | transloco }}
+            </th>
+          </tr>
+        </thead>
+        <tbody hlmTableBody>
+          @for (user of users(); track user.id) {
+            <tr hlmTableRow data-testid="users-row">
+              <td hlmTableCell class="font-medium">{{ user.name }}</td>
+              <td hlmTableCell>{{ user.email }}</td>
+              <td hlmTableCell>
+                <span hlmBadge [class]="roleClasses[user.role]">
+                  {{ 'users.roles.' + user.role | transloco }}
+                </span>
+              </td>
+              <td hlmTableCell class="text-right">
+                <a
+                  hlmBtn
+                  variant="outline"
+                  [routerLink]="['/profile', user.id]"
+                  data-testid="view-profile-link"
+                >
+                  {{ 'users.table.viewProfile' | transloco }}
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

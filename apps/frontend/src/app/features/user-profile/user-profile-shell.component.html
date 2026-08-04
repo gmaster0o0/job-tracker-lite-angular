@@ -1,0 +1,92 @@
+<div class="container mx-auto max-w-4xl px-4 py-8">
+  <div class="mb-6 flex items-center justify-between gap-4">
+    <h1 class="text-3xl font-bold tracking-tight">
+      {{ 'users.title' | transloco }}
+    </h1>
+
+    <a hlmBtn variant="outline" routerLink="/users">
+      {{ 'common.back' | transloco }}
+    </a>
+  </div>
+
+  @if (isLoading()) {
+    <div class="space-y-4" data-testid="user-profile-loading">
+      <hlm-skeleton class="h-8 w-64" />
+      <hlm-skeleton class="h-40 w-full" />
+    </div>
+  } @else if (user(); as user) {
+    <hlm-card>
+      <hlm-card-header class="space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="space-y-2">
+            <h2 hlmCardTitle>
+              {{
+                'users.profile.viewingProfile'
+                  | transloco: { username: user.name }
+              }}
+            </h2>
+            <p hlmCardDescription>{{ user.email }}</p>
+          </div>
+
+          <span
+            hlmBadge
+            [class]="roleClasses[user.role]"
+            data-testid="user-role-badge"
+          >
+            {{ 'users.roles.' + user.role | transloco }}
+          </span>
+        </div>
+      </hlm-card-header>
+
+      <div hlmCardContent class="space-y-6">
+        <div class="grid gap-2">
+          <span class="text-sm font-medium text-muted-foreground">
+            {{ 'users.table.name' | transloco }}
+          </span>
+          <span class="text-base font-medium">{{ user.name }}</span>
+        </div>
+
+        <div class="grid gap-2">
+          <span class="text-sm font-medium text-muted-foreground">
+            {{ 'users.table.email' | transloco }}
+          </span>
+          <span class="text-base">{{ user.email }}</span>
+        </div>
+
+        <div *libHasRole="['ADMIN']" class="grid gap-2">
+          <span class="text-sm font-medium text-muted-foreground">
+            {{ 'users.profile.changeRole' | transloco }}
+          </span>
+
+          <hlm-select
+            [disabled]="isSavingRole()"
+            [value]="currentRoleValue()"
+            [itemToString]="roleItemToString"
+            (valueChange)="onRoleChange($event)"
+          >
+            <hlm-select-trigger class="w-64">
+              <hlm-select-value
+                placeholder="{{ 'users.profile.changeRole' | transloco }}"
+              />
+            </hlm-select-trigger>
+            <hlm-select-content *hlmSelectPortal>
+              <hlm-select-group>
+                @for (role of roleOptions; track role.value) {
+                  <hlm-select-item [value]="role">
+                    {{ role.label() }}
+                  </hlm-select-item>
+                }
+              </hlm-select-group>
+            </hlm-select-content>
+          </hlm-select>
+        </div>
+      </div>
+    </hlm-card>
+  } @else {
+    <hlm-card>
+      <div hlmCardContent class="py-8 text-center text-muted-foreground">
+        {{ 'users.profile.notFound' | transloco }}
+      </div>
+    </hlm-card>
+  }
+</div>

@@ -9,6 +9,7 @@ export interface MenuItem {
   readonly path: string;
   readonly requiresAuth?: boolean;
   readonly questOnly?: boolean;
+  readonly requiresRole?: string[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -27,6 +28,13 @@ export class NavigationService {
 
     if (item.questOnly && isAuthenticated) {
       return false;
+    }
+
+    if (item.requiresRole && item.requiresRole.length > 0) {
+      const userRole = this.authSession.role();
+      if (!item.requiresRole.includes(userRole)) {
+        return false;
+      }
     }
 
     return true;

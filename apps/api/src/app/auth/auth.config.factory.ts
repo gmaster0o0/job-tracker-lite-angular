@@ -9,7 +9,7 @@ import {
   setLanguageOnUrl,
 } from '@job-tracker-lite-angular/core-utils';
 import { Injectable } from '@nestjs/common';
-import { AccountStatus } from '@prisma/client';
+import { AccountStatus, Role } from '@prisma/client';
 
 type EmailAndPasswordConfig = NonNullable<
   BetterAuthOptions['emailAndPassword']
@@ -54,6 +54,12 @@ export class AuthConfigFactory {
             required: false,
             input: false,
             defaultValue: AccountStatus.ACTIVE,
+          },
+          role: {
+            type: 'string',
+            required: false,
+            input: false,
+            defaultValue: Role.USER,
           },
         },
       },

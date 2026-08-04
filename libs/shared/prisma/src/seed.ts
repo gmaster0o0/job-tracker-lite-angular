@@ -1,6 +1,6 @@
 console.log('Seed script started');
 
-import { PrismaClient, JobStatus } from '@prisma/client';
+import { PrismaClient, JobStatus, Role } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { hashPassword } from 'better-auth/crypto';
 import * as dotenv from 'dotenv';
@@ -23,6 +23,14 @@ const seedUserEmail = 'user@example.com';
 const seedUserPassword = 'Demo1234';
 const systemUserId = 'seed-user';
 const seedCredentialAccountId = 'seed-user-credential';
+
+const recruiterUserEmail = 'recruiter@example.com';
+const recruiterUserId = 'seed-user-recruiter';
+const recruiterCredentialAccountId = 'seed-user-recruiter-credential';
+
+const moderatorUserEmail = 'moderator@example.com';
+const moderatorUserId = 'seed-user-moderator';
+const moderatorCredentialAccountId = 'seed-user-moderator-credential';
 
 const seedJobs = seedJobFixtures.map((job: JobDto) => {
   if (job.link == null) {
@@ -59,6 +67,7 @@ async function main() {
       email: seedUserEmail,
       pendingEmail: null,
       emailVerified: true,
+      role: Role.ADMIN,
       preferences: userPreferencesFixtures.johnDoe,
     },
     create: {
@@ -67,6 +76,7 @@ async function main() {
       email: seedUserEmail,
       pendingEmail: null,
       emailVerified: true,
+      role: Role.ADMIN,
       preferences: userPreferencesFixtures.johnDoe,
     },
   });
@@ -170,12 +180,84 @@ async function main() {
     }
   }
 
+  // Seed recruiter user
+  console.log('Seeding Recruiter user...');
+  const recruiterPasswordHash = await hashPassword(seedUserPassword);
+
+  await prisma.user.upsert({
+    where: { id: recruiterUserId },
+    update: {
+      name: 'Recruiter User',
+      email: recruiterUserEmail,
+      emailVerified: true,
+      role: Role.RECRUITER,
+    },
+    create: {
+      id: recruiterUserId,
+      name: 'Recruiter User',
+      email: recruiterUserEmail,
+      emailVerified: true,
+      role: Role.RECRUITER,
+    },
+  });
+
+  await prisma.account.deleteMany({
+    where: { userId: recruiterUserId, providerId: 'credential' },
+  });
+
+  await prisma.account.create({
+    data: {
+      id: recruiterCredentialAccountId,
+      accountId: recruiterUserId,
+      providerId: 'credential',
+      userId: recruiterUserId,
+      password: recruiterPasswordHash,
+    },
+  });
+
+  // Seed moderator user
+  console.log('Seeding Moderator user...');
+  const moderatorPasswordHash = await hashPassword(seedUserPassword);
+
+  await prisma.user.upsert({
+    where: { id: moderatorUserId },
+    update: {
+      name: 'Moderator User',
+      email: moderatorUserEmail,
+      emailVerified: true,
+      role: Role.MODERATOR,
+    },
+    create: {
+      id: moderatorUserId,
+      name: 'Moderator User',
+      email: moderatorUserEmail,
+      emailVerified: true,
+      role: Role.MODERATOR,
+    },
+  });
+
+  await prisma.account.deleteMany({
+    where: { userId: moderatorUserId, providerId: 'credential' },
+  });
+
+  await prisma.account.create({
+    data: {
+      id: moderatorCredentialAccountId,
+      accountId: moderatorUserId,
+      providerId: 'credential',
+      userId: moderatorUserId,
+      password: moderatorPasswordHash,
+    },
+  });
+
   await prisma.$disconnect();
 
   console.log(
     `Seeded ${seedJobs.length} jobs with 0-2 contacts and 0-1 notes each (deterministic).`,
   );
   console.log(`Demo login: ${seedUserEmail} / ${seedUserPassword}`);
+  console.log(`Recruiter login: ${recruiterUserEmail} / ${seedUserPassword}`);
+  console.log(`Moderator login: ${moderatorUserEmail} / ${seedUserPassword}`);
 }
 
 main().catch(async (error) => {

@@ -24,6 +24,7 @@ model User {
   lastEmailChangeRequestedAt DateTime?
   emailVerified Boolean   @default(false)
   status        AccountStatus @default(ACTIVE)
+  role          Role          @default(USER)
   gracePeriodRequestedAt DateTime?
   scheduledDeletionAt DateTime?
   gracePeriodDays Int @default(7)
@@ -51,6 +52,13 @@ enum EmailChangeTokenType {
 enum AccountStatus {
   ACTIVE
   PENDING_DELETION
+}
+
+enum Role {
+  USER
+  RECRUITER
+  MODERATOR
+  ADMIN
 }
 
 model EmailChangeToken {

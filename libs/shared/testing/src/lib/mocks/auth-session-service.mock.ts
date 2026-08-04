@@ -16,6 +16,7 @@ export function createAuthSessionServiceMock(
   const clearSession = mockFactory();
   const isPendingDeletion = mockFactory();
   const session = mockFactory();
+  const role = mockFactory();
 
   if (
     !options.loadSession &&
@@ -46,11 +47,16 @@ export function createAuthSessionServiceMock(
     );
   }
 
+  if (typeof role.mockImplementation === 'function') {
+    role.mockImplementation(() => currentSession?.user.role ?? 'USER');
+  }
+
   return {
     loadSession,
     setSession,
     clearSession,
     session,
+    role,
     isAuthenticated: mockFactory(),
     userId: mockFactory(),
     isPendingDeletion,

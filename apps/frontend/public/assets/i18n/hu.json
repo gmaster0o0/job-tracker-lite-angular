@@ -39,7 +39,8 @@
     "about": "Az alkalmazásról",
     "login": "Bejelentkezés",
     "register": "Regisztráció",
-    "add": "Hozzáadás"
+    "add": "Hozzáadás",
+    "users": "Felhasználók"
   },
   "jobs": {
     "status": {
@@ -750,6 +751,28 @@
       "CONTRACT": "Szerződéses"
     }
   },
+  "users": {
+    "title": "Felhasználók",
+    "table": {
+      "name": "Név",
+      "email": "Email",
+      "role": "Szerepkör",
+      "viewProfile": "Profil megtekintése"
+    },
+    "profile": {
+      "viewingProfile": "{{ username }} profiljának megtekintése",
+      "changeRole": "Szerepkör módosítása",
+      "notFound": "A felhasználó nem található",
+      "roleUpdated": "A szerepkör sikeresen frissítve.",
+      "roleUpdateFailed": "Nem sikerült frissíteni a szerepkört."
+    },
+    "roles": {
+      "ADMIN": "Adminisztrátor",
+      "MODERATOR": "Moderátor",
+      "RECRUITER": "Toborzó",
+      "USER": "Felhasználó"
+    }
+  },
   "contacts": {
     "edit": {
       "title": "Kapcsolat szerkesztése",
@@ -843,5 +866,11 @@
       "fieldLabel": "shared.confirmationDialog.fieldLabel",
       "fieldPlaceholder": "shared.confirmationDialog.fieldPlaceholder"
     }
+  },
+  "dashboard": {
+    "title": "Irányítópult",
+    "moderationTitle": "Felhasználói moderáció",
+    "moderationDescription": "Felhasználók, szerepkörök és moderációs feladatok kezelése.",
+    "dashboard": "Irányítópult"
   }
 }

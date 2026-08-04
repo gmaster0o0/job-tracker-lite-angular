@@ -25,6 +25,7 @@ export * from './lib/mocks/auth-data-access.mock';
 export * from './lib/mocks/profile-data-access.mock';
 export * from './lib/mocks/preferences-data-access.mock';
 export * from './lib/mocks/auth-session-service.mock';
+export * from './lib/mocks/users-data-access.mock';
 export * from './lib/mocks/user-preferences-service.mock';
 export * from './lib/mocks/email-service.mock';
 export * from './lib/mocks/browser.mocks';

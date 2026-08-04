@@ -3,6 +3,7 @@ import { authGuard } from './guards/auth.guard';
 import { guestGuard } from './guards/guest.guard';
 import { sessionInitGuard } from './guards/session-init.guard';
 import { preferencesInitGuard } from './guards/preferences-init.guard';
+import { hasRoleGuard } from './guards/has-role.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -134,6 +135,69 @@ export const appRoutes: Route[] = [
           import(
             './features/settings/privacy-settings/delete-account/delete-pending.component'
           ).then((m) => m.DeletePendingComponent),
+      },
+      {
+        path: 'users',
+        canActivate: [authGuard, hasRoleGuard(['MODERATOR', 'ADMIN'])],
+        children: [
+          {
+            path: '',
+            outlet: 'sidenav',
+            loadComponent: () =>
+              import('./navigation/main-menu/main-menu.component').then(
+                (m) => m.MainMenuComponent,
+              ),
+          },
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/users/users.component').then(
+                (m) => m.UsersComponent,
+              ),
+          },
+        ],
+      },
+      {
+        path: 'dashboard',
+        canActivate: [authGuard, hasRoleGuard(['MODERATOR', 'ADMIN'])],
+        children: [
+          {
+            path: '',
+            outlet: 'sidenav',
+            loadComponent: () =>
+              import('./navigation/main-menu/main-menu.component').then(
+                (m) => m.MainMenuComponent,
+              ),
+          },
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/dashboard/dashboard.component').then(
+                (m) => m.DashboardComponent,
+              ),
+          },
+        ],
+      },
+      {
+        path: 'profile/:slug',
+        canActivate: [authGuard, hasRoleGuard(['MODERATOR', 'ADMIN'])],
+        children: [
+          {
+            path: '',
+            outlet: 'sidenav',
+            loadComponent: () =>
+              import('./navigation/main-menu/main-menu.component').then(
+                (m) => m.MainMenuComponent,
+              ),
+          },
+          {
+            path: '',
+            loadComponent: () =>
+              import(
+                './features/user-profile/user-profile-shell.component'
+              ).then((m) => m.UserProfileShellComponent),
+          },
+        ],
       },
       {
         path: 'profile',

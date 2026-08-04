@@ -10,6 +10,7 @@ export class AuthSessionService {
   readonly session = this.sessionState.asReadonly();
   readonly isAuthenticated = computed(() => this.sessionState() !== null);
   readonly userId = computed(() => this.sessionState()?.user.id ?? null);
+  readonly role = computed(() => this.sessionState()?.user.role ?? 'USER');
   readonly isPendingDeletion = computed(
     () => this.sessionState()?.user.status === 'PENDING_DELETION',
   );
