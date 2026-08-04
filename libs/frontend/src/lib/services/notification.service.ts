@@ -41,7 +41,7 @@ export class NotificationService {
     messages: {
       loading: string;
       success: string | ((data: T) => string);
-      error: string | ((err: any) => string);
+      error: string | ((err: unknown) => string);
     },
   ): Promise<T> {
     toast.promise(promise, messages);
