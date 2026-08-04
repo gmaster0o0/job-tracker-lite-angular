@@ -136,3 +136,24 @@
 [data-slot='slider-thumb'][data-slot] {
   background-color: var(--background);
 }
+
+/* Sonner toast borders with type-specific colors */
+[data-sonner-toast] {
+  border: 1px solid var(--foreground) !important;
+}
+
+[data-sonner-toast][data-type='success'] {
+  border: 1px solid var(--success) !important;
+}
+
+[data-sonner-toast][data-type='error'] {
+  border: 1px solid var(--destructive) !important;
+}
+
+[data-sonner-toast][data-type='warning'] {
+  border: 1px solid var(--warning) !important;
+}
+
+[data-sonner-toast][data-type='info'] {
+  border: 1px solid var(--info) !important;
+}
