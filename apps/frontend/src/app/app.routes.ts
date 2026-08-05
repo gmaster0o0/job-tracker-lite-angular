@@ -87,17 +87,17 @@ export const appRoutes: Route[] = [
           {
             path: 'preferences',
             loadComponent: () =>
-              import('./features/settings/preferences/preferences.component').then(
-                (m) => m.PreferencesComponent,
-              ),
+              import(
+                './features/settings/preferences/preferences.component'
+              ).then((m) => m.PreferencesComponent),
           },
           {
             path: 'account',
             canActivate: [authGuard],
             loadComponent: () =>
-              import('./features/settings/account-settings/account-settings.component').then(
-                (m) => m.AccountSettingsComponent,
-              ),
+              import(
+                './features/settings/account-settings/account-settings.component'
+              ).then((m) => m.AccountSettingsComponent),
           },
           {
             path: 'privacy',
@@ -106,23 +106,23 @@ export const appRoutes: Route[] = [
               {
                 path: '',
                 loadComponent: () =>
-                  import('./features/settings/privacy-settings/privacy-settings.component').then(
-                    (m) => m.PrivacySettingsComponent,
-                  ),
+                  import(
+                    './features/settings/privacy-settings/privacy-settings.component'
+                  ).then((m) => m.PrivacySettingsComponent),
               },
               {
                 path: 'privacy-policy',
                 loadComponent: () =>
-                  import('./features/settings/privacy-settings/privacy-settings.component').then(
-                    (m) => m.PrivacySettingsComponent,
-                  ),
+                  import(
+                    './features/settings/privacy-settings/privacy-settings.component'
+                  ).then((m) => m.PrivacySettingsComponent),
               },
               {
                 path: 'cookie-policy',
                 loadComponent: () =>
-                  import('./features/settings/privacy-settings/privacy-settings.component').then(
-                    (m) => m.PrivacySettingsComponent,
-                  ),
+                  import(
+                    './features/settings/privacy-settings/privacy-settings.component'
+                  ).then((m) => m.PrivacySettingsComponent),
               },
             ],
           },
@@ -132,12 +132,12 @@ export const appRoutes: Route[] = [
         path: 'privacy/delete-pending',
         canActivate: [authGuard],
         loadComponent: () =>
-          import('./features/settings/privacy-settings/delete-account/delete-pending.component').then(
-            (m) => m.DeletePendingComponent,
-          ),
+          import(
+            './features/settings/privacy-settings/delete-account/delete-pending.component'
+          ).then((m) => m.DeletePendingComponent),
       },
       {
-        path: 'users/:id',
+        path: 'users/:userId',
         canActivate: [authGuard],
         loadComponent: () =>
           import('./features/users/user-public-profile.component').then(
@@ -201,9 +201,9 @@ export const appRoutes: Route[] = [
           {
             path: '',
             loadComponent: () =>
-              import('./features/users/user-details/user-details.component').then(
-                (m) => m.UserDetailsComponent,
-              ),
+              import(
+                './features/users/user-details/user-details.component'
+              ).then((m) => m.UserDetailsComponent),
           },
         ],
       },
@@ -280,33 +280,33 @@ export const appRoutes: Route[] = [
             path: 'verify-email-notice',
             canActivate: [guestGuard],
             loadComponent: () =>
-              import('./features/auth/verify-email-notice/verify-email-notice.component').then(
-                (m) => m.VerifyEmailNoticeComponent,
-              ),
+              import(
+                './features/auth/verify-email-notice/verify-email-notice.component'
+              ).then((m) => m.VerifyEmailNoticeComponent),
           },
           {
             path: 'verify-email',
             canActivate: [guestGuard],
             loadComponent: () =>
-              import('./features/auth/verify-email/verify-email.component').then(
-                (m) => m.VerifyEmailComponent,
-              ),
+              import(
+                './features/auth/verify-email/verify-email.component'
+              ).then((m) => m.VerifyEmailComponent),
           },
           {
             path: 'forgot-password',
             canActivate: [guestGuard],
             loadComponent: () =>
-              import('./features/auth/forgot-password/forgot-password.component').then(
-                (m) => m.ForgotPasswordComponent,
-              ),
+              import(
+                './features/auth/forgot-password/forgot-password.component'
+              ).then((m) => m.ForgotPasswordComponent),
           },
           {
             path: 'reset-password',
             canActivate: [guestGuard],
             loadComponent: () =>
-              import('./features/auth/reset-password/reset-password.component').then(
-                (m) => m.ResetPasswordComponent,
-              ),
+              import(
+                './features/auth/reset-password/reset-password.component'
+              ).then((m) => m.ResetPasswordComponent),
           },
         ],
       },
