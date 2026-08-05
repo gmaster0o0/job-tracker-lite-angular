@@ -4,6 +4,7 @@ import {
   UpdateUserRoleDto,
   UserListItemDto,
   UserProfileDto,
+  UpdateUserProfileDto,
 } from '@job-tracker-lite-angular/schemas';
 import { UserProfile } from '@prisma/client';
 
@@ -90,5 +91,35 @@ export class UsersService {
       data: { role: dto.role },
       select: { id: true, name: true, email: true, role: true },
     });
+  }
+
+  async updateUserProfile(
+    userId: string,
+    updateProfileDto: UpdateUserProfileDto,
+  ): Promise<UserProfileDto> {
+    // Verify user exists
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException('User not found');
+
+    const updated = await this.prisma.userProfile.upsert({
+      where: { userId },
+      update: updateProfileDto,
+      create: {
+        ...updateProfileDto,
+        userId,
+        coreSkills: updateProfileDto.coreSkills ?? [],
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return this.mapToUserProfileDto(updated);
   }
 }

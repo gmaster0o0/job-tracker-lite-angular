@@ -37,6 +37,8 @@ export class ProfileComponent {
   // Input for injected profile data (moderator mode)
   profileData = input<UserProfileDto | null>(null);
   mode = input<'own' | 'mod'>('own');
+  // Target user ID for moderator mode (required if mode is 'mod')
+  targetUserId = input<string | null>(null);
 
   // Use either injected data or resource data
   protected readonly profile = computed(() => {
@@ -97,7 +99,17 @@ export class ProfileComponent {
   async saveSection(section: SectionName, updateDto: UpdateUserProfileDto) {
     try {
       this.savingSection.set(section);
-      await this.profileDataAccess.updateProfile(updateDto);
+      const currentMode = this.mode();
+      const userId = this.targetUserId();
+
+      if (currentMode === 'mod' && userId) {
+        // Moderator editing another user's profile
+        await this.profileDataAccess.updateUserProfile(userId, updateDto);
+      } else {
+        // User editing their own profile
+        await this.profileDataAccess.updateProfile(updateDto);
+      }
+
       this.editingSection.set(null);
     } catch (error) {
       console.error('Failed to update profile', error);

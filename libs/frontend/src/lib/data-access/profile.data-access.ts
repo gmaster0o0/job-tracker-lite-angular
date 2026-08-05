@@ -29,4 +29,13 @@ export class ProfileDataAccessService {
 
     return updated;
   }
+
+  async updateUserProfile(
+    userId: string,
+    dto: UpdateUserProfileDto,
+  ): Promise<UserProfileDto> {
+    return await firstValueFrom(
+      this.http.patch<UserProfileDto>(`/api/users/${userId}/profile`, dto),
+    );
+  }
 }
