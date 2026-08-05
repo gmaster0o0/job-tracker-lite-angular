@@ -1,3 +1,4 @@
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
@@ -8,10 +9,11 @@ import {
 } from '@job-tracker-lite-angular/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { UsersComponent } from './users.component';
+import { UsersComponentHarness } from './users.component.harness';
 
 describe('UsersComponent', () => {
   let fixture: ComponentFixture<UsersComponent>;
-  let component: UsersComponent;
+  let harness: UsersComponentHarness;
   let usersDataAccessMock: ReturnType<typeof createUsersDataAccessMock>;
 
   beforeEach(async () => {
@@ -29,44 +31,26 @@ describe('UsersComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(UsersComponent);
-    component = fixture.componentInstance;
+    harness = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      UsersComponentHarness,
+    );
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(fixture.componentInstance).toBeTruthy();
   });
 
   it('should load and render users', async () => {
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
-
-    const rows = fixture.nativeElement.querySelectorAll(
-      '[data-testid="users-row"]',
-    );
-
+    expect(await harness.getUserCount()).toBe(userListFixtures.length);
     expect(usersDataAccessMock.listUsers).toHaveBeenCalledTimes(1);
-    expect(rows).toHaveLength(userListFixtures.length);
-    expect(fixture.nativeElement.textContent).toContain(
-      userListFixtures[0].name,
-    );
-    expect(fixture.nativeElement.textContent).toContain(
-      userListFixtures[0].email,
-    );
+    expect(await harness.hasUserName(userListFixtures[0].name)).toBe(true);
+    expect(await harness.hasUserEmail(userListFixtures[0].email)).toBe(true);
   });
 
   it('should render profile links for each user', async () => {
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
-
-    const links = Array.from(
-      fixture.nativeElement.querySelectorAll(
-        '[data-testid="view-profile-link"]',
-      ),
-    ) as HTMLAnchorElement[];
-
-    expect(links.map((link) => link.getAttribute('href'))).toEqual([
+    const hrefs = await harness.getProfileLinkHrefs();
+    expect(hrefs).toEqual([
       '/users/user_admin',
       '/users/user_mod',
       '/users/user_rec',

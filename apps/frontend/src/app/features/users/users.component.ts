@@ -7,6 +7,7 @@ import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 import { HlmTableImports } from '@spartan-ng/helm/table';
+import { HlmTypographyImports } from '@spartan-ng/helm/typography';
 
 @Component({
   selector: 'app-users',
@@ -18,6 +19,7 @@ import { HlmTableImports } from '@spartan-ng/helm/table';
     HlmBadgeImports,
     HlmSkeletonImports,
     HlmButtonImports,
+    HlmTypographyImports,
   ],
   templateUrl: './users.component.html',
 })
