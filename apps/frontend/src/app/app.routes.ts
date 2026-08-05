@@ -201,8 +201,8 @@ export const appRoutes: Route[] = [
           {
             path: '',
             loadComponent: () =>
-              import('./features/user-profile/user-profile-shell.component').then(
-                (m) => m.UserProfileShellComponent,
+              import('./features/users/user-details/user-details.component').then(
+                (m) => m.UserDetailsComponent,
               ),
           },
         ],

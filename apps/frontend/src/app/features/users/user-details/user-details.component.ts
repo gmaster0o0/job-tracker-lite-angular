@@ -25,7 +25,7 @@ import {
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 import { HasRoleDirective } from '@job-tracker-lite-angular/frontend-data-access';
-import { ProfileComponent } from '../profile/profile.component';
+import { ProfileComponent } from '../../profile/profile.component';
 
 type UserRole = UserListItemDto['role'];
 
@@ -37,7 +37,7 @@ interface RoleOption {
 const SAVE_DEBOUNCE_MS = 1000;
 
 @Component({
-  selector: 'app-user-profile-shell',
+  selector: 'app-user-details',
   standalone: true,
   imports: [
     TranslocoModule,
@@ -46,9 +46,9 @@ const SAVE_DEBOUNCE_MS = 1000;
     HasRoleDirective,
     ProfileComponent,
   ],
-  templateUrl: './user-profile-shell.component.html',
+  templateUrl: './user-details.component.html',
 })
-export class UserProfileShellComponent {
+export class UserDetailsComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly usersDataAccess = inject(UsersDataAccessService);
   private readonly notification = inject(NotificationService);
