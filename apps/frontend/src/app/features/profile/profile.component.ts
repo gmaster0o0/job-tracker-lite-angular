@@ -1,12 +1,4 @@
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  signal,
-  untracked,
-} from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { provideIcons } from '@ng-icons/core';
@@ -17,6 +9,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { SkillManagerComponent } from './skill-manager/skill-manager.component';
 import { PersonalInfoComponent } from './personal-info/personal-info.component';
 import { ContactInfoComponent } from './contact-info/contact-info.component';
+import { httpResource } from '@angular/common/http';
 
 import {
   UserProfileDto,
@@ -45,36 +38,18 @@ export class ProfileComponent {
   mode = input<'own' | 'mod'>('own');
   targetUserId = input<string | null>(null);
 
-  // Signals for profile state
-  private readonly modProfileData = signal<UserProfileDto | null>(null);
-  private readonly isLoadingMod = signal(false);
-
-  // Fetch profile when mode or targetUserId changes
-  constructor() {
-    effect(() => {
-      const currentMode = this.mode();
-      const userId = this.targetUserId();
-
-      if (currentMode === 'mod' && userId) {
-        untracked(() => void this.fetchModProfile(userId));
-      }
-    });
-  }
-
-  private async fetchModProfile(userId: string): Promise<void> {
-    try {
-      this.isLoadingMod.set(true);
-      const profile = await this.profileDataAccess.getUserProfile(userId);
-      this.modProfileData.set(profile);
-    } finally {
-      this.isLoadingMod.set(false);
-    }
-  }
+  // Resource for mod profile - automatically refetches when targetUserId changes
+  private readonly modProfileResource = httpResource<UserProfileDto>(() => {
+    const userId = this.targetUserId();
+    return userId && this.mode() === 'mod'
+      ? `/api/users/${userId}/profile`
+      : undefined;
+  });
 
   // Use the appropriate profile based on mode
   protected readonly profile = computed(() => {
     if (this.mode() === 'mod') {
-      return this.modProfileData();
+      return this.modProfileResource.value();
     }
     return this.profileDataAccess.profileResource.value();
   });
@@ -82,8 +57,8 @@ export class ProfileComponent {
   protected readonly profileResource = computed(() => {
     if (this.mode() === 'mod') {
       return {
-        value: () => this.modProfileData(),
-        isLoading: () => this.isLoadingMod(),
+        value: this.modProfileResource.value,
+        isLoading: this.modProfileResource.isLoading,
       };
     }
     return {
