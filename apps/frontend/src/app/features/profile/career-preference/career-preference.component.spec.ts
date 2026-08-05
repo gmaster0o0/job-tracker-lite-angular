@@ -234,6 +234,8 @@ describe('CareerPreferenceComponent', () => {
       }
 
       const modFixture = TestBed.createComponent(ModHostComponent);
+      modFixture.detectChanges();
+
       const modComponent = modFixture.debugElement.query(
         By.directive(CareerPreferenceComponent),
       ).componentInstance;
@@ -246,7 +248,11 @@ describe('CareerPreferenceComponent', () => {
       expect(updateUserProfileSpy).toHaveBeenCalledTimes(1);
       expect(updateUserProfileSpy).toHaveBeenCalledWith(
         'target-user-123',
-        expect.objectContaining({ workingStyle: 'ON_SITE' }),
+        expect.objectContaining({
+          workingStyle: 'ON_SITE',
+          experienceLevel: 'SENIOR',
+          careerType: 'FULL_TIME',
+        }),
       );
       expect(profileDataServiceSpy.updateProfile).not.toHaveBeenCalled();
     });

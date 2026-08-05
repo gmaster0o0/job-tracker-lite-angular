@@ -99,14 +99,14 @@ describe('SkillManagerComponent', () => {
 
   describe('mode-based routing', () => {
     it('calls updateProfile when mode is "own" (default)', async () => {
-      await harness.enterSkill('AWS');
+      await harness.enterSkill('Unique Test Skill A');
       await harness.clickAddNewElement();
       await harness.clickSave();
 
       expect(updateProfile).toHaveBeenCalledTimes(1);
       expect(updateProfile).toHaveBeenCalledWith(
         expect.objectContaining({
-          coreSkills: expect.arrayContaining(['AWS']),
+          coreSkills: expect.arrayContaining(['Unique Test Skill A']),
         }),
       );
     });
@@ -148,7 +148,7 @@ describe('SkillManagerComponent', () => {
         SkillManagerHarness,
       );
 
-      await modHarness.enterSkill('Docker');
+      await modHarness.enterSkill('Unique Test Skill B');
       await modHarness.clickAddNewElement();
       await modHarness.clickSave();
 
@@ -156,7 +156,7 @@ describe('SkillManagerComponent', () => {
       expect(updateUserProfileSpy).toHaveBeenCalledWith(
         'target-user-456',
         expect.objectContaining({
-          coreSkills: expect.arrayContaining(['Docker']),
+          coreSkills: expect.arrayContaining(['Unique Test Skill B']),
         }),
       );
       expect(profileDataServiceSpy.updateProfile).not.toHaveBeenCalled();
