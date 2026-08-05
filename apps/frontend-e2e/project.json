@@ -15,6 +15,53 @@
     "e2e": {
       "// dependsOn": "CI starts api:serve and frontend:serve-e2e itself, outside of any nx process, before this target runs (see .github/workflows/ci.yml). Clearing this stops @nx/playwright/plugin from also scheduling api:serve as a task here, which would otherwise race the CI-started one for port 3000.",
       "dependsOn": []
+    },
+    "e2e-mocked": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx playwright test -c apps/frontend-e2e/playwright.config.ts --project=mocked",
+        "env": {
+          "E2E_MOCKED": "true"
+        }
+      }
+    },
+    "test-stack-up": {
+      "//": "Keeps the full-stack lane off the dev stack. CI uses service containers instead.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docker compose -f docker-compose.test.yml up -d --wait",
+          "docker compose -f docker-compose.yml up -d --wait redis mailpit",
+          "cd libs/shared/prisma && npx prisma migrate deploy"
+        ],
+        "parallel": false,
+        "env": {
+          "DATABASE_URL": "postgresql://test:test@localhost:5433/job_tracker_test?schema=public"
+        }
+      }
+    },
+    "test-stack-down": {
+      "//": "Wipes the test database. globalTeardown already does this after a run; this is for a manual reset.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker compose -f docker-compose.test.yml down -v"
+      }
+    },
+    "e2e-local": {
+      "//": "Local full-stack run. The docker and prisma steps are inlined rather than calling `nx run test-stack-up`, to avoid a nested Nx CLI invocation.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docker compose -f docker-compose.test.yml up -d --wait",
+          "docker compose -f docker-compose.yml up -d --wait redis mailpit",
+          "cd libs/shared/prisma && npx prisma migrate deploy",
+          "npx playwright test -c apps/frontend-e2e/playwright.config.ts --project=full-stack --project=full-stack-mocked"
+        ],
+        "parallel": false,
+        "env": {
+          "DATABASE_URL": "postgresql://test:test@localhost:5433/job_tracker_test?schema=public"
+        }
+      }
     }
   }
 }

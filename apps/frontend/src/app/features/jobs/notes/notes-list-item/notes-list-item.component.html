@@ -1,18 +1,30 @@
-<div hlmCard class="flex justify-between p-6 shadow-sm">
+<div hlmCard data-testid="note-card" class="flex justify-between p-6 shadow-sm">
   <hlm-card-header class="flex items-start justify-between">
-    <h3 hlmCardTitle>{{ note().title }}</h3>
+    <h3 hlmCardTitle data-testid="note-title">{{ note().title }}</h3>
     <div>
-      <button hlmBtn variant="ghost" size="icon-sm" (click)="onEdit()">
+      <button
+        hlmBtn
+        variant="ghost"
+        size="icon-sm"
+        data-testid="edit-note-btn"
+        (click)="onEdit()"
+      >
         <ng-icon hlm size="sm" name="lucidePencil" />
       </button>
 
-      <button hlmBtn variant="ghost" size="icon-sm" (click)="onRemove()">
+      <button
+        hlmBtn
+        variant="ghost"
+        size="icon-sm"
+        data-testid="delete-note-btn"
+        (click)="onRemove()"
+      >
         <ng-icon hlm size="sm" name="lucideTrash2" />
       </button>
     </div>
   </hlm-card-header>
   <div hlmCardContent>
-    <article>{{ note().body }}</article>
+    <article data-testid="note-body">{{ note().body }}</article>
   </div>
   <hlm-card-footer>
     <span class="text-[10px] text-muted-foreground">

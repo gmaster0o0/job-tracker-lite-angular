@@ -1,0 +1,35 @@
+# Test stack for the full-stack e2e lane. Ports are offset from
+# docker-compose.yml so the dev stack can stay up alongside it. CI uses
+# service containers instead, on default ports.
+#
+# Distinct project name so the two stacks do not treat each other's
+# containers as orphans.
+name: job-tracker-test
+
+services:
+  postgres-test:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${TEST_DB_USER:-test}
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD:-test}
+      POSTGRES_DB: ${TEST_DB_NAME:-job_tracker_test}
+    ports:
+      - '${TEST_DB_PORT:-5433}:5432'
+    # tmpfs rather than a volume: the test database is disposable.
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${TEST_DB_USER:-test}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+# Postgres only. Redis and Mailpit are shared with docker-compose.yml, which
+# the test-stack-up and e2e-local targets start alongside this file.
+#
+# The API reads REDIS_* and MAILPIT_* through Nest's ConfigService, where .env
+# takes precedence over the environment handed to the process, so offset ports
+# for those would be silently ignored - the API would keep dialling 6379 and
+# 1025. Only DATABASE_URL can be redirected, because Prisma reads process.env
+# directly. That is also the one that has to be isolated: it holds persistent
+# state, while a queue and an inbox do not.

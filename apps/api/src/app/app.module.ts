@@ -25,7 +25,7 @@ import { QueueModule } from './queue/queue.module';
     AccountModule,
     ProfileModule,
     PreferencesModule,
-    QueueModule,
+    QueueModule.forRoot(),
   ],
   controllers: [],
 })

@@ -31,7 +31,9 @@ export class EmailProcessor
   }
 
   onApplicationBootstrap(): void {
-    this.worker.on('error', (error) => this.handleWorkerError(error));
+    if (this.worker) {
+      this.worker.on('error', (error) => this.handleWorkerError(error));
+    }
   }
 
   private handleWorkerError(error: Error): void {

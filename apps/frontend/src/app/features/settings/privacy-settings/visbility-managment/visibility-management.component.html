@@ -24,7 +24,7 @@
           hlmBtn
           class="min-w-44"
           variant="outline"
-          data-testid="visibilityManagementActionButton"
+          data-testid="visibility-management-action-button"
           (click)="onVisibilityChange('all', 0)"
         >
           {{ actionButtonLabel() }}
@@ -40,7 +40,7 @@
       </h3>
       <!-- Save State Indicator -->
       <div class="flex items-center gap-2">
-        <div data-testid="saveStateIndicator">
+        <div data-testid="save-state-indicator">
           @switch (saveState()) {
             @case ('saving') {
               <span hlmBadge variant="secondary">

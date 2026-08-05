@@ -50,15 +50,24 @@
   <!-- Job List -->
   <div class="flex-1 overflow-y-auto p-3">
     @if (jobsResource.error()) {
-      <div class="py-8 text-center text-sm text-muted-foreground">
+      <div
+        data-testid="error-state"
+        class="py-8 text-center text-sm text-muted-foreground"
+      >
         {{ 'jobs.menu.loadFailed' | transloco }}
       </div>
     } @else if (jobsResource.isLoading()) {
-      <div class="py-8 text-center text-sm text-muted-foreground">
+      <div
+        data-testid="loading-state"
+        class="py-8 text-center text-sm text-muted-foreground"
+      >
         {{ 'jobs.menu.loading' | transloco }}
       </div>
     } @else if (jobsResource.value()?.length === 0) {
-      <div class="py-8 text-center text-sm text-muted-foreground">
+      <div
+        data-testid="empty-state"
+        class="py-8 text-center text-sm text-muted-foreground"
+      >
         {{ 'jobs.menu.empty' | transloco }}
       </div>
     } @else {
@@ -71,11 +80,18 @@
               #rla="routerLinkActive"
               class="block"
             >
-              <app-job-card [job]="job" [selected]="rla.isActive" />
+              <app-job-card
+                data-testid="job-card"
+                [job]="job"
+                [selected]="rla.isActive"
+              />
             </a>
           </li>
         } @empty {
-          <li class="py-8 text-center text-sm text-muted-foreground">
+          <li
+            data-testid="no-results"
+            class="py-8 text-center text-sm text-muted-foreground"
+          >
             {{ 'jobs.menu.noResults' | transloco }}
           </li>
         }
