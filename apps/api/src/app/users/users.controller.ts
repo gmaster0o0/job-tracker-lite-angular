@@ -31,6 +31,13 @@ import { Role } from '@prisma/client';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Get user by ID (public basic info)' })
+  @ApiOkResponse({ schema: zodToApiSchema(userListItemSchema) })
+  async getUser(@Param('id') id: string): Promise<UserListItemDto> {
+    return this.usersService.getUser(id);
+  }
+
   @Get()
   @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(RolesGuard)

@@ -14,6 +14,12 @@ export class UsersDataAccessService {
     return firstValueFrom(this.http.get<UserListItemDto[]>('/api/users'));
   }
 
+  async getUser(userId: string): Promise<UserListItemDto> {
+    return firstValueFrom(
+      this.http.get<UserListItemDto>(`/api/users/${userId}`),
+    );
+  }
+
   async updateUserRole(
     userId: string,
     dto: UpdateUserRoleDto,

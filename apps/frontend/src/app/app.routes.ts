@@ -137,6 +137,14 @@ export const appRoutes: Route[] = [
           ),
       },
       {
+        path: 'users/:id',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./features/users/user-public-profile.component').then(
+            (m) => m.UserPublicProfileComponent,
+          ),
+      },
+      {
         path: 'users',
         canActivate: [authGuard, hasRoleGuard(['MODERATOR', 'ADMIN'])],
         children: [
@@ -153,13 +161,6 @@ export const appRoutes: Route[] = [
             loadComponent: () =>
               import('./features/users/users.component').then(
                 (m) => m.UsersComponent,
-              ),
-          },
-          {
-            path: ':slug',
-            loadComponent: () =>
-              import('./features/users/user-public-profile.component').then(
-                (m) => m.UserPublicProfileComponent,
               ),
           },
         ],

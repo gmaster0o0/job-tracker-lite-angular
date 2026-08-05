@@ -47,7 +47,7 @@ import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
                 <h2 hlmCardTitle>
                   {{ user.name }}
                   <span class="text-sm font-normal text-muted-foreground"
-                    >(@{{ slug() }})</span
+                    >(@{{ userId() }})</span
                   >
                 </h2>
                 <p hlmCardDescription>{{ user.email }}</p>
@@ -66,7 +66,7 @@ import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
                   <a
                     hlmBtn
                     variant="default"
-                    [routerLink]="['/profile', slug()]"
+                    [routerLink]="['/profile', userId()]"
                     data-testid="edit-profile-button"
                   >
                     {{ 'common.edit' | transloco }}
@@ -94,16 +94,10 @@ export class UserPublicProfileComponent {
   private readonly usersService = inject(UsersDataAccessService);
   private readonly authSession = inject(AuthSessionService);
 
-  slug = input.required<string>();
+  userId = input.required<string>();
 
   protected readonly isLoading = signal(false);
-  protected readonly users = signal<UserListItemDto[]>([]);
-
-  protected readonly user = computed(() => {
-    const users = this.users();
-    if (!users) return null;
-    return users.find((u: UserListItemDto) => u.id === this.slug()) ?? null;
-  });
+  protected readonly user = signal<UserListItemDto | null>(null);
 
   protected readonly roleClasses: Record<string, string> = {
     ADMIN: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
@@ -115,7 +109,7 @@ export class UserPublicProfileComponent {
 
   protected readonly canEdit = computed(() => {
     const currentUserId = this.authSession.session()?.user?.id;
-    const targetUserId = this.slug();
+    const targetUserId = this.userId();
     const userRole = this.authSession.role();
 
     // Can edit if: own profile OR admin/moderator
@@ -133,7 +127,10 @@ export class UserPublicProfileComponent {
   private async loadUser(): Promise<void> {
     this.isLoading.set(true);
     try {
-      this.users.set(await this.usersService.listUsers());
+      const user = await this.usersService.getUser(this.userId());
+      this.user.set(user);
+    } catch {
+      this.user.set(null);
     } finally {
       this.isLoading.set(false);
     }

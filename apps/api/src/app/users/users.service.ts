@@ -18,6 +18,17 @@ export class UsersService {
     });
   }
 
+  async getUser(userId: string): Promise<UserListItemDto> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, name: true, email: true, role: true },
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+
+    return user;
+  }
+
   async getUserProfile(userId: string): Promise<UserProfileDto> {
     const userProfile = await this.prisma.userProfile.findUnique({
       where: { userId },

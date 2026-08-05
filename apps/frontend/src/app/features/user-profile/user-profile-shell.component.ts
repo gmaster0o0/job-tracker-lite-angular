@@ -162,11 +162,13 @@ export class UserProfileShellComponent {
 
   private async loadData(): Promise<void> {
     try {
-      const [users, profile] = await Promise.all([
-        this.usersDataAccess.listUsers(),
-        this.profileDataAccess.getUserProfile(this.selectedUserId() ?? ''),
+      const userId = this.selectedUserId() ?? '';
+      const [user, profile] = await Promise.all([
+        this.usersDataAccess.getUser(userId),
+        this.profileDataAccess.getUserProfile(userId),
       ]);
-      this.users.set(users);
+      // Store single user in array to maintain compatibility with role dropdown logic
+      this.users.set([user]);
       this.userProfile.set(profile);
     } finally {
       this.isLoading.set(false);

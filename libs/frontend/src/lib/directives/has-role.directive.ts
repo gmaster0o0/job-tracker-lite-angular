@@ -1,9 +1,9 @@
 import {
   Directive,
   Input,
-  OnInit,
   TemplateRef,
   ViewContainerRef,
+  effect,
   inject,
 } from '@angular/core';
 import { AuthSessionService } from '../services/auth-session.service';
@@ -12,19 +12,22 @@ import { AuthSessionService } from '../services/auth-session.service';
   selector: '[libHasRole]',
   standalone: true,
 })
-export class HasRoleDirective implements OnInit {
+export class HasRoleDirective {
   private readonly authSession = inject(AuthSessionService);
   private readonly templateRef = inject(TemplateRef<unknown>);
   private readonly viewContainer = inject(ViewContainerRef);
   private _allowedRoles: string[] = [];
 
+  // Use effect() as a field initializer to track role changes reactively
+  private roleEffect = effect(() => {
+    // Access the role signal to establish the dependency
+    this.authSession.role();
+    this.updateView();
+  });
+
   @Input('libHasRole')
   set allowedRoles(value: string[]) {
     this._allowedRoles = value ?? [];
-    this.updateView();
-  }
-
-  ngOnInit(): void {
     this.updateView();
   }
 
