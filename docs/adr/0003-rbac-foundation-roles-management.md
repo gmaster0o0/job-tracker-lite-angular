@@ -12,7 +12,12 @@ The backend already exposes role-aware `/users` endpoints for moderators and adm
 - Introduce a standalone structural `HasRoleDirective` for template-level role gating.
 - Add `UsersDataAccessService` as the dedicated frontend client for `/api/users` role-management endpoints.
 - Add a `/users` page for moderators and admins that lists users with their current roles.
-- Add a `/profile/:slug` management shell that loads a user from the users list and allows administrators to change that user’s role through a Spartan select.
+- Implement dual-profile architecture:
+  - `/users/:slug` - Public profile view with edit button (owner/admin/moderator only)
+  - `/profile/:slug` - Admin/moderator edit page with compact header, auto-save role dropdown, and injected ProfileComponent
+- Add dedicated `GET /api/users/:id/profile` endpoint for fetching any user's full profile data (MODERATOR/ADMIN only).
+- Refactor ProfileComponent to accept external data via `profileData` input for reusability across contexts.
+- Implement auto-save for role changes with 1-second debounce to reduce API calls.
 - Keep user-facing labels translated through Transloco, including role labels and role-update feedback.
 
 ## Consequences
@@ -21,10 +26,14 @@ The backend already exposes role-aware `/users` endpoints for moderators and adm
 - RBAC rules now exist consistently at service, routing, and template layers.
 - Moderators can discover users, and administrators can update roles without leaving the app.
 - Client-side authorization becomes reusable instead of re-implemented per screen.
+- Dual-profile architecture separates public view from admin editing, improving UX and maintainability.
+- Dedicated `/api/users/:id/profile` endpoint provides efficient single-user profile fetching for moderators/admins.
+- ProfileComponent is now reusable across own-profile and moderation contexts via input-based data injection.
+- Auto-save role dropdown improves admin UX by eliminating manual save button clicks.
 
 ### Negative 👎
-- The profile management shell currently resolves the target user from the `/users` collection instead of a dedicated `/users/:id` endpoint, so it fetches more data than strictly necessary.
-- Role labels and messaging add more translation keys that must stay aligned across locales.
+- Role labels and messaging add translation keys that must stay aligned across locales.
+- Public profile at `/users/:slug` currently shows minimal information and could be enhanced with more user details.
 
 ### Risks
 - Client-side RBAC improves UX but does not replace backend enforcement; route guards and directives must remain aligned with server-side `RolesGuard` rules.
@@ -38,8 +47,11 @@ The backend already exposes role-aware `/users` endpoints for moderators and adm
 ### Alternative 2: Use only route guards
 - Why not: route guards protect navigation, but they do not solve conditional rendering inside already-authorized screens such as the admin-only role selector.
 
-### Alternative 3: Add a dedicated `/users/:id` endpoint before building UI
-- Why not: unnecessary for the current foundation scope because the existing users list already contains the data needed by the management shell.
+### Alternative 3: Keep profile management in single shell with no public view
+- Why not: Forces users to navigate through admin-only routes to view profiles, and mixes public profile viewing with privileged editing in a single component.
+
+### Alternative 4: Immediate role save without debounce
+- Why not: Creates excessive API calls on rapid dropdown changes, potentially overwhelming the server with unnecessary updates.
 
 ## Related Decisions
 - ADR-0001: User Preferences Persistence & Multi-Device Sync
@@ -52,4 +64,4 @@ The backend already exposes role-aware `/users` endpoints for moderators and adm
 ---
 **Author:** Copilot
 **Date:** 2026-08-04
-**Last Updated:** 2026-08-04
+**Last Updated:** 2026-08-05
