@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { provideIcons } from '@ng-icons/core';
@@ -32,9 +32,20 @@ type SectionName = 'personal' | 'contact' | 'skills' | 'career-preference';
   templateUrl: './profile.component.html',
 })
 export class ProfileComponent {
-  private readonly profileData = inject(ProfileDataAccessService);
+  private readonly profileDataAccess = inject(ProfileDataAccessService);
 
-  profileResource = this.profileData.profileResource;
+  // Input for injected profile data (moderator mode)
+  profileData = input<UserProfileDto | null>(null);
+  mode = input<'own' | 'mod'>('own');
+
+  // Use either injected data or resource data
+  protected readonly profile = computed(() => {
+    const injected = this.profileData();
+    if (injected) return injected;
+    return this.profileResource.value();
+  });
+
+  profileResource = this.profileDataAccess.profileResource;
 
   editingSection = signal<SectionName | null>(null);
   savingSection = signal<SectionName | null>(null);
@@ -86,7 +97,7 @@ export class ProfileComponent {
   async saveSection(section: SectionName, updateDto: UpdateUserProfileDto) {
     try {
       this.savingSection.set(section);
-      await this.profileData.updateProfile(updateDto);
+      await this.profileDataAccess.updateProfile(updateDto);
       this.editingSection.set(null);
     } catch (error) {
       console.error('Failed to update profile', error);

@@ -764,7 +764,9 @@
       "changeRole": "Szerepkör módosítása",
       "notFound": "A felhasználó nem található",
       "roleUpdated": "A szerepkör sikeresen frissítve.",
-      "roleUpdateFailed": "Nem sikerült frissíteni a szerepkört."
+      "roleUpdateFailed": "Nem sikerült frissíteni a szerepkört.",
+      "publicViewPlaceholder": "Nyilvános profil nézet - Hamarosan",
+      "title": "Profil"
     },
     "roles": {
       "ADMIN": "Adminisztrátor",

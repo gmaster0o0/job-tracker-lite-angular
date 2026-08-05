@@ -67,10 +67,10 @@ describe('UsersComponent', () => {
     ) as HTMLAnchorElement[];
 
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
-      '/profile/user_admin',
-      '/profile/user_mod',
-      '/profile/user_rec',
-      '/profile/user_basic',
+      '/users/user_admin',
+      '/users/user_mod',
+      '/users/user_rec',
+      '/users/user_basic',
     ]);
   });
 });

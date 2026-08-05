@@ -17,8 +17,10 @@ import { UsersService } from './users.service';
 import {
   updateUserRoleSchema,
   userListItemSchema,
+  userProfileSchema,
   UpdateUserRoleDto,
   UserListItemDto,
+  UserProfileDto,
 } from '@job-tracker-lite-angular/schemas';
 import { Role } from '@prisma/client';
 
@@ -36,6 +38,15 @@ export class UsersController {
   @ApiOkResponse({ schema: zodToApiSchema(userListItemSchema) })
   async listUsers(): Promise<UserListItemDto[]> {
     return this.usersService.listUsers();
+  }
+
+  @Get(':id/profile')
+  @Roles(Role.MODERATOR, Role.ADMIN)
+  @UseGuards(RolesGuard)
+  @ApiOperation({ summary: 'Get user profile by ID (Moderator/Admin only)' })
+  @ApiOkResponse({ schema: zodToApiSchema(userProfileSchema) })
+  async getUserProfile(@Param('id') id: string): Promise<UserProfileDto> {
+    return this.usersService.getUserProfile(id);
   }
 
   @Patch(':id/role')

@@ -765,11 +765,13 @@
       "viewProfile": "View Profile"
     },
     "profile": {
+      "title": "Profile",
       "viewingProfile": "Viewing profile of {{ username }}",
       "changeRole": "Change Role",
       "notFound": "User not found",
       "roleUpdated": "Role updated successfully.",
-      "roleUpdateFailed": "Failed to update role."
+      "roleUpdateFailed": "Failed to update role.",
+      "publicViewPlaceholder": "Public profile view - Coming Soon"
     },
     "roles": {
       "ADMIN": "Admin",
