@@ -42,6 +42,13 @@
     "add": "Hozzáadás"
   },
   "jobs": {
+    "status": {
+      "saved": "Mentve",
+      "applied": "Jelentkezve",
+      "interview": "Interjú",
+      "offered": "Ajánlat kapva",
+      "rejected": "Elutasítva"
+    },
     "progression": {
       "setStatusTooltip": "Státusz módosítása erre: {{label}}",
       "saved": "Mentve",
@@ -177,7 +184,8 @@
       "offer": "Ajánlat"
     },
     "overview": {
-      "noDescription": "Nincs leírás megadva."
+      "noDescription": "Nincs leírás megadva.",
+      "editTooltip": "Állás szerkesztése"
     },
     "deleteDialog": {
       "description": "Biztosan törölni szeretné ezt az állás jelentkezést?",

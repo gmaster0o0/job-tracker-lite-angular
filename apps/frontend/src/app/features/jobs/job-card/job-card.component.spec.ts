@@ -3,7 +3,6 @@ import { TestBed } from '@angular/core/testing';
 import { jobFixtures } from '@job-tracker-lite-angular/testing';
 import { JobCardComponent } from './job-card.component';
 import { JobCardHarness } from './job-card.harness';
-import { JobStatus } from '@job-tracker-lite-angular/schemas';
 import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 describe('JobCardComponent', () => {
@@ -25,7 +24,7 @@ describe('JobCardComponent', () => {
 
       expect(text).toContain('Frontend Engineer');
       expect(text).toContain('Acme Labs');
-      expect(text).toContain(JobStatus.SAVED);
+      expect(text).toContain('Saved');
     });
   });
 });

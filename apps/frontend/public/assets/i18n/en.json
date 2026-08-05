@@ -42,6 +42,13 @@
     "add": "Add"
   },
   "jobs": {
+    "status": {
+      "saved": "Saved",
+      "applied": "Applied",
+      "interview": "Interview",
+      "offered": "Offered",
+      "rejected": "Rejected"
+    },
     "progression": {
       "setStatusTooltip": "Set status to {{label}}",
       "saved": "Saved",
@@ -179,7 +186,8 @@
       "offer": "Offer"
     },
     "overview": {
-      "noDescription": "No description provided."
+      "noDescription": "No description provided.",
+      "editTooltip": "Edit job"
     },
     "deleteDialog": {
       "description": "Are you sure you want to delete this job?",

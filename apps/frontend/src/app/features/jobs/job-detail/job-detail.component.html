@@ -55,7 +55,7 @@
                 data-testid="job-status-badge"
                 [ngClass]="statusBadgeClasses[job()!.status]"
               >
-                {{ formatStatus(job()!.status) }}
+                {{ statusLabelKeys[job()!.status] | transloco }}
               </span>
               <div
                 [hlmTooltip]="changeStatusTooltip()"
@@ -194,7 +194,10 @@
             class="mt-4 overflow-y-auto pr-2 custom-scrollbar"
             style="max-height: calc(100vh - 420px); min-height: 300px"
           >
-            <app-job-overview [description]="job()!.description" />
+            <app-job-overview
+              [description]="job()!.description"
+              (edit)="openEditJobDialog(job()!)"
+            />
           </div>
           <div hlmTabsContent="contacts" class="flex-1 min-h-0 mt-4">
             <app-contacts-tab [jobId]="job()!.id" />
