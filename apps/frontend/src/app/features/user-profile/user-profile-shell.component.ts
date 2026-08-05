@@ -16,13 +16,11 @@ import {
 import {
   AuthSessionService,
   NotificationService,
-  ProfileDataAccessService,
   UsersDataAccessService,
 } from '@job-tracker-lite-angular/frontend-data-access';
 import {
   UpdateUserRoleDto,
   UserListItemDto,
-  UserProfileDto,
 } from '@job-tracker-lite-angular/schemas';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
@@ -53,7 +51,6 @@ const SAVE_DEBOUNCE_MS = 1000;
 export class UserProfileShellComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly usersDataAccess = inject(UsersDataAccessService);
-  private readonly profileDataAccess = inject(ProfileDataAccessService);
   private readonly notification = inject(NotificationService);
   private readonly authSession = inject(AuthSessionService);
   private readonly transloco = inject(TranslocoService);
@@ -63,7 +60,6 @@ export class UserProfileShellComponent {
     this.route.snapshot.paramMap.get('slug'),
   );
   protected readonly user = signal<UserListItemDto | null>(null);
-  protected readonly userProfile = signal<UserProfileDto | null>(null);
 
   protected readonly roleOptions: readonly RoleOption[] = [
     { value: 'ADMIN', label: translateSignal('users.roles.ADMIN') },
@@ -157,12 +153,8 @@ export class UserProfileShellComponent {
   private async loadData(): Promise<void> {
     try {
       const userId = this.selectedUserId() ?? '';
-      const [user, profile] = await Promise.all([
-        this.usersDataAccess.getUser(userId),
-        this.profileDataAccess.getUserProfile(userId),
-      ]);
+      const user = await this.usersDataAccess.getUser(userId);
       this.user.set(user);
-      this.userProfile.set(profile);
     } finally {
       this.isLoading.set(false);
     }

@@ -39,13 +39,7 @@
   </div>
 
   <!-- Profile component injected below -->
-  @if (userProfile(); as profile) {
-    <app-profile
-      [profileData]="profile"
-      [mode]="'mod'"
-      [targetUserId]="selectedUserId()"
-    />
-  }
+  <app-profile [mode]="'mod'" [targetUserId]="selectedUserId()" />
 } @else {
   <div class="p-8 text-center text-muted-foreground">
     {{ 'users.profile.notFound' | transloco }}

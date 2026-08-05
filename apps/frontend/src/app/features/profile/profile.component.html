@@ -3,7 +3,7 @@
     {{ 'profile.title' | transloco }}
   </h1>
 
-  @if (profileResource.isLoading() && !profile()) {
+  @if (profileResource().isLoading() && !profile()) {
     <div class="flex h-64 items-center justify-center">
       <p class="text-muted-foreground animate-pulse">
         {{ 'profile.loading' | transloco }}

@@ -1,4 +1,12 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { provideIcons } from '@ng-icons/core';
@@ -34,20 +42,55 @@ type SectionName = 'personal' | 'contact' | 'skills' | 'career-preference';
 export class ProfileComponent {
   private readonly profileDataAccess = inject(ProfileDataAccessService);
 
-  // Input for injected profile data (moderator mode)
-  profileData = input<UserProfileDto | null>(null);
   mode = input<'own' | 'mod'>('own');
-  // Target user ID for moderator mode (required if mode is 'mod')
   targetUserId = input<string | null>(null);
 
-  // Use either injected data or resource data
+  // Signals for profile state
+  private readonly modProfileData = signal<UserProfileDto | null>(null);
+  private readonly isLoadingMod = signal(false);
+
+  // Fetch profile when mode or targetUserId changes
+  constructor() {
+    effect(() => {
+      const currentMode = this.mode();
+      const userId = this.targetUserId();
+
+      if (currentMode === 'mod' && userId) {
+        untracked(() => void this.fetchModProfile(userId));
+      }
+    });
+  }
+
+  private async fetchModProfile(userId: string): Promise<void> {
+    try {
+      this.isLoadingMod.set(true);
+      const profile = await this.profileDataAccess.getUserProfile(userId);
+      this.modProfileData.set(profile);
+    } finally {
+      this.isLoadingMod.set(false);
+    }
+  }
+
+  // Use the appropriate profile based on mode
   protected readonly profile = computed(() => {
-    const injected = this.profileData();
-    if (injected) return injected;
-    return this.profileResource.value();
+    if (this.mode() === 'mod') {
+      return this.modProfileData();
+    }
+    return this.profileDataAccess.profileResource.value();
   });
 
-  profileResource = this.profileDataAccess.profileResource;
+  protected readonly profileResource = computed(() => {
+    if (this.mode() === 'mod') {
+      return {
+        value: () => this.modProfileData(),
+        isLoading: () => this.isLoadingMod(),
+      };
+    }
+    return {
+      value: this.profileDataAccess.profileResource.value,
+      isLoading: this.profileDataAccess.profileResource.isLoading,
+    };
+  });
 
   editingSection = signal<SectionName | null>(null);
   savingSection = signal<SectionName | null>(null);
