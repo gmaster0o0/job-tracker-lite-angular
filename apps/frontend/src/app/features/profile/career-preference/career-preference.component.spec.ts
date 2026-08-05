@@ -180,4 +180,75 @@ describe('CareerPreferenceComponent', () => {
       consoleError.mockRestore();
     });
   });
+
+  describe('mode-based routing', () => {
+    async function settleDebounce(): Promise<void> {
+      fixture.detectChanges();
+      await vi.advanceTimersByTimeAsync(0);
+    }
+
+    it('calls updateProfile when mode is "own" (default)', async () => {
+      vi.useFakeTimers();
+
+      component.onExperienceLevelChange('LEAD');
+      await vi.advanceTimersByTimeAsync(1000);
+      await settleDebounce();
+
+      expect(profileDataServiceSpy.updateProfile).toHaveBeenCalledTimes(1);
+      expect(profileDataServiceSpy.updateProfile).toHaveBeenCalledWith(
+        expect.objectContaining({ experienceLevel: 'LEAD' }),
+      );
+    });
+
+    it('calls updateUserProfile when mode is "mod" with targetUserId', async () => {
+      vi.useFakeTimers();
+
+      const updateUserProfileSpy = vi.fn().mockResolvedValue(undefined);
+      profileDataServiceSpy = {
+        updateProfile: vi.fn().mockResolvedValue(undefined),
+        updateUserProfile: updateUserProfileSpy,
+      } as never;
+
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [HostComponent, getTranslocoModule()],
+        providers: [
+          {
+            provide: ProfileDataAccessService,
+            useValue: profileDataServiceSpy,
+          },
+        ],
+      }).compileComponents();
+
+      @Component({
+        standalone: true,
+        imports: [CareerPreferenceComponent],
+        template: `<app-career-preference
+          [profile]="profile"
+          [mode]="'mod'"
+          [targetUserId]="'target-user-123'"
+        />`,
+      })
+      class ModHostComponent {
+        profile = userProfileFixtures.johnDoe;
+      }
+
+      const modFixture = TestBed.createComponent(ModHostComponent);
+      const modComponent = modFixture.debugElement.query(
+        By.directive(CareerPreferenceComponent),
+      ).componentInstance;
+
+      modComponent.onWorkingStyleChange('ON_SITE');
+      await vi.advanceTimersByTimeAsync(1000);
+      modFixture.detectChanges();
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(updateUserProfileSpy).toHaveBeenCalledTimes(1);
+      expect(updateUserProfileSpy).toHaveBeenCalledWith(
+        'target-user-123',
+        expect.objectContaining({ workingStyle: 'ON_SITE' }),
+      );
+      expect(profileDataServiceSpy.updateProfile).not.toHaveBeenCalled();
+    });
+  });
 });
