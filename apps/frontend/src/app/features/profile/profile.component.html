@@ -36,12 +36,16 @@
       <app-skill-manager
         [profile]="profile"
         [disabled]="isAnySectionEditing() || isCareerPreferenceSaving()"
+        [mode]="mode()"
+        [targetUserId]="targetUserId()"
         (saveStateChanged)="onSkillManagerSaveStateChange($event)"
       ></app-skill-manager>
 
       <app-career-preference
         [profile]="profile"
         [disabled]="isAnySectionEditing() || isSkillManagerSaving()"
+        [mode]="mode()"
+        [targetUserId]="targetUserId()"
         (saveStateChanged)="onCareerPreferenceSaveStateChange($event)"
       />
     </div>

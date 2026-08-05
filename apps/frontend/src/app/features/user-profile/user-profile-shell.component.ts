@@ -62,7 +62,7 @@ export class UserProfileShellComponent {
   protected readonly selectedUserId = signal<string | null>(
     this.route.snapshot.paramMap.get('slug'),
   );
-  protected readonly users = signal<UserListItemDto[]>([]);
+  protected readonly user = signal<UserListItemDto | null>(null);
   protected readonly userProfile = signal<UserProfileDto | null>(null);
 
   protected readonly roleOptions: readonly RoleOption[] = [
@@ -71,11 +71,6 @@ export class UserProfileShellComponent {
     { value: 'RECRUITER', label: translateSignal('users.roles.RECRUITER') },
     { value: 'USER', label: translateSignal('users.roles.USER') },
   ];
-
-  protected readonly user = computed(
-    () =>
-      this.users().find((item) => item.id === this.selectedUserId()) ?? null,
-  );
 
   protected readonly currentRoleValue = computed(
     () =>
@@ -133,9 +128,8 @@ export class UserProfileShellComponent {
         } satisfies UpdateUserRoleDto,
       );
 
-      this.users.update((items) =>
-        items.map((item) => (item.id === updated.id ? updated : item)),
-      );
+      // Update the single user signal
+      this.user.set(updated);
 
       const session = this.authSession.session();
       if (session?.user.id === updated.id) {
@@ -167,8 +161,7 @@ export class UserProfileShellComponent {
         this.usersDataAccess.getUser(userId),
         this.profileDataAccess.getUserProfile(userId),
       ]);
-      // Store single user in array to maintain compatibility with role dropdown logic
-      this.users.set([user]);
+      this.user.set(user);
       this.userProfile.set(profile);
     } finally {
       this.isLoading.set(false);

@@ -90,4 +90,235 @@ describe('UsersService', () => {
       expect(prismaMock.user.update).not.toHaveBeenCalled();
     });
   });
+
+  describe('getUser', () => {
+    it('should return a user by id', async () => {
+      const userId = 'user_basic';
+      const mockUser = {
+        id: userId,
+        name: 'Basic User',
+        email: 'basic@example.com',
+        role: Role.USER,
+      };
+
+      prismaMock.user.findUnique.mockResolvedValue(mockUser);
+
+      const result = await service.getUser(userId);
+
+      expect(result).toEqual(mockUser);
+      expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+        where: { id: userId },
+        select: { id: true, name: true, email: true, role: true },
+      });
+    });
+
+    it('should throw NotFoundException when user does not exist', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(null);
+
+      await expect(service.getUser('nonexistent-id')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+
+  describe('getUserProfile', () => {
+    it('should return a user profile with mapped data', async () => {
+      const userId = 'user_basic';
+      const mockUserProfile = {
+        userId,
+        title: 'Senior Developer',
+        city: 'New York',
+        bio: 'Experienced developer',
+        linkedin: 'linkedin.com/in/user',
+        github: 'github.com/user',
+        webpage: 'user.dev',
+        coreSkills: ['TypeScript', 'Angular'],
+        experienceLevel: 'SENIOR',
+        workingStyle: 'REMOTE',
+        careerType: 'FULL_TIME',
+        personalVisibility: 2,
+        contactVisibility: 1,
+        skillsVisibility: 2,
+        preferenceVisibility: 2,
+        user: {
+          id: userId,
+          name: 'Basic User',
+          email: 'basic@example.com',
+        },
+      };
+
+      prismaMock.userProfile.findUnique.mockResolvedValue(mockUserProfile);
+
+      const result = await service.getUserProfile(userId);
+
+      expect(result).toEqual({
+        userId,
+        name: 'Basic User',
+        title: 'Senior Developer',
+        city: 'New York',
+        bio: 'Experienced developer',
+        email: 'basic@example.com',
+        linkedin: 'linkedin.com/in/user',
+        github: 'github.com/user',
+        webpage: 'user.dev',
+        coreSkills: ['TypeScript', 'Angular'],
+        experienceLevel: 'SENIOR',
+        workingStyle: 'REMOTE',
+        careerType: 'FULL_TIME',
+        personalVisibility: 2,
+        contactVisibility: 1,
+        skillsVisibility: 2,
+        preferenceVisibility: 2,
+      });
+      expect(prismaMock.userProfile.findUnique).toHaveBeenCalledWith({
+        where: { userId },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      });
+    });
+
+    it('should throw NotFoundException when user profile does not exist', async () => {
+      prismaMock.userProfile.findUnique.mockResolvedValue(null);
+
+      await expect(service.getUserProfile('nonexistent-id')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+
+  describe('updateUserProfile', () => {
+    it('should update a user profile and return mapped data', async () => {
+      const userId = 'user_basic';
+      const updateDto = {
+        title: 'Lead Developer',
+        bio: 'Updated bio',
+        coreSkills: ['TypeScript', 'React', 'Node.js'],
+      };
+      const mockUser = {
+        id: userId,
+        name: 'Basic User',
+        email: 'basic@example.com',
+        role: Role.USER,
+      };
+      const mockUpdatedProfile = {
+        userId,
+        title: 'Lead Developer',
+        city: 'New York',
+        bio: 'Updated bio',
+        linkedin: null,
+        github: null,
+        webpage: null,
+        coreSkills: ['TypeScript', 'React', 'Node.js'],
+        experienceLevel: 'SENIOR',
+        workingStyle: 'REMOTE',
+        careerType: 'FULL_TIME',
+        personalVisibility: 2,
+        contactVisibility: 1,
+        skillsVisibility: 2,
+        preferenceVisibility: 2,
+        user: {
+          id: userId,
+          name: 'Basic User',
+          email: 'basic@example.com',
+        },
+      };
+
+      prismaMock.user.findUnique.mockResolvedValue(mockUser);
+      prismaMock.userProfile.upsert.mockResolvedValue(mockUpdatedProfile);
+
+      const result = await service.updateUserProfile(userId, updateDto);
+
+      expect(result.title).toBe('Lead Developer');
+      expect(result.bio).toBe('Updated bio');
+      expect(result.coreSkills).toEqual(['TypeScript', 'React', 'Node.js']);
+      expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+        where: { id: userId },
+      });
+      expect(prismaMock.userProfile.upsert).toHaveBeenCalledWith({
+        where: { userId },
+        update: updateDto,
+        create: {
+          ...updateDto,
+          userId,
+          coreSkills: updateDto.coreSkills,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      });
+    });
+
+    it('should throw NotFoundException when user does not exist', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.updateUserProfile('nonexistent-id', { title: 'Developer' }),
+      ).rejects.toThrow(NotFoundException);
+
+      expect(prismaMock.userProfile.upsert).not.toHaveBeenCalled();
+    });
+
+    it('should write to the correct target user profile, not the caller', async () => {
+      // This test specifically addresses the data integrity bug where
+      // moderators editing another user's profile would corrupt their own
+      const targetUserId = 'target-user-id';
+      const updateDto = { bio: 'New bio for target user' };
+      const mockUser = {
+        id: targetUserId,
+        name: 'Target User',
+        email: 'target@example.com',
+        role: Role.USER,
+      };
+      const mockProfile = {
+        userId: targetUserId,
+        bio: 'New bio for target user',
+        title: null,
+        city: null,
+        linkedin: null,
+        github: null,
+        webpage: null,
+        coreSkills: [],
+        experienceLevel: null,
+        workingStyle: null,
+        careerType: null,
+        personalVisibility: 0,
+        contactVisibility: 0,
+        skillsVisibility: 0,
+        preferenceVisibility: 0,
+        user: {
+          id: targetUserId,
+          name: 'Target User',
+          email: 'target@example.com',
+        },
+      };
+
+      prismaMock.user.findUnique.mockResolvedValue(mockUser);
+      prismaMock.userProfile.upsert.mockResolvedValue(mockProfile);
+
+      const result = await service.updateUserProfile(targetUserId, updateDto);
+
+      // Assert that the update targeted the correct user
+      expect(prismaMock.userProfile.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { userId: targetUserId },
+          create: expect.objectContaining({ userId: targetUserId }),
+        }),
+      );
+      expect(result.userId).toBe(targetUserId);
+      expect(result.bio).toBe('New bio for target user');
+    });
+  });
 });
