@@ -5,6 +5,7 @@ import {
   UserListItemDto,
   UserProfileDto,
 } from '@job-tracker-lite-angular/schemas';
+import { UserProfile } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -21,12 +22,6 @@ export class UsersService {
     const userProfile = await this.prisma.userProfile.findUnique({
       where: { userId },
       include: {
-        careerPreference: true,
-        skills: {
-          include: {
-            skill: true,
-          },
-        },
         user: {
           select: {
             id: true,
@@ -39,19 +34,18 @@ export class UsersService {
 
     if (!userProfile) throw new NotFoundException('User profile not found');
 
-    // Explicitly type userProfile.skills to avoid TypeScript inference issues
-    const profileSkills = userProfile.skills as Array<{
-      skill: { id: string; name: string };
-    }>;
+    return this.mapToUserProfileDto(userProfile);
+  }
 
-    // Explicitly type careerPreference
-    const careerPref = userProfile.careerPreference as {
-      experienceLevel:
-        'INTERN' | 'JUNIOR' | 'MID' | 'SENIOR' | 'LEAD' | 'EXPERT' | null;
-      workingStyle: 'REMOTE' | 'HYBRID' | 'ON_SITE' | null;
-      careerType: 'FULL_TIME' | 'PART_TIME' | 'CONTRACT' | null;
-    } | null;
-
+  /**
+   * Maps Prisma UserProfile to UserProfileDto.
+   * Centralized mapping ensures consistency and makes updates easier.
+   */
+  private mapToUserProfileDto(
+    userProfile: UserProfile & {
+      user: { id: string; name: string; email: string };
+    },
+  ): UserProfileDto {
     return {
       userId: userProfile.userId,
       name: userProfile.user.name,
@@ -62,10 +56,10 @@ export class UsersService {
       linkedin: userProfile.linkedin,
       github: userProfile.github,
       webpage: userProfile.webpage,
-      coreSkills: profileSkills.map((us) => us.skill.name),
-      experienceLevel: careerPref?.experienceLevel ?? null,
-      workingStyle: careerPref?.workingStyle ?? null,
-      careerType: careerPref?.careerType ?? null,
+      coreSkills: userProfile.coreSkills ?? [],
+      experienceLevel: userProfile.experienceLevel,
+      workingStyle: userProfile.workingStyle,
+      careerType: userProfile.careerType,
       personalVisibility: userProfile.personalVisibility,
       contactVisibility: userProfile.contactVisibility,
       skillsVisibility: userProfile.skillsVisibility,
