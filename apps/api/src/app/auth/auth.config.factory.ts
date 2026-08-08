@@ -7,7 +7,9 @@ import { EmailService } from '../email/email.service';
 import {
   getLanguageFromUrl,
   setLanguageOnUrl,
+  toUserSlugBase,
 } from '@job-tracker-lite-angular/core-utils';
+import { randomBytes } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
 import { AccountStatus, Role } from '@prisma/client';
 
@@ -22,6 +24,7 @@ type EmailVerificationConfig = NonNullable<
 export class AuthConfigFactory {
   private defaultBaseUrl = 'http://localhost:3000/api/auth';
   private defaultTrustedOrigin = 'http://localhost:4200';
+  private maxSlugAttempts = 5;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -61,9 +64,53 @@ export class AuthConfigFactory {
             input: false,
             defaultValue: Role.USER,
           },
+          slug: {
+            type: 'string',
+            required: false,
+            input: false,
+          },
+        },
+      },
+      databaseHooks: {
+        user: {
+          create: {
+            before: async (user) => ({
+              data: {
+                ...user,
+                slug: await this.generateUniqueUserSlug(user.name),
+              },
+            }),
+          },
         },
       },
     });
+  }
+
+  /**
+   * `User.slug` is required and unique, so every creation path has to supply
+   * one. Names are not unique, so a taken base slug gets a random suffix -
+   * matching the id-suffix approach the backfill migration used.
+   */
+  private async generateUniqueUserSlug(name: string | null): Promise<string> {
+    const base = toUserSlugBase(name);
+
+    for (let attempt = 0; attempt < this.maxSlugAttempts; attempt++) {
+      const candidate =
+        attempt === 0 ? base : `${base}-${randomBytes(4).toString('hex')}`;
+
+      const taken = await this.prisma.user.findUnique({
+        where: { slug: candidate },
+        select: { id: true },
+      });
+
+      if (!taken) {
+        return candidate;
+      }
+    }
+
+    // Exhausting the attempts means repeated random collisions, so fall back to
+    // a suffix wide enough that a clash is not a practical concern.
+    return `${base}-${randomBytes(16).toString('hex')}`;
   }
 
   private getEmailAndPasswordConfig(): EmailAndPasswordConfig {

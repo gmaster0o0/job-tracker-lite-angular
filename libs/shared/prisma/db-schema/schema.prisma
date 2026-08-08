@@ -18,6 +18,7 @@ enum JobStatus {
 
 model User {
   id            String    @id @default(cuid())
+  slug          String    @unique
   name          String
   email         String    @unique
   pendingEmail  String?
