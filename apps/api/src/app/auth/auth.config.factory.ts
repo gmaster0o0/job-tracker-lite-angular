@@ -20,6 +20,12 @@ type EmailVerificationConfig = NonNullable<
   BetterAuthOptions['emailVerification']
 >;
 
+// toUserSlugBase() only ever emits [a-z0-9-], so none of these are reachable
+// today - this only guards against that charset changing later.
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 @Injectable()
 export class AuthConfigFactory {
   private defaultBaseUrl = 'http://localhost:3000/api/auth';
@@ -88,15 +94,16 @@ export class AuthConfigFactory {
 
   /**
    * `User.slug` is required and unique, so every creation path has to supply
-   * one. Names are not unique, so a taken base slug gets a random suffix -
-   * matching the id-suffix approach the backfill migration used.
+   * one. Names are not unique, so a taken base slug gets an incrementing
+   * number - "demo-user", then "demo-user-2", "demo-user-3" - which reads far
+   * better in a `/profile/:slug` URL than a random suffix.
    */
   private async generateUniqueUserSlug(name: string | null): Promise<string> {
     const base = toUserSlugBase(name);
 
     for (let attempt = 0; attempt < this.maxSlugAttempts; attempt++) {
       const candidate =
-        attempt === 0 ? base : `${base}-${randomBytes(4).toString('hex')}`;
+        attempt === 0 ? base : await this.nextNumberedSlug(base);
 
       const taken = await this.prisma.user.findUnique({
         where: { slug: candidate },
@@ -108,9 +115,35 @@ export class AuthConfigFactory {
       }
     }
 
-    // Exhausting the attempts means repeated random collisions, so fall back to
-    // a suffix wide enough that a clash is not a practical concern.
+    // Exhausting the attempts means every number we tried lost a race, so
+    // fall back to a suffix wide enough that a clash is not a practical
+    // concern.
     return `${base}-${randomBytes(16).toString('hex')}`;
+  }
+
+  /**
+   * Finds the next free "-N" suffix for a base slug. Sorting the slug column
+   * as a string would put "-10" before "-2", so the suffix is parsed and
+   * compared as a number instead. Slugs with a non-numeric suffix (e.g. an
+   * old random-fallback slug) are ignored rather than breaking the scan.
+   */
+  private async nextNumberedSlug(base: string): Promise<string> {
+    const rows = await this.prisma.user.findMany({
+      where: { slug: { startsWith: `${base}-` } },
+      select: { slug: true },
+    });
+
+    const suffixPattern = new RegExp(`^${escapeRegExp(base)}-(\\d+)$`);
+    let highest = 1;
+
+    for (const { slug } of rows) {
+      const match = suffixPattern.exec(slug);
+      if (match) {
+        highest = Math.max(highest, Number(match[1]));
+      }
+    }
+
+    return `${base}-${highest + 1}`;
   }
 
   private getEmailAndPasswordConfig(): EmailAndPasswordConfig {
