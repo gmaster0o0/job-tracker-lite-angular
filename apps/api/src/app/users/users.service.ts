@@ -3,10 +3,10 @@ import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import {
   UpdateUserRoleDto,
   UserListItemDto,
-  UserProfileDto,
+  UserDetailsDto,
+  userDetailsSchema,
   UpdateUserProfileDto,
 } from '@job-tracker-lite-angular/schemas';
-import { UserProfile } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -30,7 +30,7 @@ export class UsersService {
     return user;
   }
 
-  async getUserProfile(userId: string): Promise<UserProfileDto> {
+  async getUserProfile(userId: string): Promise<UserDetailsDto> {
     const userProfile = await this.prisma.userProfile.findUnique({
       where: { userId },
       include: {
@@ -46,37 +46,7 @@ export class UsersService {
 
     if (!userProfile) throw new NotFoundException('User profile not found');
 
-    return this.mapToUserProfileDto(userProfile);
-  }
-
-  /**
-   * Maps Prisma UserProfile to UserProfileDto.
-   * Centralized mapping ensures consistency and makes updates easier.
-   */
-  private mapToUserProfileDto(
-    userProfile: UserProfile & {
-      user: { id: string; name: string; email: string };
-    },
-  ): UserProfileDto {
-    return {
-      userId: userProfile.userId,
-      name: userProfile.user.name,
-      title: userProfile.title,
-      city: userProfile.city,
-      bio: userProfile.bio,
-      email: userProfile.user.email,
-      linkedin: userProfile.linkedin,
-      github: userProfile.github,
-      webpage: userProfile.webpage,
-      coreSkills: userProfile.coreSkills ?? [],
-      experienceLevel: userProfile.experienceLevel,
-      workingStyle: userProfile.workingStyle,
-      careerType: userProfile.careerType,
-      personalVisibility: userProfile.personalVisibility,
-      contactVisibility: userProfile.contactVisibility,
-      skillsVisibility: userProfile.skillsVisibility,
-      preferenceVisibility: userProfile.preferenceVisibility,
-    } satisfies UserProfileDto;
+    return userDetailsSchema.parse(userProfile);
   }
 
   async updateUserRole(
@@ -95,19 +65,18 @@ export class UsersService {
 
   async updateUserProfile(
     userId: string,
-    updateProfileDto: UpdateUserProfileDto,
-  ): Promise<UserProfileDto> {
-    // Verify user exists
+    dto: UpdateUserProfileDto,
+  ): Promise<UserDetailsDto> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
     const updated = await this.prisma.userProfile.upsert({
       where: { userId },
-      update: updateProfileDto,
+      update: dto,
       create: {
-        ...updateProfileDto,
+        ...dto,
         userId,
-        coreSkills: updateProfileDto.coreSkills ?? [],
+        coreSkills: dto.coreSkills ?? [],
       },
       include: {
         user: {
@@ -120,6 +89,6 @@ export class UsersService {
       },
     });
 
-    return this.mapToUserProfileDto(updated);
+    return userDetailsSchema.parse(updated);
   }
 }

@@ -3,6 +3,7 @@ export * from './jobs.schema';
 export * from './notes.schema';
 export * from './users.schema';
 export * from './profile.schema';
+export * from './user-details.schema';
 export * from './preferences.schema';
 export * from './health.schema';
 export * from './auth.schema';

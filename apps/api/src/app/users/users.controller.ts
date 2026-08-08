@@ -17,11 +17,11 @@ import { UsersService } from './users.service';
 import {
   updateUserRoleSchema,
   userListItemSchema,
-  userProfileSchema,
+  userDetailsSchema,
   updateUserProfileSchema,
   UpdateUserRoleDto,
   UserListItemDto,
-  UserProfileDto,
+  UserDetailsDto,
   UpdateUserProfileDto,
 } from '@job-tracker-lite-angular/schemas';
 import { Role } from '@prisma/client';
@@ -53,8 +53,8 @@ export class UsersController {
   @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(RolesGuard)
   @ApiOperation({ summary: 'Get user profile by ID (Moderator/Admin only)' })
-  @ApiOkResponse({ schema: zodToApiSchema(userProfileSchema) })
-  async getUserProfile(@Param('id') id: string): Promise<UserProfileDto> {
+  @ApiOkResponse({ schema: zodToApiSchema(userDetailsSchema) })
+  async getUserProfile(@Param('id') id: string): Promise<UserDetailsDto> {
     return this.usersService.getUserProfile(id);
   }
 
@@ -68,11 +68,11 @@ export class UsersController {
     description: 'Fields to update on the user profile',
     schema: zodToApiSchema(updateUserProfileSchema),
   })
-  @ApiOkResponse({ schema: zodToApiSchema(userProfileSchema) })
+  @ApiOkResponse({ schema: zodToApiSchema(userDetailsSchema) })
   async updateUserProfile(
     @Param('id') id: string,
     @ZodBody(updateUserProfileSchema) dto: UpdateUserProfileDto,
-  ): Promise<UserProfileDto> {
+  ): Promise<UserDetailsDto> {
     return this.usersService.updateUserProfile(id, dto);
   }
 
