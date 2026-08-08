@@ -1,10 +1,8 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
+import { httpResource } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
-import {
-  AuthSessionService,
-  UsersDataAccessService,
-} from '@job-tracker-lite-angular/frontend-data-access';
+import { AuthSessionService } from '@job-tracker-lite-angular/frontend-data-access';
 import { UserListItemDto } from '@job-tracker-lite-angular/schemas';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -91,13 +89,23 @@ import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
   `,
 })
 export class UserPublicProfileComponent {
-  private readonly usersService = inject(UsersDataAccessService);
   private readonly authSession = inject(AuthSessionService);
 
   userId = input.required<string>();
 
-  protected readonly isLoading = signal(false);
-  protected readonly user = signal<UserListItemDto | null>(null);
+  // Reacts to userId changes instead of loading once in the constructor -
+  // reading a required route-bound input synchronously at construction can
+  // race ahead of the router actually populating it.
+  private readonly userResource = httpResource<UserListItemDto>(
+    () => `/api/users/${this.userId()}`,
+  );
+
+  protected readonly isLoading = computed(() => this.userResource.isLoading());
+  // resource.value() throws when the resource is in an error state (e.g. a
+  // 404) - hasValue() must be checked first.
+  protected readonly user = computed(() =>
+    this.userResource.hasValue() ? this.userResource.value() : null,
+  );
 
   protected readonly roleClasses: Record<string, string> = {
     ADMIN: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
@@ -119,20 +127,4 @@ export class UserPublicProfileComponent {
       userRole === 'MODERATOR'
     );
   });
-
-  constructor() {
-    void this.loadUser();
-  }
-
-  private async loadUser(): Promise<void> {
-    this.isLoading.set(true);
-    try {
-      const user = await this.usersService.getUser(this.userId());
-      this.user.set(user);
-    } catch {
-      this.user.set(null);
-    } finally {
-      this.isLoading.set(false);
-    }
-  }
 }
