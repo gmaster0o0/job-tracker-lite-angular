@@ -1,7 +1,37 @@
 import { AuthSessionDto } from '@job-tracker-lite-angular/schemas';
 import { UserListItemDto } from '@job-tracker-lite-angular/schemas';
+import { UserFixture, userFixtureList, userFixtures } from './user.fixtures';
 
-export const authUserIdFixture = 'user_123';
+/**
+ * Sessions and list rows are derived from `userFixtures` so a persona keeps one
+ * identity everywhere. Add people there, not here.
+ */
+export const authUserIdFixture = userFixtures.admin.id;
+
+/**
+ * `slug` is a database concern that the session payload does not carry, so it
+ * is dropped when a persona is projected onto an auth session.
+ */
+function sessionFor(
+  user: UserFixture,
+  overrides: Partial<UserFixture> = {},
+): AuthSessionDto {
+  const { slug: _slug, ...merged } = { ...user, ...overrides };
+
+  return {
+    user: merged,
+    session: {
+      id: `session_${merged.id}`,
+      token: `token_${merged.id}`,
+      expiresAt: new Date('2027-04-29T09:00:00.000Z'),
+      createdAt: merged.createdAt,
+      updatedAt: merged.updatedAt,
+      ipAddress: null,
+      userAgent: null,
+      userId: merged.id,
+    },
+  };
+}
 
 export const authSessionFixtures: {
   authenticated: AuthSessionDto;
@@ -10,171 +40,24 @@ export const authSessionFixtures: {
   recruiter: AuthSessionDto;
   moderator: AuthSessionDto;
 } = {
-  authenticated: {
-    user: {
-      id: authUserIdFixture,
-      name: 'Admin User',
-      email: 'admin@example.com',
-      emailVerified: false,
-      status: 'ACTIVE',
-      role: 'ADMIN',
-      image: null,
-      createdAt: new Date('2026-04-29T09:00:00.000Z'),
-      updatedAt: new Date('2026-04-29T09:00:00.000Z'),
-    },
-    session: {
-      id: 'session_123',
-      token: 'token_123',
-      expiresAt: new Date('2027-04-29T09:00:00.000Z'),
-      createdAt: new Date('2026-04-29T09:00:00.000Z'),
-      updatedAt: new Date('2026-04-29T09:00:00.000Z'),
-      ipAddress: null,
-      userAgent: null,
-      userId: authUserIdFixture,
-    },
-  },
-  pendingDeletion: {
-    user: {
-      id: authUserIdFixture,
-      name: 'Admin User',
-      email: 'admin@example.com',
-      emailVerified: false,
-      status: 'PENDING_DELETION',
-      role: 'USER',
-      image: null,
-      createdAt: new Date('2026-04-29T09:00:00.000Z'),
-      updatedAt: new Date('2026-04-29T09:00:00.000Z'),
-    },
-    session: {
-      id: 'session_123',
-      token: 'token_123',
-      expiresAt: new Date('2027-04-29T09:00:00.000Z'),
-      createdAt: new Date('2026-04-29T09:00:00.000Z'),
-      updatedAt: new Date('2026-04-29T09:00:00.000Z'),
-      ipAddress: null,
-      userAgent: null,
-      userId: authUserIdFixture,
-    },
-  },
-  recruiter: {
-    user: {
-      id: 'user_rec',
-      name: 'Recruiter User',
-      email: 'recruiter@example.com',
-      emailVerified: true,
-      status: 'ACTIVE',
-      role: 'RECRUITER',
-      image: null,
-      createdAt: new Date('2026-01-01T00:00:00.000Z'),
-      updatedAt: new Date('2026-01-01T00:00:00.000Z'),
-    },
-    session: {
-      id: 'session_rec',
-      token: 'token_rec',
-      expiresAt: new Date('2027-04-29T09:00:00.000Z'),
-      createdAt: new Date('2026-01-01T00:00:00.000Z'),
-      updatedAt: new Date('2026-01-01T00:00:00.000Z'),
-      ipAddress: null,
-      userAgent: null,
-      userId: 'user_rec',
-    },
-  },
-  moderator: {
-    user: {
-      id: 'user_mod',
-      name: 'Moderator User',
-      email: 'moderator@example.com',
-      emailVerified: true,
-      status: 'ACTIVE',
-      role: 'MODERATOR',
-      image: null,
-      createdAt: new Date('2026-01-01T00:00:00.000Z'),
-      updatedAt: new Date('2026-01-01T00:00:00.000Z'),
-    },
-    session: {
-      id: 'session_mod',
-      token: 'token_mod',
-      expiresAt: new Date('2027-04-29T09:00:00.000Z'),
-      createdAt: new Date('2026-01-01T00:00:00.000Z'),
-      updatedAt: new Date('2026-01-01T00:00:00.000Z'),
-      ipAddress: null,
-      userAgent: null,
-      userId: 'user_mod',
-    },
-  },
+  authenticated: sessionFor(userFixtures.admin),
+  pendingDeletion: sessionFor(userFixtures.admin, {
+    status: 'PENDING_DELETION',
+    role: 'USER',
+  }),
+  recruiter: sessionFor(userFixtures.recruiter),
+  moderator: sessionFor(userFixtures.moderator),
   guest: null,
 };
 
+/** The personas keyed by role, for specs that only care about authorisation. */
 export const userRoleFixtures = {
-  admin: {
-    id: 'user_admin',
-    name: 'Admin User',
-    email: 'admin@example.com',
-    role: 'ADMIN' as const,
-    emailVerified: true,
-    status: 'ACTIVE' as const,
-    image: null,
-    createdAt: new Date('2026-01-01'),
-    updatedAt: new Date('2026-01-01'),
-  },
-  moderator: {
-    id: 'user_mod',
-    name: 'Moderator User',
-    email: 'moderator@example.com',
-    role: 'MODERATOR' as const,
-    emailVerified: true,
-    status: 'ACTIVE' as const,
-    image: null,
-    createdAt: new Date('2026-01-01'),
-    updatedAt: new Date('2026-01-01'),
-  },
-  recruiter: {
-    id: 'user_rec',
-    name: 'Recruiter User',
-    email: 'recruiter@example.com',
-    role: 'RECRUITER' as const,
-    emailVerified: true,
-    status: 'ACTIVE' as const,
-    image: null,
-    createdAt: new Date('2026-01-01'),
-    updatedAt: new Date('2026-01-01'),
-  },
-  user: {
-    id: 'user_basic',
-    name: 'Basic User',
-    email: 'basic@example.com',
-    role: 'USER' as const,
-    emailVerified: true,
-    status: 'ACTIVE' as const,
-    image: null,
-    createdAt: new Date('2026-01-01'),
-    updatedAt: new Date('2026-01-01'),
-  },
+  admin: userFixtures.admin,
+  moderator: userFixtures.moderator,
+  recruiter: userFixtures.recruiter,
+  user: userFixtures.basic,
 };
 
-export const userListFixtures: UserListItemDto[] = [
-  {
-    id: 'user_admin',
-    name: 'Admin User',
-    email: 'admin@example.com',
-    role: 'ADMIN',
-  },
-  {
-    id: 'user_mod',
-    name: 'Moderator User',
-    email: 'moderator@example.com',
-    role: 'MODERATOR',
-  },
-  {
-    id: 'user_rec',
-    name: 'Recruiter User',
-    email: 'recruiter@example.com',
-    role: 'RECRUITER',
-  },
-  {
-    id: 'user_basic',
-    name: 'Basic User',
-    email: 'basic@example.com',
-    role: 'USER',
-  },
-];
+export const userListFixtures: UserListItemDto[] = userFixtureList.map(
+  ({ id, name, email, role }) => ({ id, name, email, role }),
+);

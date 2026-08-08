@@ -50,11 +50,6 @@ describe('UsersComponent', () => {
 
   it('should render profile links for each user', async () => {
     const hrefs = await harness.getProfileLinkHrefs();
-    expect(hrefs).toEqual([
-      '/users/user_admin',
-      '/users/user_mod',
-      '/users/user_rec',
-      '/users/user_basic',
-    ]);
+    expect(hrefs).toEqual(userListFixtures.map((user) => `/users/${user.id}`));
   });
 });

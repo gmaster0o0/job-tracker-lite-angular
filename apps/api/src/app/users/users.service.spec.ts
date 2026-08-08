@@ -3,7 +3,10 @@ import { NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import { createPrismaServiceMock } from '@job-tracker-lite-angular/testing';
 import { UsersService } from './users.service';
-import { userListFixtures } from '@job-tracker-lite-angular/testing';
+import {
+  userFixtures,
+  userListFixtures,
+} from '@job-tracker-lite-angular/testing';
 import { Role } from '@prisma/client';
 
 describe('UsersService', () => {
@@ -50,19 +53,19 @@ describe('UsersService', () => {
 
   describe('updateUserRole', () => {
     it('should update the role of an existing user', async () => {
-      const userId = 'user_basic';
+      const userId = userFixtures.basic.id;
       const dto = { role: Role.MODERATOR };
       const updatedUser = {
         id: userId,
-        name: 'Basic User',
-        email: 'basic@example.com',
+        name: userFixtures.basic.name,
+        email: userFixtures.basic.email,
         role: Role.MODERATOR,
       };
 
       prismaMock.user.findUnique.mockResolvedValue({
         id: userId,
-        name: 'Basic User',
-        email: 'basic@example.com',
+        name: userFixtures.basic.name,
+        email: userFixtures.basic.email,
         role: Role.USER,
       });
       prismaMock.user.update.mockResolvedValue(updatedUser);
@@ -93,11 +96,11 @@ describe('UsersService', () => {
 
   describe('getUser', () => {
     it('should return a user by id', async () => {
-      const userId = 'user_basic';
+      const userId = userFixtures.basic.id;
       const mockUser = {
         id: userId,
-        name: 'Basic User',
-        email: 'basic@example.com',
+        name: userFixtures.basic.name,
+        email: userFixtures.basic.email,
         role: Role.USER,
       };
 
@@ -123,7 +126,7 @@ describe('UsersService', () => {
 
   describe('getUserProfile', () => {
     it('should return a user profile with mapped data', async () => {
-      const userId = 'user_basic';
+      const userId = userFixtures.basic.id;
       const mockUserProfile = {
         userId,
         title: 'Senior Developer',
@@ -142,8 +145,8 @@ describe('UsersService', () => {
         preferenceVisibility: 2,
         user: {
           id: userId,
-          name: 'Basic User',
-          email: 'basic@example.com',
+          name: userFixtures.basic.name,
+          email: userFixtures.basic.email,
         },
       };
 
@@ -153,11 +156,11 @@ describe('UsersService', () => {
 
       expect(result).toEqual({
         userId,
-        name: 'Basic User',
+        name: userFixtures.basic.name,
         title: 'Senior Developer',
         city: 'New York',
         bio: 'Experienced developer',
-        email: 'basic@example.com',
+        email: userFixtures.basic.email,
         linkedin: 'linkedin.com/in/user',
         github: 'github.com/user',
         webpage: 'user.dev',
@@ -195,7 +198,7 @@ describe('UsersService', () => {
 
   describe('updateUserProfile', () => {
     it('should update a user profile and return mapped data', async () => {
-      const userId = 'user_basic';
+      const userId = userFixtures.basic.id;
       const updateDto = {
         title: 'Lead Developer',
         bio: 'Updated bio',
@@ -203,8 +206,8 @@ describe('UsersService', () => {
       };
       const mockUser = {
         id: userId,
-        name: 'Basic User',
-        email: 'basic@example.com',
+        name: userFixtures.basic.name,
+        email: userFixtures.basic.email,
         role: Role.USER,
       };
       const mockUpdatedProfile = {
@@ -225,8 +228,8 @@ describe('UsersService', () => {
         preferenceVisibility: 2,
         user: {
           id: userId,
-          name: 'Basic User',
-          email: 'basic@example.com',
+          name: userFixtures.basic.name,
+          email: userFixtures.basic.email,
         },
       };
 
