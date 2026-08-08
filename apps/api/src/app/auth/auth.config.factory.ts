@@ -20,8 +20,6 @@ type EmailVerificationConfig = NonNullable<
   BetterAuthOptions['emailVerification']
 >;
 
-// toUserSlugBase() only ever emits [a-z0-9-], so none of these are reachable
-// today - this only guards against that charset changing later.
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -92,13 +90,8 @@ export class AuthConfigFactory {
     });
   }
 
-  /**
-   * `User.slug` is required and unique, so every creation path has to supply
-   * one. Names are not unique, so a taken base slug gets an incrementing
-   * number - "demo-user", then "demo-user-2", "demo-user-3" - which reads far
-   * better in a `/profile/:slug` URL than a random suffix.
-   */
-  private async generateUniqueUserSlug(name: string | null): Promise<string> {
+  // Names aren't unique, so a taken base slug gets an incrementing suffix.
+  async generateUniqueUserSlug(name: string | null): Promise<string> {
     const base = toUserSlugBase(name);
 
     for (let attempt = 0; attempt < this.maxSlugAttempts; attempt++) {
@@ -115,19 +108,13 @@ export class AuthConfigFactory {
       }
     }
 
-    // Exhausting the attempts means every number we tried lost a race, so
-    // fall back to a suffix wide enough that a clash is not a practical
-    // concern.
+    // Every number we tried lost a race, so fall back to a random suffix.
     return `${base}-${randomBytes(16).toString('hex')}`;
   }
 
-  /**
-   * Finds the next free "-N" suffix for a base slug. Sorting the slug column
-   * as a string would put "-10" before "-2", so the suffix is parsed and
-   * compared as a number instead. Slugs with a non-numeric suffix (e.g. an
-   * old random-fallback slug) are ignored rather than breaking the scan.
-   */
-  private async nextNumberedSlug(base: string): Promise<string> {
+  // Slug is sorted as a string, so "-10" would sort before "-2" - the suffix
+  // is compared as a parsed number instead.
+  async nextNumberedSlug(base: string): Promise<string> {
     const rows = await this.prisma.user.findMany({
       where: { slug: { startsWith: `${base}-` } },
       select: { slug: true },
