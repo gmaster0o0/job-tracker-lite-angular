@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import {
   UpdateUserRoleDto,
   UserListItemDto,
+  UserDetailsDto,
 } from '@job-tracker-lite-angular/schemas';
 import { firstValueFrom } from 'rxjs';
 
@@ -14,9 +15,13 @@ export class UsersDataAccessService {
     return firstValueFrom(this.http.get<UserListItemDto[]>('/api/users'));
   }
 
-  async getUser(userId: string): Promise<UserListItemDto> {
+  async getUser(slug: string): Promise<UserListItemDto> {
+    return firstValueFrom(this.http.get<UserListItemDto>(`/api/users/${slug}`));
+  }
+
+  async getUserProfile(idOrSlug: string): Promise<UserDetailsDto> {
     return firstValueFrom(
-      this.http.get<UserListItemDto>(`/api/users/${userId}`),
+      this.http.get<UserDetailsDto>(`/api/users/${idOrSlug}/profile`),
     );
   }
 

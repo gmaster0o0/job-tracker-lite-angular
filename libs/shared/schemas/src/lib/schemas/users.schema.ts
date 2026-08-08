@@ -12,6 +12,7 @@ export type UserDto = z.infer<typeof userSchema>;
 
 export const userListItemSchema = z.object({
   id: z.string(),
+  slug: z.string(),
   name: z.string(),
   email: z.email(),
   role: z.enum(Role),

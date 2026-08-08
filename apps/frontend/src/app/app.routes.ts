@@ -137,7 +137,7 @@ export const appRoutes: Route[] = [
           ).then((m) => m.DeletePendingComponent),
       },
       {
-        path: 'users/:userId',
+        path: 'users/:slug',
         canActivate: [authGuard],
         loadComponent: () =>
           import('./features/users/user-public-profile.component').then(

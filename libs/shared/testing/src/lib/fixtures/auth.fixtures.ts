@@ -59,5 +59,5 @@ export const userRoleFixtures = {
 };
 
 export const userListFixtures: UserListItemDto[] = userFixtureList.map(
-  ({ id, name, email, role }) => ({ id, name, email, role }),
+  ({ id, slug, name, email, role }) => ({ id, slug, name, email, role }),
 );

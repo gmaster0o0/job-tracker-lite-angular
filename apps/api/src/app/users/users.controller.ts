@@ -33,11 +33,11 @@ import { Role } from '@prisma/client';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get user by ID (public basic info)' })
+  @Get(':slug')
+  @ApiOperation({ summary: 'Get user by slug (public basic info)' })
   @ApiOkResponse({ schema: zodToApiSchema(userListItemSchema) })
-  async getUser(@Param('id') id: string): Promise<UserListItemDto> {
-    return this.usersService.getUser(id);
+  async getUser(@Param('slug') slug: string): Promise<UserListItemDto> {
+    return this.usersService.getUser(slug);
   }
 
   @Get()
@@ -49,20 +49,24 @@ export class UsersController {
     return this.usersService.listUsers();
   }
 
-  @Get(':id/profile')
-  @Roles(Role.MODERATOR, Role.ADMIN)
-  @UseGuards(RolesGuard)
-  @ApiOperation({ summary: 'Get user profile by ID (Moderator/Admin only)' })
-  @ApiOkResponse({ schema: zodToApiSchema(userDetailsSchema) })
-  async getUserProfile(@Param('id') id: string): Promise<UserDetailsDto> {
-    return this.usersService.getUserProfile(id);
-  }
-
-  @Patch(':id/profile')
+  @Get(':idOrSlug/profile')
   @Roles(Role.MODERATOR, Role.ADMIN)
   @UseGuards(RolesGuard)
   @ApiOperation({
-    summary: 'Update user profile by ID (Moderator/Admin only)',
+    summary: 'Get user profile by id or slug (Moderator/Admin only)',
+  })
+  @ApiOkResponse({ schema: zodToApiSchema(userDetailsSchema) })
+  async getUserProfile(
+    @Param('idOrSlug') idOrSlug: string,
+  ): Promise<UserDetailsDto> {
+    return this.usersService.getUserProfile(idOrSlug);
+  }
+
+  @Patch(':idOrSlug/profile')
+  @Roles(Role.MODERATOR, Role.ADMIN)
+  @UseGuards(RolesGuard)
+  @ApiOperation({
+    summary: 'Update user profile by id or slug (Moderator/Admin only)',
   })
   @ApiBody({
     description: 'Fields to update on the user profile',
@@ -70,10 +74,10 @@ export class UsersController {
   })
   @ApiOkResponse({ schema: zodToApiSchema(userDetailsSchema) })
   async updateUserProfile(
-    @Param('id') id: string,
+    @Param('idOrSlug') idOrSlug: string,
     @ZodBody(updateUserProfileSchema) dto: UpdateUserProfileDto,
   ): Promise<UserDetailsDto> {
-    return this.usersService.updateUserProfile(id, dto);
+    return this.usersService.updateUserProfile(idOrSlug, dto);
   }
 
   @Patch(':id/role')

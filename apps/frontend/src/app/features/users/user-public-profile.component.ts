@@ -45,7 +45,7 @@ import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
                 <h2 hlmCardTitle>
                   {{ user.name }}
                   <span class="text-sm font-normal text-muted-foreground"
-                    >(@{{ userId() }})</span
+                    >(@{{ slug() }})</span
                   >
                 </h2>
                 <p hlmCardDescription>{{ user.email }}</p>
@@ -64,7 +64,7 @@ import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
                   <a
                     hlmBtn
                     variant="default"
-                    [routerLink]="['/profile', userId()]"
+                    [routerLink]="['/profile', slug()]"
                     data-testid="edit-profile-button"
                   >
                     {{ 'common.edit' | transloco }}
@@ -91,13 +91,13 @@ import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 export class UserPublicProfileComponent {
   private readonly authSession = inject(AuthSessionService);
 
-  userId = input.required<string>();
+  slug = input.required<string>();
 
-  // Reacts to userId changes instead of loading once in the constructor -
+  // Reacts to slug changes instead of loading once in the constructor -
   // reading a required route-bound input synchronously at construction can
   // race ahead of the router actually populating it.
   private readonly userResource = httpResource<UserListItemDto>(
-    () => `/api/users/${this.userId()}`,
+    () => `/api/users/${this.slug()}`,
   );
 
   protected readonly isLoading = computed(() => this.userResource.isLoading());
@@ -117,7 +117,9 @@ export class UserPublicProfileComponent {
 
   protected readonly canEdit = computed(() => {
     const currentUserId = this.authSession.session()?.user?.id;
-    const targetUserId = this.userId();
+    // Compares against the resolved user's real id, not the slug route param
+    // - the two are never equal, so this must read from the fetched user.
+    const targetUserId = this.user()?.id;
     const userRole = this.authSession.role();
 
     // Can edit if: own profile OR admin/moderator

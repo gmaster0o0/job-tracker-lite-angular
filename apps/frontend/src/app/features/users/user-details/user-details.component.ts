@@ -7,7 +7,7 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   TranslocoModule,
   TranslocoService,
@@ -20,14 +20,14 @@ import {
 } from '@job-tracker-lite-angular/frontend-data-access';
 import {
   UpdateUserRoleDto,
-  UserListItemDto,
+  UserDetailsDto,
 } from '@job-tracker-lite-angular/schemas';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 import { HasRoleDirective } from '@job-tracker-lite-angular/frontend-data-access';
 import { ProfileComponent } from '../../profile/profile.component';
 
-type UserRole = UserListItemDto['role'];
+type UserRole = UserDetailsDto['role'];
 
 interface RoleOption {
   readonly value: UserRole;
@@ -50,16 +50,20 @@ const SAVE_DEBOUNCE_MS = 1000;
 })
 export class UserDetailsComponent {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly usersDataAccess = inject(UsersDataAccessService);
   private readonly notification = inject(NotificationService);
   private readonly authSession = inject(AuthSessionService);
   private readonly transloco = inject(TranslocoService);
 
-  protected readonly isLoading = signal(true);
+  // The route accepts either the user's id or slug - `getUserProfile`
+  // resolves either, and the id is the canonical form: once loaded, a
+  // slug-based URL is replaced with the id-based one.
   protected readonly selectedUserId = signal<string | null>(
     this.route.snapshot.paramMap.get('slug'),
   );
-  protected readonly user = signal<UserListItemDto | null>(null);
+  protected readonly isLoading = signal(true);
+  protected readonly user = signal<UserDetailsDto | null>(null);
 
   protected readonly roleOptions: readonly RoleOption[] = [
     { value: 'ADMIN', label: translateSignal('users.roles.ADMIN') },
@@ -124,8 +128,9 @@ export class UserDetailsComponent {
         } satisfies UpdateUserRoleDto,
       );
 
-      // Update the single user signal
-      this.user.set(updated);
+      this.user.update((current) =>
+        current ? { ...current, role: updated.role } : current,
+      );
 
       const session = this.authSession.session();
       if (session?.user.id === updated.id) {
@@ -152,9 +157,16 @@ export class UserDetailsComponent {
 
   private async loadData(): Promise<void> {
     try {
-      const userId = this.selectedUserId() ?? '';
-      const user = await this.usersDataAccess.getUser(userId);
+      const requestedId = this.selectedUserId() ?? '';
+      const user = await this.usersDataAccess.getUserProfile(requestedId);
       this.user.set(user);
+
+      if (user.id !== requestedId) {
+        this.selectedUserId.set(user.id);
+        void this.router.navigate(['/profile', user.id], {
+          replaceUrl: true,
+        });
+      }
     } finally {
       this.isLoading.set(false);
     }

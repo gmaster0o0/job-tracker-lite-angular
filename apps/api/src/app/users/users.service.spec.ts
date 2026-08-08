@@ -37,7 +37,13 @@ describe('UsersService', () => {
 
       expect(result).toEqual(userListFixtures);
       expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-        select: { id: true, name: true, email: true, role: true },
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          email: true,
+          role: true,
+        },
         orderBy: { name: 'asc' },
       });
     });
@@ -57,6 +63,7 @@ describe('UsersService', () => {
       const dto = { role: Role.MODERATOR };
       const updatedUser = {
         id: userId,
+        slug: userFixtures.basic.slug,
         name: userFixtures.basic.name,
         email: userFixtures.basic.email,
         role: Role.MODERATOR,
@@ -79,7 +86,13 @@ describe('UsersService', () => {
       expect(prismaMock.user.update).toHaveBeenCalledWith({
         where: { id: userId },
         data: { role: Role.MODERATOR },
-        select: { id: true, name: true, email: true, role: true },
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          email: true,
+          role: true,
+        },
       });
     });
 
@@ -95,10 +108,11 @@ describe('UsersService', () => {
   });
 
   describe('getUser', () => {
-    it('should return a user by id', async () => {
-      const userId = userFixtures.basic.id;
+    it('should return a user by slug', async () => {
+      const slug = userFixtures.basic.slug;
       const mockUser = {
-        id: userId,
+        id: userFixtures.basic.id,
+        slug,
         name: userFixtures.basic.name,
         email: userFixtures.basic.email,
         role: Role.USER,
@@ -106,27 +120,45 @@ describe('UsersService', () => {
 
       prismaMock.user.findUnique.mockResolvedValue(mockUser);
 
-      const result = await service.getUser(userId);
+      const result = await service.getUser(slug);
 
       expect(result).toEqual(mockUser);
       expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
-        where: { id: userId },
-        select: { id: true, name: true, email: true, role: true },
+        where: { slug },
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          email: true,
+          role: true,
+        },
       });
     });
 
-    it('should throw NotFoundException when user does not exist', async () => {
+    it('should throw NotFoundException when no user has that slug', async () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.getUser('nonexistent-id')).rejects.toThrow(
+      await expect(service.getUser('nonexistent-slug')).rejects.toThrow(
         NotFoundException,
       );
+    });
+
+    it('does not fall back to id - a raw id is not a valid slug lookup', async () => {
+      // getUser is the public route; only getUserProfile/updateUserProfile
+      // accept either identifier.
+      prismaMock.user.findUnique.mockResolvedValue(null);
+
+      await service.getUser(userFixtures.basic.id).catch(() => undefined);
+
+      expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+        where: { slug: userFixtures.basic.id },
+        select: expect.anything(),
+      });
     });
   });
 
   describe('getUserProfile', () => {
-    it('should return a user profile with mapped data', async () => {
-      const userId = userFixtures.basic.id;
+    function mockProfileResolution(userId: string) {
       const mockUserProfile = {
         userId,
         title: 'Senior Developer',
@@ -145,18 +177,20 @@ describe('UsersService', () => {
         preferenceVisibility: 20,
         user: {
           id: userId,
+          role: Role.USER,
           name: userFixtures.basic.name,
           email: userFixtures.basic.email,
         },
       };
 
+      prismaMock.user.findFirst.mockResolvedValue({ id: userId });
       prismaMock.userProfile.findUnique.mockResolvedValue(mockUserProfile);
 
-      const result = await service.getUserProfile(userId);
-
-      expect(result).toEqual({
+      return {
         userId,
+        id: userId,
         name: userFixtures.basic.name,
+        role: Role.USER,
         title: 'Senior Developer',
         city: 'New York',
         bio: 'Experienced developer',
@@ -172,6 +206,20 @@ describe('UsersService', () => {
         contactVisibility: 10,
         skillsVisibility: 20,
         preferenceVisibility: 20,
+      };
+    }
+
+    it('should resolve the target by slug and return the profile', async () => {
+      const slug = userFixtures.basic.slug;
+      const userId = userFixtures.basic.id;
+      const expected = mockProfileResolution(userId);
+
+      const result = await service.getUserProfile(slug);
+
+      expect(result).toEqual(expected);
+      expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
+        where: { OR: [{ id: slug }, { slug }] },
+        select: { id: true },
       });
       expect(prismaMock.userProfile.findUnique).toHaveBeenCalledWith({
         where: { userId },
@@ -179,6 +227,7 @@ describe('UsersService', () => {
           user: {
             select: {
               id: true,
+              role: true,
               name: true,
               email: true,
             },
@@ -187,28 +236,49 @@ describe('UsersService', () => {
       });
     });
 
-    it('should throw NotFoundException when user profile does not exist', async () => {
-      prismaMock.userProfile.findUnique.mockResolvedValue(null);
+    it('should also resolve the target when given the raw id', async () => {
+      const userId = userFixtures.basic.id;
+      const expected = mockProfileResolution(userId);
 
-      await expect(service.getUserProfile('nonexistent-id')).rejects.toThrow(
+      const result = await service.getUserProfile(userId);
+
+      expect(result).toEqual(expected);
+      expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
+        where: { OR: [{ id: userId }, { slug: userId }] },
+        select: { id: true },
+      });
+    });
+
+    it('should throw NotFoundException when no user matches the id or slug', async () => {
+      prismaMock.user.findFirst.mockResolvedValue(null);
+
+      await expect(service.getUserProfile('nonexistent')).rejects.toThrow(
         NotFoundException,
       );
+
+      expect(prismaMock.userProfile.findUnique).not.toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundException when the user exists but has no profile', async () => {
+      prismaMock.user.findFirst.mockResolvedValue({
+        id: userFixtures.basic.id,
+      });
+      prismaMock.userProfile.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.getUserProfile(userFixtures.basic.slug),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
   describe('updateUserProfile', () => {
-    it('should update a user profile and return mapped data', async () => {
+    it('should resolve the target by slug and update the profile', async () => {
+      const slug = userFixtures.basic.slug;
       const userId = userFixtures.basic.id;
       const updateDto = {
         title: 'Lead Developer',
         bio: 'Updated bio',
         coreSkills: ['TypeScript', 'React', 'Node.js'],
-      };
-      const mockUser = {
-        id: userId,
-        name: userFixtures.basic.name,
-        email: userFixtures.basic.email,
-        role: Role.USER,
       };
       const mockUpdatedProfile = {
         userId,
@@ -228,21 +298,23 @@ describe('UsersService', () => {
         preferenceVisibility: 20,
         user: {
           id: userId,
+          role: Role.USER,
           name: userFixtures.basic.name,
           email: userFixtures.basic.email,
         },
       };
 
-      prismaMock.user.findUnique.mockResolvedValue(mockUser);
+      prismaMock.user.findFirst.mockResolvedValue({ id: userId });
       prismaMock.userProfile.upsert.mockResolvedValue(mockUpdatedProfile);
 
-      const result = await service.updateUserProfile(userId, updateDto);
+      const result = await service.updateUserProfile(slug, updateDto);
 
       expect(result.title).toBe('Lead Developer');
       expect(result.bio).toBe('Updated bio');
       expect(result.coreSkills).toEqual(['TypeScript', 'React', 'Node.js']);
-      expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
-        where: { id: userId },
+      expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
+        where: { OR: [{ id: slug }, { slug }] },
+        select: { id: true },
       });
       expect(prismaMock.userProfile.upsert).toHaveBeenCalledWith({
         where: { userId },
@@ -256,6 +328,7 @@ describe('UsersService', () => {
           user: {
             select: {
               id: true,
+              role: true,
               name: true,
               email: true,
             },
@@ -264,11 +337,11 @@ describe('UsersService', () => {
       });
     });
 
-    it('should throw NotFoundException when user does not exist', async () => {
-      prismaMock.user.findUnique.mockResolvedValue(null);
+    it('should throw NotFoundException when no user matches the id or slug', async () => {
+      prismaMock.user.findFirst.mockResolvedValue(null);
 
       await expect(
-        service.updateUserProfile('nonexistent-id', { title: 'Developer' }),
+        service.updateUserProfile('nonexistent', { title: 'Developer' }),
       ).rejects.toThrow(NotFoundException);
 
       expect(prismaMock.userProfile.upsert).not.toHaveBeenCalled();
@@ -277,14 +350,9 @@ describe('UsersService', () => {
     it('should write to the correct target user profile, not the caller', async () => {
       // This test specifically addresses the data integrity bug where
       // moderators editing another user's profile would corrupt their own
+      const targetSlug = 'target-user';
       const targetUserId = 'target-user-id';
       const updateDto = { bio: 'New bio for target user' };
-      const mockUser = {
-        id: targetUserId,
-        name: 'Target User',
-        email: 'target@example.com',
-        role: Role.USER,
-      };
       const mockProfile = {
         userId: targetUserId,
         bio: 'New bio for target user',
@@ -303,15 +371,16 @@ describe('UsersService', () => {
         preferenceVisibility: 0,
         user: {
           id: targetUserId,
+          role: Role.USER,
           name: 'Target User',
           email: 'target@example.com',
         },
       };
 
-      prismaMock.user.findUnique.mockResolvedValue(mockUser);
+      prismaMock.user.findFirst.mockResolvedValue({ id: targetUserId });
       prismaMock.userProfile.upsert.mockResolvedValue(mockProfile);
 
-      const result = await service.updateUserProfile(targetUserId, updateDto);
+      const result = await service.updateUserProfile(targetSlug, updateDto);
 
       // Assert that the update targeted the correct user
       expect(prismaMock.userProfile.upsert).toHaveBeenCalledWith(
