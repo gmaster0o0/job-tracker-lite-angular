@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { TestBed } from '@angular/core/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
@@ -94,5 +95,71 @@ describe('SkillManagerComponent', () => {
         skillsVisibility: VisibilityLevel.RECRUITER,
       }),
     );
+  });
+
+  describe('mode-based routing', () => {
+    it('calls updateProfile when mode is "own" (default)', async () => {
+      await harness.enterSkill('Unique Test Skill A');
+      await harness.clickAddNewElement();
+      await harness.clickSave();
+
+      expect(updateProfile).toHaveBeenCalledTimes(1);
+      expect(updateProfile).toHaveBeenCalledWith(
+        expect.objectContaining({
+          coreSkills: expect.arrayContaining(['Unique Test Skill A']),
+        }),
+      );
+    });
+
+    it('calls updateUserProfile when mode is "mod" with targetUserId', async () => {
+      const updateUserProfileSpy = vi.fn().mockResolvedValue(undefined);
+      const profileDataServiceSpy = {
+        updateProfile: vi.fn().mockResolvedValue(undefined),
+        updateUserProfile: updateUserProfileSpy,
+      };
+
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [HostComponent, getTranslocoModule()],
+        providers: [
+          {
+            provide: ProfileDataAccessService,
+            useValue: profileDataServiceSpy,
+          },
+        ],
+      }).compileComponents();
+
+      @Component({
+        standalone: true,
+        imports: [SkillManagerComponent],
+        template: `<app-skill-manager
+          [profile]="profile"
+          [mode]="'mod'"
+          [targetUserId]="'target-user-456'"
+        />`,
+      })
+      class ModHostComponent {
+        profile = userProfileFixtures.johnDoe;
+      }
+
+      const modFixture = TestBed.createComponent(ModHostComponent);
+      const modHarness = await TestbedHarnessEnvironment.harnessForFixture(
+        modFixture,
+        SkillManagerHarness,
+      );
+
+      await modHarness.enterSkill('Unique Test Skill B');
+      await modHarness.clickAddNewElement();
+      await modHarness.clickSave();
+
+      expect(updateUserProfileSpy).toHaveBeenCalledTimes(1);
+      expect(updateUserProfileSpy).toHaveBeenCalledWith(
+        'target-user-456',
+        expect.objectContaining({
+          coreSkills: expect.arrayContaining(['Unique Test Skill B']),
+        }),
+      );
+      expect(profileDataServiceSpy.updateProfile).not.toHaveBeenCalled();
+    });
   });
 });

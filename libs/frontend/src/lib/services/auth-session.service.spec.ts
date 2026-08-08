@@ -39,6 +39,7 @@ describe('AuthSessionService', () => {
     expect(service.session()).toEqual(authSessionFixtures.authenticated);
     expect(service.isAuthenticated()).toBe(true);
     expect(service.userId()).toBe(authSessionFixtures.authenticated?.user.id);
+    expect(service.role()).toBe(authSessionFixtures.authenticated?.user.role);
   });
 
   it('should clear authenticated state when no session is returned', async () => {
@@ -52,6 +53,7 @@ describe('AuthSessionService', () => {
     expect(service.session()).toBeNull();
     expect(service.isAuthenticated()).toBe(false);
     expect(service.userId()).toBeNull();
+    expect(service.role()).toBe('USER');
   });
 
   it('should clear session explicitly', () => {
@@ -61,6 +63,7 @@ describe('AuthSessionService', () => {
 
     expect(service.session()).toBeNull();
     expect(service.isAuthenticated()).toBe(false);
+    expect(service.role()).toBe('USER');
   });
 
   it('should fallback to guest state when loading session fails', async () => {
@@ -74,5 +77,6 @@ describe('AuthSessionService', () => {
     expect(service.session()).toBeNull();
     expect(service.isAuthenticated()).toBe(false);
     expect(service.userId()).toBeNull();
+    expect(service.role()).toBe('USER');
   });
 });

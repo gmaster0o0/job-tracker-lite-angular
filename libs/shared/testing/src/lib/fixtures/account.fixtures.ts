@@ -5,6 +5,7 @@ import {
   ChangePasswordDto,
   DeleteAccountDto,
 } from '@job-tracker-lite-angular/schemas';
+import { userFixtures } from './user.fixtures';
 
 export const accountSettingsFixtures: {
   default: AccountSettingsDto;
@@ -57,7 +58,7 @@ export const deleteAccountRequestFixtures: {
 
 export const accountUserFixtures = {
   primary: {
-    id: 'user_123',
+    id: userFixtures.admin.id,
     email: 'admin@example.com',
     pendingEmail: null,
     emailVerified: true,
@@ -102,7 +103,7 @@ export const accountDeletionStatusPrismaFixtures = {
 export const emailChangeTokenFixtures = {
   verify: {
     token: 'verify-token-123',
-    userId: 'user_123',
+    userId: userFixtures.admin.id,
     type: 'VERIFY',
     oldEmail: 'admin@example.com',
     newEmail: 'new-admin@example.com',
@@ -111,7 +112,7 @@ export const emailChangeTokenFixtures = {
   },
   restore: {
     token: 'restore-token-123',
-    userId: 'user_123',
+    userId: userFixtures.admin.id,
     type: 'RESTORE',
     oldEmail: 'admin@example.com',
     newEmail: 'new-admin@example.com',

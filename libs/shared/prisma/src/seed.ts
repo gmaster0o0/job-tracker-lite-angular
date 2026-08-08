@@ -1,6 +1,6 @@
 console.log('Seed script started');
 
-import { PrismaClient, JobStatus } from '@prisma/client';
+import { PrismaClient, JobStatus, Prisma } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { hashPassword } from 'better-auth/crypto';
 import * as dotenv from 'dotenv';
@@ -12,17 +12,16 @@ import {
   SeedContactTemplate,
   getSeedNotesForJob,
   SeedNoteTemplate,
+  seedUserFixtures,
+  seedUserFixtureList,
+  seedUserPassword,
+  SeededUserFixture,
   userProfileFixtures,
   userPreferencesFixtures,
 } from '@job-tracker-lite-angular/testing';
 
 const envPath = path.join(process.cwd(), '.env');
 dotenv.config({ path: envPath });
-
-const seedUserEmail = 'user@example.com';
-const seedUserPassword = 'Demo1234';
-const systemUserId = 'seed-user';
-const seedCredentialAccountId = 'seed-user-credential';
 
 const seedJobs = seedJobFixtures.map((job: JobDto) => {
   if (job.link == null) {
@@ -38,6 +37,50 @@ const seedJobs = seedJobFixtures.map((job: JobDto) => {
   };
 });
 
+async function upsertSeedUser(
+  prisma: PrismaClient,
+  user: SeededUserFixture,
+  extra: Partial<Prisma.UserCreateInput> = {},
+) {
+  const record = await prisma.user.upsert({
+    where: { id: user.id },
+    update: {
+      name: user.name,
+      slug: user.slug,
+      email: user.email,
+      emailVerified: true,
+      role: user.role,
+      ...extra,
+    },
+    create: {
+      id: user.id,
+      name: user.name,
+      slug: user.slug,
+      email: user.email,
+      emailVerified: true,
+      role: user.role,
+      ...extra,
+    },
+  });
+
+  await prisma.emailChangeToken.deleteMany({ where: { userId: user.id } });
+  await prisma.account.deleteMany({
+    where: { userId: user.id, providerId: 'credential' },
+  });
+
+  await prisma.account.create({
+    data: {
+      id: user.credentialAccountId,
+      accountId: user.id,
+      providerId: 'credential',
+      userId: user.id,
+      password: await hashPassword(seedUserPassword),
+    },
+  });
+
+  return record;
+}
+
 async function main() {
   console.log('Starting seed...');
   const databaseUrl = process.env['DATABASE_URL']?.trim();
@@ -52,48 +95,9 @@ async function main() {
   await prisma.$connect();
   console.log('Connected to database');
 
-  const seedUser = await prisma.user.upsert({
-    where: { id: systemUserId },
-    update: {
-      name: 'Demo User',
-      email: seedUserEmail,
-      pendingEmail: null,
-      emailVerified: true,
-      preferences: userPreferencesFixtures.johnDoe,
-    },
-    create: {
-      id: systemUserId,
-      name: 'Demo User',
-      email: seedUserEmail,
-      pendingEmail: null,
-      emailVerified: true,
-      preferences: userPreferencesFixtures.johnDoe,
-    },
-  });
-
-  await prisma.emailChangeToken.deleteMany({
-    where: {
-      userId: seedUser.id,
-    },
-  });
-
-  const seedUserPasswordHash = await hashPassword(seedUserPassword);
-
-  await prisma.account.deleteMany({
-    where: {
-      userId: seedUser.id,
-      providerId: 'credential',
-    },
-  });
-
-  await prisma.account.create({
-    data: {
-      id: seedCredentialAccountId,
-      accountId: seedUser.id,
-      providerId: 'credential',
-      userId: seedUser.id,
-      password: seedUserPasswordHash,
-    },
+  const seedUser = await upsertSeedUser(prisma, seedUserFixtures.demo, {
+    pendingEmail: null,
+    preferences: userPreferencesFixtures.johnDoe,
   });
 
   console.log('Seeding User Profile...');
@@ -107,7 +111,7 @@ async function main() {
     where: { userId: seedUser.id },
     update: {
       ...profileFixture,
-      name: 'Demo User', // Keeping the name consistent with the seed user
+      name: seedUserFixtures.demo.name, // Keep the profile in step with the user
       personalVisibility: 0,
       contactVisibility: 0,
       skillsVisibility: 0,
@@ -116,7 +120,7 @@ async function main() {
     create: {
       ...profileFixture,
       userId: seedUser.id,
-      name: 'Demo User',
+      name: seedUserFixtures.demo.name,
       personalVisibility: 0,
       contactVisibility: 0,
       skillsVisibility: 0,
@@ -170,12 +174,23 @@ async function main() {
     }
   }
 
+  console.log('Seeding Recruiter user...');
+  await upsertSeedUser(prisma, seedUserFixtures.recruiter);
+
+  console.log('Seeding Moderator user...');
+  await upsertSeedUser(prisma, seedUserFixtures.moderator);
+
   await prisma.$disconnect();
 
   console.log(
     `Seeded ${seedJobs.length} jobs with 0-2 contacts and 0-1 notes each (deterministic).`,
   );
-  console.log(`Demo login: ${seedUserEmail} / ${seedUserPassword}`);
+
+  for (const user of seedUserFixtureList) {
+    console.log(
+      `${user.role} login: ${user.email} / ${seedUserPassword} (/profile/${user.slug})`,
+    );
+  }
 }
 
 main().catch(async (error) => {

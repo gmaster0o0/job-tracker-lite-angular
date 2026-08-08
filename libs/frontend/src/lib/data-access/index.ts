@@ -6,3 +6,4 @@ export * from './profile.data-access';
 export * from './preferences.data-access';
 export * from './auth.data-access';
 export * from './account.data-access.service';
+export * from './users.data-access';

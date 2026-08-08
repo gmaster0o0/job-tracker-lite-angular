@@ -39,7 +39,8 @@
     "about": "About",
     "login": "Login",
     "register": "Register",
-    "add": "Add"
+    "add": "Add",
+    "users": "Users"
   },
   "jobs": {
     "status": {
@@ -755,6 +756,30 @@
       "CONTRACT": "Contract"
     }
   },
+  "users": {
+    "title": "Users",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "viewProfile": "View Profile"
+    },
+    "profile": {
+      "title": "Profile",
+      "viewingProfile": "Viewing profile of {{ username }}",
+      "changeRole": "Change Role",
+      "notFound": "User not found",
+      "roleUpdated": "Role updated successfully.",
+      "roleUpdateFailed": "Failed to update role.",
+      "publicViewPlaceholder": "Public profile view - Coming Soon"
+    },
+    "roles": {
+      "ADMIN": "Admin",
+      "MODERATOR": "Moderator",
+      "RECRUITER": "Recruiter",
+      "USER": "User"
+    }
+  },
   "contacts": {
     "edit": {
       "title": "Edit Contact",
@@ -848,5 +873,11 @@
       "fieldLabel": "shared.confirmationDialog.fieldLabel",
       "fieldPlaceholder": "shared.confirmationDialog.fieldPlaceholder"
     }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "moderationTitle": "User Moderation",
+    "moderationDescription": "Manage users, roles, and moderation tasks.",
+    "dashboard": "Dashboard"
   }
 }

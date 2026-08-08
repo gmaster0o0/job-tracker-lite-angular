@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProfileDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
 import { provideIcons } from '@ng-icons/core';
@@ -9,6 +9,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { SkillManagerComponent } from './skill-manager/skill-manager.component';
 import { PersonalInfoComponent } from './personal-info/personal-info.component';
 import { ContactInfoComponent } from './contact-info/contact-info.component';
+import { httpResource } from '@angular/common/http';
 
 import {
   UserProfileDto,
@@ -32,9 +33,39 @@ type SectionName = 'personal' | 'contact' | 'skills' | 'career-preference';
   templateUrl: './profile.component.html',
 })
 export class ProfileComponent {
-  private readonly profileData = inject(ProfileDataAccessService);
+  private readonly profileDataAccess = inject(ProfileDataAccessService);
 
-  profileResource = this.profileData.profileResource;
+  mode = input<'own' | 'mod'>('own');
+  targetUserId = input<string | null>(null);
+
+  // Resource for mod profile - automatically refetches when targetUserId changes
+  private readonly modProfileResource = httpResource<UserProfileDto>(() => {
+    const userId = this.targetUserId();
+    return userId && this.mode() === 'mod'
+      ? `/api/users/${userId}/profile`
+      : undefined;
+  });
+
+  // Use the appropriate profile based on mode
+  protected readonly profile = computed(() => {
+    if (this.mode() === 'mod') {
+      return this.modProfileResource.value();
+    }
+    return this.profileDataAccess.profileResource.value();
+  });
+
+  protected readonly profileResource = computed(() => {
+    if (this.mode() === 'mod') {
+      return {
+        value: this.modProfileResource.value,
+        isLoading: this.modProfileResource.isLoading,
+      };
+    }
+    return {
+      value: this.profileDataAccess.profileResource.value,
+      isLoading: this.profileDataAccess.profileResource.isLoading,
+    };
+  });
 
   editingSection = signal<SectionName | null>(null);
   savingSection = signal<SectionName | null>(null);
@@ -86,7 +117,17 @@ export class ProfileComponent {
   async saveSection(section: SectionName, updateDto: UpdateUserProfileDto) {
     try {
       this.savingSection.set(section);
-      await this.profileData.updateProfile(updateDto);
+      const currentMode = this.mode();
+      const userId = this.targetUserId();
+
+      if (currentMode === 'mod' && userId) {
+        // Moderator editing another user's profile
+        await this.profileDataAccess.updateUserProfile(userId, updateDto);
+      } else {
+        // User editing their own profile
+        await this.profileDataAccess.updateProfile(updateDto);
+      }
+
       this.editingSection.set(null);
     } catch (error) {
       console.error('Failed to update profile', error);

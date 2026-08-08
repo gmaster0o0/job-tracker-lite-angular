@@ -4,11 +4,13 @@
     "outDir": "../../dist/out-tsc",
     "types": []
   },
-  "include": ["src/**/*.ts", "../../libs/shared/testing/src/utils/transloco-testing.module.ts", "../../libs/frontend/src/lib/services/user-preferences.service.ts", "../../libs/frontend/src/lib/pipes/app-date.pipe.ts"],
-  "exclude": [
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
+  "include": [
+    "src/**/*.ts",
+    "../../libs/shared/testing/src/utils/transloco-testing.module.ts",
+    "../../libs/frontend/src/lib/services/user-preferences.service.ts",
+    "../../libs/frontend/src/lib/pipes/app-date.pipe.ts"
   ],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"],
   "angularCompilerOptions": {
     "extendedDiagnostics": {
       "checks": {

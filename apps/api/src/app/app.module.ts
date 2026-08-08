@@ -9,6 +9,7 @@ import { AccountModule } from './account/account.module';
 import { ProfileModule } from './profile/profile.module';
 import { PreferencesModule } from './preferences/preferences.module';
 import { QueueModule } from './queue/queue.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { QueueModule } from './queue/queue.module';
     ProfileModule,
     PreferencesModule,
     QueueModule,
+    UsersModule,
   ],
   controllers: [],
 })

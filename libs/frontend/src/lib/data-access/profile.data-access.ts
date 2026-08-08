@@ -15,6 +15,12 @@ export class ProfileDataAccessService {
 
   profileResource = httpResource<UserProfileDto>(() => `/api/profile`);
 
+  async getUserProfile(userId: string): Promise<UserProfileDto> {
+    return await firstValueFrom(
+      this.http.get<UserProfileDto>(`/api/users/${userId}/profile`),
+    );
+  }
+
   async updateProfile(dto: UpdateUserProfileDto): Promise<UserProfileDto> {
     const updated = await firstValueFrom(
       this.http.patch<UserProfileDto>('/api/profile', dto),
@@ -22,5 +28,14 @@ export class ProfileDataAccessService {
     this.profileResource.update(() => updated);
 
     return updated;
+  }
+
+  async updateUserProfile(
+    userId: string,
+    dto: UpdateUserProfileDto,
+  ): Promise<UserProfileDto> {
+    return await firstValueFrom(
+      this.http.patch<UserProfileDto>(`/api/users/${userId}/profile`, dto),
+    );
   }
 }

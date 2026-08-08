@@ -1,0 +1,48 @@
+@if (isLoading()) {
+  <div class="space-y-4 p-4" data-testid="user-details-loading">
+    <hlm-skeleton class="h-12 w-full" />
+    <hlm-skeleton class="h-96 w-full" />
+  </div>
+} @else if (user(); as user) {
+  <!-- Compact header with role dropdown -->
+  <div class="border-b bg-muted/30 px-4 py-3">
+    <div class="container mx-auto flex max-w-6xl items-center justify-between">
+      <div class="min-w-0 flex-1">
+        <h1 class="truncate text-xl font-semibold">
+          {{ user.name }}
+          <span class="text-muted-foreground">(@{{ user.id }})</span>
+        </h1>
+        <p class="text-sm text-muted-foreground">{{ user.email }}</p>
+      </div>
+
+      <div *libHasRole="['ADMIN']" class="ml-4 flex-shrink-0">
+        <hlm-select
+          [value]="currentRoleValue()"
+          [itemToString]="roleItemToString"
+          (valueChange)="onRoleChange($event)"
+        >
+          <hlm-select-trigger class="w-40">
+            <hlm-select-value />
+          </hlm-select-trigger>
+          <hlm-select-content *hlmSelectPortal>
+            <hlm-select-group>
+              @for (role of roleOptions; track role.value) {
+                <hlm-select-item [value]="role">
+                  {{ role.label() }}
+                </hlm-select-item>
+              }
+            </hlm-select-group>
+          </hlm-select-content>
+        </hlm-select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile component injected below -->
+  <app-profile [mode]="'mod'" [targetUserId]="selectedUserId()" />
+} @else {
+  <div class="p-8 text-center text-muted-foreground">
+    {{ 'users.profile.notFound' | transloco }}
+  </div>
+}
+

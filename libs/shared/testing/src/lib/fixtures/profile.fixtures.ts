@@ -35,8 +35,6 @@ export const userProfileFixtures = {
     contactVisibility: 0,
     skillsVisibility: 0,
     preferenceVisibility: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
   } as UserProfileDto),
   empty: frozen({
     id: 'profile_2',
@@ -46,8 +44,6 @@ export const userProfileFixtures = {
     contactVisibility: 0,
     skillsVisibility: 0,
     preferenceVisibility: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
     name: null,
     title: null,
     city: null,
