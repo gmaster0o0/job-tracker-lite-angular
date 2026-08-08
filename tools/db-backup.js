@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { spawn, spawnSync } = require('child_process');
 
-// Credentials are never passed in: the dump runs inside the container and reads
-// POSTGRES_USER / POSTGRES_DB from its own environment.
+// The dump runs inside the container and reads its own env, so no credentials
+// pass through this script.
 const CONTAINER = process.env.DB_CONTAINER || 'job-tracker-shared-db';
 const BACKUP_DIR = path.resolve(__dirname, '../backups');
 const KEEP = Number(process.env.DB_BACKUP_KEEP || 10);
@@ -26,16 +26,8 @@ function prune() {
   }
 }
 
-/**
- * This script runs as a pre-hook for db:push and db:migrate, so a failure here
- * blocks those commands on purpose. That is only the right call when there is
- * data at risk: on a fresh clone the container is not up and the database does
- * not exist yet, and refusing to run would just block first-time setup.
- *
- * Returns false when there is demonstrably nothing to back up. Anything else -
- * a running container whose dump fails - is a real error and must not be
- * swallowed.
- */
+// A failure here blocks db:push/db:migrate, which is only correct when data
+// is actually at risk - on a fresh clone there's no container or database yet.
 function hasDatabaseToBackUp() {
   const running = spawnSync(
     'docker',

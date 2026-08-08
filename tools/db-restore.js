@@ -35,9 +35,8 @@ if (!dump || !fs.existsSync(dump)) {
   return;
 }
 
-// Restoring drops and recreates every object it owns. That is exactly the kind
-// of command that should never run because someone half-remembered a flag, so
-// it refuses until --yes is passed explicitly.
+// Restoring drops and recreates every object it owns, so it refuses without
+// an explicit --yes.
 if (!confirmed) {
   console.log(`Would restore ${path.relative(process.cwd(), dump)}`);
   console.log(`into database "$POSTGRES_DB" in container ${CONTAINER}.`);

@@ -1,20 +1,11 @@
--- Diacritic-aware slug backfill. Mirrors toSlug() in
--- libs/shared/core-utils/src/lib/utils/slug.util.ts: strip diacritics so
--- "Gábor Kotél" becomes "gabor-kotel", drop anything still not
--- alphanumeric/whitespace/hyphen, collapse whitespace runs into a hyphen.
 CREATE EXTENSION IF NOT EXISTS unaccent;
 
 -- AlterTable: Add slug column (nullable at first)
 ALTER TABLE "user" ADD COLUMN "slug" TEXT;
 
--- Backfill. Names are not unique and some normalise to nothing at all (a name
--- written entirely in Cyrillic, CJK or punctuation), so the 'user' fallback
--- matches toUserSlugBase() and rows sharing a base are disambiguated by id.
--- Only the duplicates carry a suffix, so the common case keeps a clean slug -
--- the same shape AuthConfigFactory produces at runtime. Appending the whole id
--- rather than a prefix keeps this unique regardless of id format: seeded rows
--- use readable ids that share a leading substring ("seed-user-recruiter" and
--- "seed-user-moderator" agree for 8 characters).
+-- Names can collide or normalise to nothing, so duplicates get the row's id
+-- appended - the whole id, not a prefix, since some ids share a leading
+-- substring (e.g. "seed-user-recruiter" / "seed-user-moderator").
 WITH normalised AS (
   SELECT
     "id",
