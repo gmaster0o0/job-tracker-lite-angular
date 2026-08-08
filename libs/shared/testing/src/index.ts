@@ -1,3 +1,4 @@
+export * from './lib/fixtures/user.fixtures';
 export * from './lib/fixtures/jobs.fixtures';
 export * from './lib/fixtures/contacts.fixtures';
 export * from './lib/fixtures/seed.fixtures';
