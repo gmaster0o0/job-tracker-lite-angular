@@ -35,22 +35,28 @@ export class UsersService {
   // link keeps working after a user's slug changes.
   async getUserProfile(idOrSlug: string): Promise<UserDetailsDto> {
     const userId = await this.resolveUserId(idOrSlug);
-
-    const userProfile = await this.prisma.userProfile.findUnique({
-      where: { userId },
-      include: {
-        user: {
-          select: {
-            id: true,
-            role: true,
-            name: true,
-            email: true,
-          },
+    const include = {
+      user: {
+        select: {
+          id: true,
+          role: true,
+          name: true,
+          email: true,
         },
       },
-    });
+    };
 
-    if (!userProfile) throw new NotFoundException('User profile not found');
+    // Most users never fill out a profile, so there is no row to find yet -
+    // create an empty one instead of 404ing, matching ProfileService.getProfile.
+    const userProfile =
+      (await this.prisma.userProfile.findUnique({
+        where: { userId },
+        include,
+      })) ??
+      (await this.prisma.userProfile.create({
+        data: { userId, coreSkills: [] },
+        include,
+      }));
 
     return userDetailsSchema.parse(userProfile);
   }

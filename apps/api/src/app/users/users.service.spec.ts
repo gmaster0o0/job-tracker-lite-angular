@@ -213,15 +213,30 @@ describe('UsersService', () => {
       expect(prismaMock.userProfile.findUnique).not.toHaveBeenCalled();
     });
 
-    it('should throw NotFoundException when the user exists but has no profile', async () => {
-      prismaMock.user.findFirst.mockResolvedValue({
-        id: userFixtures.basic.id,
-      });
-      prismaMock.userProfile.findUnique.mockResolvedValue(null);
+    it('creates an empty profile when the user exists but has none yet', async () => {
+      const userId = userFixtures.basic.id;
+      const created = prismaUserProfileWithUserFixtures.basic;
 
-      await expect(
-        service.getUserProfile(userFixtures.basic.slug),
-      ).rejects.toThrow(NotFoundException);
+      prismaMock.user.findFirst.mockResolvedValue({ id: userId });
+      prismaMock.userProfile.findUnique.mockResolvedValue(null);
+      prismaMock.userProfile.create.mockResolvedValue(created);
+
+      const result = await service.getUserProfile(userFixtures.basic.slug);
+
+      expect(prismaMock.userProfile.create).toHaveBeenCalledWith({
+        data: { userId, coreSkills: [] },
+        include: {
+          user: {
+            select: {
+              id: true,
+              role: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      });
+      expect(result.id).toBe(userId);
     });
   });
 
