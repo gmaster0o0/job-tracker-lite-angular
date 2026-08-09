@@ -34,6 +34,19 @@
       },
       "outputs": [],
       "inputs": ["{workspaceRoot}/project.json"]
+    },
+    "coverage-report": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "command": "node tools/coverage/report.mjs",
+        "forwardAllArgs": false
+      },
+      "outputs": ["{workspaceRoot}/coverage"],
+      "inputs": [
+        "{workspaceRoot}/project.json",
+        "{workspaceRoot}/tools/coverage/report.mjs"
+      ]
     }
   }
 }

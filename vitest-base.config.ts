@@ -1,4 +1,15 @@
-import { defineConfig } from 'vitest/config';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { coverageConfigDefaults, defineConfig } from 'vitest/config';
+
+const workspaceRoot = path.dirname(fileURLToPath(import.meta.url));
+const coverageProject = process.env['NX_TASK_TARGET_PROJECT'] ?? 'vitest';
+const coverageReportsDirectory = path.join(
+  workspaceRoot,
+  'coverage',
+  'raw',
+  coverageProject,
+);
 
 // Picked up by the `@angular/build:unit-test` targets that set
 // `"runnerConfig": true`; the builder still owns the build side of the run.
@@ -24,6 +35,29 @@ export default defineConfig({
     sequence: {
       shuffle: shuffle && { files: true, tests: true },
       seed,
+    },
+    coverage: {
+      provider: 'v8',
+      reportsDirectory: coverageReportsDirectory,
+      htmlDir: path.join(coverageReportsDirectory, 'lcov-report'),
+      reporter: ['html', 'json', 'json-summary', 'lcov', 'text-summary'],
+      // Only ship *.ts logic in the coverage report - templates, static
+      // assets and test-support code (harnesses/mocks/fixtures) aren't
+      // production logic and just add noise to the unified report.
+      exclude: [
+        ...coverageConfigDefaults.exclude,
+        '**/*.html',
+        '**/public/**',
+        '**/testing/**',
+        '**/*.harness.ts',
+        '**/*.mock.ts',
+        '**/*.mocks.ts',
+        '**/*.fixture.ts',
+        '**/*.fixtures.ts',
+        // Vendored Spartan NG components (copied into the repo by their
+        // CLI, not hand-written here) - not ours to hold to a coverage bar.
+        '**/shared-ui/**',
+      ],
     },
   },
 });

@@ -10,12 +10,14 @@ import { getTranslocoModule } from '@job-tracker-lite-angular/frontend-shared';
 
 @Component({
   standalone: true,
+  selector: 'app-dummy-menu',
   template: 'Test Menu',
 })
 class DummyMenuComponent {}
 
 @Component({
   standalone: true,
+  selector: 'app-dummy-content',
   template: 'Test Content',
 })
 class DummyContentComponent {}
