@@ -36,6 +36,7 @@ export function createPrismaServiceMock(mockFactory: () => any) {
       findUnique: mockFactory(),
       findUniqueOrThrow: mockFactory(),
       findFirst: mockFactory(),
+      findMany: mockFactory(),
       update: mockFactory(),
       updateMany: mockFactory(),
       deleteMany: mockFactory(),

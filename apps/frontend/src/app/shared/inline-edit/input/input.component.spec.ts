@@ -103,4 +103,40 @@ describe('InlineInputComponent', () => {
 
     expect(component.value()).toBe('test');
   });
+
+  it('should not show a prefix addon by default', async () => {
+    expect(await harness.getPrefixText()).toBe('');
+  });
+
+  it('should show the prefix as a separate addon when provided', async () => {
+    fixture.componentRef.setInput('prefix', 'https://');
+
+    expect(await harness.getPrefixText()).toBe('https://');
+  });
+
+  it('should prepend the prefix to typed values missing a scheme', async () => {
+    fixture.componentRef.setInput('isEditing', true);
+    fixture.componentRef.setInput('prefix', 'https://');
+
+    await harness.setValue('github.com/user');
+
+    expect(component.value()).toBe('https://github.com/user');
+  });
+
+  it('should not double-prefix a value that already has a scheme', async () => {
+    fixture.componentRef.setInput('isEditing', true);
+    fixture.componentRef.setInput('prefix', 'https://');
+
+    await harness.setValue('http://github.com/user');
+
+    expect(component.value()).toBe('http://github.com/user');
+  });
+
+  it('should hide the prefix from the editable text', async () => {
+    fixture.componentRef.setInput('isEditing', true);
+    fixture.componentRef.setInput('prefix', 'https://');
+    fixture.componentRef.setInput('value', 'https://github.com/user');
+
+    expect(await harness.getValue()).toBe('github.com/user');
+  });
 });

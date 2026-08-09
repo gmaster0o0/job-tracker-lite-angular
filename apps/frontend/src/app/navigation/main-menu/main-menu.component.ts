@@ -8,6 +8,8 @@ import {
   lucideSettings,
   lucideUserPlus,
   lucideUser,
+  lucideUsers,
+  lucideLayoutDashboard,
 } from '@ng-icons/lucide';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -31,6 +33,8 @@ interface MainMenuItem extends MenuItem {
     provideIcons({
       lucideBriefcase,
       lucideUser,
+      lucideUsers,
+      lucideLayoutDashboard,
       lucideSettings,
       lucideInfo,
       lucideLogIn,
@@ -81,6 +85,20 @@ export class MainMenuComponent {
       icon: 'lucideUserPlus',
       path: '/auth/register',
       questOnly: true,
+    },
+    {
+      label: translateSignal('dashboard.dashboard'),
+      icon: 'lucideLayoutDashboard',
+      path: '/dashboard',
+      requiresAuth: true,
+      requiresRole: ['MODERATOR', 'ADMIN'],
+    },
+    {
+      label: translateSignal('common.users'),
+      icon: 'lucideUsers',
+      path: '/users',
+      requiresAuth: true,
+      requiresRole: ['MODERATOR', 'ADMIN'],
     },
   ];
 }

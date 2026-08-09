@@ -3,13 +3,13 @@
     {{ 'profile.title' | transloco }}
   </h1>
 
-  @if (profileResource.isLoading()) {
+  @if (profileResource().isLoading() && !profile()) {
     <div class="flex h-64 items-center justify-center">
       <p class="text-muted-foreground animate-pulse">
         {{ 'profile.loading' | transloco }}
       </p>
     </div>
-  } @else if (profileResource.value(); as profile) {
+  } @else if (profile(); as profile) {
     <div class="grid gap-8">
       <app-personal-info
         [profile]="profile"
@@ -36,12 +36,16 @@
       <app-skill-manager
         [profile]="profile"
         [disabled]="isAnySectionEditing() || isCareerPreferenceSaving()"
+        [mode]="mode()"
+        [targetUserId]="targetUserId()"
         (saveStateChanged)="onSkillManagerSaveStateChange($event)"
       ></app-skill-manager>
 
       <app-career-preference
         [profile]="profile"
         [disabled]="isAnySectionEditing() || isSkillManagerSaving()"
+        [mode]="mode()"
+        [targetUserId]="targetUserId()"
         (saveStateChanged)="onCareerPreferenceSaveStateChange($event)"
       />
     </div>

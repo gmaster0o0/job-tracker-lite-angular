@@ -1,5 +1,21 @@
 import { ContactDto, JobDto, NoteDto } from '@job-tracker-lite-angular/schemas';
 import { jobFixtures } from './jobs.fixtures';
+import { SeededUserFixture, userFixtures } from './user.fixtures';
+
+export { userFixturePassword as seedUserPassword } from './user.fixtures';
+export type { SeededUserFixture } from './user.fixtures';
+
+export const seedUserFixtures = {
+  demo: userFixtures.admin,
+  recruiter: userFixtures.recruiter,
+  moderator: userFixtures.moderator,
+} as const satisfies Record<string, SeededUserFixture>;
+
+export const seedUserFixtureList: readonly SeededUserFixture[] = [
+  seedUserFixtures.demo,
+  seedUserFixtures.recruiter,
+  seedUserFixtures.moderator,
+];
 
 export interface SeedContactTemplate {
   name: string;

@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import {
   UserProfileDto,
   UpdateUserProfileDto,
+  userProfileSchema,
 } from '@job-tracker-lite-angular/schemas';
 
 @Injectable()
@@ -15,22 +16,24 @@ export class ProfileService {
     });
 
     if (!profile) {
-      return this.prisma.userProfile.create({
+      const created = await this.prisma.userProfile.create({
         data: {
           userId,
           coreSkills: [],
         },
       });
+
+      return userProfileSchema.parse(created);
     }
 
-    return profile;
+    return userProfileSchema.parse(profile);
   }
 
   async updateProfile(
     userId: string,
     updateProfileDto: UpdateUserProfileDto,
   ): Promise<UserProfileDto> {
-    return this.prisma.userProfile.upsert({
+    const updated = await this.prisma.userProfile.upsert({
       where: { userId },
       update: updateProfileDto,
       create: {
@@ -39,5 +42,7 @@ export class ProfileService {
         coreSkills: updateProfileDto.coreSkills ?? [],
       },
     });
+
+    return userProfileSchema.parse(updated);
   }
 }

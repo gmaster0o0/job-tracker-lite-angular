@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { AccountStatus } from '@prisma/client';
 import { errorCodes } from '../error-codes';
 import { required } from '../validators/required';
+import { Role } from '@prisma/client';
 
 const hasNumber = (value: string): boolean => /\d/.test(value);
 const hasUppercase = (value: string): boolean => /[A-Z]/.test(value);
@@ -110,6 +111,7 @@ export const authUserSchema = z.object({
   email: z.email(),
   emailVerified: z.boolean(),
   status: z.enum(AccountStatus).optional().default(AccountStatus.ACTIVE),
+  role: z.enum(Role).optional().default(Role.USER),
   image: z.string().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),

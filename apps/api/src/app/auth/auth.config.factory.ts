@@ -7,9 +7,11 @@ import { EmailService } from '../email/email.service';
 import {
   getLanguageFromUrl,
   setLanguageOnUrl,
+  toUserSlugBase,
 } from '@job-tracker-lite-angular/core-utils';
+import { randomBytes } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
-import { AccountStatus } from '@prisma/client';
+import { AccountStatus, Role } from '@prisma/client';
 
 type EmailAndPasswordConfig = NonNullable<
   BetterAuthOptions['emailAndPassword']
@@ -18,10 +20,15 @@ type EmailVerificationConfig = NonNullable<
   BetterAuthOptions['emailVerification']
 >;
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 @Injectable()
 export class AuthConfigFactory {
   private defaultBaseUrl = 'http://localhost:3000/api/auth';
   private defaultTrustedOrigin = 'http://localhost:4200';
+  private maxSlugAttempts = 5;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -55,9 +62,75 @@ export class AuthConfigFactory {
             input: false,
             defaultValue: AccountStatus.ACTIVE,
           },
+          role: {
+            type: 'string',
+            required: false,
+            input: false,
+            defaultValue: Role.USER,
+          },
+          slug: {
+            type: 'string',
+            required: false,
+            input: false,
+          },
+        },
+      },
+      databaseHooks: {
+        user: {
+          create: {
+            before: async (user) => ({
+              data: {
+                ...user,
+                slug: await this.generateUniqueUserSlug(user.name),
+              },
+            }),
+          },
         },
       },
     });
+  }
+
+  // Names aren't unique, so a taken base slug gets an incrementing suffix.
+  async generateUniqueUserSlug(name: string | null): Promise<string> {
+    const base = toUserSlugBase(name);
+
+    for (let attempt = 0; attempt < this.maxSlugAttempts; attempt++) {
+      const candidate =
+        attempt === 0 ? base : await this.nextNumberedSlug(base);
+
+      const taken = await this.prisma.user.findUnique({
+        where: { slug: candidate },
+        select: { id: true },
+      });
+
+      if (!taken) {
+        return candidate;
+      }
+    }
+
+    // Every number we tried lost a race, so fall back to a random suffix.
+    return `${base}-${randomBytes(16).toString('hex')}`;
+  }
+
+  // Slug is sorted as a string, so "-10" would sort before "-2" - the suffix
+  // is compared as a parsed number instead.
+  async nextNumberedSlug(base: string): Promise<string> {
+    const rows = await this.prisma.user.findMany({
+      where: { slug: { startsWith: `${base}-` } },
+      select: { slug: true },
+    });
+
+    const suffixPattern = new RegExp(`^${escapeRegExp(base)}-(\\d+)$`);
+    let highest = 1;
+
+    for (const { slug } of rows) {
+      const match = suffixPattern.exec(slug);
+      if (match) {
+        highest = Math.max(highest, Number(match[1]));
+      }
+    }
+
+    return `${base}-${highest + 1}`;
   }
 
   private getEmailAndPasswordConfig(): EmailAndPasswordConfig {

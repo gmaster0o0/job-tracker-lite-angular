@@ -59,6 +59,8 @@ export class CareerPreferenceComponent {
 
   profile = input.required<UserProfileDto>();
   disabled = input<boolean>(false);
+  mode = input<'own' | 'mod'>('own');
+  targetUserId = input<string | null>(null);
 
   experienceLevel = linkedSignal(() => this.profile().experienceLevel ?? null);
   workingStyle = linkedSignal(() => this.profile().workingStyle ?? null);
@@ -155,12 +157,27 @@ export class CareerPreferenceComponent {
     this.saveState.set('saving');
     this.saveStateChanged.emit('saving');
     try {
-      await this.profileData.updateProfile({
-        experienceLevel: this.experienceLevel(),
-        workingStyle: this.workingStyle(),
-        careerType: this.careerType(),
-        preferenceVisibility: this.preferenceVisibility(),
-      });
+      const currentMode = this.mode();
+      const userId = this.targetUserId();
+
+      if (currentMode === 'mod' && userId) {
+        // Moderator editing another user's profile
+        await this.profileData.updateUserProfile(userId, {
+          experienceLevel: this.experienceLevel(),
+          workingStyle: this.workingStyle(),
+          careerType: this.careerType(),
+          preferenceVisibility: this.preferenceVisibility(),
+        });
+      } else {
+        // User editing their own profile
+        await this.profileData.updateProfile({
+          experienceLevel: this.experienceLevel(),
+          workingStyle: this.workingStyle(),
+          careerType: this.careerType(),
+          preferenceVisibility: this.preferenceVisibility(),
+        });
+      }
+
       this.saveState.set('saved');
       this.saveStateChanged.emit('saved');
 

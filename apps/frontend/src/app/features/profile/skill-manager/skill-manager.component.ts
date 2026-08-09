@@ -76,6 +76,8 @@ export class SkillManagerComponent {
 
   profile = input.required<UserProfileDto>();
   disabled = input<boolean>(false);
+  mode = input<'own' | 'mod'>('own');
+  targetUserId = input<string | null>(null);
 
   readonly saveStateChanged = output<SaveState>();
 
@@ -229,11 +231,23 @@ export class SkillManagerComponent {
     try {
       const nextSkills = [...this.draftSkills()];
       const nextVisibility = this.draftVisibility();
+      const currentMode = this.mode();
+      const userId = this.targetUserId();
 
-      await this.profileData.updateProfile({
-        coreSkills: nextSkills,
-        skillsVisibility: nextVisibility,
-      });
+      if (currentMode === 'mod' && userId) {
+        // Moderator editing another user's profile
+        await this.profileData.updateUserProfile(userId, {
+          coreSkills: nextSkills,
+          skillsVisibility: nextVisibility,
+        });
+      } else {
+        // User editing their own profile
+        await this.profileData.updateProfile({
+          coreSkills: nextSkills,
+          skillsVisibility: nextVisibility,
+        });
+      }
+
       this.savedSkills.set(nextSkills);
       this.setSaveState('saved');
 

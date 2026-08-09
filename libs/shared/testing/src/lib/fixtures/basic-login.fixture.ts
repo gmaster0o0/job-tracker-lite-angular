@@ -1,3 +1,5 @@
+import { userFixtures } from './user.fixtures';
+
 export const validLoginCredentials = {
   email: 'admin@example.com',
   password: 'test123',
@@ -18,7 +20,7 @@ export const invalidLoginCredentialsMissingEmail = {
 };
 
 export const validUserResponse = {
-  id: 'user_123',
+  id: userFixtures.admin.id,
   email: 'admin@example.com',
 };
 
