@@ -16,7 +16,11 @@
       <ng-icon [name]="icon()" class="h-4 w-4" />
     </hlm-input-group-addon>
   }
-
+  @if (prefix()) {
+    <hlm-input-group-addon>
+      <hlm-input-group-text> {{ prefix() }}</hlm-input-group-text>
+    </hlm-input-group-addon>
+  }
   <input
     hlmInputGroupInput
     [ngModel]="displayValue()"

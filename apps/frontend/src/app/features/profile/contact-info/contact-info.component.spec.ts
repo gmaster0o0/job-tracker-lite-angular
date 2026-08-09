@@ -39,7 +39,9 @@ describe('ContactInfoComponent', () => {
     expect(await harness.getLinkedin()).toBe(
       userProfileFixtures.johnDoe.linkedin,
     );
-    expect(await harness.getGithub()).toBe(userProfileFixtures.johnDoe.github);
+    // The 'https://' scheme is shown as a fixed prefix addon, not repeated
+    // in the editable text.
+    expect(await harness.getGithub()).toBe('github.com/johndoe');
     expect(await harness.getWebsite()).toBe(
       userProfileFixtures.johnDoe.webpage,
     );
@@ -74,7 +76,7 @@ describe('ContactInfoComponent', () => {
       expect.objectContaining({
         email: 'new-email@example.com',
         linkedin: 'new-linkedin',
-        github: 'new-github',
+        github: 'https://new-github',
         webpage: 'new-website.com',
         contactVisibility: VisibilityLevel.REGISTERED,
       }),

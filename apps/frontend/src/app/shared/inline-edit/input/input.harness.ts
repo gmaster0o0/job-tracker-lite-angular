@@ -24,6 +24,7 @@ export class InlineInputHarness extends ComponentHarness {
 
   protected getInputElement = this.locatorForOptional('input');
   protected getIcon = this.locatorForOptional('ng-icon');
+  protected getPrefixElement = this.locatorForOptional('hlm-input-group-text');
 
   async isEditing(): Promise<boolean> {
     const input = await this.getInputElement();
@@ -61,5 +62,10 @@ export class InlineInputHarness extends ComponentHarness {
 
   async hasIcon(): Promise<boolean> {
     return (await this.getIcon()) !== null;
+  }
+
+  async getPrefixText(): Promise<string> {
+    const prefix = await this.getPrefixElement();
+    return ((await prefix?.text()) ?? '').trim();
   }
 }
