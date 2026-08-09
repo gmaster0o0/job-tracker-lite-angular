@@ -30,6 +30,7 @@ describe('UserPublicProfileComponent', () => {
     }));
     authSessionMock.role.mockImplementation(() => 'ADMIN');
 
+    TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [UserPublicProfileComponent, getTranslocoModule()],
       providers: [
@@ -114,6 +115,7 @@ describe('UserPublicProfileComponent', () => {
     }));
     authSessionMock.role.mockImplementation(() => 'USER');
 
+    TestBed.resetTestingModule();
     await TestBed.configureTestingModule({
       imports: [UserPublicProfileComponent, getTranslocoModule()],
       providers: [

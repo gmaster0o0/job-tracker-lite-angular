@@ -1,7 +1,10 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
-import { UsersDataAccessService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  ROLE_BADGE_CLASSES,
+  UsersDataAccessService,
+} from '@job-tracker-lite-angular/frontend-data-access';
 import { UserListItemDto } from '@job-tracker-lite-angular/schemas';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -37,10 +40,5 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  protected readonly roleClasses: Record<string, string> = {
-    ADMIN: 'bg-primary text-primary-foreground',
-    MODERATOR: 'bg-blue-600 text-white',
-    RECRUITER: 'bg-emerald-600 text-white',
-    USER: 'bg-secondary text-secondary-foreground',
-  };
+  protected readonly ROLE_BADGE_CLASSES = ROLE_BADGE_CLASSES;
 }

@@ -4,6 +4,7 @@ import { PrismaService } from '@job-tracker-lite-angular/prisma';
 import { createPrismaServiceMock } from '@job-tracker-lite-angular/testing';
 import { UsersService } from './users.service';
 import {
+  prismaUserProfileWithUserFixtures,
   userFixtures,
   userListFixtures,
 } from '@job-tracker-lite-angular/testing';
@@ -110,13 +111,7 @@ describe('UsersService', () => {
   describe('getUser', () => {
     it('should return a user by slug', async () => {
       const slug = userFixtures.basic.slug;
-      const mockUser = {
-        id: userFixtures.basic.id,
-        slug,
-        name: userFixtures.basic.name,
-        email: userFixtures.basic.email,
-        role: Role.USER,
-      };
+      const mockUser = userListFixtures.find((user) => user.slug === slug);
 
       prismaMock.user.findUnique.mockResolvedValue(mockUser);
 
@@ -158,61 +153,20 @@ describe('UsersService', () => {
   });
 
   describe('getUserProfile', () => {
-    function mockProfileResolution(userId: string) {
-      const mockUserProfile = {
-        userId,
-        title: 'Senior Developer',
-        city: 'New York',
-        bio: 'Experienced developer',
-        linkedin: 'https://linkedin.com/in/user',
-        github: 'https://github.com/user',
-        webpage: 'https://user.dev',
-        coreSkills: ['TypeScript', 'Angular'],
-        experienceLevel: 'SENIOR',
-        workingStyle: 'REMOTE',
-        careerType: 'FULL_TIME',
-        personalVisibility: 20,
-        contactVisibility: 10,
-        skillsVisibility: 20,
-        preferenceVisibility: 20,
-        user: {
-          id: userId,
-          role: Role.USER,
-          name: userFixtures.basic.name,
-          email: userFixtures.basic.email,
-        },
-      };
+    function mockProfileResolution() {
+      const mockUserProfile = prismaUserProfileWithUserFixtures.basic;
+      const { user, ...profile } = mockUserProfile;
 
-      prismaMock.user.findFirst.mockResolvedValue({ id: userId });
+      prismaMock.user.findFirst.mockResolvedValue({ id: user.id });
       prismaMock.userProfile.findUnique.mockResolvedValue(mockUserProfile);
 
-      return {
-        userId,
-        id: userId,
-        name: userFixtures.basic.name,
-        role: Role.USER,
-        title: 'Senior Developer',
-        city: 'New York',
-        bio: 'Experienced developer',
-        email: userFixtures.basic.email,
-        linkedin: 'https://linkedin.com/in/user',
-        github: 'https://github.com/user',
-        webpage: 'https://user.dev',
-        coreSkills: ['TypeScript', 'Angular'],
-        experienceLevel: 'SENIOR',
-        workingStyle: 'REMOTE',
-        careerType: 'FULL_TIME',
-        personalVisibility: 20,
-        contactVisibility: 10,
-        skillsVisibility: 20,
-        preferenceVisibility: 20,
-      };
+      return { ...profile, ...user };
     }
 
     it('should resolve the target by slug and return the profile', async () => {
       const slug = userFixtures.basic.slug;
       const userId = userFixtures.basic.id;
-      const expected = mockProfileResolution(userId);
+      const expected = mockProfileResolution();
 
       const result = await service.getUserProfile(slug);
 
@@ -238,7 +192,7 @@ describe('UsersService', () => {
 
     it('should also resolve the target when given the raw id', async () => {
       const userId = userFixtures.basic.id;
-      const expected = mockProfileResolution(userId);
+      const expected = mockProfileResolution();
 
       const result = await service.getUserProfile(userId);
 
@@ -281,27 +235,10 @@ describe('UsersService', () => {
         coreSkills: ['TypeScript', 'React', 'Node.js'],
       };
       const mockUpdatedProfile = {
-        userId,
+        ...prismaUserProfileWithUserFixtures.basic,
         title: 'Lead Developer',
-        city: 'New York',
         bio: 'Updated bio',
-        linkedin: null,
-        github: null,
-        webpage: null,
         coreSkills: ['TypeScript', 'React', 'Node.js'],
-        experienceLevel: 'SENIOR',
-        workingStyle: 'REMOTE',
-        careerType: 'FULL_TIME',
-        personalVisibility: 20,
-        contactVisibility: 10,
-        skillsVisibility: 20,
-        preferenceVisibility: 20,
-        user: {
-          id: userId,
-          role: Role.USER,
-          name: userFixtures.basic.name,
-          email: userFixtures.basic.email,
-        },
       };
 
       prismaMock.user.findFirst.mockResolvedValue({ id: userId });
@@ -350,31 +287,12 @@ describe('UsersService', () => {
     it('should write to the correct target user profile, not the caller', async () => {
       // This test specifically addresses the data integrity bug where
       // moderators editing another user's profile would corrupt their own
-      const targetSlug = 'target-user';
-      const targetUserId = 'target-user-id';
+      const targetSlug = userFixtures.moderator.slug;
+      const targetUserId = userFixtures.moderator.id;
       const updateDto = { bio: 'New bio for target user' };
       const mockProfile = {
-        userId: targetUserId,
+        ...prismaUserProfileWithUserFixtures.moderator,
         bio: 'New bio for target user',
-        title: null,
-        city: null,
-        linkedin: null,
-        github: null,
-        webpage: null,
-        coreSkills: [],
-        experienceLevel: null,
-        workingStyle: null,
-        careerType: null,
-        personalVisibility: 0,
-        contactVisibility: 0,
-        skillsVisibility: 0,
-        preferenceVisibility: 0,
-        user: {
-          id: targetUserId,
-          role: Role.USER,
-          name: 'Target User',
-          email: 'target@example.com',
-        },
       };
 
       prismaMock.user.findFirst.mockResolvedValue({ id: targetUserId });

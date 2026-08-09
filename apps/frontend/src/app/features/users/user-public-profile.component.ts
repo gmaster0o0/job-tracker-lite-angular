@@ -2,7 +2,10 @@ import { Component, computed, inject, input } from '@angular/core';
 import { httpResource } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
-import { AuthSessionService } from '@job-tracker-lite-angular/frontend-data-access';
+import {
+  AuthSessionService,
+  ROLE_BADGE_CLASSES,
+} from '@job-tracker-lite-angular/frontend-data-access';
 import { UserListItemDto } from '@job-tracker-lite-angular/schemas';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -54,7 +57,7 @@ import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
               <div class="flex items-center gap-3">
                 <span
                   hlmBadge
-                  [class]="roleClasses[user.role]"
+                  [class]="ROLE_BADGE_CLASSES[user.role]"
                   data-testid="user-role-badge"
                 >
                   {{ 'users.roles.' + user.role | transloco }}
@@ -107,13 +110,7 @@ export class UserPublicProfileComponent {
     this.userResource.hasValue() ? this.userResource.value() : null,
   );
 
-  protected readonly roleClasses: Record<string, string> = {
-    ADMIN: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-    MODERATOR:
-      'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-    RECRUITER: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    USER: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
-  };
+  protected readonly ROLE_BADGE_CLASSES = ROLE_BADGE_CLASSES;
 
   protected readonly canEdit = computed(() => {
     const currentUserId = this.authSession.session()?.user?.id;

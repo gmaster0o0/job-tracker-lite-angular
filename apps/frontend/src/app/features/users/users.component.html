@@ -30,7 +30,7 @@
               <td hlmTableCell class="font-medium">{{ user.name }}</td>
               <td hlmTableCell>{{ user.email }}</td>
               <td hlmTableCell>
-                <span hlmBadge [class]="roleClasses[user.role]">
+                <span hlmBadge [class]="ROLE_BADGE_CLASSES[user.role]">
                   {{ 'users.roles.' + user.role | transloco }}
                 </span>
               </td>
