@@ -63,7 +63,6 @@ describe('UserPublicProfileComponent', () => {
     httpMock
       .expectOne(`/api/users/${userFixtures.admin.slug}`)
       .flush(userListFixtures[0]);
-    fixture.detectChanges();
     await fixture.whenStable();
 
     expect(fixture.nativeElement.textContent).toContain(
@@ -77,7 +76,6 @@ describe('UserPublicProfileComponent', () => {
     httpMock
       .expectOne(`/api/users/${userFixtures.admin.slug}`)
       .flush('Not found', { status: 404, statusText: 'Not Found' });
-    fixture.detectChanges();
     await fixture.whenStable();
 
     expect(
@@ -91,7 +89,6 @@ describe('UserPublicProfileComponent', () => {
     httpMock
       .expectOne(`/api/users/${userFixtures.admin.slug}`)
       .flush(userListFixtures[0]);
-    fixture.detectChanges();
     await fixture.whenStable();
 
     const editLink = fixture.nativeElement.querySelector(
@@ -134,7 +131,6 @@ describe('UserPublicProfileComponent', () => {
     httpMock
       .expectOne(`/api/users/${userFixtures.admin.slug}`)
       .flush(userListFixtures[0]);
-    fixture.detectChanges();
     await fixture.whenStable();
 
     expect(
