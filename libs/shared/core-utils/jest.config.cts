@@ -7,5 +7,6 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   transformIgnorePatterns: ['node_modules/(?!(better-auth)/)'],
-  coverageDirectory: '../../../coverage/libs/shared/core-utils',
+  coverageDirectory: '../../../coverage/raw/libs/shared/core-utils',
+  coverageReporters: ['html', 'json', 'json-summary', 'lcov', 'text-summary'],
 };

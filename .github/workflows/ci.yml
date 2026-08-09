@@ -171,6 +171,31 @@ jobs:
 
           echo "Nx failed for a reason other than Nx Cloud availability."
           exit 1
+      - name: Run full repo tests with coverage
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/test_db?schema=public
+          DB_USER: user
+          DB_PASSWORD: password
+          DB_NAME: test_db
+          SMTP_HOST: smtp.ethereal.email
+          SMTP_PORT: 587
+          SMTP_USER: fake@ethereal.email
+          SMTP_PASS: fakepassword
+          NX_NO_CLOUD: 'true'
+        run: |
+          set -o pipefail
+          npx nx run-many -t test --projects='!*-e2e' --parallel=3 --skipRemoteCache --skipNxCache --coverage
+      - name: Generate unified coverage report
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npm run coverage:report
+      - name: Upload unified coverage report
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unified-coverage-report
+          path: coverage
       - name: Stop e2e dev servers
         if: always()
         shell: bash
