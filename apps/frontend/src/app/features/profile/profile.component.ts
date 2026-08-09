@@ -121,8 +121,11 @@ export class ProfileComponent {
       const userId = this.targetUserId();
 
       if (currentMode === 'mod' && userId) {
-        // Moderator editing another user's profile
-        await this.profileDataAccess.updateUserProfile(userId, updateDto);
+        const updated = await this.profileDataAccess.updateUserProfile(
+          userId,
+          updateDto,
+        );
+        this.modProfileResource.update(() => updated);
       } else {
         // User editing their own profile
         await this.profileDataAccess.updateProfile(updateDto);
