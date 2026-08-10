@@ -10,9 +10,26 @@ test.describe('System Status', () => {
       page.getByRole('heading', { name: 'Health Check' }),
     ).toBeVisible();
 
-    // Each dependency is reported on its own row; there is no single
-    // "all systems operational" summary line on this page.
-    await expect(page.getByText('API', { exact: true })).toBeVisible();
-    await expect(page.getByText('Database', { exact: true })).toBeVisible();
+    // Each dependency gets its own card with a colour-coded badge, not a
+    // single "all systems operational" summary line.
+    await expect(page.getByTestId('status-api-badge')).toHaveText('OK');
+    await expect(page.getByTestId('status-database-badge')).toHaveText('UP');
+    await expect(page.getByTestId('status-queue-badge')).toHaveText('UP');
+  });
+
+  test.describe('degraded backend', { tag: '@mock-only' }, () => {
+    test.use({ scenarios: { health: 'degraded' } });
+
+    test('reports the failing dependency', async ({ page }) => {
+      await page.goto('/status');
+
+      // The degraded fixture reports the database as down while the API
+      // process itself and Redis stay up.
+      await expect(page.getByTestId('status-api-badge')).toHaveText('ERROR');
+      await expect(page.getByTestId('status-database-badge')).toHaveText(
+        'DOWN',
+      );
+      await expect(page.getByTestId('status-queue-badge')).toHaveText('UP');
+    });
   });
 });

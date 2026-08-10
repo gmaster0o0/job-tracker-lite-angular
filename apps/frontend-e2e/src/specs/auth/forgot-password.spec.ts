@@ -80,3 +80,48 @@ test.describe('forgot password flow', { tag: '@full-stack-only' }, () => {
     await signInThroughUi(page, owner.email, newPassword);
   });
 });
+
+// Rate limiting and a genuine backend outage are both hard to reproduce
+// against a live server on demand, so these run mocked instead. A sibling
+// describe, not nested in the block above: that one is @full-stack-only,
+// and combining the two tags would leave these tests running in no project.
+test.describe(
+  'forgot password flow - unhappy paths',
+  { tag: '@mock-only' },
+  () => {
+    test.use({ storageState: undefined });
+
+    test.describe('rate limited', () => {
+      test.use({ scenarios: { auth: 'rateLimited' } });
+
+      test('shows an error instead of the success message', async ({
+        page,
+      }) => {
+        await page.goto('/auth/forgot-password');
+        await page.getByLabel(/email/i).fill('someone@example.com');
+        await page.locator('button[form="forgotPasswordForm"]').click();
+
+        await expect(page.getByText('Reset Link Request Failed')).toBeVisible();
+        await expect(
+          page.getByText(
+            'If an account exists for this email, a reset link has been sent',
+          ),
+        ).toHaveCount(0);
+      });
+    });
+
+    test.describe('server error', () => {
+      test.use({ scenarios: { auth: 'serverError' } });
+
+      test('shows an error instead of the success message', async ({
+        page,
+      }) => {
+        await page.goto('/auth/forgot-password');
+        await page.getByLabel(/email/i).fill('someone@example.com');
+        await page.locator('button[form="forgotPasswordForm"]').click();
+
+        await expect(page.getByText('Reset Link Request Failed')).toBeVisible();
+      });
+    });
+  },
+);

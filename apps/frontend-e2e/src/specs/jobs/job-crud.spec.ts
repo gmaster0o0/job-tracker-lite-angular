@@ -52,4 +52,39 @@ test.describe('Job CRUD', () => {
       page.getByTestId('job-card').filter({ hasText: title }),
     ).toHaveCount(0);
   });
+
+  // The unique-link conflict is a real database constraint, trivially
+  // reproducible against the real backend - no mock needed.
+  test.describe('unhappy paths', { tag: '@full-stack-only' }, () => {
+    test('create job with a link already in use is rejected', async ({
+      page,
+    }) => {
+      await openFirstJob(page);
+
+      const link = `https://example.com/duplicate-${Date.now()}`;
+
+      await page.getByTestId('create-job-btn').click();
+      await page.locator('#position').fill('Duplicate Link A');
+      await page.locator('#company').fill('Test Company');
+      await page.locator('#link').fill(link);
+      await page.getByTestId('submit-btn').click();
+
+      await expect(
+        page.getByTestId('job-card').filter({ hasText: 'Duplicate Link A' }),
+      ).toBeVisible();
+
+      await page.getByTestId('create-job-btn').click();
+      await page.locator('#position').fill('Duplicate Link B');
+      await page.locator('#company').fill('Test Company');
+      await page.locator('#link').fill(link);
+      await page.getByTestId('submit-btn').click();
+
+      // The backend enforces one link per user; the dialog surfaces the
+      // conflict rather than creating a second job with the same link.
+      await expect(page.getByText('Job Creation Failed')).toBeVisible();
+      await expect(
+        page.getByTestId('job-card').filter({ hasText: 'Duplicate Link B' }),
+      ).toHaveCount(0);
+    });
+  });
 });

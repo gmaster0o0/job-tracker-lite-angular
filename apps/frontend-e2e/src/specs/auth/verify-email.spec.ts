@@ -50,4 +50,51 @@ test.describe('verify email flow', { tag: '@full-stack-only' }, () => {
     // actually matters instead - the account can now sign in.
     await signInThroughUi(page, email, password);
   });
+
+  // An invalid token is trivial to reproduce against the real backend - no
+  // need to mock better-auth's rejection.
+  test('invalid verification token shows an error', async ({
+    page,
+    request,
+  }) => {
+    const username = `verify_invalid_${Date.now()}`;
+    const email = `${username}@example.com`;
+    const password = 'Password123!';
+    const name = 'Verify Invalid';
+
+    await page.goto('/auth/register');
+    await page.getByLabel(/name/i).fill(name);
+    await page.getByLabel(/email/i).fill(email);
+
+    await page.locator('#password').fill(password);
+    await page.locator('#confirmPassword').fill(password);
+
+    await page.getByRole('button', { name: /create account/i }).click();
+
+    await expect(
+      page.getByText(
+        'Registration successful. Please check your email to verify your account.',
+      ),
+    ).toBeVisible();
+
+    const emailMsg = await waitForEmail(request, email, /Verify your email/i);
+    const verifyLink = extractLink(emailMsg.HTML, '/api/auth/verify-email');
+    expect(verifyLink).toBeTruthy();
+
+    // Corrupt the token so better-auth rejects it, keeping the same origin
+    // and callbackURL as a genuine link - the token is the only thing under
+    // test.
+    const invalidLink = verifyLink!.replace(
+      /token=[^&]+/,
+      'token=invalid-token',
+    );
+    await page.goto(invalidLink);
+
+    await expect(page.getByText('Email Verification Failed')).toBeVisible();
+    await expect(
+      page.getByText(
+        'The verification link is invalid or expired. Please request a new one.',
+      ),
+    ).toBeVisible();
+  });
 });

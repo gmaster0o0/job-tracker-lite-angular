@@ -1,14 +1,11 @@
 import { APIRequestContext, APIResponse } from '@playwright/test';
-import { MIN_PASSWORD_LENGTH } from '@job-tracker-lite-angular/schemas';
+import { authUserSchema, AuthUserDto } from '@job-tracker-lite-angular/schemas';
 import { waitForEmail, extractLink } from './mailpit.helper';
 import { allJobDtoFixtures } from '@job-tracker-lite-angular/testing';
 
-export interface ProvisionedUser {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-}
+// `password` is test-only - the server never returns it, so it sits
+// alongside the schema-validated fields rather than inside them.
+export type ProvisionedUser = AuthUserDto & { password: string };
 
 /**
  * Provisions a real user in the backend using the sign-up endpoint.
@@ -60,11 +57,11 @@ export async function provisionUser(
   }
 
   const data = await res.json();
-  const userId = data.user?.id;
+  const parsedUser = authUserSchema.safeParse(data.user);
 
-  if (!userId) {
+  if (!parsedUser.success) {
     throw new Error(
-      `Provisioning returned no user id: ${JSON.stringify(data)}`,
+      `Sign-up response for ${email} does not match authUserSchema: ${parsedUser.error.message}\nBody: ${JSON.stringify(data)}`,
     );
   }
 
@@ -98,9 +95,7 @@ export async function provisionUser(
   }
 
   return {
-    id: userId,
-    name,
-    email,
+    ...parsedUser.data,
     password,
   };
 }

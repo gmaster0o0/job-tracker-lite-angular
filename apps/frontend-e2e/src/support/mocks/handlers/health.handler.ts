@@ -1,5 +1,8 @@
 import { MockRoute } from '../registry';
-import { healthFixture } from '@job-tracker-lite-angular/testing';
+import {
+  degradedHealth,
+  healthFixture,
+} from '@job-tracker-lite-angular/testing';
 
 // The app calls /api/health/detailed (the /status dashboard) and
 // /api/health/ready (the navbar indicator). There is no bare /api/health
@@ -16,14 +19,10 @@ export const healthRoutes: MockRoute[] = [
       }
 
       if (scenarios.health === 'degraded') {
-        // Terminus answers 503 with the same envelope as a healthy report.
-        return {
-          status: 503,
-          body: {
-            ...healthFixture,
-            status: 'error',
-          },
-        };
+        // Terminus answers 503 with the same envelope as a healthy report,
+        // but with the failing dependency (here, the database) reported
+        // under `error` instead of `info`.
+        return { status: 503, body: degradedHealth };
       }
 
       return { status: 200, body: healthFixture };

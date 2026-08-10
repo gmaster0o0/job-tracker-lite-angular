@@ -12,6 +12,7 @@
         </div>
         <span
           hlmBadge
+          data-testid="job-card-status-badge"
           [ngClass]="statusBadgeClasses[job().status]"
           class="shrink-0 text-xs uppercase tracking-[0.02em]"
         >
@@ -45,6 +46,7 @@
       </p>
       <span
         hlmBadge
+        data-testid="job-card-status-badge"
         [ngClass]="statusBadgeClasses[job().status]"
         class="shrink-0 text-[10px] uppercase tracking-[0.02em]"
       >
