@@ -1,6 +1,6 @@
 # E2E Testing Conventions & Workflows
 
-This document outlines the guidelines and workflow for the Hybrid E2E architecture in `apps/frontend-e2e`. For the foundational architecture decisions, refer to [ADR-0003: Hybrid E2E Testing Architecture](./adr/0003-hybrid-e2e-testing-architecture.md).
+This document outlines the guidelines and workflow for the Hybrid E2E architecture in `apps/frontend-e2e`. For the foundational architecture decisions, refer to [ADR-0004: Hybrid E2E Testing Architecture](./adr/0004-hybrid-e2e-testing-architecture.md).
 
 ## 1. E2E Conventions
 

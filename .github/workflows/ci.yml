@@ -35,7 +35,7 @@ jobs:
           - '1025:1025'
           - '8025:8025'
       # Redis is infrastructure we own, so e2e runs the real thing rather than
-      # a fake queue driver - see docs/adr/0003.
+      # a fake queue driver - see docs/adr/0004.
       redis:
         image: redis:7-alpine
         ports:

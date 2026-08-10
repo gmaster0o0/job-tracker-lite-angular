@@ -1,7 +1,7 @@
 # Test stack for the full-stack e2e lane.
 #
 # These are services we own, so tests run the real thing rather than a fake
-# (see docs/adr/0003-hybrid-e2e-testing-architecture.md). Ports are offset from
+# (see docs/adr/0004-hybrid-e2e-testing-architecture.md). Ports are offset from
 # docker-compose.yml so the dev stack can stay up alongside this one.
 #
 #   docker compose -f docker-compose.test.yml up -d
