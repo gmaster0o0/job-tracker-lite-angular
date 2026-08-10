@@ -13,6 +13,7 @@
         hlmInput
         libFormField
         id="name"
+        data-testid="contact-name-input"
         [formField]="contactForm.name"
         placeholder="{{ 'contacts.fields.name.placeholder' | transloco }}"
         class="w-full"
@@ -40,6 +41,7 @@
         libFormField
         id="email"
         type="email"
+        data-testid="contact-email-input"
         [formField]="contactForm.email"
         placeholder="{{ 'contacts.fields.email.placeholder' | transloco }}"
         class="w-full"
@@ -69,6 +71,7 @@
         hlmInput
         libFormField
         id="phoneNumber"
+        data-testid="contact-phone-input"
         [formField]="contactForm.phoneNumber"
         placeholder="{{
           'contacts.fields.phoneNumber.placeholder' | transloco

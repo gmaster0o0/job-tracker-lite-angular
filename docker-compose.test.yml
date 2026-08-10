@@ -1,0 +1,57 @@
+# Test stack for the full-stack e2e lane.
+#
+# These are services we own, so tests run the real thing rather than a fake
+# (see docs/adr/0004-hybrid-e2e-testing-architecture.md). Ports are offset from
+# docker-compose.yml so the dev stack can stay up alongside this one.
+#
+#   docker compose -f docker-compose.test.yml up -d
+#   docker compose -f docker-compose.test.yml down -v
+#
+# CI uses service containers instead of this file, on default ports.
+
+# Distinct project name so this stack and the dev stack in docker-compose.yml
+# do not treat each other's containers as orphans.
+name: job-tracker-test
+
+services:
+  postgres-test:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${TEST_DB_USER:-test}
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD:-test}
+      POSTGRES_DB: ${TEST_DB_NAME:-job_tracker_test}
+    ports:
+      - '${TEST_DB_PORT:-5433}:5432'
+    # No volume on purpose: the test database is disposable, and starting from
+    # empty on every `up` keeps runs reproducible.
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${TEST_DB_USER:-test}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis-test:
+    image: redis:7-alpine
+    ports:
+      - '${TEST_REDIS_PORT:-6380}:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+# Deliberately no Mailpit here: the e2e lane shares the one in
+# docker-compose.yml on 1025/8025.
+#
+# The API resolves EMAIL_PROVIDER and MAILPIT_* through Nest's ConfigService,
+# where values from .env take precedence over the environment we hand the
+# process - so an offset SMTP port would be ignored and mail would land in the
+# dev inbox while the mail helper polled an empty one. Prisma reads
+# DATABASE_URL from process.env directly, which is why the database override
+# above does work.
+#
+# Sharing is safe here in a way sharing the database is not: mail is
+# ephemeral, and every worker provisions a unique recipient address, so
+# waitForEmail's `to:` search never crosses runs.

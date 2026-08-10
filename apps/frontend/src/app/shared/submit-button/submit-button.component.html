@@ -2,7 +2,13 @@
   [hlmTooltip]="cooldownTooltip()"
   [tooltipDisabled]="!showCooldownTooltip()"
 >
-  <button hlmBtn type="submit" [attr.form]="formId()" [disabled]="isDisabled()">
+  <button
+    hlmBtn
+    type="submit"
+    [attr.form]="formId()"
+    [disabled]="isDisabled()"
+    data-testid="submit-btn"
+  >
     @if (isSubmitting()) {
       <ng-icon hlm name="lucideLoader2" size="sm" class="animate-spin" />
       {{ submittingLabel() }}

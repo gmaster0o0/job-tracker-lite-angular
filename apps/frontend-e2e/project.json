@@ -15,6 +15,51 @@
     "e2e": {
       "// dependsOn": "CI starts api:serve and frontend:serve-e2e itself, outside of any nx process, before this target runs (see .github/workflows/ci.yml). Clearing this stops @nx/playwright/plugin from also scheduling api:serve as a task here, which would otherwise race the CI-started one for port 3000.",
       "dependsOn": []
+    },
+    "e2e-mocked": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx playwright test -c apps/frontend-e2e/playwright.config.ts --project=mocked",
+        "env": {
+          "E2E_MOCKED": "true"
+        }
+      }
+    },
+    "test-stack-up": {
+      "//": "Postgres, Redis and Mailpit on offset ports, so the full-stack lane never touches the dev stack - it creates and deletes real users and jobs. CI uses service containers on default ports instead.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docker compose -f docker-compose.test.yml up -d --wait",
+          "cd libs/shared/prisma && npx prisma migrate deploy"
+        ],
+        "parallel": false,
+        "env": {
+          "DATABASE_URL": "postgresql://test:test@localhost:5433/job_tracker_test?schema=public"
+        }
+      }
+    },
+    "test-stack-down": {
+      "//": "Wipes the test database. Not run automatically after e2e-local: leaving the stack up keeps repeat runs fast, since a fresh volume means re-running every migration.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker compose -f docker-compose.test.yml down -v"
+      }
+    },
+    "e2e-local": {
+      "//": "One command for a local full-stack run: brings the test stack up, migrates it, then runs the lanes that need a backend. The docker and prisma steps are inlined rather than calling `nx run test-stack-up`, to avoid a nested Nx CLI invocation. `e2e` stays untouched for CI, which supplies its own service containers.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docker compose -f docker-compose.test.yml up -d --wait",
+          "cd libs/shared/prisma && npx prisma migrate deploy",
+          "npx playwright test -c apps/frontend-e2e/playwright.config.ts --project=full-stack --project=full-stack-mocked"
+        ],
+        "parallel": false,
+        "env": {
+          "DATABASE_URL": "postgresql://test:test@localhost:5433/job_tracker_test?schema=public"
+        }
+      }
     }
   }
 }

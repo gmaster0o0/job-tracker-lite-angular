@@ -20,6 +20,7 @@
             <div hlmCardContent>
               <span
                 hlmBadge
+                data-testid="status-api-badge"
                 [class.bg-success]="apiStatus() === 'ok'"
                 [class.text-success-foreground]="apiStatus() === 'ok'"
                 [class.bg-destructive]="apiStatus() === 'error'"
@@ -39,6 +40,7 @@
                 healthData.error.database?.status;
               <span
                 hlmBadge
+                data-testid="status-database-badge"
                 [class.bg-success]="dbStatus === 'up'"
                 [class.text-success-foreground]="dbStatus === 'up'"
                 [class.bg-destructive]="dbStatus === 'down'"
@@ -57,6 +59,7 @@
                 healthData.info.redis?.status ?? healthData.error.redis?.status;
               <span
                 hlmBadge
+                data-testid="status-queue-badge"
                 [class.bg-success]="redisStatus === 'up'"
                 [class.text-success-foreground]="redisStatus === 'up'"
                 [class.bg-destructive]="redisStatus === 'down'"
