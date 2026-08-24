@@ -20,7 +20,9 @@ test.describe('Profile - Skills', () => {
     // Neither fixture's coreSkills include this one, so it's unambiguous
     // whether it came from the suggestion list or was already there.
     await page.locator('#newSkill').fill('JavaScript');
-    await page.getByRole('button', { name: 'JavaScript', exact: true }).click();
+    // Suggestions are brnComboboxItem, which sets role="option" - they are
+    // not reachable as buttons, unlike the plain add-new control below.
+    await page.getByRole('option', { name: 'JavaScript', exact: true }).click();
     await page.getByTestId('save-skills-btn').click();
 
     await page.reload();

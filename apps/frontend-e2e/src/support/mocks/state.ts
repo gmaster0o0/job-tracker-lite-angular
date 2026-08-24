@@ -16,7 +16,23 @@ import {
   userPreferencesFixtures,
   accountSettingsFixtures,
 } from '@job-tracker-lite-angular/testing';
-import { ScenarioMap } from '../scenarios';
+import { AuthScenario, ScenarioMap } from '../scenarios';
+
+/**
+ * Auth scenarios that describe something a logged-out visitor runs into:
+ * bad credentials, an unverified or already-taken address, a rate-limited
+ * or failing password-reset request. None of them can start from a live
+ * session - every /auth/* route is behind `guestGuard`, which bounces an
+ * authenticated browser to /jobs before the spec can assert anything.
+ */
+const LOGGED_OUT_AUTH_SCENARIOS = new Set<AuthScenario>([
+  'unauthenticated',
+  'invalidCredentials',
+  'unverifiedEmail',
+  'emailTaken',
+  'rateLimited',
+  'serverError',
+]);
 
 export interface MockState {
   session: AuthSessionDto | null;
@@ -30,10 +46,9 @@ export interface MockState {
 
 export function createMockState(scenarios: ScenarioMap): MockState {
   return {
-    session:
-      scenarios.auth === 'unauthenticated'
-        ? null
-        : structuredClone(authSessionFixtures.authenticated),
+    session: LOGGED_OUT_AUTH_SCENARIOS.has(scenarios.auth)
+      ? null
+      : structuredClone(authSessionFixtures.authenticated),
     jobs: scenarios.jobs === 'noData' ? [] : structuredClone(allJobDtoFixtures),
     contacts:
       scenarios.contacts === 'noData'

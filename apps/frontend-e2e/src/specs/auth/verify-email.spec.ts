@@ -51,9 +51,13 @@ test.describe('verify email flow', { tag: '@full-stack-only' }, () => {
     await signInThroughUi(page, email, password);
   });
 
-  // An invalid token is trivial to reproduce against the real backend - no
-  // need to mock better-auth's rejection.
-  test('invalid verification token shows an error', async ({
+  // An invalid token is trivial to reproduce against the real backend, but
+  // where better-auth *lands* the browser afterwards is its own redirect
+  // config - the same reason the happy path above asserts on sign-in rather
+  // than on a landing page. What matters here is that the bad token did not
+  // verify the account, so this asserts that instead: signing in still gets
+  // bounced to the "verify your email" notice.
+  test('an invalid verification token leaves the account unverified', async ({
     page,
     request,
   }) => {
@@ -81,14 +85,33 @@ test.describe('verify email flow', { tag: '@full-stack-only' }, () => {
     const verifyLink = extractLink(emailMsg.HTML, '/api/auth/verify-email');
     expect(verifyLink).toBeTruthy();
 
-    // Corrupt the token so better-auth rejects it, keeping the same origin
-    // and callbackURL as a genuine link - the token is the only thing under
-    // test.
+    // Corrupt the token, keeping the same origin and callbackURL as a
+    // genuine link - the token is the only thing under test.
     const invalidLink = verifyLink!.replace(
       /token=[^&]+/,
       'token=invalid-token',
     );
     await page.goto(invalidLink);
+
+    // Still unverified, so the login form redirects to the notice page
+    // instead of signing in.
+    await page.goto('/auth/login');
+    await page.locator('#email').fill(email);
+    await page.locator('#password').fill(password);
+    await page.locator('button[form="loginForm"]').click();
+
+    await expect(page).toHaveURL(/\/auth\/verify-email-notice/);
+  });
+});
+
+// The error copy itself is rendered from the `error` query param the API
+// redirects back with, so driving the app's own route proves the rendering
+// without depending on better-auth's redirect configuration.
+test.describe('verify email error page', { tag: '@mock-only' }, () => {
+  test.use({ scenarios: { auth: 'unauthenticated' } });
+
+  test('renders the invalid-token message', async ({ page }) => {
+    await page.goto('/auth/verify-email?error=invalid_token');
 
     await expect(page.getByText('Email Verification Failed')).toBeVisible();
     await expect(

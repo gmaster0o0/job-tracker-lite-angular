@@ -85,12 +85,14 @@ test.describe('forgot password flow', { tag: '@full-stack-only' }, () => {
 // against a live server on demand, so these run mocked instead. A sibling
 // describe, not nested in the block above: that one is @full-stack-only,
 // and combining the two tags would leave these tests running in no project.
+//
+// Both scenarios below also null the mocked session (see
+// LOGGED_OUT_AUTH_SCENARIOS in support/mocks/state.ts) - without that,
+// guestGuard redirects to /jobs and the form never renders.
 test.describe(
   'forgot password flow - unhappy paths',
   { tag: '@mock-only' },
   () => {
-    test.use({ storageState: undefined });
-
     test.describe('rate limited', () => {
       test.use({ scenarios: { auth: 'rateLimited' } });
 
