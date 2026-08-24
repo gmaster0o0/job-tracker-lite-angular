@@ -10,7 +10,10 @@
 
   <hlm-accordion type="multiple">
     <hlm-accordion-item>
-      <hlm-accordion-trigger class="w-full justify-between">
+      <hlm-accordion-trigger
+        class="w-full justify-between"
+        data-testid="privacy-section-data-management"
+      >
         <span class="text-xl text-foreground">{{
           'privacySettings.dataManagement.title' | transloco
         }}</span></hlm-accordion-trigger
@@ -71,7 +74,7 @@
     </hlm-accordion-item>
 
     <hlm-accordion-item>
-      <hlm-accordion-trigger>
+      <hlm-accordion-trigger data-testid="privacy-section-danger-zone">
         <span class="text-xl text-foreground"
           >{{ 'privacySettings.dangerzone.title' | transloco }}
         </span></hlm-accordion-trigger

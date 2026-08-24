@@ -31,7 +31,12 @@
       </div>
 
       <div class="flex flex-wrap gap-3">
-        <button hlmBtn (click)="onRecover()" [disabled]="isRecovering()">
+        <button
+          hlmBtn
+          data-testid="recover-account-btn"
+          (click)="onRecover()"
+          [disabled]="isRecovering()"
+        >
           {{ 'privacySettings.deletePending.recoverButton' | transloco }}
         </button>
         <a hlmBtn variant="outline" routerLink="/">

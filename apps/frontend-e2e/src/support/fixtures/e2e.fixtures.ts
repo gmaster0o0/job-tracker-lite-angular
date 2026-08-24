@@ -120,6 +120,21 @@ export const test = base.extend<TestOptions & E2EFixtures, WorkerFixtures>({
     if (useMocks) {
       await page.route(/^https?:\/\/(?!localhost)/, (r) => r.abort());
     }
+
+    // The cookie banner is `fixed bottom-4 right-4 z-50` and shows until the
+    // visitor answers it, so it sits on top of anything in that corner - the
+    // delete-account button among them - and swallows the click. Recording
+    // the same essential-only consent the banner's own buttons write puts
+    // every spec in the "already answered" state a returning user is in.
+    // CookieConsentService reads this key on construction; a spec that wants
+    // to exercise the banner itself has to clear it first.
+    await page.addInitScript(() => {
+      window.localStorage.setItem(
+        'cookieConsent',
+        JSON.stringify({ essential: true }),
+      );
+    });
+
     await use(page);
   },
 });

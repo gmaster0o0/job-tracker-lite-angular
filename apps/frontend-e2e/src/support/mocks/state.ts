@@ -44,11 +44,27 @@ export interface MockState {
   account: AccountSettingsDto;
 }
 
+/**
+ * authGuard routes on the session's own status, not on the deletion-status
+ * endpoint: only a PENDING_DELETION user may open /privacy/delete-pending,
+ * and any other route bounces them back to it. So the scenario has to be
+ * reflected in the session too, not just in the delete/status response.
+ */
+function sessionFor(scenarios: ScenarioMap): AuthSessionDto {
+  if (LOGGED_OUT_AUTH_SCENARIOS.has(scenarios.auth)) {
+    return null;
+  }
+
+  return structuredClone(
+    scenarios.account === 'deletionPending'
+      ? authSessionFixtures.pendingDeletion
+      : authSessionFixtures.authenticated,
+  );
+}
+
 export function createMockState(scenarios: ScenarioMap): MockState {
   return {
-    session: LOGGED_OUT_AUTH_SCENARIOS.has(scenarios.auth)
-      ? null
-      : structuredClone(authSessionFixtures.authenticated),
+    session: sessionFor(scenarios),
     jobs: scenarios.jobs === 'noData' ? [] : structuredClone(allJobDtoFixtures),
     contacts:
       scenarios.contacts === 'noData'

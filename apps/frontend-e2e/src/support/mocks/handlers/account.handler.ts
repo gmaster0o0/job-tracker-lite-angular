@@ -56,19 +56,58 @@ export const accountRoutes: MockRoute[] = [
     },
   },
   {
+    // accountDeletionStatusSchema, not a bare { deletionPending } flag: the
+    // page reads `status` and counts down to `scheduledDeletionAt`.
     method: 'GET',
     pattern: /^\/api\/account\/delete\/status$/,
-    resolve: ({ scenarios }) => ({
-      status: 200,
-      body: {
-        deletionPending: scenarios.account === 'deletionPending',
-      },
-    }),
+    resolve: ({ scenarios }) => {
+      const gracePeriodDays = 7;
+
+      if (scenarios.account !== 'deletionPending') {
+        return {
+          status: 200,
+          body: {
+            status: 'active',
+            gracePeriodRequestedAt: null,
+            scheduledDeletionAt: null,
+            gracePeriodDays,
+          },
+        };
+      }
+
+      const gracePeriodRequestedAt = new Date();
+      const scheduledDeletionAt = new Date(
+        gracePeriodRequestedAt.getTime() +
+          gracePeriodDays * 24 * 60 * 60 * 1000,
+      );
+
+      return {
+        status: 200,
+        body: {
+          status: 'pending_deletion',
+          gracePeriodRequestedAt: gracePeriodRequestedAt.toISOString(),
+          scheduledDeletionAt: scheduledDeletionAt.toISOString(),
+          gracePeriodDays,
+        },
+      };
+    },
   },
   {
     method: 'POST',
     pattern: /^\/api\/account\/delete\/recover$/,
-    resolve: () => ({ status: 200, body: { status: true } }),
+    resolve: ({ state }) => {
+      // The page reloads the session straight after recovering and then
+      // navigates to /settings/privacy. authGuard sends a still-pending user
+      // back to the deletion page, so the recovery has to clear that status
+      // here or the navigation never sticks.
+      if (state.session) {
+        state.session = {
+          ...state.session,
+          user: { ...state.session.user, status: 'ACTIVE' },
+        };
+      }
+      return { status: 200, body: { status: true } };
+    },
   },
   {
     method: 'POST',
