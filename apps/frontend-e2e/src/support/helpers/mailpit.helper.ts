@@ -13,12 +13,25 @@ export async function waitForEmail(
     const res = await api.get(
       `${MAILPIT}/search?query=${encodeURIComponent(`to:${to}`)}`,
     );
-    const { messages } = await res.json();
-    const hit = messages?.find((m: any) => subject.test(m.Subject));
-    if (hit) {
-      const msgRes = await api.get(`${MAILPIT}/message/${hit.ID}`);
-      return msgRes.json();
+
+    // Anything that is not a clean JSON response is treated as "not ready
+    // yet" and retried. Mailpit has no healthcheck in CI, so the first search
+    // can land before it is listening; parsing that unconditionally threw out
+    // of the loop on the first attempt, never reaching the retry or the
+    // deadline. This helper runs inside the workerUser fixture, so that took
+    // down every test on the worker and reported a JSON parse error instead
+    // of the timeout message below.
+    if (res.ok()) {
+      const { messages } = await res.json().catch(() => ({ messages: null }));
+      const hit = messages?.find((m: { Subject: string }) =>
+        subject.test(m.Subject),
+      );
+      if (hit) {
+        const msgRes = await api.get(`${MAILPIT}/message/${hit.ID}`);
+        return msgRes.json();
+      }
     }
+
     await new Promise((r) => setTimeout(r, 300));
   }
   throw new Error(`No email to ${to} matching ${subject} within ${timeout}ms`);

@@ -7,14 +7,27 @@ import { signInThroughUi } from '../../support/helpers/auth.helper';
 import { provisionUser } from '../../support/helpers/api.helper';
 
 test.describe('account settings', { tag: '@full-stack-only' }, () => {
+  // Signs in as an account it owns outright. Confirming an email change
+  // rewrites user.email and deletes every session row for that user
+  // (AccountService.verifyEmailChange), so running this against the
+  // worker-scoped user invalidated the storageState the worker fixture hands
+  // to every later test on that worker - they started unauthenticated and
+  // failed on unrelated locator timeouts, depending on scheduling.
+  test.use({ storageState: undefined });
+
   test('change email → confirm link from Mailpit → email updated', async ({
     page,
     request,
-    workerUser,
+    baseURL,
   }) => {
-    test.skip(!workerUser, 'Worker user is required for full-stack only tests');
-
+    const owner = await provisionUser(
+      request,
+      `chemail_${Date.now()}`,
+      baseURL ?? undefined,
+    );
     const newEmail = `changed_${Date.now()}@example.com`;
+
+    await signInThroughUi(page, owner.email, owner.password);
 
     // Go to settings page
     await page.goto('/settings/account');
@@ -56,15 +69,13 @@ test.describe('account settings', { tag: '@full-stack-only' }, () => {
 
     // Confirming the change signs the session out, so the proof that the new
     // address took effect is that it can be used to sign in.
-    await signInThroughUi(page, newEmail, workerUser!.password);
+    await signInThroughUi(page, newEmail, owner.password);
   });
 
-  // Each of these provisions its own account rather than reusing the
-  // worker-scoped user: a request that succeeds starts the resend cooldown,
-  // which disables the submit button on any later test sharing the account.
+  // These provision their own account for a second reason on top of the one
+  // above: a request that succeeds starts the resend cooldown, which disables
+  // the submit button on any later test sharing the account.
   test.describe('unhappy paths', () => {
-    test.use({ storageState: undefined });
-
     test('rejects changing to the current email', async ({
       page,
       request,

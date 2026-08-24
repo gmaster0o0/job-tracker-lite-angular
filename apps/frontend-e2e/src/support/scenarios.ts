@@ -18,9 +18,7 @@ export type NotesScenario = BaseScenario | 'notFound';
 export type ProfileScenario = BaseScenario | 'partiallyFilled';
 export type PreferencesScenario = BaseScenario;
 export type AccountScenario =
-  | BaseScenario
-  | 'changeEmailCooldown'
-  | 'deletionPending';
+  BaseScenario | 'changeEmailCooldown' | 'deletionPending';
 export type HealthScenario = 'happyPath' | 'degraded' | 'serverError';
 
 export interface ScenarioMap {
@@ -33,6 +31,19 @@ export interface ScenarioMap {
   account: AccountScenario;
   health: HealthScenario;
 }
+
+export type ScenarioDomain = keyof ScenarioMap;
+
+/**
+ * How long a `loading` response is held before it resolves. Long enough for a
+ * spec to assert the skeleton, short enough not to eat the test budget.
+ *
+ * Applied centrally, by domain, in setupMockApi: `loading` is part of
+ * BaseScenario and so typechecks for nearly every domain, and a handler that
+ * answered instantly turned `test.use({ scenarios: { jobs: 'loading' } })`
+ * into a locator timeout that read like a missing data-testid.
+ */
+export const LOADING_DELAY_MS = 2000;
 
 export const defaultScenarios: ScenarioMap = {
   auth: 'happyPath',

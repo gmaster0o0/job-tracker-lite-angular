@@ -116,9 +116,27 @@ export const test = base.extend<TestOptions & E2EFixtures, WorkerFixtures>({
     { auto: true },
   ],
 
-  page: async ({ page, useMocks }, use) => {
+  page: async ({ page, useMocks, baseURL }, use) => {
     if (useMocks) {
-      await page.route(/^https?:\/\/(?!localhost)/, (r) => r.abort());
+      // Backstop against a real outbound call in the mocked lane: anything
+      // that is not the app's own origin is aborted, so an accidental request
+      // to a third party fails the test instead of flaking on the network.
+      //
+      // Compared against the resolved baseURL rather than the literal string
+      // "localhost": playwright.config.ts supports pointing BASE_URL at a
+      // deployed app, and a hard-coded hostname aborted the app itself for
+      // every value but one - 127.0.0.1 and [::1] included - leaving each
+      // page.goto() to fail with net::ERR_FAILED.
+      // Kept to http(s) so blob: and data: URLs - the export download builds
+      // one - are never candidates for aborting.
+      const appOrigin = baseURL ? new URL(baseURL).origin : null;
+      await page.route(
+        (url) =>
+          appOrigin !== null &&
+          (url.protocol === 'http:' || url.protocol === 'https:') &&
+          url.origin !== appOrigin,
+        (r) => r.abort(),
+      );
     }
 
     // The cookie banner is `fixed bottom-4 right-4 z-50` and shows until the

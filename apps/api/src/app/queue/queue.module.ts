@@ -49,7 +49,14 @@ export class QueueModule {
     const queueToken = getQueueToken(name);
 
     return {
-      module: QueueModule,
+      // Rooted at BullModule so both branches present the same metatype to
+      // the importer. Nest validates `exports: [BullModule]` against the
+      // metatypes of a module's imports, so a QueueModule-rooted definition
+      // here made EmailModule - which re-exports BullModule so the health
+      // check can inject this queue - fail to load under a fake driver.
+      // BullModule is declared @Module({}), so hosting these providers on it
+      // pulls in nothing else.
+      module: BullModule,
       providers: [
         {
           provide: queueToken,

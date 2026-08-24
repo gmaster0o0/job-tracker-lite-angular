@@ -5,13 +5,9 @@ export const authRoutes: MockRoute[] = [
   {
     method: 'GET',
     pattern: /^\/api\/auth\/get-session$/,
-    resolve: ({ state, scenarios }) => {
-      // simulate network delay for testing loading skeleton if needed
-      if (scenarios.auth === 'loading') {
-        return { status: 200, body: state.session, delayMs: 2000 };
-      }
-      return { status: 200, body: state.session };
-    },
+    // The `loading` delay is applied by domain in setupMockApi, so this does
+    // not need to special-case it.
+    resolve: ({ state }) => ({ status: 200, body: state.session }),
   },
   {
     // better-auth namespaces the credential endpoints: the app posts to
@@ -20,10 +16,34 @@ export const authRoutes: MockRoute[] = [
     pattern: /^\/api\/auth\/sign-in\/email$/,
     resolve: ({ state, scenarios }) => {
       if (scenarios.auth === 'invalidCredentials') {
-        return { status: 401, body: { message: 'Invalid credentials' } };
+        return {
+          status: 401,
+          body: {
+            statusCode: 401,
+            errorCode: 'INVALID_EMAIL_OR_PASSWORD',
+            message: 'Invalid email or password',
+          },
+        };
       }
       if (scenarios.auth === 'unverifiedEmail') {
-        return { status: 403, body: { message: 'Email not verified' } };
+        return {
+          status: 403,
+          body: {
+            statusCode: 403,
+            errorCode: 'EMAIL_NOT_VERIFIED',
+            message: 'Email not verified',
+          },
+        };
+      }
+      // Both of these are declared on AuthScenario and listed as logged-out
+      // scenarios, so they are reachable from the login form. Falling through
+      // to the success path signed the visitor in instead, and a spec
+      // asserting an error would fail claiming the message never appeared.
+      if (scenarios.auth === 'rateLimited') {
+        return { status: 429, body: { message: 'Too many requests' } };
+      }
+      if (scenarios.auth === 'serverError') {
+        return { status: 500, body: { message: 'Server error' } };
       }
       state.session = structuredClone(authSessionFixtures.authenticated);
       return { status: 200, body: state.session };

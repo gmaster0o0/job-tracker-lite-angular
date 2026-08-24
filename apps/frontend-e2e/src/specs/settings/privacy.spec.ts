@@ -17,8 +17,12 @@ const openSection = async (page: Page, section: string) => {
 
 test.describe('privacy - data management', () => {
   test('exports the account data as a JSON download', async ({ page }) => {
-    // First hit of the lazily-loaded privacy route pays for its compile, which
-    // has already pushed this past the default budget once in CI.
+    // Headroom, kept deliberately. This timed out twice in CI waiting for the
+    // accordion trigger, which is what /settings/privacy looks like when the
+    // session is gone and the router has bounced to /auth/login - the
+    // account spec was destroying the worker user's sessions at the time, so
+    // that is the likely cause and it is fixed. Left in until a few runs
+    // confirm it, rather than assuming.
     test.slow();
 
     await openSection(page, 'data-management');

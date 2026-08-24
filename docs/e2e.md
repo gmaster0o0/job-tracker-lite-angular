@@ -7,6 +7,7 @@ This document outlines the guidelines and workflow for the Hybrid E2E architectu
 ### Tags (`@mock-only` / `@full-stack-only`)
 
 We use native Playwright tags to control which lane tests execute in:
+
 - **`@mock-only`**: Used for tests asserting behavior a real backend cannot reliably produce (500s, malformed responses, rate limits).
 - **`@full-stack-only`**: Used for tests requiring real external infrastructure flows (e.g., confirming a verification email landed in Mailpit).
 - **Untagged**: The vast majority of our tests. These run in **both** the mocked lane (for quick feedback loop) and the full-stack lane (acting as our contract).
@@ -20,10 +21,12 @@ test('create job', async () => { ... });
 
 ### Shared Fixtures & Setup
 
-All Playwright tests **must** import `test` and `expect` from the single entry point. Do not construct your own data inline or make ad-hoc fetch requests. 
+All Playwright tests **must** import `test` and `expect` from the single entry point. Do not construct your own data inline or make ad-hoc fetch requests.
+
 ```typescript
 import { test, expect } from '../support/fixtures/e2e.fixtures';
 ```
+
 Mock data should utilize the typed shared fixtures from `@job-tracker-lite-angular/testing` to seed in-memory states instead of using raw JSON blobs.
 
 ### Scenarios
@@ -34,7 +37,7 @@ Scenarios allow you to simulate explicit states per domain without affecting the
 test.describe('When Jobs API is down', { tag: '@mock-only' }, () => {
   // Overrides only the jobs scenario, auth and others remain default (happyPath)
   test.use({ scenarios: { jobs: 'serverError' } });
-  
+
   test('renders error state', async ({ page }) => { ... });
 });
 ```
@@ -58,24 +61,25 @@ test.describe('When Jobs API is down', { tag: '@mock-only' }, () => {
 Flaky tests degrade CI confidence. Ensure tests remain reliable by strictly adhering to the following rules:
 
 1. **Quarantining**: Actively track flakes. If a test randomly fails on `main`, immediately mark it using `test.skip()`. Include a comment linking to an investigation ticket.
-2. **Investigation using Artifacts**: Do not rely exclusively on local reproduction for flakes. Our CI configuration uses `retain-on-failure`. Always download the traces, videos, and screenshots from the failing CI workflow before blindly tweaking assertions or locators.
+2. **Investigation using traces**: Do not rely exclusively on local reproduction. `playwright.config.ts` sets `trace: 'on-first-retry'`, so a test that fails once and passes on retry still leaves a trace behind, written under `dist/.playwright/apps/frontend-e2e/test-output/<test>/trace.zip` and opened with `npx playwright show-trace <path>`. Note that CI does **not** upload these today — the workflow publishes only the unified coverage report — so a CI-only flake has to be reproduced locally or the artifact upload has to be added first. No video or screenshot is captured in either place.
 3. **Timeouts & Web-First Assertions**: **Never** manually use `page.waitForTimeout()`. Rely entirely on Playwright's auto-wait mechanisms and web-first assertions (`expect(locator).toBeVisible()`). If an action requires extensive delay, wait on a network response via `page.waitForResponse()` rather than inflating the global timeout or using fixed delays.
 
 ---
 
-## 4. CI Workflow
+## 4. Targets & CI Workflow
 
-Our CI environment validates both inner loop speed and contract adherence across two primary execution targets:
+### The targets
 
-### The Split Lanes
-- **Mocked Lane (`nx run frontend-e2e:e2e-mocked`)**: Completely decoupled from backend infrastructure (No Docker, Postgres, or API node process). Suitable for dev cycles and pre-push hooks where it runs in under ~90s.
-- **Full-Stack Lane (`nx run frontend-e2e:e2e`)**: Validates the end-to-end integration by pairing the Playwright specs with the real Nest API process and local database infrastructure. (Contains both `full-stack` and `full-stack-mocked` Playwright project runs).
+- **`nx run frontend-e2e:e2e-mocked`** — local only. Runs the `mocked` project alone, decoupled from backend infrastructure (no Docker, Postgres or API process), which is what makes it usable in a dev cycle or a pre-push hook.
+- **`nx run frontend-e2e:e2e-local`** — local full-stack. Brings up `docker-compose.test.yml`, migrates it, then runs the lanes that need a backend. The stack is torn down afterwards by `globalTeardown`; set `E2E_KEEP_STACK=true` to leave it running between runs.
+- **`nx run frontend-e2e:e2e`** — what CI runs, via `nx affected -t lint test build typecheck e2e`. With no `--project` filter this executes **all three** Playwright projects: `mocked`, `full-stack` and `full-stack-mocked`. CI does not run `e2e-mocked` separately, so the mocked specs execute as part of this one target.
 
 ### Infrastructure & Services
-Infrastructure that we own runs as real service containers inside the CI workflow context rather than patched mocks:
-- **Postgres**: Live cloned DB instance per parallel worker.
-- **Redis**: Containerized Redis for queue tasks mapped across isolated worker prefixes.
-- **Mailpit**: Container mapped properly through environment outputs allowing actual intercept assertions for outbound emails.
 
-### Reporting via Blob
-In distributed or sharded CI topologies, Playwright `['blob']` reporters coalesce results across runners. This allows GitHub pipelines to merge all split testing outputs into a single, comprehensive HTML report.
+Infrastructure we own runs as real service containers in the workflow rather than as patched mocks. The API and frontend are started by the workflow itself, before the Nx run, and the servers are shared by the whole suite:
+
+- **Postgres** — one service container, one `test_db`. Workers share it; isolation comes from each worker provisioning its own user and every row being user-scoped, not from a database per worker.
+- **Redis** — one service container, shared. `QUEUE_DRIVER` is deliberately left unset so e2e exercises real BullMQ rather than a fake (see [ADR-0004](./adr/0004-hybrid-e2e-testing-architecture.md)).
+- **Mailpit** — one service container. Isolation is by unique recipient address per worker, with `waitForEmail` filtering on `to:`; never purge the shared inbox mid-run.
+
+Playwright runs single-worker in CI and is not sharded, so no blob reporter or report-merging step is involved.
