@@ -34,7 +34,18 @@ export const authRoutes: MockRoute[] = [
     pattern: /^\/api\/auth\/sign-up\/email$/,
     resolve: ({ state, scenarios }) => {
       if (scenarios.auth === 'emailTaken') {
-        return { status: 409, body: { message: 'Email already in use' } };
+        // BetterAuthExceptionFilter answers with { statusCode, errorCode,
+        // message }. Without the errorCode the interceptor falls back to
+        // internal_server_error and the form renders a translation key that
+        // does not exist instead of the "already registered" copy.
+        return {
+          status: 409,
+          body: {
+            statusCode: 409,
+            errorCode: 'USER_ALREADY_EXISTS',
+            message: 'User already exists',
+          },
+        };
       }
       if (scenarios.auth === 'serverError') {
         return { status: 500, body: { message: 'Server error' } };

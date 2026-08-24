@@ -17,6 +17,10 @@ const openSection = async (page: Page, section: string) => {
 
 test.describe('privacy - data management', () => {
   test('exports the account data as a JSON download', async ({ page }) => {
+    // First hit of the lazily-loaded privacy route pays for its compile, which
+    // has already pushed this past the default budget once in CI.
+    test.slow();
+
     await openSection(page, 'data-management');
 
     const [download] = await Promise.all([
@@ -122,12 +126,17 @@ test.describe('privacy - account deletion', () => {
     });
   });
 
-  test(
-    'request → confirm from Mailpit → sign back in → recover',
-    {
-      tag: '@full-stack-only',
-    },
-    async ({ page, request, baseURL }) => {
+  test.describe('end to end', { tag: '@full-stack-only' }, () => {
+    // This test signs in as its own account, and every /auth/* route sits
+    // behind guestGuard - carrying the worker user's storageState would
+    // redirect the sign-in away from the login form before it could be filled.
+    test.use({ storageState: undefined });
+
+    test('request → confirm from Mailpit → sign back in → recover', async ({
+      page,
+      request,
+      baseURL,
+    }) => {
       // Its own account: confirming the request marks the user for deletion and
       // drops every session it has, which would strand the worker user.
       const user = await provisionUser(
@@ -168,6 +177,6 @@ test.describe('privacy - account deletion', () => {
       await page.getByTestId('confirm-btn').click();
 
       await expect(page).toHaveURL(/\/settings\/privacy/);
-    },
-  );
+    });
+  });
 });
