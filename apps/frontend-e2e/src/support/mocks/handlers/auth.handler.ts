@@ -1,5 +1,25 @@
-import { MockRoute } from '../registry';
+import { MockResponse, MockRoute } from '../registry';
 import { authSessionFixtures } from '@job-tracker-lite-angular/testing';
+import { AuthScenario } from '../../scenarios';
+
+/**
+ * The two transport-level failures every auth endpoint can produce.
+ *
+ * Both are declared on AuthScenario and listed in LOGGED_OUT_AUTH_SCENARIOS,
+ * so every one of these routes is reachable under them from a logged-out
+ * page. A route that does not answer them falls through to its success path
+ * and the spec fails claiming the error copy never rendered - so this is
+ * applied to all of them rather than fixed one route at a time.
+ */
+function authTransportFailure(scenario: AuthScenario): MockResponse | null {
+  if (scenario === 'rateLimited') {
+    return { status: 429, body: { message: 'Too many requests' } };
+  }
+  if (scenario === 'serverError') {
+    return { status: 500, body: { message: 'Server error' } };
+  }
+  return null;
+}
 
 export const authRoutes: MockRoute[] = [
   {
@@ -35,16 +55,9 @@ export const authRoutes: MockRoute[] = [
           },
         };
       }
-      // Both of these are declared on AuthScenario and listed as logged-out
-      // scenarios, so they are reachable from the login form. Falling through
-      // to the success path signed the visitor in instead, and a spec
-      // asserting an error would fail claiming the message never appeared.
-      if (scenarios.auth === 'rateLimited') {
-        return { status: 429, body: { message: 'Too many requests' } };
-      }
-      if (scenarios.auth === 'serverError') {
-        return { status: 500, body: { message: 'Server error' } };
-      }
+      const failure = authTransportFailure(scenarios.auth);
+      if (failure) return failure;
+
       state.session = structuredClone(authSessionFixtures.authenticated);
       return { status: 200, body: state.session };
     },
@@ -67,9 +80,9 @@ export const authRoutes: MockRoute[] = [
           },
         };
       }
-      if (scenarios.auth === 'serverError') {
-        return { status: 500, body: { message: 'Server error' } };
-      }
+      const failure = authTransportFailure(scenarios.auth);
+      if (failure) return failure;
+
       state.session = structuredClone(authSessionFixtures.authenticated);
       return { status: 200, body: state.session };
     },
@@ -87,15 +100,11 @@ export const authRoutes: MockRoute[] = [
     // address exists, so the UI cannot be used to enumerate accounts.
     method: 'POST',
     pattern: /^\/api\/auth\/request-password-reset$/,
-    resolve: ({ scenarios }) => {
-      if (scenarios.auth === 'rateLimited') {
-        return { status: 429, body: { message: 'Too many requests' } };
-      }
-      if (scenarios.auth === 'serverError') {
-        return { status: 500, body: { message: 'Server error' } };
-      }
-      return { status: 200, body: { status: true } };
-    },
+    resolve: ({ scenarios }) =>
+      authTransportFailure(scenarios.auth) ?? {
+        status: 200,
+        body: { status: true },
+      },
   },
   {
     method: 'POST',
@@ -107,18 +116,22 @@ export const authRoutes: MockRoute[] = [
           body: { message: 'Invalid or expired token' },
         };
       }
-      return { status: 200, body: { status: true } };
+      return (
+        authTransportFailure(scenarios.auth) ?? {
+          status: 200,
+          body: { status: true },
+        }
+      );
     },
   },
   {
     method: 'POST',
     pattern: /^\/api\/auth\/send-verification-email$/,
-    resolve: ({ scenarios }) => {
-      if (scenarios.auth === 'rateLimited') {
-        return { status: 429, body: { message: 'Too many requests' } };
-      }
-      return { status: 200, body: { status: true } };
-    },
+    resolve: ({ scenarios }) =>
+      authTransportFailure(scenarios.auth) ?? {
+        status: 200,
+        body: { status: true },
+      },
   },
   {
     method: 'POST',
@@ -127,7 +140,12 @@ export const authRoutes: MockRoute[] = [
       if (scenarios.auth === 'invalidCredentials') {
         return { status: 400, body: { message: 'Invalid password' } };
       }
-      return { status: 200, body: { status: true } };
+      return (
+        authTransportFailure(scenarios.auth) ?? {
+          status: 200,
+          body: { status: true },
+        }
+      );
     },
   },
 ];

@@ -47,11 +47,12 @@
       }
     },
     "e2e-local": {
-      "//": "One command for a local full-stack run: brings the test stack up, migrates it, then runs the lanes that need a backend. The docker and prisma steps are inlined rather than calling `nx run test-stack-up`, to avoid a nested Nx CLI invocation. `e2e` stays untouched for CI, which supplies its own service containers.",
+      "//": "One command for a local full-stack run: brings the test stack up, migrates it, then runs the lanes that need a backend. Mailpit comes from docker-compose.yml rather than the test stack - see the note at the bottom of docker-compose.test.yml for why its ports cannot be offset - so that one service is started explicitly here; without it every full-stack test fails, since provisionUser verifies each user through the inbox. `up -d` on a service already running is a no-op, so this is safe alongside a running dev stack. The docker and prisma steps are inlined rather than calling `nx run test-stack-up`, to avoid a nested Nx CLI invocation. `e2e` stays untouched for CI, which supplies its own service containers.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
           "docker compose -f docker-compose.test.yml up -d --wait",
+          "docker compose -f docker-compose.yml up -d --wait mailpit",
           "cd libs/shared/prisma && npx prisma migrate deploy",
           "npx playwright test -c apps/frontend-e2e/playwright.config.ts --project=full-stack --project=full-stack-mocked"
         ],

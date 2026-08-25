@@ -42,6 +42,30 @@ test.describe('When Jobs API is down', { tag: '@mock-only' }, () => {
 });
 ```
 
+`loading` is the one scenario that changes timing rather than payload: `setupMockApi` holds every response in that domain for `LOADING_DELAY_MS` before answering, which is long enough to assert a skeleton and short enough not to eat the test budget. The response itself is unchanged, so the resolved state still arrives.
+
+Asserting the skeleton alone does **not** prove the scenario is applied — it is briefly visible on any load, so such a test passes even when the delay is silently not happening. Assert the delay itself:
+
+```typescript
+test.describe('loading state', { tag: '@mock-only' }, () => {
+  test.use({ scenarios: { jobs: 'loading' } });
+
+  test('holds the response back so the skeleton stays up', async ({ page }) => {
+    const jobsResponse = page.waitForResponse((r) =>
+      /\/api\/jobs$/.test(new URL(r.url()).pathname),
+    );
+    const startedAt = Date.now();
+
+    await page.goto('/jobs');
+    await expect(page.getByTestId('loading-state')).toBeVisible();
+    await jobsResponse;
+
+    expect(Date.now() - startedAt).toBeGreaterThanOrEqual(LOADING_DELAY_MS / 2);
+    await expect(page.getByTestId('job-card').first()).toBeVisible();
+  });
+});
+```
+
 ---
 
 ## 2. PR Checklist for New E2E Tests
@@ -71,7 +95,7 @@ Flaky tests degrade CI confidence. Ensure tests remain reliable by strictly adhe
 ### The targets
 
 - **`nx run frontend-e2e:e2e-mocked`** — local only. Runs the `mocked` project alone, decoupled from backend infrastructure (no Docker, Postgres or API process), which is what makes it usable in a dev cycle or a pre-push hook.
-- **`nx run frontend-e2e:e2e-local`** — local full-stack. Brings up `docker-compose.test.yml`, migrates it, then runs the lanes that need a backend. The stack is torn down afterwards by `globalTeardown`; set `E2E_KEEP_STACK=true` to leave it running between runs.
+- **`nx run frontend-e2e:e2e-local`** — local full-stack. Brings up `docker-compose.test.yml` (Postgres and Redis on offset ports) plus the `mailpit` service from `docker-compose.yml`, migrates the database, then runs the lanes that need a backend. Mailpit is not part of the test stack because its ports cannot be offset — see the note at the bottom of `docker-compose.test.yml` — and every full-stack test needs it, since `provisionUser` verifies each user through the inbox. The test stack is torn down afterwards by `globalTeardown`; set `E2E_KEEP_STACK=true` to leave it running between runs.
 - **`nx run frontend-e2e:e2e`** — what CI runs, via `nx affected -t lint test build typecheck e2e`. With no `--project` filter this executes **all three** Playwright projects: `mocked`, `full-stack` and `full-stack-mocked`. CI does not run `e2e-mocked` separately, so the mocked specs execute as part of this one target.
 
 ### Infrastructure & Services
@@ -82,4 +106,4 @@ Infrastructure we own runs as real service containers in the workflow rather tha
 - **Redis** — one service container, shared. `QUEUE_DRIVER` is deliberately left unset so e2e exercises real BullMQ rather than a fake (see [ADR-0004](./adr/0004-hybrid-e2e-testing-architecture.md)).
 - **Mailpit** — one service container. Isolation is by unique recipient address per worker, with `waitForEmail` filtering on `to:`; never purge the shared inbox mid-run.
 
-Playwright runs single-worker in CI and is not sharded, so no blob reporter or report-merging step is involved.
+`nxE2EPreset` keys several settings off `CI`: under it Playwright runs `workers: 1` with `retries: 2` and `forbidOnly`, and adds a `blob` reporter alongside the HTML one, written to `dist/.playwright/apps/frontend-e2e/blob-report`. So a blob report _is_ produced on every CI run — but the run is not sharded, so there is nothing to merge it with, and like the traces in §3 it is never uploaded. Both become useful the moment an `upload-artifact` step is added.

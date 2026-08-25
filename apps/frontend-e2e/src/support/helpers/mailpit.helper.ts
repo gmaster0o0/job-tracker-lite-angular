@@ -10,18 +10,23 @@ export async function waitForEmail(
 ) {
   const deadline = Date.now() + timeout;
   while (Date.now() < deadline) {
-    const res = await api.get(
-      `${MAILPIT}/search?query=${encodeURIComponent(`to:${to}`)}`,
-    );
-
-    // Anything that is not a clean JSON response is treated as "not ready
-    // yet" and retried. Mailpit has no healthcheck in CI, so the first search
-    // can land before it is listening; parsing that unconditionally threw out
-    // of the loop on the first attempt, never reaching the retry or the
-    // deadline. This helper runs inside the workerUser fixture, so that took
-    // down every test on the worker and reported a JSON parse error instead
+    // Everything short of a clean JSON response counts as "not ready yet" and
+    // is retried until the deadline: the request itself failing, a non-2xx
+    // answer, and a body that will not parse.
+    //
+    // The request has to be inside the tolerance, not just the response.
+    // Mailpit has no healthcheck in CI and the local stack shares the dev
+    // one, so the first search can reach a port nothing is listening on -
+    // which never produces a response at all, it rejects with ECONNREFUSED.
+    // Guarding only `res.ok()` still let that escape on the first attempt.
+    // This runs inside the workerUser fixture, and CI runs one worker, so an
+    // escape here takes down the entire suite with a connection error instead
     // of the timeout message below.
-    if (res.ok()) {
+    const res = await api
+      .get(`${MAILPIT}/search?query=${encodeURIComponent(`to:${to}`)}`)
+      .catch(() => null);
+
+    if (res?.ok()) {
       const { messages } = await res.json().catch(() => ({ messages: null }));
       const hit = messages?.find((m: { Subject: string }) =>
         subject.test(m.Subject),

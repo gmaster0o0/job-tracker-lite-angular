@@ -122,19 +122,32 @@ export const test = base.extend<TestOptions & E2EFixtures, WorkerFixtures>({
       // that is not the app's own origin is aborted, so an accidental request
       // to a third party fails the test instead of flaking on the network.
       //
-      // Compared against the resolved baseURL rather than the literal string
+      if (!baseURL) {
+        // Refuse rather than degrade. With no origin to compare against there
+        // is nothing to guard, and a backstop that silently stops guarding is
+        // worse than none: the next reader assumes it is still catching.
+        throw new Error(
+          'The mocked lane needs a baseURL to know which origin belongs to the app. Set it in playwright.config.ts or through BASE_URL.',
+        );
+      }
+
+      // Derived from the resolved baseURL rather than the literal string
       // "localhost": playwright.config.ts supports pointing BASE_URL at a
       // deployed app, and a hard-coded hostname aborted the app itself for
-      // every value but one - 127.0.0.1 and [::1] included - leaving each
+      // every other value - 127.0.0.1 and [::1] included - leaving each
       // page.goto() to fail with net::ERR_FAILED.
-      // Kept to http(s) so blob: and data: URLs - the export download builds
-      // one - are never candidates for aborting.
-      const appOrigin = baseURL ? new URL(baseURL).origin : null;
+      //
+      // Written as a RegExp, not a predicate. Playwright can only serialise
+      // string/RegExp/URLPattern matchers for the browser to filter on, and
+      // falls back to intercepting `**/*` for a function - so every request
+      // the page makes, the dev server's whole unbundled module graph
+      // included, would round-trip to the Node client just to be evaluated
+      // here. Matching only http(s) also leaves blob: and data: URLs alone;
+      // the export download builds one.
+      const appOrigin = new URL(baseURL).origin;
+      const escapedOrigin = appOrigin.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       await page.route(
-        (url) =>
-          appOrigin !== null &&
-          (url.protocol === 'http:' || url.protocol === 'https:') &&
-          url.origin !== appOrigin,
+        new RegExp(`^(?!${escapedOrigin}(?:[/?#]|$))https?://`),
         (r) => r.abort(),
       );
     }
