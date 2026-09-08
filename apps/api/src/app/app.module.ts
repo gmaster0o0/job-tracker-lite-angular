@@ -26,7 +26,7 @@ import { UsersModule } from './users/users.module';
     AccountModule,
     ProfileModule,
     PreferencesModule,
-    QueueModule,
+    QueueModule.forRoot(),
     UsersModule,
   ],
   controllers: [],

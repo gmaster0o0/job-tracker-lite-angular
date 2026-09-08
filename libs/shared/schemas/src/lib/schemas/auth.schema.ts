@@ -117,6 +117,8 @@ export const authUserSchema = z.object({
   updatedAt: z.coerce.date(),
 });
 
+export type AuthUserDto = z.infer<typeof authUserSchema>;
+
 export const authSessionSchema = z.object({
   id: z.string(),
   token: z.string(),

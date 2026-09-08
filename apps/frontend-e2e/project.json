@@ -15,6 +15,52 @@
     "e2e": {
       "// dependsOn": "CI starts api:serve and frontend:serve-e2e itself, outside of any nx process, before this target runs (see .github/workflows/ci.yml). Clearing this stops @nx/playwright/plugin from also scheduling api:serve as a task here, which would otherwise race the CI-started one for port 3000.",
       "dependsOn": []
+    },
+    "e2e-mocked": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx playwright test -c apps/frontend-e2e/playwright.config.ts --project=mocked",
+        "env": {
+          "E2E_MOCKED": "true"
+        }
+      }
+    },
+    "test-stack-up": {
+      "//": "Postgres, Redis and Mailpit on offset ports, so the full-stack lane never touches the dev stack - it creates and deletes real users and jobs. CI uses service containers on default ports instead.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docker compose -f docker-compose.test.yml up -d --wait",
+          "cd libs/shared/prisma && npx prisma migrate deploy"
+        ],
+        "parallel": false,
+        "env": {
+          "DATABASE_URL": "postgresql://test:test@localhost:5433/job_tracker_test?schema=public"
+        }
+      }
+    },
+    "test-stack-down": {
+      "//": "Wipes the test database. Mostly for cleaning up by hand - e2e-local already tears the stack down through globalTeardown, and `down -v` drops the volume so the next run replays every migration. Set E2E_KEEP_STACK=true to keep it up between runs while iterating.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker compose -f docker-compose.test.yml down -v"
+      }
+    },
+    "e2e-local": {
+      "//": "One command for a local full-stack run: brings the test stack up, migrates it, then runs the lanes that need a backend. Mailpit comes from docker-compose.yml rather than the test stack - see the note at the bottom of docker-compose.test.yml for why its ports cannot be offset - so that one service is started explicitly here; without it every full-stack test fails, since provisionUser verifies each user through the inbox. `up -d` on a service already running is a no-op, so this is safe alongside a running dev stack. The docker and prisma steps are inlined rather than calling `nx run test-stack-up`, to avoid a nested Nx CLI invocation. `e2e` stays untouched for CI, which supplies its own service containers.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docker compose -f docker-compose.test.yml up -d --wait",
+          "docker compose -f docker-compose.yml up -d --wait mailpit",
+          "cd libs/shared/prisma && npx prisma migrate deploy",
+          "npx playwright test -c apps/frontend-e2e/playwright.config.ts --project=full-stack --project=full-stack-mocked"
+        ],
+        "parallel": false,
+        "env": {
+          "DATABASE_URL": "postgresql://test:test@localhost:5433/job_tracker_test?schema=public"
+        }
+      }
     }
   }
 }

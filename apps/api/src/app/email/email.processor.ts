@@ -8,6 +8,7 @@ import {
   type SendEmailOptions,
 } from './providers/email-provider.interface';
 import { describeRedisError } from '../queue/redis-error.util';
+import { isFakeQueueDriver } from '../queue/queue.driver';
 
 // The Worker maintains its own Redis connection, separate from the Queue's
 // (EmailService). Same reasoning as there: without a listener, BullMQ's
@@ -31,6 +32,12 @@ export class EmailProcessor
   }
 
   onApplicationBootstrap(): void {
+    // Asks the driver rather than reading `this.worker`: that getter throws
+    // when no worker was created, which is exactly the fake-driver case.
+    if (isFakeQueueDriver()) {
+      return;
+    }
+
     this.worker.on('error', (error) => this.handleWorkerError(error));
   }
 

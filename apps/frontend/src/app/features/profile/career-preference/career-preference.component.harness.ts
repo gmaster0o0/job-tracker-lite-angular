@@ -14,7 +14,7 @@ export class CareerPreferenceHarness extends ComponentHarness {
     'hlm-select#careerType',
   );
   private readonly saveStateIndicatorLocator = this.locatorForOptional(
-    '[data-testid="saveStateIndicator"]',
+    '[data-testid="save-state-indicator"]',
   );
 
   async getTitle(): Promise<string> {

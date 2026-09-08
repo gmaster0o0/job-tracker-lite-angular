@@ -13,6 +13,7 @@
         hlmInput
         libFormField
         id="title"
+        data-testid="note-title-input"
         [formField]="noteForm.title"
         placeholder="{{ 'jobs.notes.fields.title.placeholder' | transloco }}"
         class="w-full"
@@ -38,6 +39,7 @@
         hlmTextarea
         libFormField
         id="body"
+        data-testid="note-body-input"
         [formField]="noteForm.body"
         placeholder="{{ 'jobs.notes.fields.body.placeholder' | transloco }}"
         rows="4"

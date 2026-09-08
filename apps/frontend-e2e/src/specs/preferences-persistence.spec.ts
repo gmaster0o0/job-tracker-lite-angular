@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../support/fixtures/e2e.fixtures';
 
 // Regression coverage for a bug where saved theme/language/date-format
 // preferences were ignored on a fresh page load (F5) - they only took

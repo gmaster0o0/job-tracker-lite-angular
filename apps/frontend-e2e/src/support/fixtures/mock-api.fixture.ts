@@ -1,0 +1,81 @@
+import { Page, Route } from '@playwright/test';
+import { assertMatchesContract } from '../mocks/contract';
+import { allRoutes } from '../mocks/registry';
+import { LOADING_DELAY_MS, ScenarioMap } from '../scenarios';
+import { MockState } from '../mocks/state';
+import { HttpMethod } from '../mocks/registry';
+
+// Registry of all routes
+const mockRoutes = allRoutes;
+
+export async function setupMockApi(
+  page: Page,
+  scenarios: ScenarioMap,
+  state: MockState,
+  mockRequests: any[],
+) {
+  await page.route('**/api/**', async (route: Route) => {
+    const req = route.request();
+    const url = new URL(req.url());
+    const method = req.method() as HttpMethod;
+
+    for (const r of mockRoutes) {
+      const methods = Array.isArray(r.method) ? r.method : [r.method];
+      if (!methods.includes(method)) continue;
+
+      const m = r.pattern.exec(url.pathname);
+      if (!m) continue;
+
+      let body = undefined;
+      const postData = req.postData();
+      if (postData) {
+        try {
+          body = JSON.parse(postData);
+        } catch {
+          // non-JSON request body - leave `body` undefined
+        }
+      }
+
+      mockRequests.push({ method, path: url.pathname, body });
+
+      const res = await r.resolve({
+        scenarios,
+        state,
+        method,
+        url,
+        params: m.groups ?? {},
+        body,
+      });
+      // A handler may ask for its own delay; `loading` applies one to every
+      // route in the domain, so the scenario works wherever it typechecks.
+      const delayMs =
+        res.delayMs ??
+        (scenarios[r.domain] === 'loading' ? LOADING_DELAY_MS : 0);
+      if (delayMs) await new Promise((done) => setTimeout(done, delayMs));
+
+      // Answers the route even when the payload is rejected - see ADR-0004,
+      // "Operating rules". Rethrows so the schema error still fails the run.
+      try {
+        assertMatchesContract(url.pathname, method, res);
+      } catch (error) {
+        await route.fulfill({
+          status: 500,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            message: error instanceof Error ? error.message : String(error),
+          }),
+        });
+        throw error;
+      }
+
+      return route.fulfill({
+        status: res.status,
+        contentType: 'application/json',
+        // `'body' in res`, not a truthiness check: `null` is a real payload.
+        body: JSON.stringify('body' in res ? res.body : {}),
+      });
+    }
+
+    return route.continue();
+  });
+}

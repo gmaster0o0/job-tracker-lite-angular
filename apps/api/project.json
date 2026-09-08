@@ -75,13 +75,19 @@
     "typecheck-app": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx tsc --noEmit --pretty -p apps/api/tsconfig.json"
+        "command": "npx tsc --noEmit --pretty -p apps/api/tsconfig.app.json"
+      }
+    },
+    "typecheck-spec": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsc --noEmit --pretty -p apps/api/tsconfig.spec.json"
       }
     },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["nx run api:typecheck-app"],
+        "commands": ["nx run api:typecheck-app", "nx run api:typecheck-spec"],
         "parallel": true
       }
     }
