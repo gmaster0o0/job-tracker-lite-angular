@@ -1,14 +1,13 @@
 /**
- * The fake queue drivers exist so API tests can exercise queued work without
- * Redis, which is only useful if the module that owns the queue still boots
- * under them. Both drivers regressed once: the module re-exported `BullModule`
- * that a fake driver never imported, and the processor's bootstrap hook read
- * `WorkerHost.worker`, a getter that throws when no worker was created.
+ * Pins the rule that the fake queue drivers must keep this module bootable
+ * (ADR-0004, "Operating rules"): they exist so API tests can exercise queued
+ * work without Redis, which is only useful if the module owning the queue
+ * still loads under them.
  *
- * The driver is resolved while the module body is evaluated, so each case has
- * to load the graph fresh. Everything is imported inside the isolated registry
- * - pulling `Test` or `ConfigModule` in from the outer one would mix two
- * copies of Nest and fail on identity rather than on the thing under test.
+ * The driver is resolved while the module body is evaluated, so each case
+ * loads the graph fresh. Everything is imported inside the isolated registry -
+ * pulling `Test` or `ConfigModule` in from the outer one mixes two copies of
+ * Nest and fails on identity rather than on the thing under test.
  */
 describe('EmailModule', () => {
   const originalDriver = process.env['QUEUE_DRIVER'];

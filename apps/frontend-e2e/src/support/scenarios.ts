@@ -37,11 +37,9 @@ export type ScenarioDomain = keyof ScenarioMap;
 /**
  * How long a `loading` response is held before it resolves. Long enough for a
  * spec to assert the skeleton, short enough not to eat the test budget.
- *
- * Applied centrally, by domain, in setupMockApi: `loading` is part of
- * BaseScenario and so typechecks for nearly every domain, and a handler that
- * answered instantly turned `test.use({ scenarios: { jobs: 'loading' } })`
- * into a locator timeout that read like a missing data-testid.
+ * Applied centrally by domain in setupMockApi, so the scenario works wherever
+ * it typechecks. Assert against this value, not just the skeleton - see
+ * ADR-0004, "Operating rules".
  */
 export const LOADING_DELAY_MS = 2000;
 

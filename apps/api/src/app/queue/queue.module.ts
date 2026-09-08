@@ -50,12 +50,9 @@ export class QueueModule {
 
     return {
       // Rooted at BullModule so both branches present the same metatype to
-      // the importer. Nest validates `exports: [BullModule]` against the
-      // metatypes of a module's imports, so a QueueModule-rooted definition
-      // here made EmailModule - which re-exports BullModule so the health
-      // check can inject this queue - fail to load under a fake driver.
-      // BullModule is declared @Module({}), so hosting these providers on it
-      // pulls in nothing else.
+      // the importer, which is what Nest validates a re-export against. It is
+      // declared @Module({}), so hosting these providers on it pulls in
+      // nothing else. See ADR-0004, "Operating rules".
       module: BullModule,
       providers: [
         {

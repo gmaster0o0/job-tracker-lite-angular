@@ -17,12 +17,10 @@ const openSection = async (page: Page, section: string) => {
 
 test.describe('privacy - data management', () => {
   test('exports the account data as a JSON download', async ({ page }) => {
-    // Headroom, kept deliberately. This timed out twice in CI waiting for the
-    // accordion trigger, which is what /settings/privacy looks like when the
-    // session is gone and the router has bounced to /auth/login - the
-    // account spec was destroying the worker user's sessions at the time, so
-    // that is the likely cause and it is fixed. Left in until a few runs
-    // confirm it, rather than assuming.
+    // Headroom while the suite settles: this timed out in CI when a sibling
+    // spec was invalidating the worker session, which leaves the page on
+    // /auth/login where the accordion trigger never appears. That cause is
+    // fixed; drop this once a few runs confirm it.
     test.slow();
 
     await openSection(page, 'data-management');
@@ -131,9 +129,8 @@ test.describe('privacy - account deletion', () => {
   });
 
   test.describe('end to end', { tag: '@full-stack-only' }, () => {
-    // This test signs in as its own account, and every /auth/* route sits
-    // behind guestGuard - carrying the worker user's storageState would
-    // redirect the sign-in away from the login form before it could be filled.
+    // Signs itself in, so it must start logged out: guestGuard redirects an
+    // authenticated browser away from /auth/login before the form renders.
     test.use({ storageState: undefined });
 
     test('request → confirm from Mailpit → sign back in → recover', async ({
@@ -141,8 +138,8 @@ test.describe('privacy - account deletion', () => {
       request,
       baseURL,
     }) => {
-      // Its own account: confirming the request marks the user for deletion and
-      // drops every session it has, which would strand the worker user.
+      // Owns its account: confirming marks the user for deletion and drops
+      // every session it has. ADR-0004, "Operating rules".
       const user = await provisionUser(
         request,
         `del_${Date.now()}`,

@@ -96,10 +96,8 @@ export const accountRoutes: MockRoute[] = [
     method: 'POST',
     pattern: /^\/api\/account\/delete\/recover$/,
     resolve: ({ state }) => {
-      // The page reloads the session straight after recovering and then
-      // navigates to /settings/privacy. authGuard sends a still-pending user
-      // back to the deletion page, so the recovery has to clear that status
-      // here or the navigation never sticks.
+      // Clears the pending status: the page reloads the session and navigates
+      // away, and authGuard sends a still-pending user straight back here.
       if (state.session) {
         state.session = {
           ...state.session,

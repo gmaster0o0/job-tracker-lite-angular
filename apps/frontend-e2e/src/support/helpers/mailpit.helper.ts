@@ -11,17 +11,9 @@ export async function waitForEmail(
   const deadline = Date.now() + timeout;
   while (Date.now() < deadline) {
     // Everything short of a clean JSON response counts as "not ready yet" and
-    // is retried until the deadline: the request itself failing, a non-2xx
-    // answer, and a body that will not parse.
-    //
-    // The request has to be inside the tolerance, not just the response.
-    // Mailpit has no healthcheck in CI and the local stack shares the dev
-    // one, so the first search can reach a port nothing is listening on -
-    // which never produces a response at all, it rejects with ECONNREFUSED.
-    // Guarding only `res.ok()` still let that escape on the first attempt.
-    // This runs inside the workerUser fixture, and CI runs one worker, so an
-    // escape here takes down the entire suite with a connection error instead
-    // of the timeout message below.
+    // is retried until the deadline: a rejected request (Mailpit not
+    // listening), a non-2xx, or a body that will not parse. Nothing may
+    // escape this loop - see ADR-0004, "Operating rules".
     const res = await api
       .get(`${MAILPIT}/search?query=${encodeURIComponent(`to:${to}`)}`)
       .catch(() => null);
@@ -46,13 +38,9 @@ export const extractLink = (html: string, path: string) =>
   html.match(new RegExp(`https?://[^\\s"']*${path}[^\\s"']*`))?.[0];
 
 /**
- * Deletes EVERY message in the shared inbox.
- *
- * Do not call this from a spec. Workers run in parallel against one Mailpit,
- * so purging mid-run deletes mail another worker is waiting on - which is
- * what made the mail specs fail intermittently. Isolation comes instead from
- * each worker provisioning a unique recipient, with waitForEmail filtering
- * on `to:`. Kept for manual cleanup between full runs.
+ * Deletes EVERY message in the shared inbox. For manual cleanup between full
+ * runs - never from a spec: mail isolation is by recipient, not by inbox (see
+ * ADR-0004, "Operating rules").
  */
 export const purgeInbox = (api: APIRequestContext) =>
   api.delete(`${MAILPIT}/messages`);

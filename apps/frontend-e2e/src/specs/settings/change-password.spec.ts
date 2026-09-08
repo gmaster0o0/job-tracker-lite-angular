@@ -3,9 +3,8 @@ import { test, expect } from '../../support/fixtures/e2e.fixtures';
 import { provisionUser } from '../../support/helpers/api.helper';
 import { signInThroughUi } from '../../support/helpers/auth.helper';
 
-// A successful change signs the session out on purpose, and a failed one
-// still burns an attempt against a real account, so every test here works on
-// its own throwaway user rather than the worker-scoped one.
+// Own accounts throughout: a successful change signs the session out.
+// ADR-0004, "Operating rules".
 test.describe('change password', { tag: '@full-stack-only' }, () => {
   test.use({ storageState: undefined });
 

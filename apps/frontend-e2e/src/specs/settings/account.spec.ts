@@ -7,12 +7,8 @@ import { signInThroughUi } from '../../support/helpers/auth.helper';
 import { provisionUser } from '../../support/helpers/api.helper';
 
 test.describe('account settings', { tag: '@full-stack-only' }, () => {
-  // Signs in as an account it owns outright. Confirming an email change
-  // rewrites user.email and deletes every session row for that user
-  // (AccountService.verifyEmailChange), so running this against the
-  // worker-scoped user invalidated the storageState the worker fixture hands
-  // to every later test on that worker - they started unauthenticated and
-  // failed on unrelated locator timeouts, depending on scheduling.
+  // Owns its account: confirming an email change rewrites `user.email` and
+  // deletes the user's session rows. ADR-0004, "Operating rules".
   test.use({ storageState: undefined });
 
   test('change email → confirm link from Mailpit → email updated', async ({
@@ -29,27 +25,18 @@ test.describe('account settings', { tag: '@full-stack-only' }, () => {
 
     await signInThroughUi(page, owner.email, owner.password);
 
-    // Go to settings page
     await page.goto('/settings/account');
-
-    // Wait for the change email form
     await expect(page.locator('#changeEmailForm')).toBeVisible();
-
-    // Fill the new email
     await page.locator('#newEmail').fill(newEmail);
 
-    // The submit button is rendered outside the <form> and bound to it with
-    // the `form` attribute, so it is not a descendant of #changeEmailForm.
-    // Selecting on that attribute also disambiguates it from the
-    // change-password form's button on the same page.
+    // Bound to the form by the `form` attribute rather than nested in it,
+    // which also disambiguates it from the change-password button.
     await page.locator('button[form="changeEmailForm"]').click();
 
-    // Verification sent notice
     await expect(
       page.getByText('Verification email sent to your new address.'),
     ).toBeVisible();
 
-    // Wait for email from Mailpit
     const emailMsg = await waitForEmail(
       request,
       newEmail,
@@ -64,17 +51,15 @@ test.describe('account settings', { tag: '@full-stack-only' }, () => {
     );
     expect(confirmLink).toBeTruthy();
 
-    // Navigate to the link
     await page.goto(confirmLink!);
 
-    // Confirming the change signs the session out, so the proof that the new
-    // address took effect is that it can be used to sign in.
+    // Confirming signs the session out, so the proof the new address took
+    // effect is that it can be used to sign in.
     await signInThroughUi(page, newEmail, owner.password);
   });
 
-  // These provision their own account for a second reason on top of the one
-  // above: a request that succeeds starts the resend cooldown, which disables
-  // the submit button on any later test sharing the account.
+  // Own accounts here for a second reason: a successful request starts the
+  // resend cooldown, which disables the button for anything sharing it.
   test.describe('unhappy paths', () => {
     test('rejects changing to the current email', async ({
       page,

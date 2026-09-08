@@ -36,11 +36,9 @@ test.describe('Job List', () => {
     });
   });
 
-  // Covers the `loading` scenario end to end, which is otherwise three
-  // untested moving parts: registerRoutes stamping a domain onto each route,
-  // setupMockApi reading it back, and the delay being applied. Dropping any
-  // of them makes the delay silently stop happening - the exact silent no-op
-  // the central implementation replaced - and only this spec would notice.
+  // Pins the `loading` machinery: the domain stamped on each route at
+  // registration, read back in setupMockApi, and the delay applied. Nothing
+  // else notices if any of the three stops working.
   test.describe('loading state', { tag: '@mock-only' }, () => {
     test.use({ scenarios: { jobs: 'loading' } });
 
@@ -57,10 +55,9 @@ test.describe('Job List', () => {
       await expect(page.getByTestId('loading-state')).toBeVisible();
       await jobsResponse;
 
-      // The skeleton alone proves nothing - it is briefly visible on any
-      // load - so this asserts the delay itself. Half the configured value
-      // clears an instant response by a wide margin while leaving room for a
-      // slow machine.
+      // Asserts the delay, not the skeleton: the skeleton is briefly visible
+      // on any load and so proves nothing. Half the configured value clears
+      // an instant response by a wide margin, with room for a slow machine.
       expect(Date.now() - startedAt).toBeGreaterThanOrEqual(
         LOADING_DELAY_MS / 2,
       );

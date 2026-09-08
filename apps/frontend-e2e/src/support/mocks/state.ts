@@ -19,11 +19,9 @@ import {
 import { AuthScenario, ScenarioMap } from '../scenarios';
 
 /**
- * Auth scenarios that describe something a logged-out visitor runs into:
- * bad credentials, an unverified or already-taken address, a rate-limited
- * or failing password-reset request. None of them can start from a live
- * session - every /auth/* route is behind `guestGuard`, which bounces an
- * authenticated browser to /jobs before the spec can assert anything.
+ * Auth scenarios describing what a logged-out visitor runs into. None can
+ * start from a live session: every /auth/* route is behind `guestGuard`,
+ * which bounces an authenticated browser to /jobs before a spec can assert.
  */
 const LOGGED_OUT_AUTH_SCENARIOS = new Set<AuthScenario>([
   'unauthenticated',

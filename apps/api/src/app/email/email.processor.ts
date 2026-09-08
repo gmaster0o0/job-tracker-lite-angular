@@ -32,11 +32,8 @@ export class EmailProcessor
   }
 
   onApplicationBootstrap(): void {
-    // `WorkerHost.worker` is a getter that throws when no worker was ever
-    // initialised, so reading it to test for one throws in precisely the case
-    // this guard exists to handle: under a fake driver nothing imports
-    // BullModule.forRoot(), no explorer creates a worker, and evaluating the
-    // condition would reject app.init(). Ask the driver instead.
+    // Asks the driver rather than reading `this.worker`: that getter throws
+    // when no worker was created, which is exactly the fake-driver case.
     if (isFakeQueueDriver()) {
       return;
     }

@@ -37,13 +37,11 @@ test.describe('sign up', { tag: '@full-stack-only' }, () => {
 });
 
 /**
- * Mocked rather than full-stack, and deliberately so. Run against the real
- * backend, signing up a second time on an address that already exists came
- * back 2xx: no error reached the form, which walked on to the verification
- * notice as if it had created something. Whether that is deliberate (not
- * leaking which addresses are registered) or a genuine hole is an open
- * question - see the investigation task - so this asserts the contract the
- * app is written against instead of a behaviour nobody has confirmed.
+ * Mocked deliberately. Against the real backend a duplicate sign-up returns
+ * 2xx and the form walks on to the verification notice, which contradicts the
+ * error path the app is written around (`user_already_exists` has copy and a
+ * 409 mapping). Until that is settled - deliberate anti-enumeration, or a
+ * hole - this asserts the intended contract rather than the live behaviour.
  */
 test.describe('sign up - duplicate address', { tag: '@mock-only' }, () => {
   test.use({ scenarios: { auth: 'emailTaken' } });

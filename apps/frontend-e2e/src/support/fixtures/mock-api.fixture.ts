@@ -53,11 +53,8 @@ export async function setupMockApi(
         (scenarios[r.domain] === 'loading' ? LOADING_DELAY_MS : 0);
       if (delayMs) await new Promise((done) => setTimeout(done, delayMs));
 
-      // The guard has to answer the request even when it rejects the payload.
-      // Throwing straight out of the handler leaves the route unfulfilled -
-      // the browser waits forever, and the spec dies on an unrelated locator
-      // timeout with the schema diff nowhere in sight. Answering with the
-      // message first means the failure arrives immediately and says why.
+      // Answers the route even when the payload is rejected - see ADR-0004,
+      // "Operating rules". Rethrows so the schema error still fails the run.
       try {
         assertMatchesContract(url.pathname, method, res);
       } catch (error) {
@@ -74,11 +71,7 @@ export async function setupMockApi(
       return route.fulfill({
         status: res.status,
         contentType: 'application/json',
-        // `'body' in res` rather than a truthiness check: `null` is a real
-        // payload here - GET /api/auth/get-session answers exactly that for a
-        // logged-out visitor - and `?? {}` turned it into `{}`, so the
-        // unauthenticated scenario was exercising the app's malformed-payload
-        // fallback instead of its no-session path.
+        // `'body' in res`, not a truthiness check: `null` is a real payload.
         body: JSON.stringify('body' in res ? res.body : {}),
       });
     }

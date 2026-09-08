@@ -51,9 +51,8 @@ export function assertMatchesContract(
 ): void {
   // If it's a 4xx or 5xx, we typically don't have a rigid positive schema. Skip schema validation for errors for now.
   if (res.status >= 300) return;
-  // `'body' in res` rather than a truthiness check: a handler that answers a
-  // literal `null` (the logged-out session payload) still has a contract to
-  // meet, and `!res.body` skipped validating it entirely.
+  // `'body' in res`, not a truthiness check: a handler answering a literal
+  // `null` (the logged-out session payload) still has a contract to meet.
   if (!('body' in res)) return;
 
   const schema = schemaFor(path, method);

@@ -29,24 +29,46 @@ The workspace has assets that make a better design cheap: `libs/shared/testing` 
 - **The full-stack lane provisions one real user per Playwright worker**, reused across tests via `storageState`. Because every domain row is user-scoped in the Prisma schema, this gives real isolation and lets the lane run `fullyParallel: true`.
 - **Playwright code stays out of `libs/shared/testing`.** That library is imported by unit tests and by `libs/shared/prisma/src/seed.ts`; an `@playwright/test` import there would pull Playwright into both graphs. All Playwright code lives in `apps/frontend-e2e/src/support/`; only plain data fixtures cross the boundary.
 - **Substitution is governed by ownership, not convenience.** Infrastructure we run — Postgres, Redis, the SMTP catcher — runs for real, as a container, in every lane that has a backend. Only vendor-run services (Resend today, any future external API) are substituted. Faking owned infrastructure hides risk rather than reducing it. The `QUEUE_DRIVER=memory` fake accepts a job and discards it; `EmailService` compensates by sending synchronously when that driver is active, so email still reaches Mailpit — but the compensation is per-call-site, so any other producer added later silently loses its job, and BullMQ scheduling, retries, backoff and the processor itself are never exercised end to end. `QUEUE_DRIVER` should therefore be split into `inline` (executes the processor) and `memory` (records jobs) and scoped to API unit tests, with e2e running real Redis.
-- **Third parties are substituted from outside the process.** In the full-stack lane the API is a separate OS process, so in-process interception (`jest.mock`, `nock`, `msw/node`) cannot reach it. Every third-party client must expose an env-selected DI provider *and* an env-configurable base URL, pointed in e2e at a small in-repo stub app with a control endpoint for driving vendor failure modes. Mocked mode additionally installs a backstop route that aborts any non-localhost request, so an accidental real outbound call fails the test instead of flaking.
+- **Third parties are substituted from outside the process.** In the full-stack lane the API is a separate OS process, so in-process interception (`jest.mock`, `nock`, `msw/node`) cannot reach it. Every third-party client must expose an env-selected DI provider _and_ an env-configurable base URL, pointed in e2e at a small in-repo stub app with a control endpoint for driving vendor failure modes. Mocked mode additionally installs a backstop route that aborts any non-localhost request, so an accidental real outbound call fails the test instead of flaking.
 - **Each dependency gets one double per layer, not one overall.** In-process fakes at the API unit layer; real containers at the integration and e2e layers. In the frontend mocked lane there is no API process, so no database or queue double exists there at all — `page.route` subsumes everything below the HTTP boundary. Worker isolation is by database-per-worker (Postgres, cloned from a migrated template), BullMQ `prefix` per worker (Redis), and unique recipient addresses (Mailpit).
 
 ### Where each double lives
 
-A dependency does not have *a* double — it has one per layer. Empty cells are structural, not gaps: in the frontend mocked lane there is no API process, so nothing exists for a database or queue double to attach to.
+A dependency does not have _a_ double — it has one per layer. Empty cells are structural, not gaps: in the frontend mocked lane there is no API process, so nothing exists for a database or queue double to attach to.
 
-| Layer | Postgres | Redis / BullMQ | Mail | 3rd-party HTTP |
-| --- | --- | --- | --- | --- |
-| Frontend unit / component | — | — | — | — |
-| Frontend e2e `mocked` | — | — | — | — |
-| API unit (`TestingModule`) | `prisma-service.mock` | queue-token fake | `email-service.mock` | client mock |
-| API integration (in-process) | **real, Docker** — tx rollback | **real, Docker** | **Mailpit** | in-process stub OK |
-| Full-stack e2e (black box) | **real, Docker** — db per worker | **real, Docker** — prefix per worker | **Mailpit** | **stub container**, env-pointed |
+| Layer                        | Postgres                         | Redis / BullMQ                       | Mail                 | 3rd-party HTTP                  |
+| ---------------------------- | -------------------------------- | ------------------------------------ | -------------------- | ------------------------------- |
+| Frontend unit / component    | —                                | —                                    | —                    | —                               |
+| Frontend e2e `mocked`        | —                                | —                                    | —                    | —                               |
+| API unit (`TestingModule`)   | `prisma-service.mock`            | queue-token fake                     | `email-service.mock` | client mock                     |
+| API integration (in-process) | **real, Docker** — tx rollback   | **real, Docker**                     | **Mailpit**          | in-process stub OK              |
+| Full-stack e2e (black box)   | **real, Docker** — shared\*       | **real, Docker** — shared\*           | **Mailpit** — shared | **stub container**, env-pointed |
 
-Worker isolation is by database-per-worker cloned from a migrated template (Postgres), BullMQ `prefix` per worker (Redis), and unique recipient addresses (Mailpit). Transaction-rollback-per-test is unavailable at the e2e layer: the request runs on the API process's own connection pool, so the test holds no handle on that transaction.
+Transaction-rollback-per-test is unavailable at the e2e layer: the request runs on the API process's own connection pool, so the test holds no handle on that transaction.
+
+\* **Amended during implementation.** The design above called for a database per worker cloned from a migrated template, and a BullMQ `prefix` per worker. Neither was built: CI runs one Postgres service container with a single `test_db` and one shared Redis, and Playwright runs `workers: 1` there anyway (`nxE2EPreset` sets it whenever `CI` is set). Isolation comes from every domain row being user-scoped and each worker provisioning its own user — which is sufficient while the row-level ownership holds, and cheaper than the template-clone machinery. Revisit if the suite is ever sharded across runners, or if a feature introduces rows that are not user-scoped.
 
 The full design — file layout, mock route table, scenario catalogue and phased rollout — is published as an artifact: <https://claude.ai/code/artifact/4cbed805-8c1a-4cf3-82c4-fa9786471854>
+
+## Operating rules
+
+Constraints the design implies but does not state. Each one has been violated at least once and cost a debugging session, and each is easier to get wrong than to notice; they live here rather than as commentary at the call sites.
+
+**A test that mutates account state provisions its own user.** The worker fixture hands the same `storageState` to every test on that worker, and it is captured once at provisioning time. Changing the account's email or password, or marking it for deletion, deletes its session rows server-side — so the shared state silently stops authenticating and later tests on that worker fail on unrelated locator timeouts, depending on scheduling. `provisionUser` is cheap; a shared account that a test mutates is not. This is why the change-email, change-password, deletion and password-reset specs each own an account.
+
+**Mail isolation is by recipient, never by inbox.** One Mailpit serves every worker, so purging it mid-run deletes mail another worker is waiting on. Each worker provisions a unique address and `waitForEmail` filters on `to:`. The poll also treats _any_ unsuccessful attempt — a rejected request, a non-2xx, an unparseable body — as "not ready yet", because it runs inside a worker fixture: an escape there takes down every test on the worker, and with `workers: 1` in CI that is the whole suite.
+
+**Anything that answers a request must answer it on every path.** A guard that throws before fulfilling leaves the route pending, the browser waits forever, and the run dies on a locator timeout that names none of it. The contract guard therefore fulfils with the schema error before rethrowing.
+
+**Distinguish "no body" from a body of `null`.** `GET /api/auth/get-session` answers a literal `null` for a logged-out visitor, so `res.body ?? {}` and `if (!res.body)` both erase a real payload — and the logged-out scenario then passes by exercising the app's malformed-payload fallback rather than its no-session path.
+
+**Scenario coverage has to assert the mechanism, not the symptom.** `loading` delays a domain's responses centrally, keyed off a `domain` stamped onto each route at registration. A spec that only asserts the skeleton is visible passes whether or not the delay is applied — the skeleton flashes on any load — so it pins nothing. Assert the elapsed time against `LOADING_DELAY_MS`.
+
+**The mocked lane's outbound backstop compares origins, and stays serialisable.** It aborts anything that is not the app's own origin, derived from the resolved `baseURL` rather than a hard-coded hostname, since `BASE_URL` may point at `127.0.0.1` or a deployed app. It must be a string/RegExp/URLPattern: Playwright cannot serialise a function matcher to the browser and silently falls back to intercepting every request.
+
+**Consent and other one-time interstitials are pre-answered.** The cookie banner is fixed to the bottom-right corner until dismissed, where it intercepts clicks on anything beneath it. Every spec starts from the state a returning visitor is in; a spec that wants the banner clears the key itself.
+
+**The fake queue drivers must keep the module graph bootable.** `inline` and `memory` exist so API tests can exercise queued work without Redis, which only holds if the module owning the queue still loads under them. Both branches of `registerQueue` therefore return a `BullModule`-rooted dynamic module — Nest validates re-exports against the metatypes of a module's imports — and nothing may read `WorkerHost.worker` outside the `redis` driver, since that getter throws when no worker was created.
 
 ## Consequences
 
@@ -68,7 +90,7 @@ The full design — file layout, mock route table, scenario catalogue and phased
 
 ### Risks
 
-- **Mocks drifting into fiction.** The zod guard validates response *shape*, not semantics — a handler can be schema-valid and still behave unlike the real API (wrong status code, wrong ordering, missing side effect). The full-stack lane is the backstop, which is why untagged tests must run in both lanes and why the `@mock-only` set should stay small and deliberately chosen.
+- **Mocks drifting into fiction.** The zod guard validates response _shape_, not semantics — a handler can be schema-valid and still behave unlike the real API (wrong status code, wrong ordering, missing side effect). The full-stack lane is the backstop, which is why untagged tests must run in both lanes and why the `@mock-only` set should stay small and deliberately chosen.
 - **Per-worker users leaking.** If a teardown fails, orphaned users accumulate in the test database. Low impact against an ephemeral CI database; worth a periodic cleanup if the pattern is reused against a shared environment.
 - **Mailpit search flakiness.** Waiting on an inbox is inherently a polling operation. Bounded by unique per-worker addresses and an explicit timeout that fails loudly rather than hanging.
 - **The nested-Nx deadlock.** Any new e2e target that invokes `nx run` from inside an already-running Nx task will deadlock in CI, where the daemon is disabled. The existing `dependsOn: []` plus servers-started-outside-Nx arrangement must be preserved by anything added here.
